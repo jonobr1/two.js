@@ -3167,7 +3167,7 @@ declare module 'two.js/src/effects/image' {
   export class Image extends Rectangle {
     /**
      * @name Two.Image.fill
-     * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
+     * @property {String} - Scale image to fill the bounds while preserving aspect ratio.
      */
     static fill: 'fill';
     /**
@@ -3185,13 +3185,19 @@ declare module 'two.js/src/effects/image' {
      * @property {String} - Repeat image at original size to fill the bounds.
      */
     static tile: 'tile';
+    /**
+     * @name Two.Image.stretch
+     * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
+     */
+    static stretch: 'stretch';
 
     constructor(
       path?: string | Texture,
       ox?: number,
       oy?: number,
       width?: number,
-      height?: number
+      height?: number,
+      mode?: 'fill' | 'fit' | 'crop' | 'tile' | 'stretch'
     );
     /**
      * @name Two.Image#_flagTexture
@@ -3220,9 +3226,9 @@ declare module 'two.js/src/effects/image' {
     texture: Texture;
     /**
      * @name Two.Image#mode
-     * @property {String} - The scaling mode for the image. Can be 'fill', 'fit', 'crop', or 'tile'. Defaults to 'fit'.
+     * @property {String} - The scaling mode for the image. Can be 'fill', 'fit', 'crop', 'tile', or 'stretch'. Defaults to 'fill'.
      */
-    mode: 'fill' | 'fit' | 'crop' | 'tile';
+    mode: 'fill' | 'fit' | 'crop' | 'tile' | 'stretch';
     /**
      * @name Two.Image#dispose
      * @function

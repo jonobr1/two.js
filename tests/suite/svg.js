@@ -363,7 +363,7 @@
         elem.getAttribute('fill'),
         'Two.Image applied the correct texture properly.'
       );
-      assert.equal(image.mode, 'fit', 'Two.Image uses default fit mode.');
+      assert.equal(image.mode, 'fill', 'Two.Image uses default fill mode.');
       assert.done();
     };
 

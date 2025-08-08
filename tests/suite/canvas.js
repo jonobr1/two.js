@@ -287,9 +287,9 @@
 
       QUnit.Utils.compare.call(
         assert,
-        './images/canvas/image-fit' + suffix,
+        './images/canvas/image-fill' + suffix,
         two.renderer,
-        'Two.makeImage renders properly with default fit mode.'
+        'Two.makeImage renders properly with default fill mode.'
       );
     };
 
@@ -450,6 +450,46 @@
         './images/canvas/image-tile' + suffix,
         two.renderer,
         'Two.makeImage renders properly in tile mode.'
+      );
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: stretch)', function (assert) {
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.canvas,
+      width: 200,
+      height: 100,
+      ratio: deviceRatio,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      200,
+      100,
+      'stretch'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-stretch' + suffix,
+        two.renderer,
+        'Two.makeImage renders properly in stretch mode.'
       );
     };
 

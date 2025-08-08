@@ -782,7 +782,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.20",
-  PublishDate: "2025-08-08T22:54:56.523Z",
+  PublishDate: "2025-08-08T23:50:19.761Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -7952,7 +7952,7 @@ var _Image = class extends Rectangle {
     __publicField(this, "_flagTexture", false);
     __publicField(this, "_flagMode", false);
     __publicField(this, "_texture", null);
-    __publicField(this, "_mode", "fit");
+    __publicField(this, "_mode", "fill");
     for (let prop in proto23) {
       Object.defineProperty(this, prop, proto23[prop]);
     }
@@ -8027,9 +8027,19 @@ var _Image = class extends Rectangle {
         const scaleX = rw / iw;
         const scaleY = rh / ih;
         switch (this._mode) {
+          case _Image.fill: {
+            const scale = Math.max(scaleX, scaleY);
+            effect.scale = scale;
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "repeat";
+            break;
+          }
           case _Image.fit: {
-            const fitScale = Math.max(scaleX, scaleY);
-            effect.scale = fitScale;
+            const scale = Math.min(scaleX, scaleY);
+            effect.scale = scale;
+            effect.offset.x = 0;
+            effect.offset.y = 0;
             effect.repeat = "no-repeat";
             break;
           }
@@ -8042,12 +8052,12 @@ var _Image = class extends Rectangle {
             effect.repeat = "repeat";
             break;
           }
-          case _Image.fill:
+          case _Image.stretch:
           default: {
             effect.scale = new Vector(scaleX, scaleY);
             effect.offset.x = 0;
             effect.offset.y = 0;
-            effect.repeat = "no-repeat";
+            effect.repeat = "repeat";
           }
         }
       }
@@ -8056,8 +8066,8 @@ var _Image = class extends Rectangle {
     return this;
   }
   flagReset() {
-    this._flagTexture = this._flagMode = false;
     super.flagReset.call(this);
+    this._flagTexture = this._flagMode = false;
     return this;
   }
 };
@@ -8066,6 +8076,7 @@ __publicField(Image, "fill", "fill");
 __publicField(Image, "fit", "fit");
 __publicField(Image, "crop", "crop");
 __publicField(Image, "tile", "tile");
+__publicField(Image, "stretch", "stretch");
 __publicField(Image, "Properties", ["texture", "mode"]);
 var proto23 = {
   texture: {
@@ -10059,6 +10070,11 @@ var svg = {
           } else {
             changed.width *= this._scale;
             changed.height *= this._scale;
+          }
+          if (/no-repeat/i.test(this._repeat)) {
+            styles.preserveAspectRatio = "xMidYMid";
+          } else {
+            styles.preserveAspectRatio = "none";
           }
           styles.width = changed.width;
           styles.height = changed.height;

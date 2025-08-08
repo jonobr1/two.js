@@ -1058,7 +1058,7 @@ export default class Two {
    * @param {Number} y
    * @param {Number} width
    * @param {Number} height
-   * @param {String} [mode="fit"]
+   * @param {String} [mode="fill"]
    * @returns {Two.Image}
    * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
    */

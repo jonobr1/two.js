@@ -11,7 +11,7 @@ import { Texture } from './texture.js';
  * @param {Number} [oy=0] - The initial `y` position of the Two.Image.
  * @param {Number} [width=1] - The width to display the image at.
  * @param {Number} [height=1] - The height to display the image at.
- * @param {String} [mode="fit"] - The fill mode
+ * @param {String} [mode="fill"] - The fill mode
  * @description A convenient package to display images scaled to fit specific dimensions. Unlike {@link Two.Sprite}, this class scales the image to the provided width and height rather than using the image's native dimensions. By default, images are scaled to 'fit' within the bounds while preserving aspect ratio.
  */
 export class Image extends Rectangle {
@@ -41,7 +41,7 @@ export class Image extends Rectangle {
    * @private
    * @see {@link Two.Image#mode}
    */
-  _mode = 'fit';
+  _mode = 'fill';
 
   constructor(path, ox, oy, width, height, mode) {
     super(ox, oy, width || 1, height || 1);
@@ -72,7 +72,7 @@ export class Image extends Rectangle {
 
   /**
    * @name Two.Image.fill
-   * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
+   * @property {String} - Scale image to fill the bounds while preserving aspect ratio.
    */
   static fill = 'fill';
 
@@ -93,6 +93,12 @@ export class Image extends Rectangle {
    * @property {String} - Repeat image at original size to fill the bounds.
    */
   static tile = 'tile';
+
+  /**
+   * @name Two.Image.stretch
+   * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
+   */
+  static stretch = 'stretch';
 
   /**
    * @name Two.Image.Properties
@@ -224,10 +230,22 @@ export class Image extends Rectangle {
 
         // Apply scaling based on mode
         switch (this._mode) {
+          case Image.fill: {
+            // Fill within bounds while preserving aspect ratio
+            const scale = Math.max(scaleX, scaleY);
+            effect.scale = scale;
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = 'repeat';
+            break;
+          }
+
           case Image.fit: {
             // Fit within bounds while preserving aspect ratio
-            const fitScale = Math.max(scaleX, scaleY);
-            effect.scale = fitScale;
+            const scale = Math.min(scaleX, scaleY);
+            effect.scale = scale; // TODO: For SVG this works `new Vector(scaleX, scaleY);`
+            effect.offset.x = 0;
+            effect.offset.y = 0;
             effect.repeat = 'no-repeat';
             break;
           }
@@ -245,13 +263,13 @@ export class Image extends Rectangle {
             break;
           }
 
-          case Image.fill:
+          case Image.stretch:
           default: {
             // Stretch the image texture to whatever the dimensions of the rect are
             effect.scale = new Vector(scaleX, scaleY);
             effect.offset.x = 0;
             effect.offset.y = 0;
-            effect.repeat = 'no-repeat';
+            effect.repeat = 'repeat';
           }
         }
       }
@@ -269,9 +287,8 @@ export class Image extends Rectangle {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-    this._flagTexture = this._flagMode = false;
-
     super.flagReset.call(this);
+    this._flagTexture = this._flagMode = false;
 
     return this;
   }
