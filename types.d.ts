@@ -3162,7 +3162,7 @@ declare module 'two.js/src/effects/image' {
    * @param {Number} [oy=0] - The initial `y` position of the Two.Image.
    * @param {Number} [width=1] - The width to display the image at.
    * @param {Number} [height=1] - The height to display the image at.
-   * @description A convenient package to display images scaled to fit specific dimensions. Unlike {@link Two.Sprite}, this class scales the image to the provided width and height rather than using the image's native dimensions. By default, images are scaled to 'fit' within the bounds while preserving aspect ratio.
+   * @description A convenient package to display images scaled to fit specific dimensions. Unlike {@link Two.Sprite}, this class scales the image to the provided width and height rather than using the image's native dimensions. By default, images are scaled to 'fill' within the bounds while preserving aspect ratio.
    */
   export class Image extends Rectangle {
     /**
