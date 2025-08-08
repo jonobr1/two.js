@@ -13,6 +13,7 @@ import { Texture } from './texture.js';
  * @param {Number} [height=1] - The height to display the image at.
  * @param {String} [mode="fill"] - The fill mode
  * @description A convenient package to display images scaled to fit specific dimensions. Unlike {@link Two.Sprite}, this class scales the image to the provided width and height rather than using the image's native dimensions. By default, images are scaled to 'fit' within the bounds while preserving aspect ratio.
+ * @nota-bene Two.Image.fit mode in all renderers is not complete
  */
 export class Image extends Rectangle {
   /**
