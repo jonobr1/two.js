@@ -11,7 +11,8 @@ import { Texture } from './texture.js';
  * @param {Number} [oy=0] - The initial `y` position of the Two.Image.
  * @param {Number} [width=1] - The width to display the image at.
  * @param {Number} [height=1] - The height to display the image at.
- * @description A convenient package to display images scaled to fit specific dimensions. Unlike {@link Two.Sprite}, this class scales the image to the provided width and height rather than using the image's native dimensions.
+ * @param {String} [mode="fit"] - The fill mode
+ * @description A convenient package to display images scaled to fit specific dimensions. Unlike {@link Two.Sprite}, this class scales the image to the provided width and height rather than using the image's native dimensions. By default, images are scaled to 'fit' within the bounds while preserving aspect ratio.
  */
 export class Image extends Rectangle {
   /**
@@ -22,6 +23,13 @@ export class Image extends Rectangle {
   _flagTexture = false;
 
   /**
+   * @name Two.Image#_flagMode
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Image#mode} needs updating.
+   */
+  _flagMode = false;
+
+  /**
    * @name Two.Image#_texture
    * @private
    * @see {@link Two.Image#texture}
@@ -29,13 +37,13 @@ export class Image extends Rectangle {
   _texture = null;
 
   /**
-   * @name Two.Image#_origin
+   * @name Two.Image#_mode
    * @private
-   * @see {@link Two.Image#origin}
+   * @see {@link Two.Image#mode}
    */
-  _origin = null;
+  _mode = 'fit';
 
-  constructor(path, ox, oy, width, height) {
+  constructor(path, ox, oy, width, height, mode) {
     super(ox, oy, width || 1, height || 1);
 
     for (let prop in proto) {
@@ -55,16 +63,42 @@ export class Image extends Rectangle {
       this.texture = new Texture(path);
     }
 
-    this.origin = new Vector();
+    if (typeof mode === 'string') {
+      this.mode = mode;
+    }
 
     this._update();
   }
 
   /**
+   * @name Two.Image.fill
+   * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
+   */
+  static fill = 'fill';
+
+  /**
+   * @name Two.Image.fit
+   * @property {String} - Scale image to fit within bounds while preserving aspect ratio.
+   */
+  static fit = 'fit';
+
+  /**
+   * @name Two.Image.crop
+   * @property {String} - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+   */
+  static crop = 'crop';
+
+  /**
+   * @name Two.Image.tile
+   * @property {String} - Repeat image at original size to fill the bounds.
+   */
+  static tile = 'tile';
+
+  /**
    * @name Two.Image.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Image}.
    */
-  static Properties = ['texture'];
+  static Properties = ['texture', 'mode'];
 
   /**
    * @name Two.Image.fromObject
@@ -135,6 +169,7 @@ export class Image extends Rectangle {
   toObject() {
     const object = super.toObject.call(this);
     object.texture = this.texture.toObject();
+    object.mode = this.mode;
     return object;
   }
 
@@ -150,14 +185,14 @@ export class Image extends Rectangle {
   dispose() {
     // Call parent dispose for inherited cleanup (vertices, fill/stroke effects)
     super.dispose();
-    
+
     // Dispose texture (more thorough than unbind)
     if (this._texture && typeof this._texture.dispose === 'function') {
       this._texture.dispose();
     } else if (this._texture && typeof this._texture.unbind === 'function') {
       this._texture.unbind();
     }
-    
+
     return this;
   }
 
@@ -178,32 +213,47 @@ export class Image extends Rectangle {
       }
 
       if (effect.loaded) {
-        // Scale the texture to fit the rectangle dimensions
         const iw = effect.image.width;
         const ih = effect.image.height;
         const rw = this.width;
         const rh = this.height;
 
-        // Calculate scale to fit the texture within the rectangle
+        // Calculate base scale ratios
         const scaleX = rw / iw;
         const scaleY = rh / ih;
 
-        // Set texture scale to fit the rectangle
-        if (effect.scale !== scaleX || effect.scale !== scaleY) {
-          // Use uniform scaling to maintain aspect ratio if needed
-          // For now, stretch to fill - users can modify this behavior if needed
-          effect.scale = new Vector(scaleX, scaleY);
-        }
+        // Apply scaling based on mode
+        switch (this._mode) {
+          case Image.fit: {
+            // Fit within bounds while preserving aspect ratio
+            const fitScale = Math.max(scaleX, scaleY);
+            effect.scale = fitScale;
+            effect.repeat = 'no-repeat';
+            break;
+          }
 
-        // Center the texture within the rectangle
-        const ox = (iw - rw / scaleX) / 2;
-        const oy = (ih - rh / scaleY) / 2;
+          case Image.crop: {
+            // Allow developer to control everything
+            break;
+          }
 
-        if (ox !== effect.offset.x) {
-          effect.offset.x = ox;
-        }
-        if (oy !== effect.offset.y) {
-          effect.offset.y = oy;
+          case Image.tile: {
+            // Repeat image at original size
+            effect.scale = 1;
+            effect.offset.x = (iw - rw) / 2;
+            effect.offset.y = (ih - rh) / 2;
+            effect.repeat = 'repeat';
+            break;
+          }
+
+          case Image.fill:
+          default: {
+            // Stretch the image texture to whatever the dimensions of the rect are
+            effect.scale = new Vector(scaleX, scaleY);
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = 'no-repeat';
+          }
         }
       }
     }
@@ -220,7 +270,7 @@ export class Image extends Rectangle {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-    this._flagTexture = false;
+    this._flagTexture = this._flagMode = false;
 
     super.flagReset.call(this);
 
@@ -237,6 +287,16 @@ const proto = {
     set: function (v) {
       this._texture = v;
       this._flagTexture = true;
+    },
+  },
+  mode: {
+    enumerable: true,
+    get: function () {
+      return this._mode;
+    },
+    set: function (v) {
+      this._mode = v;
+      this._flagMode = true;
     },
   },
 };
