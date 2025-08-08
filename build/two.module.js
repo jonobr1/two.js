@@ -782,7 +782,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.20",
-  PublishDate: "2025-08-07T03:54:43.286Z",
+  PublishDate: "2025-08-08T18:01:07.573Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -7947,11 +7947,12 @@ function xhr(path, callback) {
 
 // src/effects/image.js
 var _Image = class extends Rectangle {
-  constructor(path, ox, oy, width, height) {
+  constructor(path, ox, oy, width, height, mode) {
     super(ox, oy, width || 1, height || 1);
     __publicField(this, "_flagTexture", false);
+    __publicField(this, "_flagMode", false);
     __publicField(this, "_texture", null);
-    __publicField(this, "_origin", null);
+    __publicField(this, "_mode", "fit");
     for (let prop in proto23) {
       Object.defineProperty(this, prop, proto23[prop]);
     }
@@ -7962,7 +7963,9 @@ var _Image = class extends Rectangle {
     } else if (typeof path === "string") {
       this.texture = new Texture(path);
     }
-    this.origin = new Vector();
+    if (typeof mode === "string") {
+      this.mode = mode;
+    }
     this._update();
   }
   static fromObject(obj) {
@@ -7998,6 +8001,7 @@ var _Image = class extends Rectangle {
   toObject() {
     const object = super.toObject.call(this);
     object.texture = this.texture.toObject();
+    object.mode = this.mode;
     return object;
   }
   dispose() {
@@ -8022,16 +8026,29 @@ var _Image = class extends Rectangle {
         const rh = this.height;
         const scaleX = rw / iw;
         const scaleY = rh / ih;
-        if (effect.scale !== scaleX || effect.scale !== scaleY) {
-          effect.scale = new Vector(scaleX, scaleY);
-        }
-        const ox = (iw - rw / scaleX) / 2;
-        const oy = (ih - rh / scaleY) / 2;
-        if (ox !== effect.offset.x) {
-          effect.offset.x = ox;
-        }
-        if (oy !== effect.offset.y) {
-          effect.offset.y = oy;
+        switch (this._mode) {
+          case _Image.fit: {
+            const fitScale = Math.max(scaleX, scaleY);
+            effect.scale = fitScale;
+            effect.repeat = "no-repeat";
+            break;
+          }
+          case _Image.crop: {
+            break;
+          }
+          case _Image.tile: {
+            effect.offset.x = (iw - rw) / 2;
+            effect.offset.y = (ih - rh) / 2;
+            effect.repeat = "repeat";
+            break;
+          }
+          case _Image.fill:
+          default: {
+            effect.scale = new Vector(scaleX, scaleY);
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "no-repeat";
+          }
         }
       }
     }
@@ -8039,13 +8056,17 @@ var _Image = class extends Rectangle {
     return this;
   }
   flagReset() {
-    this._flagTexture = false;
+    this._flagTexture = this._flagMode = false;
     super.flagReset.call(this);
     return this;
   }
 };
 var Image = _Image;
-__publicField(Image, "Properties", ["texture"]);
+__publicField(Image, "fill", "fill");
+__publicField(Image, "fit", "fit");
+__publicField(Image, "crop", "crop");
+__publicField(Image, "tile", "tile");
+__publicField(Image, "Properties", ["texture", "mode"]);
 var proto23 = {
   texture: {
     enumerable: true,
@@ -8055,6 +8076,16 @@ var proto23 = {
     set: function(v) {
       this._texture = v;
       this._flagTexture = true;
+    }
+  },
+  mode: {
+    enumerable: true,
+    get: function() {
+      return this._mode;
+    },
+    set: function(v) {
+      this._mode = v;
+      this._flagMode = true;
     }
   }
 };
