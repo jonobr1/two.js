@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Added `Two.Image` as a new shape that inherits `Two.Rectangle`
 - Expand `Two.RoundedRectangle` constructor to accept `Two.Vector` as the radius
 - Added `Two.Element.dispose`, `Two.Path.dispose`, `Two.Group.dispose`, `Two.Text.dispose`, `Two.Points.dispose`, `Two.ImageSequence.dispose`, `Two.Sprite.dispose`
 - Improved `Two.release` to account for renderer specific deallocations
