@@ -503,19 +503,19 @@ export default class Two {
       // WebGL resource cleanup
       if (this.type === 'WebGLRenderer' && this.renderer.ctx) {
         const gl = this.renderer.ctx;
-        
+
         // Clean up textures
         if (obj._renderer.texture) {
           gl.deleteTexture(obj._renderer.texture);
           delete obj._renderer.texture;
         }
-        
+
         // Clean up buffers
         if (obj._renderer.positionBuffer) {
           gl.deleteBuffer(obj._renderer.positionBuffer);
           delete obj._renderer.positionBuffer;
         }
-        
+
         // Clean up any other WebGL effects
         if (obj._renderer.effect) {
           obj._renderer.effect = null;
@@ -1058,11 +1058,12 @@ export default class Two {
    * @param {Number} y
    * @param {Number} width
    * @param {Number} height
+   * @param {String} [mode="fit"]
    * @returns {Two.Image}
    * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
    */
-  makeImage(pathOrTexture, x, y, width, height) {
-    const image = new Image(pathOrTexture, x, y, width, height);
+  makeImage(pathOrTexture, x, y, width, height, mode) {
+    const image = new Image(pathOrTexture, x, y, width, height, mode);
     this.add(image);
 
     return image;

@@ -338,6 +338,275 @@
     QUnit.Utils.addInstanceToTest(assert.test, two);
   });
 
+  QUnit.test('two.makeImage (Simple)', function (assert) {
+    assert.expect(2);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(path, two.width / 2, two.height / 2, 150, 100);
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + image.id);
+      var id = texture.id;
+
+      assert.equal(
+        'url(#' + id + ')',
+        elem.getAttribute('fill'),
+        'Two.Image applied the correct texture properly.'
+      );
+      assert.equal(image.mode, 'fit', 'Two.Image uses default fit mode.');
+      assert.done();
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: fit)', function (assert) {
+    assert.expect(2);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      150,
+      100,
+      'fit'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + image.id);
+      var id = texture.id;
+
+      assert.equal(
+        'url(#' + id + ')',
+        elem.getAttribute('fill'),
+        'Two.Image applied the correct texture properly in fit mode.'
+      );
+      assert.equal(
+        image.mode,
+        'fit',
+        'Two.Image mode property is set correctly to fit.'
+      );
+      assert.done();
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: fill)', function (assert) {
+    assert.expect(2);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      150,
+      100,
+      'fill'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + image.id);
+      var id = texture.id;
+
+      assert.equal(
+        'url(#' + id + ')',
+        elem.getAttribute('fill'),
+        'Two.Image applied the correct texture properly in fill mode.'
+      );
+      assert.equal(
+        image.mode,
+        'fill',
+        'Two.Image mode property is set correctly to fill.'
+      );
+      assert.done();
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: crop)', function (assert) {
+    assert.expect(2);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      150,
+      100,
+      'crop'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + image.id);
+      var id = texture.id;
+
+      assert.equal(
+        'url(#' + id + ')',
+        elem.getAttribute('fill'),
+        'Two.Image applied the correct texture properly in crop mode.'
+      );
+      assert.equal(
+        image.mode,
+        'crop',
+        'Two.Image mode property is set correctly to crop.'
+      );
+      assert.done();
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: tile)', function (assert) {
+    assert.expect(2);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      150,
+      100,
+      'tile'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + image.id);
+      var id = texture.id;
+
+      assert.equal(
+        'url(#' + id + ')',
+        elem.getAttribute('fill'),
+        'Two.Image applied the correct texture properly in tile mode.'
+      );
+      assert.equal(
+        image.mode,
+        'tile',
+        'Two.Image mode property is set correctly to tile.'
+      );
+      assert.done();
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode switching)', function (assert) {
+    assert.expect(3);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      150,
+      100,
+      'fit'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      var elem = two.renderer.domElement.querySelector('#' + image.id);
+      var id = texture.id;
+
+      assert.equal(
+        'url(#' + id + ')',
+        elem.getAttribute('fill'),
+        'Two.Image applied the correct texture properly in initial fit mode.'
+      );
+      assert.equal(
+        image.mode,
+        'fit',
+        'Two.Image initial mode property is set correctly to fit.'
+      );
+
+      // Change mode and verify
+      image.mode = 'fill';
+      two.update();
+
+      assert.equal(
+        image.mode,
+        'fill',
+        'Two.Image mode property changes correctly from fit to fill.'
+      );
+      assert.done();
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
   QUnit.test('two.makeSprite (Simple)', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);

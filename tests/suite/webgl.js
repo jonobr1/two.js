@@ -266,6 +266,250 @@
     );
   });
 
+  QUnit.test('two.makeImage (Simple)', function (assert) {
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 200,
+      height: 100,
+      ratio: deviceRatio,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(path, two.width / 2, two.height / 2, 200, 100);
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-fit' + suffix,
+        two.renderer,
+        'Two.makeImage renders properly with default fit mode.'
+      );
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: fit)', function (assert) {
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 200,
+      height: 100,
+      ratio: deviceRatio,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      200,
+      100,
+      'fit'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-fit' + suffix,
+        two.renderer,
+        'Two.makeImage renders properly in fit mode.'
+      );
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: fill)', function (assert) {
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 200,
+      height: 100,
+      ratio: deviceRatio,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      200,
+      100,
+      'fill'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-fill' + suffix,
+        two.renderer,
+        'Two.makeImage renders properly in fill mode.'
+      );
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: crop)', function (assert) {
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 200,
+      height: 100,
+      ratio: deviceRatio,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      200,
+      100,
+      'crop'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-crop' + suffix,
+        two.renderer,
+        'Two.makeImage renders properly in crop mode.'
+      );
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode: tile)', function (assert) {
+    assert.expect(1);
+    assert.done = assert.async(1);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 200,
+      height: 100,
+      ratio: deviceRatio,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      200,
+      100,
+      'tile'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-tile' + suffix,
+        two.renderer,
+        'Two.makeImage renders properly in tile mode.'
+      );
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
+  QUnit.test('two.makeImage (Mode switching)', function (assert) {
+    assert.expect(2);
+    assert.done = assert.async(2);
+
+    var two = new Two({
+      type: Two.Types.webgl,
+      width: 200,
+      height: 100,
+      ratio: deviceRatio,
+    });
+
+    var path = '/tests/images/spritesheet.jpg';
+    var image = two.makeImage(
+      path,
+      two.width / 2,
+      two.height / 2,
+      200,
+      100,
+      'fit'
+    );
+    var texture = image.texture;
+
+    var loaded = function () {
+      texture.unbind(Two.Events.Types.load, loaded);
+      two.update();
+
+      QUnit.Utils.compare.call(
+        assert,
+        './images/canvas/image-fit' + suffix,
+        two.renderer,
+        'Two.makeImage renders properly in initial fit mode.',
+        function () {
+          image.mode = 'fill';
+          two.update();
+
+          QUnit.Utils.compare.call(
+            assert,
+            './images/canvas/image-fill' + suffix,
+            two.renderer,
+            'Two.Image changes mode properly from fit to fill.'
+          );
+        }
+      );
+    };
+
+    texture.bind(Two.Events.Types.load, loaded);
+    texture._update();
+
+    QUnit.Utils.addInstanceToTest(assert.test, two);
+  });
+
   QUnit.test('two.makeSprite (Simple)', function (assert) {
     assert.expect(1);
     assert.done = assert.async(1);

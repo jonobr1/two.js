@@ -782,7 +782,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.20",
-  PublishDate: "2025-08-08T18:01:07.573Z",
+  PublishDate: "2025-08-08T22:54:56.523Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -11969,8 +11969,8 @@ var _Two = class {
     this.add(sprite);
     return sprite;
   }
-  makeImage(pathOrTexture, x, y, width, height) {
-    const image = new Image(pathOrTexture, x, y, width, height);
+  makeImage(pathOrTexture, x, y, width, height, mode) {
+    const image = new Image(pathOrTexture, x, y, width, height, mode);
     this.add(image);
     return image;
   }
