@@ -5284,8 +5284,9 @@ declare module 'two.js' {
      * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
      * @param {Number} x
      * @param {Number} y
-     * @param {Number} width
-     * @param {Number} height
+     * @param {Number} [width]
+     * @param {Number} [height]
+     * @param {String} [mode="fill"]
      * @returns {Two.Image}
      * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
      */
@@ -5293,8 +5294,9 @@ declare module 'two.js' {
       pathOrTexture: any,
       x: number,
       y: number,
-      width: number,
-      height: number
+      width?: number,
+      height?: number,
+      mode?: 'fit' | 'fill' | 'crop' | 'tile' | 'stretch'
     ): Image;
     /**
      * @name Two#makeImageSequence
