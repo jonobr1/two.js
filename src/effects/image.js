@@ -252,12 +252,13 @@ export class Image extends Rectangle {
           }
 
           case Image.crop: {
-            // Allow developer to control everything
+            // Intentionally left blank to allow
+            // external developer to control
             break;
           }
 
           case Image.tile: {
-            // Repeat image from top left corner
+            // Repeat image and align it correctly
             effect.offset.x = (iw - rw) / 2;
             effect.offset.y = (ih - rh) / 2;
             effect.repeat = 'repeat';
