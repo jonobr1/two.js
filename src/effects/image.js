@@ -238,8 +238,7 @@ export class Image extends Rectangle {
           }
 
           case Image.tile: {
-            // Repeat image at original size
-            effect.scale = 1;
+            // Repeat image from top left corner
             effect.offset.x = (iw - rw) / 2;
             effect.offset.y = (ih - rh) / 2;
             effect.repeat = 'repeat';
