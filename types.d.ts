@@ -83,8 +83,8 @@ declare module 'two.js/src/utils/math' {
    * @function
    * @param {Path|Group} object - The object to calculate effective stroke width for
    * @param {Matrix} [worldMatrix] - The world transformation matrix. If not provided, will be calculated.
-   * @returns {Number} The effective stroke width adjusted for strokeUniform setting
-   * @description Calculate effective stroke width, compensating for world scale if strokeUniform is true
+   * @returns {Number} The effective stroke width adjusted for strokeAttenuation setting
+   * @description Calculate effective stroke width, compensating for world scale if strokeAttenuation is false
    */
   export function getEffectiveStrokeWidth(object: Path | Group, worldMatrix?: Matrix): number;
   import { Matrix } from 'two.js/src/matrix';
@@ -1612,11 +1612,11 @@ declare module 'two.js/src/group' {
      */
     mask: Shape | undefined;
     /**
-     * @name Two.Group#strokeUniform
-     * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations for all child shapes.
-     * @description When `strokeUniform` is `true`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level.
+     * @name Two.Group#strokeAttenuation
+     * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space for all child shapes.
+     * @description When `strokeAttenuation` is `false`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke widths scale normally with transformations.
      */
-    strokeUniform: boolean;
+    strokeAttenuation: boolean;
     /**
      * @name Two.Group#additions
      * @property {Shape[]}
@@ -2847,11 +2847,11 @@ declare module 'two.js/src/path' {
      */
     private _dashes;
     /**
-     * @name Two.Path#_strokeUniform
+     * @name Two.Path#_strokeAttenuation
      * @private
-     * @see {@link Two.Path#strokeUniform}
+     * @see {@link Two.Path#strokeAttenuation}
      */
-    private _strokeUniform;
+    private _strokeAttenuation;
     /**
      * @name Two.Path#closed
      * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point.
@@ -2952,11 +2952,11 @@ declare module 'two.js/src/path' {
       offset?: number;
     };
     /**
-     * @name Two.Path#strokeUniform
-     * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations.
-     * @description When `strokeUniform` is `true`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level.
+     * @name Two.Path#strokeAttenuation
+     * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+     * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
      */
-    strokeUniform: boolean;
+    strokeAttenuation: boolean;
     /**
      * @name Two.Path#copy
      * @function

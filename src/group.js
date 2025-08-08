@@ -196,11 +196,11 @@ export class Group extends Shape {
   _mask = null;
 
   /**
-   * @name Two.Group#_strokeUniform
+   * @name Two.Group#_strokeAttenuation
    * @private
-   * @see {@link Two.Group#strokeUniform}
+   * @see {@link Two.Group#strokeAttenuation}
    */
-  _strokeUniform = false;
+  _strokeAttenuation = true;
 
   constructor(children) {
     super();
@@ -1070,21 +1070,21 @@ const proto = {
   },
 
   /**
-   * @name Two.Group#strokeUniform
-   * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations for all child shapes.
-   * @description When `strokeUniform` is `true`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level.
+   * @name Two.Group#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space for all child shapes.
+   * @description When `strokeAttenuation` is `false`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke widths scale normally with transformations.
    */
-  strokeUniform: {
+  strokeAttenuation: {
     enumerable: true,
     get: function () {
-      return this._strokeUniform;
+      return this._strokeAttenuation;
     },
     set: function (v) {
-      this._strokeUniform = !!v;
+      this._strokeAttenuation = !!v;
       for (let i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        if (child.strokeUniform !== undefined) {
-          child.strokeUniform = v;
+        if (child.strokeAttenuation !== undefined) {
+          child.strokeAttenuation = v;
         }
       }
     },

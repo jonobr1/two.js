@@ -116,11 +116,11 @@ export class Path extends Shape {
   _flagMiter = true;
 
   /**
-   * @name Two.Path#_flagStrokeUniform
+   * @name Two.Path#_flagStrokeAttenuation
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Path#strokeUniform} needs updating.
+   * @property {Boolean} - Determines whether the {@link Two.Path#strokeAttenuation} needs updating.
    */
-  _flagStrokeUniform = true;
+  _flagStrokeAttenuation = true;
 
   /**
    * @name Two.Path#_flagMask
@@ -258,11 +258,11 @@ export class Path extends Shape {
   _dashes = null;
 
   /**
-   * @name Two.Path#_strokeUniform
+   * @name Two.Path#_strokeAttenuation
    * @private
-   * @see {@link Two.Path#strokeUniform}
+   * @see {@link Two.Path#strokeAttenuation}
    */
-  _strokeUniform = false;
+  _strokeAttenuation = true;
 
   constructor(vertices, closed, curved, manual) {
     super();
@@ -421,7 +421,7 @@ export class Path extends Shape {
     'beginning',
     'ending',
     'dashes',
-    'strokeUniform',
+    'strokeAttenuation',
   ];
 
   static Utils = {
@@ -1237,7 +1237,7 @@ export class Path extends Shape {
       this._flagJoin =
       this._flagMiter =
       this._flagClip =
-      this._flagStrokeUniform =
+      this._flagStrokeAttenuation =
         false;
 
     Shape.prototype.flagReset.call(this);
@@ -1525,18 +1525,18 @@ const proto = {
   },
 
   /**
-   * @name Two.Path#strokeUniform
-   * @property {Boolean} - When set to `true`, stroke width remains constant in screen space regardless of scale transformations.
-   * @description When `strokeUniform` is `true`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level.
+   * @name Two.Path#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
    */
-  strokeUniform: {
+  strokeAttenuation: {
     enumerable: true,
     get: function () {
-      return this._strokeUniform;
+      return this._strokeAttenuation;
     },
     set: function (v) {
-      this._strokeUniform = !!v;
-      this._flagStrokeUniform = true;
+      this._strokeAttenuation = !!v;
+      this._flagStrokeAttenuation = true;
       this._flagLinewidth = true;
     },
   },

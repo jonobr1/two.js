@@ -145,14 +145,14 @@ function toFixed(v) {
  * @function
  * @param {Two.Path|Two.Group} object - The object to calculate effective stroke width for
  * @param {Two.Matrix} [worldMatrix] - The world transformation matrix. If not provided, will be calculated.
- * @returns {Number} The effective stroke width adjusted for strokeUniform setting
- * @description Calculate effective stroke width, compensating for world scale if strokeUniform is true
+ * @returns {Number} The effective stroke width adjusted for strokeAttenuation setting
+ * @description Calculate effective stroke width, compensating for world scale if strokeAttenuation is false
  */
 function getEffectiveStrokeWidth(object, worldMatrix) {
   const linewidth = object._linewidth;
   
-  // If strokeUniform is false or not set, return original linewidth
-  if (!object.strokeUniform) {
+  // If strokeAttenuation is true (default), return original linewidth (scales with transforms)
+  if (object.strokeAttenuation) {
     return linewidth;
   }
   
