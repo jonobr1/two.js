@@ -3152,6 +3152,96 @@ declare module 'two.js/src/shapes/rectangle' {
   import { Path } from 'two.js/src/path';
   import { Vector } from 'two.js/src/vector';
 }
+declare module 'two.js/src/effects/image' {
+  /**
+   * @name Two.Image
+   * @class
+   * @extends Two.Rectangle
+   * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the image.
+   * @param {Number} [ox=0] - The initial `x` position of the Two.Image.
+   * @param {Number} [oy=0] - The initial `y` position of the Two.Image.
+   * @param {Number} [width=1] - The width to display the image at.
+   * @param {Number} [height=1] - The height to display the image at.
+   * @description A convenient package to display images scaled to fit specific dimensions. Unlike {@link Two.Sprite}, this class scales the image to the provided width and height rather than using the image's native dimensions. By default, images are scaled to 'fill' within the bounds while preserving aspect ratio.
+   */
+  export class Image extends Rectangle {
+    /**
+     * @name Two.Image.fill
+     * @property {String} - Scale image to fill the bounds while preserving aspect ratio.
+     */
+    static fill: 'fill';
+    /**
+     * @name Two.Image.fit
+     * @property {String} - Scale image to fit within bounds while preserving aspect ratio.
+     */
+    static fit: 'fit';
+    /**
+     * @name Two.Image.crop
+     * @property {String} - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+     */
+    static crop: 'crop';
+    /**
+     * @name Two.Image.tile
+     * @property {String} - Repeat image at original size to fill the bounds.
+     */
+    static tile: 'tile';
+    /**
+     * @name Two.Image.stretch
+     * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
+     */
+    static stretch: 'stretch';
+
+    constructor(
+      path?: string | Texture,
+      ox?: number,
+      oy?: number,
+      width?: number,
+      height?: number,
+      mode?: 'fill' | 'fit' | 'crop' | 'tile' | 'stretch'
+    );
+    /**
+     * @name Two.Image#_flagTexture
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Image#texture} needs updating.
+     */
+    private _flagTexture;
+    /**
+     * @name Two.Image#_flagMode
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Image#mode} needs updating.
+     */
+    private _flagMode;
+    /**
+     * @name Two.Image#_texture
+     * @private
+     * @see {@link Two.Image#texture}
+     */
+    private _texture;
+    /**
+     * @name Two.Image#_mode
+     * @private
+     * @see {@link Two.Image#mode}
+     */
+    private _mode;
+    texture: Texture;
+    /**
+     * @name Two.Image#mode
+     * @property {String} - The scaling mode for the image. Can be 'fill', 'fit', 'crop', 'tile', or 'stretch'. Defaults to 'fill'.
+     */
+    mode: 'fill' | 'fit' | 'crop' | 'tile' | 'stretch';
+    /**
+     * @name Two.Image#dispose
+     * @function
+     * @description Release the image's renderer resources and detach all events.
+     * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+     * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
+     * for potential re-attachment.
+     */
+    dispose(): Image;
+  }
+  import { Rectangle } from 'two.js/src/shapes/rectangle';
+  import { Texture } from 'two.js/src/effects/texture';
+}
 declare module 'two.js/src/effects/sprite' {
   /**
      * @name Two.Sprite
@@ -4720,6 +4810,7 @@ declare module 'two.js' {
     static Text: typeof Text;
     static Vector: typeof Vector;
     static Gradient: typeof Gradient;
+    static Image: typeof Image;
     static ImageSequence: typeof ImageSequence;
     static LinearGradient: typeof LinearGradient;
     static RadialGradient: typeof RadialGradient;
@@ -5188,6 +5279,26 @@ declare module 'two.js' {
       autostart?: boolean
     ): Sprite;
     /**
+     * @name Two#makeImage
+     * @function
+     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} [width]
+     * @param {Number} [height]
+     * @param {String} [mode="fill"]
+     * @returns {Two.Image}
+     * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
+     */
+    makeImage(
+      pathOrTexture: any,
+      x: number,
+      y: number,
+      width?: number,
+      height?: number,
+      mode?: 'fit' | 'fill' | 'crop' | 'tile' | 'stretch'
+    ): Image;
+    /**
      * @name Two#makeImageSequence
      * @function
      * @param {(String[]|Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
@@ -5295,6 +5406,7 @@ declare module 'two.js' {
   import { LinearGradient } from 'two.js/src/effects/linear-gradient';
   import { RadialGradient } from 'two.js/src/effects/radial-gradient';
   import { Sprite } from 'two.js/src/effects/sprite';
+  import { Image } from 'two.js/src/effects/image';
   import { ImageSequence } from 'two.js/src/effects/image-sequence';
   import { Texture } from 'two.js/src/effects/texture';
   import { Group } from 'two.js/src/group';

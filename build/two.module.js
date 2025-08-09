@@ -83,10 +83,10 @@ var CanvasPolyfill = {
     };
     return elem;
   },
-  polyfill: function(canvas3, Image) {
+  polyfill: function(canvas3, Image2) {
     CanvasPolyfill.shim(canvas3);
-    if (typeof Image !== "undefined") {
-      CanvasPolyfill.Image = Image;
+    if (typeof Image2 !== "undefined") {
+      CanvasPolyfill.Image = Image2;
     }
     CanvasPolyfill.isHeadless = true;
     return canvas3;
@@ -782,7 +782,7 @@ var Constants = {
     canvas: "CanvasRenderer"
   },
   Version: "v0.8.20",
-  PublishDate: "2025-08-07T03:41:10.194Z",
+  PublishDate: "2025-08-08T23:50:19.761Z",
   Identifier: "two-",
   Resolution: 12,
   AutoCalculateImportedMatrices: true,
@@ -7945,6 +7945,162 @@ function xhr(path, callback) {
   return xhr2;
 }
 
+// src/effects/image.js
+var _Image = class extends Rectangle {
+  constructor(path, ox, oy, width, height, mode) {
+    super(ox, oy, width || 1, height || 1);
+    __publicField(this, "_flagTexture", false);
+    __publicField(this, "_flagMode", false);
+    __publicField(this, "_texture", null);
+    __publicField(this, "_mode", "fill");
+    for (let prop in proto23) {
+      Object.defineProperty(this, prop, proto23[prop]);
+    }
+    this.noStroke();
+    this.noFill();
+    if (path instanceof Texture) {
+      this.texture = path;
+    } else if (typeof path === "string") {
+      this.texture = new Texture(path);
+    }
+    if (typeof mode === "string") {
+      this.mode = mode;
+    }
+    this._update();
+  }
+  static fromObject(obj) {
+    const image = new _Image().copy(obj);
+    if ("id" in obj) {
+      image.id = obj.id;
+    }
+    return image;
+  }
+  copy(image) {
+    super.copy.call(this, image);
+    for (let i = 0; i < _Image.Properties.length; i++) {
+      const k = _Image.Properties[i];
+      if (k in image) {
+        this[k] = image[k];
+      }
+    }
+    return this;
+  }
+  clone(parent) {
+    const clone = new _Image(
+      this.texture,
+      this.translation.x,
+      this.translation.y,
+      this.width,
+      this.height
+    );
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  toObject() {
+    const object = super.toObject.call(this);
+    object.texture = this.texture.toObject();
+    object.mode = this.mode;
+    return object;
+  }
+  dispose() {
+    super.dispose();
+    if (this._texture && typeof this._texture.dispose === "function") {
+      this._texture.dispose();
+    } else if (this._texture && typeof this._texture.unbind === "function") {
+      this._texture.unbind();
+    }
+    return this;
+  }
+  _update() {
+    const effect = this._texture;
+    if (effect) {
+      if (this._flagTexture) {
+        this.fill = effect;
+      }
+      if (effect.loaded) {
+        const iw = effect.image.width;
+        const ih = effect.image.height;
+        const rw = this.width;
+        const rh = this.height;
+        const scaleX = rw / iw;
+        const scaleY = rh / ih;
+        switch (this._mode) {
+          case _Image.fill: {
+            const scale = Math.max(scaleX, scaleY);
+            effect.scale = scale;
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "repeat";
+            break;
+          }
+          case _Image.fit: {
+            const scale = Math.min(scaleX, scaleY);
+            effect.scale = scale;
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "no-repeat";
+            break;
+          }
+          case _Image.crop: {
+            break;
+          }
+          case _Image.tile: {
+            effect.offset.x = (iw - rw) / 2;
+            effect.offset.y = (ih - rh) / 2;
+            effect.repeat = "repeat";
+            break;
+          }
+          case _Image.stretch:
+          default: {
+            effect.scale = new Vector(scaleX, scaleY);
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "repeat";
+          }
+        }
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  flagReset() {
+    super.flagReset.call(this);
+    this._flagTexture = this._flagMode = false;
+    return this;
+  }
+};
+var Image = _Image;
+__publicField(Image, "fill", "fill");
+__publicField(Image, "fit", "fit");
+__publicField(Image, "crop", "crop");
+__publicField(Image, "tile", "tile");
+__publicField(Image, "stretch", "stretch");
+__publicField(Image, "Properties", ["texture", "mode"]);
+var proto23 = {
+  texture: {
+    enumerable: true,
+    get: function() {
+      return this._texture;
+    },
+    set: function(v) {
+      this._texture = v;
+      this._flagTexture = true;
+    }
+  },
+  mode: {
+    enumerable: true,
+    get: function() {
+      return this._mode;
+    },
+    set: function(v) {
+      this._mode = v;
+      this._flagMode = true;
+    }
+  }
+};
+
 // src/effects/image-sequence.js
 var _ImageSequence = class extends Rectangle {
   constructor(paths, ox, oy, frameRate) {
@@ -7963,8 +8119,8 @@ var _ImageSequence = class extends Rectangle {
     __publicField(this, "_textures", null);
     __publicField(this, "_frameRate", 0);
     __publicField(this, "_origin", null);
-    for (let prop in proto23) {
-      Object.defineProperty(this, prop, proto23[prop]);
+    for (let prop in proto24) {
+      Object.defineProperty(this, prop, proto24[prop]);
     }
     this._renderer.flagTextures = FlagTextures.bind(this);
     this._renderer.bindTextures = BindTextures.bind(this);
@@ -8162,7 +8318,7 @@ __publicField(ImageSequence, "Properties", [
   "loop"
 ]);
 __publicField(ImageSequence, "DefaultFrameRate", 30);
-var proto23 = {
+var proto24 = {
   frameRate: {
     enumerable: true,
     get: function() {
@@ -9914,6 +10070,11 @@ var svg = {
           } else {
             changed.width *= this._scale;
             changed.height *= this._scale;
+          }
+          if (/no-repeat/i.test(this._repeat)) {
+            styles.preserveAspectRatio = "xMidYMid";
+          } else {
+            styles.preserveAspectRatio = "none";
           }
           styles.width = changed.width;
           styles.height = changed.height;
@@ -11824,6 +11985,11 @@ var _Two = class {
     this.add(sprite);
     return sprite;
   }
+  makeImage(pathOrTexture, x, y, width, height, mode) {
+    const image = new Image(pathOrTexture, x, y, width, height, mode);
+    this.add(image);
+    return image;
+  }
   makeImageSequence(pathsOrTextures, x, y, frameRate, autostart) {
     const imageSequence = new ImageSequence(pathsOrTextures, x, y, frameRate);
     if (autostart) {
@@ -11906,6 +12072,7 @@ __publicField(Two, "Shape", Shape);
 __publicField(Two, "Text", Text);
 __publicField(Two, "Vector", Vector);
 __publicField(Two, "Gradient", Gradient);
+__publicField(Two, "Image", Image);
 __publicField(Two, "ImageSequence", ImageSequence);
 __publicField(Two, "LinearGradient", LinearGradient);
 __publicField(Two, "RadialGradient", RadialGradient);
