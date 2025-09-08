@@ -92,7 +92,9 @@ export class Element extends Events {
     if (element.renderer && typeof element.renderer.type === 'string') {
       this.renderer.type = element.renderer.type;
     }
-    this.className = element.className || '';
+    if (typeof element.className === 'string') {
+      this.className = element.className;
+    }
     return this;
   }
 
