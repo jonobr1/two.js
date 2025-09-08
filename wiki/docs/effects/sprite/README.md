@@ -699,3 +699,60 @@ Return a JSON compatible plain object that represents the path.
 </div>
 
 
+
+<div class="instance function ">
+
+## dispose
+
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Sprite.</span><span class="shortname">dispose</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Sprite
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Release the sprite's renderer resources and detach all events.
+This method stops any running animation, clears animation callbacks, disposes
+the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+cleanup from the Rectangle/Path hierarchy while preserving the renderer type
+for potential re-attachment.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L365">
+    sprite.js:365
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+

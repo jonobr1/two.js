@@ -650,3 +650,60 @@ Return a JSON compatible plain object that represents the path.
 </div>
 
 
+
+<div class="instance function ">
+
+## dispose
+
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.ImageSequence.</span><span class="shortname">dispose</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.ImageSequence
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Release the image sequence's renderer resources and detach all events.
+This method stops any running animation, clears animation callbacks, unbinds
+textures collection events, and disposes individual textures (calling dispose()
+for thorough cleanup) while preserving the renderer type for potential
+re-attachment to a new renderer.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L328">
+    image-sequence.js:328
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+

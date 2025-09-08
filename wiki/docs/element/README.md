@@ -367,3 +367,49 @@ Called internally by Two.js's renderer to reset all flags. Ensures that only pro
 </div>
 
 
+
+<div class="instance function ">
+
+## dispose
+
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Element.</span><span class="shortname">dispose</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Release the element's renderer object and detach any events.
+This cleans up renderer-specific resources and unbinds all event listeners.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/element.js#L109">
+    element.js:109
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
