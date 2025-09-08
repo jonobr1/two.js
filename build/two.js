@@ -766,7 +766,7 @@ var Two = (() => {
       canvas: "CanvasRenderer"
     },
     Version: "v0.8.20",
-    PublishDate: "2025-09-08T17:10:44.915Z",
+    PublishDate: "2025-09-08T17:21:43.659Z",
     Identifier: "two-",
     Resolution: 12,
     AutoCalculateImportedMatrices: true,
@@ -1437,7 +1437,9 @@ var Two = (() => {
       if (element.renderer && typeof element.renderer.type === "string") {
         this.renderer.type = element.renderer.type;
       }
-      this.className = element.className || "";
+      if (typeof element.className === "string") {
+        this.className = element.className;
+      }
       return this;
     }
     toObject() {
