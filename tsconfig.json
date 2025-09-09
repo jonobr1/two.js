@@ -6,6 +6,7 @@
     "emitDeclarationOnly": true,
     "lib": ["es6", "dom"],
     "module": "commonjs",
-    "baseUrl": "./src/"
+    "baseUrl": "./src/",
+    "types": []
   }
 }

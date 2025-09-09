@@ -57,6 +57,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/minimatch": "^6.0.0",
     "@vuepress/plugin-google-analytics": "^1.8.2",
     "@vuepress/plugin-nprogress": "^1.5.4",
     "babel-eslint": "^10.1.0",
