@@ -7,7 +7,7 @@ used before a patch is released.
 
 You may submit the report in the following ways:
 
-- Send an email to inquiries@jono.fyi.
+- Send an email to inquiries+two.js@jono.fyi.
 
 Please provide the following information in your report:
 
