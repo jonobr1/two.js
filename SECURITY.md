@@ -13,11 +13,13 @@ You may submit the report in the following ways:
 
 Please provide the following information in your report:
 
-- The version(s) where the issue is identified.
-- Any special configuration required to reproduce the issue.
-- Step-by-step instructions to reproduce the issue.
-- Impact of the issue, including how an attacker might exploit the issue.
-- Your recommended remediation if any.
+- The type of issue (e.g., buffer overflow, SQL injection, or cross-site scripting)
+- Full paths of source file(s) related to the manifestation of the issue
+- The location of the affected source code (tag/branch/commit or direct URL)
+- Any special configuration required to reproduce the issue
+- Step-by-step instructions to reproduce the issue
+- Proof-of-concept or exploit code (if possible)
+- Impact of the issue, including how an attacker might exploit the issue
 
 This project is maintained by volunteers on a reasonable-effort basis. As such,
 we ask that you give us 90 days to work on a fix before public exposure.
