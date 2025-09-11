@@ -21,10 +21,6 @@ privately. **Do not disclose it as a public issue.** This gives us time to work 
 
 This project is maintained by volunteers on a reasonable-effort basis. As such, we ask that you give us 90 days to work on a fix before public exposure.
 
-<br />
-
 ---
-
-<br />
 
 _Two.js conforms to this [Incident Response Plan](https://two.js.org/incident-response-plan) in moments of security risks._
