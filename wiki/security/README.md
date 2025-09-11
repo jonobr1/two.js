@@ -1,3 +1,9 @@
+---
+pageClass: fine-print
+title: Two.js Security Policy
+lang: en-US
+---
+
 # Security Policy
 
 If you have discovered a security vulnerability in this project, please report it
