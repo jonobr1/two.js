@@ -489,8 +489,6 @@ QUnit.test('Two.Matrix', function (assert) {
 
   result = [46, 118, 190];
 
-  check = true;
-
   assert.deepEqual(
     vector,
     result,
