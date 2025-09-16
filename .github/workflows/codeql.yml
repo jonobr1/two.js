@@ -23,16 +23,19 @@ jobs:
         language: [ javascript ]
 
     steps:
+      # checkout@v5
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: jonobr1/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
+      # setup-node@v5
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: jonobr1/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: '20' # Use latest LTS
 
+      # cache@v4
       - name: Cache node modules
-        uses: actions/cache@v4
+        uses: jonobr1/cache@0400d5f644dc74513175e3cd8d07132dd4860809
         with:
           path: |
             node_modules
@@ -41,16 +44,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # codeql-action/init@v3
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: jonobr1/codeql-action/init@192325c86100d080feab897ff886c34abd4c83a3
         with:
           languages: ${{ matrix.language }}
           queries: security-and-quality
 
+      # codeql-action/autobuild@v3
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: jonobr1/codeql-action/autobuild@192325c86100d080feab897ff886c34abd4c83a3
 
+      # codeql-action/analyze@v3
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: jonobr1/codeql-action/analyze@192325c86100d080feab897ff886c34abd4c83a3
         with:
           category: "/language:${{ matrix.language }}"
