@@ -1056,12 +1056,6 @@ export class Path extends Shape {
         this._lengths[i] = getCurveLength(a, b, limit);
         sum += this._lengths[i];
 
-        if (i >= last && closed) {
-          b = this.vertices[(i + 1) % length];
-
-          this._lengths[i + 1] = getCurveLength(a, b, limit);
-          sum += this._lengths[i + 1];
-        }
 
         b = a;
       },
