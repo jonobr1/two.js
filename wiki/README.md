@@ -218,3 +218,14 @@ Published under the [MIT License](https://github.com/jonobr1/two.js/blob/dev/LIC
 </div>
 
 ---
+
+## Security & Safety
+
+- Handle untrusted SVGs carefully: Do not load or interpret SVGs from untrusted users without sanitizing. Malicious SVGs can embed external references and scripts. Use an SVG sanitizer and set appropriate `Content-Security-Policy`.
+- Images and external assets: Prefer same-origin or vetted hosts. Disable `allow-scripts` in any embedders/iframes and avoid inline event handlers.
+- CSP recommended defaults: Consider a CSP that restricts scripts to self and trusted CDNs, disallows inline/eval, and sets `object-src 'none'`.
+- Report a vulnerability: Open a confidential report via [GitHub Security Advisories](https://github.com/jonobr1/two.js/security/advisories/new) or email the maintainer if applicable. For general questions, use [GitHub Issues](https://github.com/jonobr1/two.js/issues/new?assignees=&labels=question&template=question.md&title=%5BQuestion%5D).
+
+::: tip Note
+Two.js does not collect user data. If you embed Two.js in a site that handles user content, apply your own input validation, rate limiting, and abuse reporting workflow.
+:::
