@@ -714,7 +714,7 @@ QUnit.test('Two.Collection', function (assert) {
 });
 
 QUnit.test('Two.Children', function (assert) {
-  assert.expect(3);
+  assert.expect(4);
 
   var group = new Two.Group();
   var shape = new Two.Shape();
@@ -745,10 +745,18 @@ QUnit.test('Two.Children', function (assert) {
     'Two.Children properly updates ids map when child id changes.'
   );
 
-  // Check to be able to add and remove masks freely without errors
-
-  group.mask = new Two.Rectangle(0, 0, 10, 10);
-  group.mask = null;
+  try {
+    // Check to be able to add and remove masks freely without errors
+    group.mask = new Two.Rectangle(0, 0, 10, 10);
+    group.mask = null;
+    assert.equal(
+      group.mask,
+      null,
+      'Two.Group properly assigns and unassigns masks.'
+    );
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 QUnit.test('Two.Shape', function (assert) {
