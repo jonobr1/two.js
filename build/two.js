@@ -1200,7 +1200,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2025-09-16T17:17:47.446Z",
+    PublishDate: "2025-09-16T17:20:53.777Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -4970,11 +4970,6 @@ var Two = (() => {
           }
           this._lengths[i] = getCurveLength2(a, b, limit);
           sum += this._lengths[i];
-          if (i >= last && closed2) {
-            b = this.vertices[(i + 1) % length];
-            this._lengths[i + 1] = getCurveLength2(a, b, limit);
-            sum += this._lengths[i + 1];
-          }
           b = a;
         },
         this
