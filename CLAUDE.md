@@ -83,10 +83,11 @@ The Two class provides factory methods for creating and adding objects to the sc
 - Tests located in `tests/` directory
 - Test suites in `tests/suite/` organized by functionality
 - HTML test runners: `tests/index.html`, `tests/noWebGL.html`
-- TypeScript tests in `tests/typescript/`
+- TypeScript compilation tests in `tests/typescript/` with `index.ts` that imports and uses Two.js API
 
 ### Running Tests
-No automated test runner specified - tests are run manually via HTML files in browser.
+- Manual browser testing via HTML files: `tests/index.html` and `tests/noWebGL.html`
+- TypeScript compilation testing: `cd tests/typescript && npx tsc index.ts` to verify types work correctly
 
 ## Key Files to Understand
 
@@ -146,8 +147,8 @@ Designed for modern browsers with ES6+ support. Uses feature detection for rende
 - Open `tests/index.html` in browser for manual testing
 - Test new features across Canvas, SVG, and WebGL renderers
 - Check `tests/noWebGL.html` for fallback scenarios
-- TypeScript tests in `tests/typescript/` should compile without errors
-- No automated test runner - manual browser testing required
+- TypeScript compilation tests: Run `cd tests/typescript && npx tsc index.ts` to verify TypeScript definitions work correctly
+- Manual browser testing required - no automated test runner
 
 ## File Organization Rules
 
@@ -174,7 +175,6 @@ Designed for modern browsers with ES6+ support. Uses feature detection for rende
 - Browser: UMD build for direct script inclusion
 
 ### Nota Bene
-- There aren't any linting commands
-- All the tests run in the browser
-- There are no TypeScript tests
-- Let the developer check these manually instead of trying to run commands
+- All visual tests run in the browser via HTML files
+- TypeScript tests verify that the type definitions work correctly by compiling sample code – this is work in progress
+- Manual testing approach - no automated test runners or CI integration
