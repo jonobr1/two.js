@@ -4,6 +4,18 @@ title: Two.js Security Policy
 lang: en-US
 ---
 
+# Notes on Safety
+
+When using Two.js or any other client-side rendering library we recommend considering:
+
+- Handle untrusted SVGs carefully: Do not load or interpret SVGs from untrusted users without sanitizing. Malicious SVGs can embed external references and scripts. Use an SVG sanitizer and set appropriate `Content-Security-Policy`.
+- Images and external assets: Prefer same-origin or vetted hosts. Disable `allow-scripts` in any embedders/iframes and avoid inline event handlers.
+- CSP recommended defaults: Consider a CSP that restricts scripts to self and trusted CDNs, disallows inline/eval, and sets `object-src 'none'`.
+
+::: tip Note
+The Two.js library does not collect user data. If you embed Two.js in a site that handles user content, apply your own input validation, rate limiting, and abuse reporting workflow.
+:::
+
 # Security Policy
 
 If you have discovered a security vulnerability in this project, please report it
