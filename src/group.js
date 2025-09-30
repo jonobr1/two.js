@@ -15,8 +15,8 @@ import { RoundedRectangle } from './shapes/rounded-rectangle.js';
 import { Star } from './shapes/star.js';
 import { Text } from './text.js';
 import { Element } from './element.js';
-import { ImageSequence } from 'effects/image-sequence.js';
-import { Sprite } from 'effects/sprite.js';
+import { ImageSequence } from './effects/image-sequence.js';
+import { Sprite } from './effects/sprite.js';
 
 // Constants
 
