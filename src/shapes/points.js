@@ -165,6 +165,10 @@ export class Points extends Shape {
     this.dashes.offset = 0;
   }
 
+  /**
+   * @name Two.Points.Properties
+   * @property {String[]} - A list of properties that are on every {@link Two.Points}.
+   */
   static Properties = [
     'fill',
     'stroke',
@@ -178,6 +182,14 @@ export class Points extends Shape {
     'dashes',
   ];
 
+  /**
+   * @name Two.Points.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Points} to create a new instance
+   * @returns {Two.Points}
+   * @description Create a new {@link Two.Points} from an object notation of a {@link Two.Points}.
+   * @nota-bene Works in conjunction with {@link Two.Points#toObject}
+   */
   static fromObject(obj) {
     const fill =
       typeof obj.fill === 'string' ? obj.fill : getEffectFromObject(obj.fill);
@@ -295,14 +307,14 @@ export class Points extends Shape {
    * @returns {Two.Points}
    * @description Release the points' renderer resources and detach all events.
    * This method cleans up vertices collection events, individual vertex events,
-   * and disposes fill/stroke effects (calling dispose() on Gradients and 
+   * and disposes fill/stroke effects (calling dispose() on Gradients and
    * Textures for thorough cleanup) while preserving the renderer type for
    * potential re-attachment to a new renderer.
    */
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
-    
+
     // Unbind vertices collection events
     if (this.vertices && typeof this.vertices.unbind === 'function') {
       try {
@@ -311,7 +323,7 @@ export class Points extends Shape {
         // Ignore unbind errors for incomplete Collection objects
       }
     }
-    
+
     // Unbind individual vertex events
     if (this.vertices) {
       for (let i = 0; i < this.vertices.length; i++) {
@@ -321,21 +333,33 @@ export class Points extends Shape {
         }
       }
     }
-    
+
     // Dispose fill effect (more thorough than unbind)
     if (typeof this.fill === 'object' && this.fill && 'dispose' in this.fill) {
       this.fill.dispose();
-    } else if (typeof this.fill === 'object' && this.fill && 'unbind' in this.fill) {
+    } else if (
+      typeof this.fill === 'object' &&
+      this.fill &&
+      'unbind' in this.fill
+    ) {
       this.fill.unbind();
     }
-    
+
     // Dispose stroke effect (more thorough than unbind)
-    if (typeof this.stroke === 'object' && this.stroke && 'dispose' in this.stroke) {
+    if (
+      typeof this.stroke === 'object' &&
+      this.stroke &&
+      'dispose' in this.stroke
+    ) {
       this.stroke.dispose();
-    } else if (typeof this.stroke === 'object' && this.stroke && 'unbind' in this.stroke) {
+    } else if (
+      typeof this.stroke === 'object' &&
+      this.stroke &&
+      'unbind' in this.stroke
+    ) {
       this.stroke.unbind();
     }
-    
+
     return this;
   }
 

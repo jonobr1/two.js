@@ -123,6 +123,8 @@ export class ImageSequence extends Rectangle {
   constructor(paths, ox, oy, frameRate) {
     super(ox, oy, 0, 0);
 
+    this._renderer.type = 'image-sequence';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -314,6 +316,7 @@ export class ImageSequence extends Rectangle {
    */
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = 'image-sequence';
     object.textures = this.textures.map(function (texture) {
       return texture.toObject();
     });
@@ -338,15 +341,15 @@ export class ImageSequence extends Rectangle {
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
-    
+
     // Stop animation if playing
     if (this._playing) {
       this._playing = false;
     }
-    
+
     // Clear animation callbacks
     this._onLastFrame = null;
-    
+
     // Unbind textures collection events
     if (this.textures && typeof this.textures.unbind === 'function') {
       try {
@@ -355,7 +358,7 @@ export class ImageSequence extends Rectangle {
         // Ignore unbind errors for incomplete Collection objects
       }
     }
-    
+
     // Dispose individual textures (more thorough than unbind)
     if (this.textures) {
       for (let i = 0; i < this.textures.length; i++) {
@@ -367,7 +370,7 @@ export class ImageSequence extends Rectangle {
         }
       }
     }
-    
+
     return this;
   }
 

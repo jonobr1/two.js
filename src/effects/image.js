@@ -47,6 +47,8 @@ export class Image extends Rectangle {
   constructor(path, ox, oy, width, height, mode) {
     super(ox, oy, width || 1, height || 1);
 
+    this._renderer.type = 'image';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -72,34 +74,21 @@ export class Image extends Rectangle {
   }
 
   /**
-   * @name Two.Image.fill
-   * @property {String} - Scale image to fill the bounds while preserving aspect ratio.
+   * @name Two.Image.Modes
+   * @property {Object} mode - Different mode types to render an image inspired by Figma.
+   * @property {String} mode.fill - Scale image to fill the bounds while preserving aspect ratio.
+   * @property {String} mode.fit - Scale image to fit within bounds while preserving aspect ratio.
+   * @property {String} mode.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+   * @property {String} mode.tile - Repeat image at original size to fill the bounds.
+   * @property {String} mode.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
    */
-  static fill = 'fill';
-
-  /**
-   * @name Two.Image.fit
-   * @property {String} - Scale image to fit within bounds while preserving aspect ratio.
-   */
-  static fit = 'fit';
-
-  /**
-   * @name Two.Image.crop
-   * @property {String} - Scale image to fill bounds while preserving aspect ratio, cropping excess.
-   */
-  static crop = 'crop';
-
-  /**
-   * @name Two.Image.tile
-   * @property {String} - Repeat image at original size to fill the bounds.
-   */
-  static tile = 'tile';
-
-  /**
-   * @name Two.Image.stretch
-   * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
-   */
-  static stretch = 'stretch';
+  static Modes = {
+    fill: 'fill',
+    fit: 'fit',
+    crop: 'crop',
+    tile: 'tile',
+    stretch: 'stretch',
+  };
 
   /**
    * @name Two.Image.Properties
@@ -175,6 +164,7 @@ export class Image extends Rectangle {
    */
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = 'image';
     object.texture = this.texture.toObject();
     object.mode = this.mode;
     return object;
@@ -231,7 +221,7 @@ export class Image extends Rectangle {
 
         // Apply scaling based on mode
         switch (this._mode) {
-          case Image.fill: {
+          case Image.Modes.fill: {
             // Fill within bounds while preserving aspect ratio
             const scale = Math.max(scaleX, scaleY);
             effect.scale = scale;
@@ -241,7 +231,7 @@ export class Image extends Rectangle {
             break;
           }
 
-          case Image.fit: {
+          case Image.Modes.fit: {
             // Fit within bounds while preserving aspect ratio
             const scale = Math.min(scaleX, scaleY);
             effect.scale = scale; // TODO: For SVG this works `new Vector(scaleX, scaleY);`
@@ -251,13 +241,13 @@ export class Image extends Rectangle {
             break;
           }
 
-          case Image.crop: {
+          case Image.Modes.crop: {
             // Intentionally left blank to allow
             // external developer to control
             break;
           }
 
-          case Image.tile: {
+          case Image.Modes.tile: {
             // Repeat image and align it correctly
             effect.offset.x = (iw - rw) / 2;
             effect.offset.y = (ih - rh) / 2;
@@ -265,7 +255,7 @@ export class Image extends Rectangle {
             break;
           }
 
-          case Image.stretch:
+          case Image.Modes.stretch:
           default: {
             // Stretch the image texture to whatever the dimensions of the rect are
             effect.scale = new Vector(scaleX, scaleY);
