@@ -89,8 +89,12 @@ export class Element extends Events {
   copy(element) {
     // Explicitly do not copy the id
     // of an object to keep uniqueness
-    this.renderer.type = element.renderer.type;
-    this.className = element.className;
+    if (element.renderer && typeof element.renderer.type === 'string') {
+      this.renderer.type = element.renderer.type;
+    }
+    if (typeof element.className === 'string') {
+      this.className = element.className;
+    }
     return this;
   }
 
@@ -111,15 +115,15 @@ export class Element extends Events {
   dispose() {
     // Preserve the renderer type for potential re-attachment
     const rendererType = this._renderer.type;
-    
+
     // Clear renderer object but preserve type
     this._renderer = { type: rendererType };
-    
+
     // Unbind all events
     if (typeof this.unbind === 'function') {
       this.unbind();
     }
-    
+
     return this;
   }
 }

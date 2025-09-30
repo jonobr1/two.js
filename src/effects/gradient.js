@@ -79,7 +79,7 @@ export class Gradient extends Element {
     if (stops && stops.length > 0) {
       stops = stops.map((o) => (o instanceof Stop ? o : new Stop().copy(o)));
     }
-    const gradient = new Gradient().copy(obj);
+    const gradient = new Gradient(stops).copy(obj);
 
     if ('id' in obj) {
       gradient.id = obj.id;

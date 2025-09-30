@@ -11,8 +11,12 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## September 8, 2025 v0.8.20
 
+<h3 class="visible">Sep 8, 2025</h3><version-link v="v0.8.20" />
+
+- Fixed `Two.Element.copy` to fail gracefully
+- Added `Two.Image` as a new shape that inherits `Two.Rectangle`
 - Expand `Two.RoundedRectangle` constructor to accept `Two.Vector` as the radius
 - Added `Two.Element.dispose`, `Two.Path.dispose`, `Two.Group.dispose`, `Two.Text.dispose`, `Two.Points.dispose`, `Two.ImageSequence.dispose`, `Two.Sprite.dispose`
 - Improved `Two.release` to account for renderer specific deallocations

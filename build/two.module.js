@@ -90,10 +90,10 @@ var CanvasPolyfill = {
    * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
    * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
    */
-  polyfill: function(canvas3, Image) {
+  polyfill: function(canvas3, Image3) {
     CanvasPolyfill.shim(canvas3);
-    if (typeof Image !== "undefined") {
-      CanvasPolyfill.Image = Image;
+    if (typeof Image3 !== "undefined") {
+      CanvasPolyfill.Image = Image3;
     }
     CanvasPolyfill.isHeadless = true;
     return canvas3;
@@ -123,7 +123,6 @@ __export(math_exports, {
   TWO_PI: () => TWO_PI,
   decomposeMatrix: () => decomposeMatrix,
   getComputedMatrix: () => getComputedMatrix,
-  getEffectiveStrokeWidth: () => getEffectiveStrokeWidth,
   getPoT: () => getPoT,
   lerp: () => lerp,
   mod: () => mod,
@@ -215,25 +214,6 @@ var NumArray = root.Float32Array || Array;
 var floor = Math.floor;
 function toFixed(v) {
   return floor(v * 1e6) / 1e6;
-}
-function getEffectiveStrokeWidth(object, worldMatrix) {
-  const linewidth = object._linewidth;
-  if (object.strokeAttenuation) {
-    return linewidth;
-  }
-  if (!worldMatrix) {
-    worldMatrix = object.worldMatrix || getComputedMatrix(object);
-  }
-  const decomposed = decomposeMatrix(
-    worldMatrix.elements[0],
-    worldMatrix.elements[3],
-    worldMatrix.elements[1],
-    worldMatrix.elements[4],
-    worldMatrix.elements[2],
-    worldMatrix.elements[5]
-  );
-  const scale = Math.max(Math.abs(decomposed.scaleX), Math.abs(decomposed.scaleY));
-  return scale > 0 ? linewidth / scale : linewidth;
 }
 
 // src/utils/path-commands.js
@@ -1223,12 +1203,12 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: "v0.8.20",
+  Version: "v0.8.21",
   /**
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2025-09-30T22:28:33.259Z",
+  PublishDate: "2025-09-30T22:51:48.793Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1274,94 +1254,74 @@ var Curve = {
   // As values are symmetric, only store half of them and adapt algorithm
   // to factor in symmetry.
   abscissas: [
-    [0.5773502691896257],
-    [0, 0.7745966692414834],
-    [0.33998104358485626, 0.8611363115940526],
-    [0, 0.5384693101056831, 0.906179845938664],
+    [0.5773502691896],
+    [0, 0.7745966692415],
+    [0.3399810435849, 0.8611363115941],
+    [0, 0.5384693101057, 0.9061798459387],
+    [0.2386191860832, 0.6612093864663, 0.9324695142032],
+    [0, 0.4058451513774, 0.7415311855994, 0.9491079123428],
+    [0.1834346424956, 0.5255324099163, 0.7966664774136, 0.9602898564975],
+    [0, 0.3242534234038, 0.6133714327006, 0.8360311073266, 0.9681602395076],
     [
-      0.2386191860831969,
-      0.6612093864662645,
-      0.932469514203152
+      0.1488743389816,
+      0.4333953941292,
+      0.679409568299,
+      0.865063366689,
+      0.9739065285172
     ],
     [
       0,
-      0.4058451513773972,
-      0.7415311855993945,
-      0.9491079123427585
+      0.2695431559523,
+      0.5190961292068,
+      0.730152005574,
+      0.8870625997681,
+      0.9782286581461
     ],
     [
-      0.1834346424956498,
-      0.525532409916329,
-      0.7966664774136267,
-      0.9602898564975363
-    ],
-    [
-      0,
-      0.3242534234038089,
-      0.6133714327005904,
-      0.8360311073266358,
-      0.9681602395076261
-    ],
-    [
-      0.14887433898163122,
-      0.4333953941292472,
-      0.6794095682990244,
-      0.8650633666889845,
-      0.9739065285171717
+      0.1252334085115,
+      0.3678314989982,
+      0.5873179542866,
+      0.7699026741943,
+      0.9041172563705,
+      0.9815606342467
     ],
     [
       0,
-      0.26954315595234496,
-      0.5190961292068118,
-      0.7301520055740494,
-      0.8870625997680953,
-      0.978228658146057
+      0.2304583159551,
+      0.4484927510364,
+      0.6423493394403,
+      0.8015780907333,
+      0.917598399223,
+      0.9841830547186
     ],
     [
-      0.1252334085114689,
-      0.3678314989981802,
-      0.5873179542866175,
-      0.7699026741943047,
-      0.9041172563704749,
-      0.9815606342467192
-    ],
-    [
-      0,
-      0.2304583159551348,
-      0.44849275103644687,
-      0.6423493394403402,
-      0.8015780907333099,
-      0.9175983992229779,
-      0.9841830547185881
-    ],
-    [
-      0.10805494870734367,
-      0.31911236892788974,
-      0.5152486363581541,
-      0.6872929048116855,
-      0.827201315069765,
-      0.9284348836635735,
-      0.9862838086968123
+      0.1080549487073,
+      0.3191123689279,
+      0.5152486363582,
+      0.6872929048117,
+      0.8272013150698,
+      0.9284348836636,
+      0.9862838086968
     ],
     [
       0,
-      0.20119409399743451,
-      0.3941513470775634,
-      0.5709721726085388,
-      0.7244177313601701,
-      0.8482065834104272,
-      0.937273392400706,
-      0.9879925180204854
+      0.2011940939974,
+      0.3941513470776,
+      0.5709721726085,
+      0.7244177313602,
+      0.8482065834104,
+      0.9372733924007,
+      0.9879925180205
     ],
     [
-      0.09501250983763744,
-      0.2816035507792589,
-      0.45801677765722737,
-      0.6178762444026438,
-      0.755404408355003,
-      0.8656312023878318,
-      0.9445750230732326,
-      0.9894009349916499
+      0.0950125098376,
+      0.2816035507793,
+      0.4580167776572,
+      0.6178762444026,
+      0.755404408355,
+      0.8656312023878,
+      0.9445750230732,
+      0.9894009349916
     ]
   ],
   weights: [
@@ -2003,8 +1963,12 @@ var _Element = class _Element extends Events {
     return this;
   }
   copy(element) {
-    this.renderer.type = element.renderer.type;
-    this.className = element.className;
+    if (element.renderer && typeof element.renderer.type === "string") {
+      this.renderer.type = element.renderer.type;
+    }
+    if (typeof element.className === "string") {
+      this.className = element.className;
+    }
     return this;
   }
   toObject() {
@@ -2803,7 +2767,7 @@ var _Gradient = class _Gradient extends Element {
     if (stops && stops.length > 0) {
       stops = stops.map((o) => o instanceof Stop ? o : new Stop().copy(o));
     }
-    const gradient = new _Gradient().copy(obj);
+    const gradient = new _Gradient(stops).copy(obj);
     if ("id" in obj) {
       gradient.id = obj.id;
     }
@@ -4329,12 +4293,6 @@ var _Path = class _Path extends Shape {
      */
     __publicField(this, "_flagMiter", true);
     /**
-     * @name Two.Path#_flagStrokeAttenuation
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Path#strokeAttenuation} needs updating.
-     */
-    __publicField(this, "_flagStrokeAttenuation", true);
-    /**
      * @name Two.Path#_flagMask
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
@@ -4449,12 +4407,6 @@ var _Path = class _Path extends Shape {
      * @see {@link Two.Path#dashes}
      */
     __publicField(this, "_dashes", null);
-    /**
-     * @name Two.Path#_strokeAttenuation
-     * @private
-     * @see {@link Two.Path#strokeAttenuation}
-     */
-    __publicField(this, "_strokeAttenuation", true);
     for (let prop in proto10) {
       Object.defineProperty(this, prop, proto10[prop]);
     }
@@ -4509,13 +4461,15 @@ var _Path = class _Path extends Shape {
    */
   copy(path) {
     super.copy.call(this, path);
-    this.vertices = [];
-    for (let j = 0; j < path.vertices.length; j++) {
-      const v = path.vertices[j];
-      if (v instanceof Anchor) {
-        this.vertices.push(path.vertices[j].clone());
-      } else {
-        this.vertices.push(new Anchor().copy(v));
+    if (path.vertices) {
+      this.vertices = [];
+      for (let j = 0; j < path.vertices.length; j++) {
+        const v = path.vertices[j];
+        if (v instanceof Anchor) {
+          this.vertices.push(path.vertices[j].clone());
+        } else {
+          this.vertices.push(new Anchor().copy(v));
+        }
       }
     }
     for (let i = 0; i < _Path.Properties.length; i++) {
@@ -4588,7 +4542,7 @@ var _Path = class _Path extends Shape {
    * @returns {Two.Path}
    * @description Release the path's renderer resources and detach all events.
    * This method cleans up vertices collection events, individual vertex events,
-   * control point events, and disposes fill/stroke effects (calling dispose() 
+   * control point events, and disposes fill/stroke effects (calling dispose()
    * on Gradients and Textures for thorough cleanup) while preserving the
    * renderer type for potential re-attachment to a new renderer.
    */
@@ -4993,11 +4947,6 @@ var _Path = class _Path extends Shape {
         }
         this._lengths[i] = getCurveLength2(a, b, limit);
         sum += this._lengths[i];
-        if (i >= last && closed2) {
-          b = this.vertices[(i + 1) % length];
-          this._lengths[i + 1] = getCurveLength2(a, b, limit);
-          sum += this._lengths[i + 1];
-        }
         b = a;
       },
       this
@@ -5108,7 +5057,7 @@ var _Path = class _Path extends Shape {
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = this._flagStrokeAttenuation = false;
+    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = false;
     Shape.prototype.flagReset.call(this);
     return this;
   }
@@ -5131,8 +5080,7 @@ __publicField(_Path, "Properties", [
   "automatic",
   "beginning",
   "ending",
-  "dashes",
-  "strokeAttenuation"
+  "dashes"
 ]);
 __publicField(_Path, "Utils", {
   getCurveLength: getCurveLength2
@@ -5362,22 +5310,6 @@ var proto10 = {
       }
       this._dashes = v;
     }
-  },
-  /**
-   * @name Two.Path#strokeAttenuation
-   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
-   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
-   */
-  strokeAttenuation: {
-    enumerable: true,
-    get: function() {
-      return this._strokeAttenuation;
-    },
-    set: function(v) {
-      this._strokeAttenuation = !!v;
-      this._flagStrokeAttenuation = true;
-      this._flagLinewidth = true;
-    }
   }
 };
 function FlagVertices() {
@@ -5424,13 +5356,13 @@ var _Rectangle = class _Rectangle extends Path {
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Rectangle#width} needs updating.
      */
-    __publicField(this, "_flagWidth", 0);
+    __publicField(this, "_flagWidth", false);
     /**
      * @name Two.Rectangle#_flagHeight
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Rectangle#height} needs updating.
      */
-    __publicField(this, "_flagHeight", 0);
+    __publicField(this, "_flagHeight", false);
     /**
      * @name Two.Rectangle#_width
      * @private
@@ -5484,8 +5416,12 @@ var _Rectangle = class _Rectangle extends Path {
     super.copy.call(this, rectangle);
     for (let i = 0; i < _Rectangle.Properties.length; i++) {
       const k = _Rectangle.Properties[i];
-      if (k in rectangle && typeof rectangle[k] === "number") {
-        this[k] = rectangle[k];
+      if (k in rectangle) {
+        if (typeof rectangle[k] === "number") {
+          this[k] = rectangle[k];
+        } else if (this[k] instanceof Vector) {
+          this[k].copy(rectangle[k]);
+        }
       }
     }
     return this;
@@ -5546,7 +5482,11 @@ var _Rectangle = class _Rectangle extends Path {
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      if (clone[k] instanceof Vector) {
+        clone[k].copy(this[k]);
+      } else {
+        clone[k] = this[k];
+      }
     }
     if (parent) {
       parent.add(clone);
@@ -5572,7 +5512,7 @@ var _Rectangle = class _Rectangle extends Path {
  * @name Two.Rectangle.Properties
  * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
  */
-__publicField(_Rectangle, "Properties", ["width", "height"]);
+__publicField(_Rectangle, "Properties", ["width", "height", "origin"]);
 var Rectangle = _Rectangle;
 var proto11 = {
   width: {
@@ -5725,6 +5665,7 @@ var _Sprite = class _Sprite extends Rectangle {
      * @see {@link Two.Sprite#origin}
      */
     __publicField(this, "_origin", null);
+    this._renderer.type = "sprite";
     for (let prop in proto12) {
       Object.defineProperty(this, prop, proto12[prop]);
     }
@@ -5862,6 +5803,7 @@ var _Sprite = class _Sprite extends Rectangle {
    */
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = "sprite";
     object.texture = this.texture.toObject();
     object.columns = this.columns;
     object.rows = this.rows;
@@ -6855,7 +6797,6 @@ var _Points = class _Points extends Shape {
     __publicField(this, "_flagVisible", true);
     __publicField(this, "_flagSize", true);
     __publicField(this, "_flagSizeAttenuation", true);
-    __publicField(this, "_flagStrokeAttenuation", true);
     __publicField(this, "_length", 0);
     __publicField(this, "_fill", "#fff");
     __publicField(this, "_stroke", "#000");
@@ -6867,7 +6808,6 @@ var _Points = class _Points extends Shape {
     __publicField(this, "_beginning", 0);
     __publicField(this, "_ending", 1);
     __publicField(this, "_dashes", null);
-    __publicField(this, "_strokeAttenuation", true);
     /**
      * @name Two.Points#noFill
      * @function
@@ -6934,6 +6874,14 @@ var _Points = class _Points extends Shape {
     this.dashes = [];
     this.dashes.offset = 0;
   }
+  /**
+   * @name Two.Points.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Points} to create a new instance
+   * @returns {Two.Points}
+   * @description Create a new {@link Two.Points} from an object notation of a {@link Two.Points}.
+   * @nota-bene Works in conjunction with {@link Two.Points#toObject}
+   */
   static fromObject(obj) {
     const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
     const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
@@ -7132,6 +7080,10 @@ var _Points = class _Points extends Shape {
     return this;
   }
 };
+/**
+ * @name Two.Points.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Points}.
+ */
 __publicField(_Points, "Properties", [
   "fill",
   "stroke",
@@ -7142,8 +7094,7 @@ __publicField(_Points, "Properties", [
   "sizeAttenuation",
   "beginning",
   "ending",
-  "dashes",
-  "strokeAttenuation"
+  "dashes"
 ]);
 var Points = _Points;
 var proto16 = {
@@ -7291,22 +7242,6 @@ var proto16 = {
         v.offset = this.dashes && this._dashes.offset || 0;
       }
       this._dashes = v;
-    }
-  },
-  /**
-   * @name Two.Points#strokeAttenuation
-   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
-   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
-   */
-  strokeAttenuation: {
-    enumerable: true,
-    get: function() {
-      return this._strokeAttenuation;
-    },
-    set: function(v) {
-      this._strokeAttenuation = !!v;
-      this._flagStrokeAttenuation = true;
-      this._flagLinewidth = true;
     }
   }
 };
@@ -8168,9 +8103,9 @@ var _Text = class _Text extends Shape {
      */
     __publicField(this, "_flagVisible", true);
     /**
-     * @name Two.Text#_flagMask
+     * @name Two.Path#_flagMask
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Text#mask} needs updating.
+     * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
      */
     __publicField(this, "_flagMask", false);
     /**
@@ -8185,12 +8120,6 @@ var _Text = class _Text extends Shape {
      * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
      */
     __publicField(this, "_flagDirection", true);
-    /**
-     * @name Two.Text#_flagStrokeAttenuation
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Text#strokeAttenuation} needs updating.
-     */
-    __publicField(this, "_flagStrokeAttenuation", true);
     // Underlying Properties
     /**
      * @name Two.Text#value
@@ -8290,12 +8219,6 @@ var _Text = class _Text extends Shape {
      * @see {@link Two.Text#dashes}
      */
     __publicField(this, "_dashes", null);
-    /**
-     * @name Two.Text#_strokeAttenuation
-     * @private
-     * @see {@link Two.Text#strokeAttenuation}
-     */
-    __publicField(this, "_strokeAttenuation", true);
     for (let prop in proto20) {
       Object.defineProperty(this, prop, proto20[prop]);
     }
@@ -8433,7 +8356,7 @@ var _Text = class _Text extends Shape {
    * @function
    * @returns {Two.Text}
    * @description Release the text's renderer resources and detach all events.
-   * This method disposes fill and stroke effects (calling dispose() on
+   * This method disposes fill and stroke effects (calling dispose() on 
    * Gradients and Textures for thorough cleanup) while preserving the
    * renderer type for potential re-attachment to a new renderer.
    */
@@ -8563,8 +8486,7 @@ __publicField(_Text, "Properties", [
   "visible",
   "fill",
   "stroke",
-  "dashes",
-  "strokeAttenuation"
+  "dashes"
 ]);
 var Text = _Text;
 var proto20 = {
@@ -8764,22 +8686,6 @@ var proto20 = {
       }
       this._dashes = v;
     }
-  },
-  /**
-   * @name Two.Text#strokeAttenuation
-   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
-   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
-   */
-  strokeAttenuation: {
-    enumerable: true,
-    get: function() {
-      return this._strokeAttenuation;
-    },
-    set: function(v) {
-      this._strokeAttenuation = !!v;
-      this._flagStrokeAttenuation = true;
-      this._flagLinewidth = true;
-    }
   }
 };
 function FlagFill2() {
@@ -8787,6 +8693,464 @@ function FlagFill2() {
 }
 function FlagStroke2() {
   this._flagStroke = true;
+}
+
+// src/effects/image-sequence.js
+var _ImageSequence = class _ImageSequence extends Rectangle {
+  constructor(paths, ox, oy, frameRate) {
+    super(ox, oy, 0, 0);
+    /**
+     * @name Two.ImageSequence#_flagTextures
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#textures} need updating.
+     */
+    __publicField(this, "_flagTextures", false);
+    /**
+     * @name Two.ImageSequence#_flagFrameRate
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#frameRate} needs updating.
+     */
+    __publicField(this, "_flagFrameRate", false);
+    /**
+     * @name Two.ImageSequence#_flagIndex
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#index} needs updating.
+     */
+    __publicField(this, "_flagIndex", false);
+    // Private variables
+    /**
+     * @name Two.ImageSequence#_amount
+     * @private
+     * @property {Number} - Number of frames for a given {@link Two.ImageSequence}.
+     */
+    __publicField(this, "_amount", 1);
+    /**
+     * @name Two.ImageSequence#_duration
+     * @private
+     * @property {Number} - Number of milliseconds a {@link Two.ImageSequence}.
+     */
+    __publicField(this, "_duration", 0);
+    /**
+     * @name Two.ImageSequence#_index
+     * @private
+     * @property {Number} - The current frame the {@link Two.ImageSequence} is currently displaying.
+     */
+    __publicField(this, "_index", 0);
+    /**
+     * @name Two.ImageSequence#_startTime
+     * @private
+     * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.ImageSequence} started.
+     */
+    __publicField(this, "_startTime", 0);
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} is animating or not.
+     */
+    __publicField(this, "_playing", false);
+    /**
+     * @name Two.ImageSequence#_firstFrame
+     * @private
+     * @property {Number} - The frame the {@link Two.ImageSequence} should start with.
+     */
+    __publicField(this, "_firstFrame", 0);
+    /**
+     * @name Two.ImageSequence#_lastFrame
+     * @private
+     * @property {Number} - The frame the {@link Two.ImageSequence} should end with.
+     */
+    __publicField(this, "_lastFrame", 0);
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} should loop or not.
+     */
+    __publicField(this, "_loop", true);
+    // Exposed through getter-setter
+    /**
+     * @name Two.ImageSequence#_textures
+     * @private
+     * @see {@link Two.ImageSequence#textures}
+     */
+    __publicField(this, "_textures", null);
+    /**
+     * @name Two.ImageSequence#_frameRate
+     * @private
+     * @see {@link Two.ImageSequence#frameRate}
+     */
+    __publicField(this, "_frameRate", 0);
+    /**
+     * @name Two.ImageSequence#_origin
+     * @private
+     * @see {@link Two.ImageSequence#origin}
+     */
+    __publicField(this, "_origin", null);
+    this._renderer.type = "image-sequence";
+    for (let prop in proto21) {
+      Object.defineProperty(this, prop, proto21[prop]);
+    }
+    this._renderer.flagTextures = FlagTextures.bind(this);
+    this._renderer.bindTextures = BindTextures.bind(this);
+    this._renderer.unbindTextures = UnbindTextures.bind(this);
+    this.noStroke();
+    this.noFill();
+    if (Array.isArray(paths)) {
+      this.textures = paths.map(GenerateTexture.bind(this));
+    } else if (typeof paths === "string") {
+      this.textures = [GenerateTexture(paths)];
+    }
+    this.origin = new Vector();
+    this._update();
+    if (typeof frameRate === "number") {
+      this.frameRate = frameRate;
+    } else {
+      this.frameRate = _ImageSequence.DefaultFrameRate;
+    }
+    this.index = 0;
+  }
+  /**
+   * @name Two.ImageSequence.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.ImageSequence} to create a new instance
+   * @returns {Two.ImageSequence}
+   * @description Create a new {@link Two.ImageSequence} from an object notation of a {@link Two.ImageSequence}.
+   * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
+   */
+  static fromObject(obj) {
+    const sequence = new _ImageSequence().copy(obj);
+    if ("id" in obj) {
+      sequence.id = obj.id;
+    }
+    return sequence;
+  }
+  /**
+   * @name Two.ImageSequence#copy
+   * @function
+   * @param {Two.ImageSequence} imageSequence - The reference {@link Two.ImageSequence}
+   * @description Copy the properties of one {@link Two.ImageSequence} onto another.
+   */
+  copy(imageSequence) {
+    super.copy.call(this, imageSequence);
+    for (let i = 0; i < _ImageSequence.Properties.length; i++) {
+      const k = _ImageSequence.Properties[i];
+      if (k in imageSequence) {
+        this[k] = imageSequence[k];
+      }
+    }
+    return this;
+  }
+  /**
+   * @name Two.ImageSequence#play
+   * @function
+   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
+   * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
+   * @description Initiate animation playback of a {@link Two.ImageSequence}.
+   */
+  play(firstFrame, lastFrame, onLastFrame) {
+    this._playing = true;
+    this._firstFrame = 0;
+    this._lastFrame = this.amount - 1;
+    this._startTime = _.performance.now();
+    if (typeof firstFrame === "number") {
+      this._firstFrame = firstFrame;
+    }
+    if (typeof lastFrame === "number") {
+      this._lastFrame = lastFrame;
+    }
+    if (typeof onLastFrame === "function") {
+      this._onLastFrame = onLastFrame;
+    } else {
+      delete this._onLastFrame;
+    }
+    if (this._index !== this._firstFrame) {
+      this._startTime -= 1e3 * Math.abs(this._index - this._firstFrame) / this._frameRate;
+    }
+    return this;
+  }
+  /**
+   * @name Two.ImageSequence#pause
+   * @function
+   * @description Halt animation playback of a {@link Two.ImageSequence}.
+   */
+  pause() {
+    this._playing = false;
+    return this;
+  }
+  /**
+   * @name Two.ImageSequence#stop
+   * @function
+   * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
+   */
+  stop() {
+    this._playing = false;
+    this._index = this._firstFrame;
+    return this;
+  }
+  /**
+   * @name Two.ImageSequence#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.ImageSequence}
+   * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
+   */
+  clone(parent) {
+    const clone = new _ImageSequence(
+      this.textures,
+      this.translation.x,
+      this.translation.y,
+      this.frameRate
+    );
+    clone._loop = this._loop;
+    if (this._playing) {
+      clone.play();
+    }
+    if (parent) {
+      parent.add(clone);
+    }
+    return clone;
+  }
+  /**
+   * @name Two.ImageSequence#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
+  toObject() {
+    const object = super.toObject.call(this);
+    object.renderer.type = "image-sequence";
+    object.textures = this.textures.map(function(texture) {
+      return texture.toObject();
+    });
+    object.frameRate = this.frameRate;
+    object.index = this.index;
+    object.firstFrame = this.firstFrame;
+    object.lastFrame = this.lastFrame;
+    object.loop = this.loop;
+    return object;
+  }
+  /**
+   * @name Two.ImageSequence#dispose
+   * @function
+   * @returns {Two.ImageSequence}
+   * @description Release the image sequence's renderer resources and detach all events.
+   * This method stops any running animation, clears animation callbacks, unbinds
+   * textures collection events, and disposes individual textures (calling dispose()
+   * for thorough cleanup) while preserving the renderer type for potential
+   * re-attachment to a new renderer.
+   */
+  dispose() {
+    super.dispose();
+    if (this._playing) {
+      this._playing = false;
+    }
+    this._onLastFrame = null;
+    if (this.textures && typeof this.textures.unbind === "function") {
+      try {
+        this.textures.unbind();
+      } catch (e) {
+      }
+    }
+    if (this.textures) {
+      for (let i = 0; i < this.textures.length; i++) {
+        const texture = this.textures[i];
+        if (typeof texture.dispose === "function") {
+          texture.dispose();
+        } else if (typeof texture.unbind === "function") {
+          texture.unbind();
+        }
+      }
+    }
+    return this;
+  }
+  /**
+   * @name Two.ImageSequence#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
+  _update() {
+    const effect = this._textures;
+    let width, height, elapsed, amount, duration, texture;
+    let index, frames;
+    if (effect) {
+      if (this._flagTextures) {
+        this._amount = effect.length;
+      }
+      if (this._flagFrameRate) {
+        this._duration = 1e3 * this._amount / this._frameRate;
+      }
+      if (this._playing && this._frameRate > 0) {
+        amount = this._amount;
+        if (_.isNaN(this._lastFrame)) {
+          this._lastFrame = amount - 1;
+        }
+        elapsed = _.performance.now() - this._startTime;
+        frames = this._lastFrame + 1;
+        duration = 1e3 * (frames - this._firstFrame) / this._frameRate;
+        if (this._loop) {
+          elapsed = elapsed % duration;
+        } else {
+          elapsed = Math.min(elapsed, duration);
+        }
+        index = lerp(this._firstFrame, frames, elapsed / duration);
+        index = Math.floor(index);
+        if (index !== this._index) {
+          this._index = index;
+          texture = effect[this._index];
+          if (texture.loaded) {
+            width = texture.image.width;
+            height = texture.image.height;
+            if (this.width !== width) {
+              this.width = width;
+            }
+            if (this.height !== height) {
+              this.height = height;
+            }
+            this.fill = texture;
+            if (index >= this._lastFrame - 1 && this._onLastFrame) {
+              this._onLastFrame();
+            }
+          }
+        }
+      } else if (this._flagIndex || !(this.fill instanceof Texture)) {
+        texture = effect[this._index];
+        if (texture.loaded) {
+          width = texture.image.width;
+          height = texture.image.height;
+          if (this.width !== width) {
+            this.width = width;
+          }
+          if (this.height !== height) {
+            this.height = height;
+          }
+        }
+        this.fill = texture;
+      }
+    }
+    super._update.call(this);
+    return this;
+  }
+  /**
+   * @name Two.ImageSequence#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
+  flagReset() {
+    this._flagTextures = this._flagFrameRate = false;
+    super.flagReset.call(this);
+    return this;
+  }
+};
+/**
+ * @name Two.ImageSequence.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
+ */
+__publicField(_ImageSequence, "Properties", [
+  "textures",
+  "frameRate",
+  "index",
+  "firstFrame",
+  "lastFrame",
+  "loop"
+]);
+/**
+ * @name Two.ImageSequence.DefaultFrameRate
+ * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
+ */
+__publicField(_ImageSequence, "DefaultFrameRate", 30);
+var ImageSequence = _ImageSequence;
+var proto21 = {
+  frameRate: {
+    enumerable: true,
+    get: function() {
+      return this._frameRate;
+    },
+    set: function(v) {
+      this._frameRate = v;
+      this._flagFrameRate = true;
+    }
+  },
+  index: {
+    enumerable: true,
+    get: function() {
+      return this._index;
+    },
+    set: function(v) {
+      this._index = v;
+      this._flagIndex = true;
+    }
+  },
+  textures: {
+    enumerable: true,
+    get: function() {
+      return this._textures;
+    },
+    set: function(textures) {
+      const bindTextures = this._renderer.bindTextures;
+      const unbindTextures = this._renderer.unbindTextures;
+      if (this._textures) {
+        this._textures.unbind(Events.Types.insert, bindTextures).unbind(Events.Types.remove, unbindTextures);
+      }
+      this._textures = new Collection((textures || []).slice(0));
+      this._textures.bind(Events.Types.insert, bindTextures).bind(Events.Types.remove, unbindTextures);
+      bindTextures(this._textures);
+    }
+  },
+  firstFrame: {
+    enumerable: true,
+    get: function() {
+      return this._firstFrame;
+    },
+    set: function(v) {
+      this._firstFrame = v;
+    }
+  },
+  lastFrame: {
+    enumerable: true,
+    get: function() {
+      return this._lastFrame;
+    },
+    set: function(v) {
+      this._lastFrame = v;
+    }
+  },
+  loop: {
+    enumerable: true,
+    get: function() {
+      return this._loop;
+    },
+    set: function(v) {
+      this._loop = !!v;
+    }
+  }
+};
+function FlagTextures() {
+  this._flagTextures = true;
+}
+function BindTextures(items) {
+  let i = items.length;
+  while (i--) {
+    items[i].bind(Events.Types.change, this._renderer.flagTextures);
+  }
+  this._renderer.flagTextures();
+}
+function UnbindTextures(items) {
+  let i = items.length;
+  while (i--) {
+    items[i].unbind(Events.Types.change, this._renderer.flagTextures);
+  }
+  this._renderer.flagTextures();
+}
+function GenerateTexture(obj) {
+  if (obj instanceof Texture) {
+    return obj;
+  } else if (typeof obj === "string") {
+    return new Texture(obj);
+  }
 }
 
 // src/group.js
@@ -8935,14 +9299,8 @@ var _Group = class _Group extends Shape {
      * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
      */
     __publicField(this, "_mask", null);
-    /**
-     * @name Two.Group#_strokeAttenuation
-     * @private
-     * @see {@link Two.Group#strokeAttenuation}
-     */
-    __publicField(this, "_strokeAttenuation", true);
-    for (let prop in proto21) {
-      Object.defineProperty(this, prop, proto21[prop]);
+    for (let prop in proto22) {
+      Object.defineProperty(this, prop, proto22[prop]);
     }
     this._renderer.type = "group";
     this.additions = [];
@@ -9006,8 +9364,18 @@ var _Group = class _Group extends Shape {
             return ArcSegment.fromObject(child);
           case "circle":
             return Circle.fromObject(child);
+          case "element":
+            return Element.fromObject(child);
           case "ellipse":
             return Ellipse.fromObject(child);
+          case "group":
+            return _Group.fromObject(child);
+          case "image":
+            return Image.fromObject(child);
+          case "image-sequence":
+            return ImageSequence.fromObject(child);
+          case "path":
+            return Path.fromObject(child);
           case "points":
             return Points.fromObject(child);
           case "polygon":
@@ -9016,26 +9384,37 @@ var _Group = class _Group extends Shape {
             return Rectangle.fromObject(child);
           case "rounded-rectangle":
             return RoundedRectangle.fromObject(child);
-          case "star":
-            return Star.fromObject(child);
-          case "path":
-            return Path.fromObject(child);
-          case "text":
-            return Text.fromObject(child);
-          case "group":
-            return _Group.fromObject(child);
           case "shape":
             return Shape.fromObject(child);
-          case "element":
-            return Element.fromObject(child);
+          case "sprite":
+            return Sprite.fromObject(child);
+          case "star":
+            return Star.fromObject(child);
+          case "text":
+            return Text.fromObject(child);
         }
       }
       return child;
     }
   }
+  /**
+   * @name Two.Group#copy
+   * @function
+   * @param {Two.Group} [group] - The reference {@link Two.Group}
+   * @returns {Two.Group}
+   * @description Copy the properties of one {@link Two.Group} onto another.
+   */
   copy(group) {
     super.copy.call(this, group);
-    console.warn("Two.Group.copy is not supported yet.");
+    console.warn(
+      "Two.js: attempting to copy group. Two.Group.children copying not supported."
+    );
+    for (let i = 0; i < _Group.Properties.length; i++) {
+      const k = _Group.Properties[i];
+      if (k in group) {
+        this[k] = group[k];
+      }
+    }
     return this;
   }
   /**
@@ -9443,7 +9822,7 @@ __publicField(_Group, "Properties", [
   "automatic"
 ]);
 var Group = _Group;
-var proto21 = {
+var proto22 = {
   visible: {
     enumerable: true,
     get: function() {
@@ -9653,26 +10032,6 @@ var proto21 = {
         v.clip = true;
       }
     }
-  },
-  /**
-   * @name Two.Group#strokeAttenuation
-   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space for all child shapes.
-   * @description When `strokeAttenuation` is `false`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke widths scale normally with transformations.
-   */
-  strokeAttenuation: {
-    enumerable: true,
-    get: function() {
-      return this._strokeAttenuation;
-    },
-    set: function(v) {
-      this._strokeAttenuation = !!v;
-      for (let i = 0; i < this.children.length; i++) {
-        const child = this.children[i];
-        if (child.strokeAttenuation !== void 0) {
-          child.strokeAttenuation = v;
-        }
-      }
-    }
   }
 };
 function replaceParent(child, newParent) {
@@ -9734,8 +10093,8 @@ var Line = class extends Path {
   constructor(x1, y1, x2, y2) {
     const points = [new Anchor(x1, y1), new Anchor(x2, y2)];
     super(points);
-    for (let prop in proto22) {
-      Object.defineProperty(this, prop, proto22[prop]);
+    for (let prop in proto23) {
+      Object.defineProperty(this, prop, proto23[prop]);
     }
     this.vertices[0].command = Commands.move;
     this.vertices[1].command = Commands.line;
@@ -9743,7 +10102,7 @@ var Line = class extends Path {
   }
 };
 __publicField(Line, "Properties", ["left", "right"]);
-var proto22 = {
+var proto23 = {
   left: {
     enumerable: true,
     get: function() {
@@ -10789,274 +11148,134 @@ function xhr(path, callback) {
   return xhr2;
 }
 
-// src/effects/image-sequence.js
-var _ImageSequence = class _ImageSequence extends Rectangle {
-  constructor(paths, ox, oy, frameRate) {
-    super(ox, oy, 0, 0);
+// src/effects/image.js
+var _Image = class _Image extends Rectangle {
+  constructor(path, ox, oy, width, height, mode) {
+    super(ox, oy, width || 1, height || 1);
     /**
-     * @name Two.ImageSequence#_flagTextures
+     * @name Two.Image#_flagTexture
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#textures} need updating.
+     * @property {Boolean} - Determines whether the {@link Two.Image#texture} needs updating.
      */
-    __publicField(this, "_flagTextures", false);
+    __publicField(this, "_flagTexture", false);
     /**
-     * @name Two.ImageSequence#_flagFrameRate
+     * @name Two.Image#_flagMode
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#frameRate} needs updating.
+     * @property {Boolean} - Determines whether the {@link Two.Image#mode} needs updating.
      */
-    __publicField(this, "_flagFrameRate", false);
+    __publicField(this, "_flagMode", false);
     /**
-     * @name Two.ImageSequence#_flagIndex
+     * @name Two.Image#_texture
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#index} needs updating.
+     * @see {@link Two.Image#texture}
      */
-    __publicField(this, "_flagIndex", false);
-    // Private variables
+    __publicField(this, "_texture", null);
     /**
-     * @name Two.ImageSequence#_amount
+     * @name Two.Image#_mode
      * @private
-     * @property {Number} - Number of frames for a given {@link Two.ImageSequence}.
+     * @see {@link Two.Image#mode}
      */
-    __publicField(this, "_amount", 1);
-    /**
-     * @name Two.ImageSequence#_duration
-     * @private
-     * @property {Number} - Number of milliseconds a {@link Two.ImageSequence}.
-     */
-    __publicField(this, "_duration", 0);
-    /**
-     * @name Two.ImageSequence#_index
-     * @private
-     * @property {Number} - The current frame the {@link Two.ImageSequence} is currently displaying.
-     */
-    __publicField(this, "_index", 0);
-    /**
-     * @name Two.ImageSequence#_startTime
-     * @private
-     * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.ImageSequence} started.
-     */
-    __publicField(this, "_startTime", 0);
-    /**
-     * @name Two.ImageSequence#_playing
-     * @private
-     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} is animating or not.
-     */
-    __publicField(this, "_playing", false);
-    /**
-     * @name Two.ImageSequence#_firstFrame
-     * @private
-     * @property {Number} - The frame the {@link Two.ImageSequence} should start with.
-     */
-    __publicField(this, "_firstFrame", 0);
-    /**
-     * @name Two.ImageSequence#_lastFrame
-     * @private
-     * @property {Number} - The frame the {@link Two.ImageSequence} should end with.
-     */
-    __publicField(this, "_lastFrame", 0);
-    /**
-     * @name Two.ImageSequence#_playing
-     * @private
-     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} should loop or not.
-     */
-    __publicField(this, "_loop", true);
-    // Exposed through getter-setter
-    /**
-     * @name Two.ImageSequence#_textures
-     * @private
-     * @see {@link Two.ImageSequence#textures}
-     */
-    __publicField(this, "_textures", null);
-    /**
-     * @name Two.ImageSequence#_frameRate
-     * @private
-     * @see {@link Two.ImageSequence#frameRate}
-     */
-    __publicField(this, "_frameRate", 0);
-    /**
-     * @name Two.ImageSequence#_origin
-     * @private
-     * @see {@link Two.ImageSequence#origin}
-     */
-    __publicField(this, "_origin", null);
-    for (let prop in proto23) {
-      Object.defineProperty(this, prop, proto23[prop]);
+    __publicField(this, "_mode", "fill");
+    this._renderer.type = "image";
+    for (let prop in proto24) {
+      Object.defineProperty(this, prop, proto24[prop]);
     }
-    this._renderer.flagTextures = FlagTextures.bind(this);
-    this._renderer.bindTextures = BindTextures.bind(this);
-    this._renderer.unbindTextures = UnbindTextures.bind(this);
     this.noStroke();
     this.noFill();
-    if (Array.isArray(paths)) {
-      this.textures = paths.map(GenerateTexture.bind(this));
-    } else if (typeof paths === "string") {
-      this.textures = [GenerateTexture(paths)];
+    if (path instanceof Texture) {
+      this.texture = path;
+    } else if (typeof path === "string") {
+      this.texture = new Texture(path);
     }
-    this.origin = new Vector();
+    if (typeof mode === "string") {
+      this.mode = mode;
+    }
     this._update();
-    if (typeof frameRate === "number") {
-      this.frameRate = frameRate;
-    } else {
-      this.frameRate = _ImageSequence.DefaultFrameRate;
-    }
-    this.index = 0;
   }
   /**
-   * @name Two.ImageSequence.fromObject
+   * @name Two.Image.fromObject
    * @function
-   * @param {Object} obj - Object notation of a {@link Two.ImageSequence} to create a new instance
-   * @returns {Two.ImageSequence}
-   * @description Create a new {@link Two.ImageSequence} from an object notation of a {@link Two.ImageSequence}.
-   * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
+   * @param {Object} obj - Object notation of a {@link Two.Image} to create a new instance
+   * @returns {Two.Image}
+   * @description Create a new {@link Two.Image} from an object notation of a {@link Two.Image}.
+   * @nota-bene Works in conjunction with {@link Two.Image#toObject}
    */
   static fromObject(obj) {
-    const sequence = new _ImageSequence().copy(obj);
+    const image = new _Image().copy(obj);
     if ("id" in obj) {
-      sequence.id = obj.id;
+      image.id = obj.id;
     }
-    return sequence;
+    return image;
   }
   /**
-   * @name Two.ImageSequence#copy
+   * @name Two.Image#copy
    * @function
-   * @param {Two.ImageSequence} imageSequence - The reference {@link Two.ImageSequence}
-   * @description Copy the properties of one {@link Two.ImageSequence} onto another.
+   * @param {Two.Image} image - The reference {@link Two.Image}
+   * @description Copy the properties of one {@link Two.Image} onto another.
    */
-  copy(imageSequence) {
-    super.copy.call(this, imageSequence);
-    for (let i = 0; i < _ImageSequence.Properties.length; i++) {
-      const k = _ImageSequence.Properties[i];
-      if (k in imageSequence) {
-        this[k] = imageSequence[k];
+  copy(image) {
+    super.copy.call(this, image);
+    for (let i = 0; i < _Image.Properties.length; i++) {
+      const k = _Image.Properties[i];
+      if (k in image) {
+        this[k] = image[k];
       }
     }
     return this;
   }
   /**
-   * @name Two.ImageSequence#play
-   * @function
-   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
-   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
-   * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
-   * @description Initiate animation playback of a {@link Two.ImageSequence}.
-   */
-  play(firstFrame, lastFrame, onLastFrame) {
-    this._playing = true;
-    this._firstFrame = 0;
-    this._lastFrame = this.amount - 1;
-    this._startTime = _.performance.now();
-    if (typeof firstFrame === "number") {
-      this._firstFrame = firstFrame;
-    }
-    if (typeof lastFrame === "number") {
-      this._lastFrame = lastFrame;
-    }
-    if (typeof onLastFrame === "function") {
-      this._onLastFrame = onLastFrame;
-    } else {
-      delete this._onLastFrame;
-    }
-    if (this._index !== this._firstFrame) {
-      this._startTime -= 1e3 * Math.abs(this._index - this._firstFrame) / this._frameRate;
-    }
-    return this;
-  }
-  /**
-   * @name Two.ImageSequence#pause
-   * @function
-   * @description Halt animation playback of a {@link Two.ImageSequence}.
-   */
-  pause() {
-    this._playing = false;
-    return this;
-  }
-  /**
-   * @name Two.ImageSequence#stop
-   * @function
-   * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
-   */
-  stop() {
-    this._playing = false;
-    this._index = this._firstFrame;
-    return this;
-  }
-  /**
-   * @name Two.ImageSequence#clone
+   * @name Two.Image#clone
    * @function
    * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-   * @returns {Two.ImageSequence}
-   * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
+   * @returns {Two.Image}
+   * @description Create a new instance of {@link Two.Image} with the same properties of the current image.
    */
   clone(parent) {
-    const clone = new _ImageSequence(
-      this.textures,
+    const clone = new _Image(
+      this.texture,
       this.translation.x,
       this.translation.y,
-      this.frameRate
+      this.width,
+      this.height
     );
-    clone._loop = this._loop;
-    if (this._playing) {
-      clone.play();
-    }
     if (parent) {
       parent.add(clone);
     }
     return clone;
   }
   /**
-   * @name Two.ImageSequence#toObject
+   * @name Two.Image#toObject
    * @function
    * @returns {Object}
-   * @description Return a JSON compatible plain object that represents the path.
+   * @description Return a JSON compatible plain object that represents the image.
    */
   toObject() {
     const object = super.toObject.call(this);
-    object.textures = this.textures.map(function(texture) {
-      return texture.toObject();
-    });
-    object.frameRate = this.frameRate;
-    object.index = this.index;
-    object.firstFrame = this.firstFrame;
-    object.lastFrame = this.lastFrame;
-    object.loop = this.loop;
+    object.renderer.type = "image";
+    object.texture = this.texture.toObject();
+    object.mode = this.mode;
     return object;
   }
   /**
-   * @name Two.ImageSequence#dispose
+   * @name Two.Image#dispose
    * @function
-   * @returns {Two.ImageSequence}
-   * @description Release the image sequence's renderer resources and detach all events.
-   * This method stops any running animation, clears animation callbacks, unbinds
-   * textures collection events, and disposes individual textures (calling dispose()
-   * for thorough cleanup) while preserving the renderer type for potential
-   * re-attachment to a new renderer.
+   * @returns {Two.Image}
+   * @description Release the image's renderer resources and detach all events.
+   * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+   * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
+   * for potential re-attachment.
    */
   dispose() {
     super.dispose();
-    if (this._playing) {
-      this._playing = false;
-    }
-    this._onLastFrame = null;
-    if (this.textures && typeof this.textures.unbind === "function") {
-      try {
-        this.textures.unbind();
-      } catch (e) {
-      }
-    }
-    if (this.textures) {
-      for (let i = 0; i < this.textures.length; i++) {
-        const texture = this.textures[i];
-        if (typeof texture.dispose === "function") {
-          texture.dispose();
-        } else if (typeof texture.unbind === "function") {
-          texture.unbind();
-        }
-      }
+    if (this._texture && typeof this._texture.dispose === "function") {
+      this._texture.dispose();
+    } else if (this._texture && typeof this._texture.unbind === "function") {
+      this._texture.unbind();
     }
     return this;
   }
   /**
-   * @name Two.ImageSequence#_update
+   * @name Two.Image#_update
    * @function
    * @private
    * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
@@ -11064,186 +11283,113 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
    * @nota-bene Try not to call this method more than once a frame.
    */
   _update() {
-    const effect = this._textures;
-    let width, height, elapsed, amount, duration, texture;
-    let index, frames;
+    const effect = this._texture;
     if (effect) {
-      if (this._flagTextures) {
-        this._amount = effect.length;
+      if (this._flagTexture) {
+        this.fill = effect;
       }
-      if (this._flagFrameRate) {
-        this._duration = 1e3 * this._amount / this._frameRate;
-      }
-      if (this._playing && this._frameRate > 0) {
-        amount = this._amount;
-        if (_.isNaN(this._lastFrame)) {
-          this._lastFrame = amount - 1;
-        }
-        elapsed = _.performance.now() - this._startTime;
-        frames = this._lastFrame + 1;
-        duration = 1e3 * (frames - this._firstFrame) / this._frameRate;
-        if (this._loop) {
-          elapsed = elapsed % duration;
-        } else {
-          elapsed = Math.min(elapsed, duration);
-        }
-        index = lerp(this._firstFrame, frames, elapsed / duration);
-        index = Math.floor(index);
-        if (index !== this._index) {
-          this._index = index;
-          texture = effect[this._index];
-          if (texture.loaded) {
-            width = texture.image.width;
-            height = texture.image.height;
-            if (this.width !== width) {
-              this.width = width;
-            }
-            if (this.height !== height) {
-              this.height = height;
-            }
-            this.fill = texture;
-            if (index >= this._lastFrame - 1 && this._onLastFrame) {
-              this._onLastFrame();
-            }
+      if (effect.loaded) {
+        const iw = effect.image.width;
+        const ih = effect.image.height;
+        const rw = this.width;
+        const rh = this.height;
+        const scaleX = rw / iw;
+        const scaleY = rh / ih;
+        switch (this._mode) {
+          case _Image.Modes.fill: {
+            const scale = Math.max(scaleX, scaleY);
+            effect.scale = scale;
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "repeat";
+            break;
+          }
+          case _Image.Modes.fit: {
+            const scale = Math.min(scaleX, scaleY);
+            effect.scale = scale;
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "no-repeat";
+            break;
+          }
+          case _Image.Modes.crop: {
+            break;
+          }
+          case _Image.Modes.tile: {
+            effect.offset.x = (iw - rw) / 2;
+            effect.offset.y = (ih - rh) / 2;
+            effect.repeat = "repeat";
+            break;
+          }
+          case _Image.Modes.stretch:
+          default: {
+            effect.scale = new Vector(scaleX, scaleY);
+            effect.offset.x = 0;
+            effect.offset.y = 0;
+            effect.repeat = "repeat";
           }
         }
-      } else if (this._flagIndex || !(this.fill instanceof Texture)) {
-        texture = effect[this._index];
-        if (texture.loaded) {
-          width = texture.image.width;
-          height = texture.image.height;
-          if (this.width !== width) {
-            this.width = width;
-          }
-          if (this.height !== height) {
-            this.height = height;
-          }
-        }
-        this.fill = texture;
       }
     }
     super._update.call(this);
     return this;
   }
   /**
-   * @name Two.ImageSequence#flagReset
+   * @name Two.Image#flagReset
    * @function
    * @private
    * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
    */
   flagReset() {
-    this._flagTextures = this._flagFrameRate = false;
     super.flagReset.call(this);
+    this._flagTexture = this._flagMode = false;
     return this;
   }
 };
 /**
- * @name Two.ImageSequence.Properties
- * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
+ * @name Two.Image.Modes
+ * @property {Object} mode - Different mode types to render an image inspired by Figma.
+ * @property {String} mode.fill - Scale image to fill the bounds while preserving aspect ratio.
+ * @property {String} mode.fit - Scale image to fit within bounds while preserving aspect ratio.
+ * @property {String} mode.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+ * @property {String} mode.tile - Repeat image at original size to fill the bounds.
+ * @property {String} mode.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
  */
-__publicField(_ImageSequence, "Properties", [
-  "textures",
-  "frameRate",
-  "index",
-  "firstFrame",
-  "lastFrame",
-  "loop"
-]);
+__publicField(_Image, "Modes", {
+  fill: "fill",
+  fit: "fit",
+  crop: "crop",
+  tile: "tile",
+  stretch: "stretch"
+});
 /**
- * @name Two.ImageSequence.DefaultFrameRate
- * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
+ * @name Two.Image.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Image}.
  */
-__publicField(_ImageSequence, "DefaultFrameRate", 30);
-var ImageSequence = _ImageSequence;
-var proto23 = {
-  frameRate: {
+__publicField(_Image, "Properties", ["texture", "mode"]);
+var Image2 = _Image;
+var proto24 = {
+  texture: {
     enumerable: true,
     get: function() {
-      return this._frameRate;
+      return this._texture;
     },
     set: function(v) {
-      this._frameRate = v;
-      this._flagFrameRate = true;
+      this._texture = v;
+      this._flagTexture = true;
     }
   },
-  index: {
+  mode: {
     enumerable: true,
     get: function() {
-      return this._index;
+      return this._mode;
     },
     set: function(v) {
-      this._index = v;
-      this._flagIndex = true;
-    }
-  },
-  textures: {
-    enumerable: true,
-    get: function() {
-      return this._textures;
-    },
-    set: function(textures) {
-      const bindTextures = this._renderer.bindTextures;
-      const unbindTextures = this._renderer.unbindTextures;
-      if (this._textures) {
-        this._textures.unbind(Events.Types.insert, bindTextures).unbind(Events.Types.remove, unbindTextures);
-      }
-      this._textures = new Collection((textures || []).slice(0));
-      this._textures.bind(Events.Types.insert, bindTextures).bind(Events.Types.remove, unbindTextures);
-      bindTextures(this._textures);
-    }
-  },
-  firstFrame: {
-    enumerable: true,
-    get: function() {
-      return this._firstFrame;
-    },
-    set: function(v) {
-      this._firstFrame = v;
-    }
-  },
-  lastFrame: {
-    enumerable: true,
-    get: function() {
-      return this._lastFrame;
-    },
-    set: function(v) {
-      this._lastFrame = v;
-    }
-  },
-  loop: {
-    enumerable: true,
-    get: function() {
-      return this._loop;
-    },
-    set: function(v) {
-      this._loop = !!v;
+      this._mode = v;
+      this._flagMode = true;
     }
   }
 };
-function FlagTextures() {
-  this._flagTextures = true;
-}
-function BindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].bind(Events.Types.change, this._renderer.flagTextures);
-  }
-  this._renderer.flagTextures();
-}
-function UnbindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].unbind(Events.Types.change, this._renderer.flagTextures);
-  }
-  this._renderer.flagTextures();
-}
-function GenerateTexture(obj) {
-  if (obj instanceof Texture) {
-    return obj;
-  } else if (typeof obj === "string") {
-    return new Texture(obj);
-  }
-}
 
 // src/renderers/canvas.js
 var emptyArray = [];
@@ -11387,7 +11533,7 @@ var canvas2 = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = getEffectiveStrokeWidth(this);
+          ctx.lineWidth = linewidth;
         }
         if (miter) {
           ctx.miterLimit = miter;
@@ -11583,7 +11729,7 @@ var canvas2 = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = getEffectiveStrokeWidth(this);
+          ctx.lineWidth = linewidth;
         }
       }
       if (typeof opacity === "number") {
@@ -11719,7 +11865,7 @@ var canvas2 = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = getEffectiveStrokeWidth(this);
+          ctx.lineWidth = linewidth;
         }
       }
       if (typeof opacity === "number") {
@@ -12462,7 +12608,7 @@ var svg = {
         }
       }
       if (this._flagLinewidth) {
-        changed["stroke-width"] = getEffectiveStrokeWidth(this);
+        changed["stroke-width"] = this._linewidth;
       }
       if (this._flagOpacity) {
         changed["stroke-opacity"] = this._opacity;
@@ -12579,7 +12725,7 @@ var svg = {
         }
       }
       if (this._flagLinewidth) {
-        changed["stroke-width"] = getEffectiveStrokeWidth(this);
+        changed["stroke-width"] = this._linewidth;
       }
       if (this._flagOpacity) {
         changed["stroke-opacity"] = this._opacity;
@@ -12673,7 +12819,7 @@ var svg = {
         }
       }
       if (this._flagLinewidth) {
-        changed["stroke-width"] = getEffectiveStrokeWidth(this);
+        changed["stroke-width"] = this._linewidth;
       }
       if (this._flagOpacity) {
         changed.opacity = this._opacity;
@@ -12933,6 +13079,11 @@ var svg = {
           } else {
             changed.width *= this._scale;
             changed.height *= this._scale;
+          }
+          if (/no-repeat/i.test(this._repeat)) {
+            styles.preserveAspectRatio = "xMidYMid";
+          } else {
+            styles.preserveAspectRatio = "none";
           }
           styles.width = changed.width;
           styles.height = changed.height;
@@ -13272,7 +13423,7 @@ var webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = getEffectiveStrokeWidth(elem);
+          ctx.lineWidth = linewidth;
         }
         if (miter) {
           ctx.miterLimit = miter;
@@ -13619,7 +13770,7 @@ var webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = getEffectiveStrokeWidth(elem) / aspect;
+          ctx.lineWidth = linewidth / aspect;
         }
       }
       if (typeof opacity === "number") {
@@ -13832,7 +13983,7 @@ var webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = getEffectiveStrokeWidth(elem);
+          ctx.lineWidth = linewidth;
         }
       }
       if (typeof opacity === "number") {
@@ -15147,6 +15298,23 @@ var _Two = class _Two {
     return sprite;
   }
   /**
+   * @name Two#makeImage
+   * @function
+   * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} width
+   * @param {Number} height
+   * @param {String} [mode="fill"]
+   * @returns {Two.Image}
+   * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
+   */
+  makeImage(pathOrTexture, x, y, width, height, mode) {
+    const image = new Image2(pathOrTexture, x, y, width, height, mode);
+    this.add(image);
+    return image;
+  }
+  /**
    * @name Two#makeImageSequence
    * @function
    * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
@@ -15305,6 +15473,7 @@ __publicField(_Two, "Shape", Shape);
 __publicField(_Two, "Text", Text);
 __publicField(_Two, "Vector", Vector);
 __publicField(_Two, "Gradient", Gradient);
+__publicField(_Two, "Image", Image2);
 __publicField(_Two, "ImageSequence", ImageSequence);
 __publicField(_Two, "LinearGradient", LinearGradient);
 __publicField(_Two, "RadialGradient", RadialGradient);

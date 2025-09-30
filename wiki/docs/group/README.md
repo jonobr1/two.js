@@ -1301,6 +1301,62 @@ Return a JSON compatible plain object that represents the group.
 
 <div class="instance function ">
 
+## dispose
+
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Group.</span><span class="shortname">dispose</span></a></h2>
+
+
+
+
+<div class="returns">
+
+__Returns__: Two.Group
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Release the group's renderer resources and detach all events.
+This method recursively disposes all child objects, unbinds the children
+collection events, and preserves the renderer type for potential re-attachment
+to a new renderer.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L425">
+    group.js:425
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
 ## corner
 
 <h2 class="longname" aria-hidden="true"><a href="#corner"><span class="prefix">Two.Group.</span><span class="shortname">corner</span></a></h2>
@@ -1331,8 +1387,8 @@ Orient the children of the group to the upper left-hand corner of that group.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L425">
-    group.js:425
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L460">
+    group.js:460
   </a>
 
 </div>
@@ -1376,8 +1432,8 @@ Orient the children of the group to the center of that group.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L447">
-    group.js:447
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L482">
+    group.js:482
   </a>
 
 </div>
@@ -1431,8 +1487,8 @@ Recursively search for id. Returns the first element found.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L473">
-    group.js:473
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L508">
+    group.js:508
   </a>
 
 </div>
@@ -1486,8 +1542,8 @@ Recursively search for classes. Returns an array of matching elements.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L500">
-    group.js:500
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L535">
+    group.js:535
   </a>
 
 </div>
@@ -1541,8 +1597,8 @@ Recursively search for children of a specific type, e.g. [Two.Path](/docs/path/)
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L523">
-    group.js:523
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L558">
+    group.js:558
   </a>
 
 </div>
@@ -1593,8 +1649,8 @@ Add objects to the group.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L546">
-    group.js:546
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L581">
+    group.js:581
   </a>
 
 </div>
@@ -1645,8 +1701,8 @@ Remove objects from the group.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L578">
-    group.js:578
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L613">
+    group.js:613
   </a>
 
 </div>
@@ -1707,8 +1763,8 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L619">
-    group.js:619
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L654">
+    group.js:654
   </a>
 
 </div>
@@ -1752,8 +1808,8 @@ Apply `noFill` method to all child shapes.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L700">
-    group.js:700
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L735">
+    group.js:735
   </a>
 
 </div>
@@ -1797,8 +1853,8 @@ Apply `noStroke` method to all child shapes.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L712">
-    group.js:712
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L747">
+    group.js:747
   </a>
 
 </div>
@@ -1842,8 +1898,8 @@ Apply `subdivide` method to all child shapes.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L724">
-    group.js:724
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/group.js#L759">
+    group.js:759
   </a>
 
 </div>

@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typescript": "^5.2.2",
-    "two.js": "file:../.."
+    "two.js": "file:../../",
+    "typescript": "^5.2.2"
   }
 }

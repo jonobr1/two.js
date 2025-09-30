@@ -637,8 +637,8 @@ Cached method to let renderers know `offset` has been updated on a [Two.Texture]
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L668">
-    texture.js:668
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L670">
+    texture.js:670
   </a>
 
 </div>
@@ -682,8 +682,8 @@ Cached method to let renderers know `scale` has been updated on a [Two.Texture](
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L677">
-    texture.js:677
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/texture.js#L679">
+    texture.js:679
   </a>
 
 </div>
@@ -1118,7 +1118,7 @@ Return a JSON compatible plain object that represents the texture.
 
 ## dispose
 
-<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Gradient.</span><span class="shortname">dispose</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Texture.</span><span class="shortname">dispose</span></a></h2>
 
 
 

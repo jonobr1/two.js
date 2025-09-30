@@ -1126,6 +1126,12 @@ const svg = {
             changed.height *= this._scale;
           }
 
+          if (/no-repeat/i.test(this._repeat)) {
+            styles.preserveAspectRatio = 'xMidYMid';
+          } else {
+            styles.preserveAspectRatio = 'none';
+          }
+
           styles.width = changed.width;
           styles.height = changed.height;
         }

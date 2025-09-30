@@ -15,6 +15,8 @@ import { RoundedRectangle } from './shapes/rounded-rectangle.js';
 import { Star } from './shapes/star.js';
 import { Text } from './text.js';
 import { Element } from './element.js';
+import { ImageSequence } from './effects/image-sequence.js';
+import { Sprite } from './effects/sprite.js';
 
 // Constants
 
@@ -324,8 +326,18 @@ export class Group extends Shape {
             return ArcSegment.fromObject(child);
           case 'circle':
             return Circle.fromObject(child);
+          case 'element':
+            return Element.fromObject(child);
           case 'ellipse':
             return Ellipse.fromObject(child);
+          case 'group':
+            return Group.fromObject(child);
+          case 'image':
+            return Image.fromObject(child);
+          case 'image-sequence':
+            return ImageSequence.fromObject(child);
+          case 'path':
+            return Path.fromObject(child);
           case 'points':
             return Points.fromObject(child);
           case 'polygon':
@@ -334,18 +346,14 @@ export class Group extends Shape {
             return Rectangle.fromObject(child);
           case 'rounded-rectangle':
             return RoundedRectangle.fromObject(child);
-          case 'star':
-            return Star.fromObject(child);
-          case 'path':
-            return Path.fromObject(child);
-          case 'text':
-            return Text.fromObject(child);
-          case 'group':
-            return Group.fromObject(child);
           case 'shape':
             return Shape.fromObject(child);
-          case 'element':
-            return Element.fromObject(child);
+          case 'sprite':
+            return Sprite.fromObject(child);
+          case 'star':
+            return Star.fromObject(child);
+          case 'text':
+            return Text.fromObject(child);
         }
       }
       // Commonly null for empty set
@@ -354,9 +362,24 @@ export class Group extends Shape {
     }
   }
 
+  /**
+   * @name Two.Group#copy
+   * @function
+   * @param {Two.Group} [group] - The reference {@link Two.Group}
+   * @returns {Two.Group}
+   * @description Copy the properties of one {@link Two.Group} onto another.
+   */
   copy(group) {
     super.copy.call(this, group);
-    console.warn('Two.Group.copy is not supported yet.');
+    console.warn(
+      'Two.js: attempting to copy group. Two.Group.children copying not supported.'
+    );
+    for (let i = 0; i < Group.Properties.length; i++) {
+      const k = Group.Properties[i];
+      if (k in group) {
+        this[k] = group[k];
+      }
+    }
     return this;
   }
 
@@ -441,7 +464,7 @@ export class Group extends Shape {
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
-    
+
     // Recursively dispose all children
     if (this.children) {
       for (let i = 0; i < this.children.length; i++) {
@@ -451,7 +474,7 @@ export class Group extends Shape {
         }
       }
     }
-    
+
     // Unbind children collection events
     if (this.children && typeof this.children.unbind === 'function') {
       try {
@@ -460,7 +483,7 @@ export class Group extends Shape {
         // Ignore unbind errors for incomplete Collection objects
       }
     }
-    
+
     return this;
   }
 

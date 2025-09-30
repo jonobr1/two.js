@@ -151,6 +151,8 @@ export class Sprite extends Rectangle {
   constructor(path, ox, oy, cols, rows, frameRate) {
     super(ox, oy, 0, 0);
 
+    this._renderer.type = 'sprite';
+
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
     }
@@ -351,6 +353,7 @@ export class Sprite extends Rectangle {
    */
   toObject() {
     const object = super.toObject.call(this);
+    object.renderer.type = 'sprite';
     object.texture = this.texture.toObject();
     object.columns = this.columns;
     object.rows = this.rows;
@@ -375,25 +378,25 @@ export class Sprite extends Rectangle {
   dispose() {
     // Call parent dispose for inherited cleanup (vertices, fill/stroke effects)
     super.dispose();
-    
+
     // Stop animation if playing
     if (this._playing) {
       this._playing = false;
     }
-    
+
     // Clear animation callbacks
     this._onLastFrame = null;
-    
+
     // Reset timing properties
     this._startTime = 0;
-    
+
     // Dispose texture (more thorough than unbind)
     if (this._texture && typeof this._texture.dispose === 'function') {
       this._texture.dispose();
     } else if (this._texture && typeof this._texture.unbind === 'function') {
       this._texture.unbind();
     }
-    
+
     return this;
   }
 

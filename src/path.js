@@ -461,14 +461,15 @@ export class Path extends Shape {
   copy(path) {
     super.copy.call(this, path);
 
-    this.vertices = [];
-
-    for (let j = 0; j < path.vertices.length; j++) {
-      const v = path.vertices[j];
-      if (v instanceof Anchor) {
-        this.vertices.push(path.vertices[j].clone());
-      } else {
-        this.vertices.push(new Anchor().copy(v));
+    if (path.vertices) {
+      this.vertices = [];
+      for (let j = 0; j < path.vertices.length; j++) {
+        const v = path.vertices[j];
+        if (v instanceof Anchor) {
+          this.vertices.push(path.vertices[j].clone());
+        } else {
+          this.vertices.push(new Anchor().copy(v));
+        }
       }
     }
 
@@ -556,14 +557,14 @@ export class Path extends Shape {
    * @returns {Two.Path}
    * @description Release the path's renderer resources and detach all events.
    * This method cleans up vertices collection events, individual vertex events,
-   * control point events, and disposes fill/stroke effects (calling dispose() 
+   * control point events, and disposes fill/stroke effects (calling dispose()
    * on Gradients and Textures for thorough cleanup) while preserving the
    * renderer type for potential re-attachment to a new renderer.
    */
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
-    
+
     // Unbind vertices collection events
     if (this.vertices && typeof this.vertices.unbind === 'function') {
       try {
@@ -572,7 +573,7 @@ export class Path extends Shape {
         // Ignore unbind errors for incomplete Collection objects
       }
     }
-    
+
     // Unbind individual vertex events and control point events
     if (this.vertices) {
       for (let i = 0; i < this.vertices.length; i++) {
@@ -584,27 +585,42 @@ export class Path extends Shape {
           if (v.controls.left && typeof v.controls.left.unbind === 'function') {
             v.controls.left.unbind();
           }
-          if (v.controls.right && typeof v.controls.right.unbind === 'function') {
+          if (
+            v.controls.right &&
+            typeof v.controls.right.unbind === 'function'
+          ) {
             v.controls.right.unbind();
           }
         }
       }
     }
-    
+
     // Dispose fill effect (more thorough than unbind)
     if (typeof this.fill === 'object' && this.fill && 'dispose' in this.fill) {
       this.fill.dispose();
-    } else if (typeof this.fill === 'object' && this.fill && 'unbind' in this.fill) {
+    } else if (
+      typeof this.fill === 'object' &&
+      this.fill &&
+      'unbind' in this.fill
+    ) {
       this.fill.unbind();
     }
-    
+
     // Dispose stroke effect (more thorough than unbind)
-    if (typeof this.stroke === 'object' && this.stroke && 'dispose' in this.stroke) {
+    if (
+      typeof this.stroke === 'object' &&
+      this.stroke &&
+      'dispose' in this.stroke
+    ) {
       this.stroke.dispose();
-    } else if (typeof this.stroke === 'object' && this.stroke && 'unbind' in this.stroke) {
+    } else if (
+      typeof this.stroke === 'object' &&
+      this.stroke &&
+      'unbind' in this.stroke
+    ) {
       this.stroke.unbind();
     }
-    
+
     return this;
   }
 
@@ -1070,13 +1086,6 @@ export class Path extends Shape {
 
         this._lengths[i] = getCurveLength(a, b, limit);
         sum += this._lengths[i];
-
-        if (i >= last && closed) {
-          b = this.vertices[(i + 1) % length];
-
-          this._lengths[i + 1] = getCurveLength(a, b, limit);
-          sum += this._lengths[i + 1];
-        }
 
         b = a;
       },

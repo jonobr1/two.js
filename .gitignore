@@ -3,6 +3,9 @@ node_modules
 junk/
 *.log
 docs.json
-package-lock.json
 dist
 .idea
+.codacy
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
