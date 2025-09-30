@@ -111,13 +111,13 @@ export class Rectangle extends Path {
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Rectangle#width} needs updating.
    */
-  _flagWidth = 0;
+  _flagWidth = false;
   /**
    * @name Two.Rectangle#_flagHeight
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Rectangle#height} needs updating.
    */
-  _flagHeight = 0;
+  _flagHeight = false;
 
   /**
    * @name Two.Rectangle#_width
@@ -202,7 +202,11 @@ export class Rectangle extends Path {
 
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      if (clone[k] instanceof Vector) {
+        clone[k].copy(this[k]);
+      } else {
+        clone[k] = this[k];
+      }
     }
 
     if (parent) {

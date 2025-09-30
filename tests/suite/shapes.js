@@ -568,28 +568,48 @@ QUnit.test('Two.Rectangle', function (assert) {
 
   var width = 50;
   var height = 75;
-  var properties = [width, height];
+  var origin = '{"x":0,"y":0}';
+  var properties = [width, height, origin];
 
   var path = new Two.Rectangle(0, 0, width, height);
 
   for (var i = 0; i < Two.Rectangle.Properties.length; i++) {
     var prop = Two.Rectangle.Properties[i];
+    var isOrigin = i == 2;
     assert.equal(
-      path[prop],
+      isOrigin ? JSON.stringify(path[prop].toObject()) : path[prop],
       properties[i],
       'Can get property ' + prop + ' correctly.'
     );
-    path[prop] = properties[i] * 2;
-    assert.equal(
-      path[prop],
-      properties[i] * 2,
-      'Can set property ' + prop + ' correctly.'
-    );
-    assert.equal(
-      path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)],
-      true,
-      'Set ' + prop + "'s property flag correctly."
-    );
+    if (isOrigin) {
+      path[prop].set(50, 50);
+      assert.equal(
+        JSON.stringify(path[prop].toObject()),
+        '{"x":50,"y":50}',
+        'Can set property ' + prop + ' correctly.'
+      );
+    } else {
+      path[prop] = properties[i] * 2;
+      assert.equal(
+        path[prop],
+        properties[i] * 2,
+        'Can set property ' + prop + ' correctly.'
+      );
+    }
+    if (isOrigin) {
+      console.log(path._flagVertices);
+      assert.equal(
+        path['_flagVertices'],
+        true,
+        'Set ' + prop + "'s property flag correctly."
+      );
+    } else {
+      assert.equal(
+        path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)],
+        true,
+        'Set ' + prop + "'s property flag correctly."
+      );
+    }
   }
 
   path._update();
@@ -597,11 +617,20 @@ QUnit.test('Two.Rectangle', function (assert) {
 
   for (var i = 0; i < Two.Rectangle.Properties.length; i++) {
     var prop = Two.Rectangle.Properties[i];
-    assert.equal(
-      path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)],
-      false,
-      'Reset flag ' + prop + ' correctly.'
-    );
+    var isOrigin = i == 2;
+    if (isOrigin) {
+      assert.equal(
+        path['_flagVertices'],
+        false,
+        'Reset flag ' + prop + ' correctly.'
+      );
+    } else {
+      assert.equal(
+        path['_flag' + prop.charAt(0).toUpperCase() + prop.slice(1)],
+        false,
+        'Reset flag ' + prop + ' correctly.'
+      );
+    }
   }
 
   path.closed = false;
@@ -796,33 +825,44 @@ QUnit.test('Two.RoundedRectangle Object Conversion', function (assert) {
   );
 });
 
-QUnit.test('Two.RoundedRectangle Vector Radius Construction', function (assert) {
-  assert.expect(6);
+QUnit.test(
+  'Two.RoundedRectangle Vector Radius Construction',
+  function (assert) {
+    assert.expect(6);
 
-  var width = 100;
-  var height = 80;
-  var rx = 10;
-  var ry = 15;
-  var vectorRadius = new Two.Vector(rx, ry);
+    var width = 100;
+    var height = 80;
+    var rx = 10;
+    var ry = 15;
+    var vectorRadius = new Two.Vector(rx, ry);
 
-  var rect = new Two.RoundedRectangle(0, 0, width, height, vectorRadius);
+    var rect = new Two.RoundedRectangle(0, 0, width, height, vectorRadius);
 
-  assert.equal(rect.width, width, 'Width set correctly with Vector radius');
-  assert.equal(rect.height, height, 'Height set correctly with Vector radius');
-  assert.equal(rect.radius instanceof Two.Vector, true, 'Radius is Vector instance');
-  assert.equal(rect.radius.x, rx, 'Vector radius x value set correctly');
-  assert.equal(rect.radius.y, ry, 'Vector radius y value set correctly');
+    assert.equal(rect.width, width, 'Width set correctly with Vector radius');
+    assert.equal(
+      rect.height,
+      height,
+      'Height set correctly with Vector radius'
+    );
+    assert.equal(
+      rect.radius instanceof Two.Vector,
+      true,
+      'Radius is Vector instance'
+    );
+    assert.equal(rect.radius.x, rx, 'Vector radius x value set correctly');
+    assert.equal(rect.radius.y, ry, 'Vector radius y value set correctly');
 
-  rect._update();
+    rect._update();
 
-  var expectedX1 = width / 2 - rx;
-  var expectedY1 = -height / 2;
-  assert.equal(
-    rect.vertices[1].x === expectedX1 && rect.vertices[1].y === expectedY1,
-    true,
-    'Vertices calculated correctly with Vector radius'
-  );
-});
+    var expectedX1 = width / 2 - rx;
+    var expectedY1 = -height / 2;
+    assert.equal(
+      rect.vertices[1].x === expectedX1 && rect.vertices[1].y === expectedY1,
+      true,
+      'Vertices calculated correctly with Vector radius'
+    );
+  }
+);
 
 QUnit.test('Two.Star', function (assert) {
   assert.expect(Two.Star.Properties.length * 4 + 1);
