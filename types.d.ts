@@ -567,7 +567,24 @@ declare module 'two.js/src/anchor' {
      * @description Create a new {@link Two.Anchor} from an object notation of a {@link Two.Anchor}.
      * @nota-bene Works in conjunction with {@link Two.Anchor#toObject}
      */
-    static fromObject(obj: object): () => Anchor;
+    static fromObject(
+      obj:
+        | object
+        | {
+            x?: number;
+            y?: number;
+            command?: Commands[keyof Commands];
+            relative?: boolean;
+            controls?: {
+              left: { x: number; y: number } | Vector;
+              right: { x: number; y: number } | Vector;
+            };
+            rx?: number;
+            ry?: number;
+            xAxisRotation?: number;
+            largeArcFlag?: number;
+          }
+    ): Anchor;
     constructor(
       x?: number,
       y?: number,
@@ -575,13 +592,13 @@ declare module 'two.js/src/anchor' {
       ay?: number,
       bx?: number,
       by?: number,
-      command?: 'M' | 'L' | 'A' | 'C' | 'Z'
+      command?: Commands[keyof Commands]
     );
     controls: {
       left: Vector;
       right: Vector;
     };
-    command: 'M' | 'L' | 'A' | 'C' | 'Z';
+    command: Commands[keyof Commands];
     relative: boolean;
     rx?: number;
     ry?: number;
@@ -854,7 +871,15 @@ declare module 'two.js/src/element' {
      * @description Create a new {@link Two.Element} from an object notation of a {@link Two.Element}.
      * @nota-bene Works in conjunction with {@link Two.Element#toObject}
      */
-    static fromObject(obj: object): Element;
+    static fromObject(
+      obj:
+        | object
+        | {
+            renderer?: { type: string };
+            id?: string;
+            className?: string;
+          }
+    ): Element;
     /**
      * @name Two.Element#_flagId
      * @private
@@ -873,7 +898,7 @@ declare module 'two.js/src/element' {
      * @nota-bene With the {@link Two.SVGRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
      */
     renderer: {
-      type: 'element' | string;
+      type: 'element' | 'group' | 'path' | 'text' | 'points' | string;
       elem?:
         | SVGGElement
         | SVGPathElement
@@ -885,7 +910,8 @@ declare module 'two.js/src/element' {
         | SVGRadialGradientElement
         | SVGImageElement
         | SVGClipPathElement
-        | SVGStopElement;
+        | SVGStopElement
+        | SVGPatternElement;
       onBeforeRender?: () => void;
       onAfterRender?: () => void;
     };
@@ -965,7 +991,14 @@ declare module 'two.js/src/matrix' {
      * @description Create a new {@link Two.Matrix} from an object notation of a {@link Two.Matrix}.
      * @nota-bene Works in conjunction with {@link Two.Matrix#toObject}
      */
-    static fromObject(obj: object): Matrix;
+    static fromObject(
+      obj:
+        | object
+        | {
+            elements?: number[];
+            manual?: boolean;
+          }
+    ): Matrix;
     constructor(elements: number[]);
     constructor(
       a?: number,
@@ -1196,7 +1229,26 @@ declare module 'two.js/src/shape' {
      * @description Create a new {@link Two.Shape} from an object notation of a {@link Two.Shape}.
      * @nota-bene Works in conjunction with {@link Two.Shape#toObject}
      */
-    static fromObject(obj: object): Shape;
+    static fromObject(
+      obj:
+        | object
+        | ((
+            | {
+                translation?: { x: number; y: number } | Vector;
+                position?: never;
+              }
+            | {
+                position?: { x: number; y: number } | Vector;
+                translation?: never;
+              }
+          ) & {
+            rotation?: number;
+            scale?: number | { x: number; y: number } | Vector;
+            skewX?: number;
+            skewY?: number;
+            matrix: Parameters<typeof Matrix.fromObject>;
+          })
+    ): Shape;
     /**
      * @name Two.Shape#_flagMatrix
      * @private
@@ -1423,14 +1475,18 @@ declare module 'two.js/src/children' {
   import { Shape } from 'two.js/src/shape';
 }
 declare module 'two.js/src/group' {
+  type ChildParams =
+    | Parameters<typeof Path.fromObject>
+    | Parameters<typeof Text.fromObject>
+    | Parameters<typeof Points.fromObject>;
   /**
-     * @name Two.Group
-     * @class
+   * @name Two.Group
+   * @class
 
-     * @param {Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
-     * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
-     * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
-     */
+    * @param {Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
+    * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
+    * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
+    */
   export class Group extends Shape {
     static Children: Children;
     /**
@@ -1458,7 +1514,15 @@ declare module 'two.js/src/group' {
      * @property {String[]} - A list of properties that are on every {@link Two.Group}.
      */
     static Properties: string[];
-    static fromObject(obj: object): Group;
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Shape.fromObject> & {
+            children?: (ChildParams | Parameters<typeof Group.fromObject>)[];
+            opacity?: number;
+            mask?: ChildParams;
+          })
+    ): Group;
     constructor(children?: Shape[]);
     constructor(...args: Shape[]);
     /**
@@ -1548,13 +1612,13 @@ declare module 'two.js/src/group' {
      * @property {String}
      * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
      */
-    cap: 'butt' | 'round' | 'square';
+    cap: CapProperties;
     /**
      * @name Two.Group#join
      * @property {String}
      * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
      */
-    join: 'butt' | 'round' | 'square';
+    join: JoinProperties;
     /**
      * @name Two.Group#miter
      * @property {String}
@@ -1750,6 +1814,9 @@ declare module 'two.js/src/group' {
     flagReset(): Group;
   }
   import { Shape } from 'two.js/src/shape';
+  import { Path, CapProperties, JoinProperties } from 'two.js/src/path';
+  import { Text } from 'two.js/src/text';
+  import { Points } from 'two.js/src/shapes/points';
   import { Children } from 'two.js/src/children';
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Texture } from 'two.js/src/effects/texture';
@@ -1970,7 +2037,7 @@ declare module 'two.js/src/effects/stop' {
      * @name Two.Stop.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
      */
-    static override Properties: ('offset' | 'opacity' | 'color' | string)[];
+    static override Properties: ('offset' | 'color' | 'opacity' | string)[];
     /**
      * @name Two.Stop.fromObject
      * @function
@@ -1979,7 +2046,15 @@ declare module 'two.js/src/effects/stop' {
      * @description Create a new {@link Two.Stop} from an object notation of a {@link Two.Stop}.
      * @nota-bene Works in conjunction with {@link Two.Stop#toObject}
      */
-    static fromObject(obj: object): Stop;
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof TwoElement.fromObject> & {
+            offset?: number;
+            color?: string;
+            opacity?: number;
+          })
+    ): Stop;
     constructor(offset?: number, color?: string, opacity?: number);
     /**
      * @name Two.Stop#_flagOffset
@@ -2066,6 +2141,8 @@ declare module 'two.js/src/effects/stop' {
   import { Gradient } from 'two.js/src/effects/gradient';
 }
 declare module 'two.js/src/effects/gradient' {
+  type SpreadProperties = 'pad' | 'reflect' | 'repeat';
+  type UnitsProperties = 'userSpaceOnUse' | 'objectBoundingBox';
   /**
      * @name Two.Gradient
      * @class
@@ -2083,7 +2160,7 @@ declare module 'two.js/src/effects/gradient' {
      * @name Two.Gradient.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
      */
-    static Properties: string[];
+    static Properties: ('spread' | 'stops' | 'units' | string)[];
     /**
      * @name Two.Gradient.fromObject
      * @function
@@ -2092,7 +2169,15 @@ declare module 'two.js/src/effects/gradient' {
      * @description Create a new {@link Two.Gradient} from an object notation of a {@link Two.Gradient}.
      * @nota-bene Works in conjunction with {@link Two.Gradient#toObject}
      */
-    static fromObject(obj: object): Gradient;
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof TwoElement.fromObject> & {
+            stops?: number[];
+            spread?: SpreadProperties;
+            units?: UnitsProperties;
+          })
+    ): Gradient;
     constructor(stops?: Stop[]);
     private _flagStops: boolean;
     private _flagSpread: boolean;
@@ -2116,13 +2201,13 @@ declare module 'two.js/src/effects/gradient' {
      * @property {String} - Indicates what happens if the gradient starts or ends inside the bounds of the target rectangle. Possible values are `'pad'`, `'reflect'`, and `'repeat'`.
      * @see {@link https://www.w3.org/TR/SVG11/pservers.html#LinearGradientElementSpreadMethodAttribute} for more information
      */
-    spread: 'pad' | 'reflect' | 'repeat';
+    spread: SpreadProperties;
     /**
      * @name Two.Gradient#units
      * @property {String} [units='objectBoundingBox'] - Indicates how coordinate values are interpreted by the renderer. Possible values are `'userSpaceOnUse'` and `'objectBoundingBox'`.
      * @see {@link https://www.w3.org/TR/SVG11/pservers.html#RadialGradientElementGradientUnitsAttribute} for more information
      */
-    units: 'userSpaceOnUse' | 'objectBoundingBox';
+    units: UnitsProperties;
     /**
      * @name Two.Gradient#stops
      * @property {Two.Stop[]} - An ordered list of {@link Two.Stop}s for rendering the gradient.
@@ -2199,7 +2284,14 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @description Create a new {@link Two.LinearGradient} from an object notation of a {@link Two.LinearGradient}.
      * @nota-bene Works in conjunction with {@link Two.LinearGradient#toObject}
      */
-    static fromObject(obj: object): LinearGradient;
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Gradient.fromObject> & {
+            left?: { x: number; y: number } | Vector;
+            right?: { x: number; y: number } | Vector;
+          })
+    ): LinearGradient;
     constructor(
       x1?: number,
       y1?: number,
@@ -2291,7 +2383,15 @@ declare module 'two.js/src/effects/radial-gradient' {
      * @description Create a new {@link Two.RadialGradient} from an object notation of a {@link Two.RadialGradient}.
      * @nota-bene Works in conjunction with {@link Two.RadialGradient#toObject}
      */
-    static fromObject(obj: object): RadialGradient;
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Gradient.fromObject> & {
+            radius?: number;
+            center?: { x: number; y: number } | Vector;
+            focal?: { x: number; y: number } | Vector;
+          })
+    ): RadialGradient;
     constructor(
       cx?: number,
       cy?: number,
@@ -2378,6 +2478,7 @@ declare module 'two.js/src/effects/radial-gradient' {
   import { Vector } from 'two.js/src/vector';
 }
 declare module 'two.js/src/effects/texture' {
+  type RepeatProperties = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat';
   /**
    * @name Two.Texture
    * @class
@@ -2461,7 +2562,16 @@ declare module 'two.js/src/effects/texture' {
      * @description Create a new {@link Two.Texture} from an object notation of a {@link Two.Texture}.
      * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
      */
-    static fromObject(obj: object): Texture;
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof TwoElement.fromObject> & {
+            src?: string;
+            repeat?: RepeatProperties;
+            offset?: { x: number; y: number } | Vector;
+            scale?: { x: number; y: number } | Vector;
+          })
+    ): Texture;
     constructor(
       src?: string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
       callback?: Function
@@ -2555,7 +2665,7 @@ declare module 'two.js/src/effects/texture' {
      * @property {String} - CSS style declaration to tile {@link Two.Path}. Valid values include: `'no-repeat'`, `'repeat'`, `'repeat-x'`, `'repeat-y'`.
      * @see {@link https://www.w3.org/TR/2dcontext/#dom-context-2d-createpattern}
      */
-    repeat: string;
+    repeat: RepeatProperties;
     /**
      * @name Two.Texture#offset
      * @property {Vector} - A two-component vector describing any pixel offset of the texture when applied to a {@link Two.Path}.
@@ -2617,6 +2727,8 @@ declare module 'two.js/src/effects/texture' {
   import { Registry } from 'two.js/src/registry';
 }
 declare module 'two.js/src/path' {
+  export type CapProperties = 'butt' | 'round' | 'square';
+  export type JoinProperties = 'miter' | 'round' | 'bevel';
   /**
    * @name Two.Path
    * @class
@@ -2648,7 +2760,29 @@ declare module 'two.js/src/path' {
      * @description Create a new {@link Two.Path} from an object notation of a {@link Two.Path}.
      * @nota-bene Works in conjunction with {@link Two.Path#toObject}
      */
-    static fromObject(obj): Path;
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Shape.fromObject> & {
+            vertices?: ({ x: number; y: number } | Anchor | Vector)[];
+            fill?: string;
+            stroke?: string;
+            linewidth?: number;
+            opacity?: number;
+            visible?: boolean;
+            cap?: CapProperties;
+            join?: JoinProperties;
+            miter?: number;
+            closed?: boolean;
+            curved?: boolean;
+            automatic?: boolean;
+            beginning?: number;
+            ending?: number;
+            dashes?: number[] & {
+              offset?: number;
+            };
+          })
+    ): Path;
     constructor(
       vertices?: Anchor[],
       closed?: boolean,
@@ -2893,13 +3027,13 @@ declare module 'two.js/src/path' {
      * @property {String}
      * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
      */
-    cap: string;
+    cap: CapProperties;
     /**
      * @name Two.Path#join
      * @property {String}
      * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
      */
-    join: string;
+    join: JoinProperties;
     /**
      * @name Two.Path#miter
      * @property {String}
@@ -3097,16 +3231,36 @@ declare module 'two.js/src/path' {
 }
 declare module 'two.js/src/shapes/rectangle' {
   /**
-     * @name Two.Rectangle
-     * @class
-
-     * @param {Number} [x=0] - The x position of the rectangle.
-     * @param {Number} [y=0] - The y position of the rectangle.
-     * @param {Number} [width=1] - The width value of the rectangle.
-     * @param {Number} [height=1] - The width value of the rectangle.
-     */
+   * @name Two.Rectangle
+   * @class
+   * @param {Number} [x=0] - The x position of the rectangle.
+   * @param {Number} [y=0] - The y position of the rectangle.
+   * @param {Number} [width=1] - The width value of the rectangle.
+   * @param {Number} [height=1] - The width value of the rectangle.
+   */
   export class Rectangle extends Path {
-    static Properties: string[];
+    /**
+     * @name Two.Rectangle.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
+     */
+    static Properties: ('width' | 'height' | string)[];
+    /**
+     * @name Two.Rectangle.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Rectangle} to create a new instance
+     * @returns {Two.Rectangle}
+     * @description Create a new {@link Two.Rectangle} from an object notation of a {@link Two.Rectangle}.
+     * @nota-bene Works in conjunction with {@link Two.Rectangle#toObject}
+     */
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Path.fromObject> & {
+            width?: number;
+            height?: number;
+            origin?: { x: number; y: number } | Vector;
+          })
+    ): Rectangle;
     constructor(x?: number, y?: number, width?: number, height?: number);
     /**
      * @name Two.Rectangle#width
@@ -3148,11 +3302,28 @@ declare module 'two.js/src/shapes/rectangle' {
      */
     private _height;
     private _origin: Vector;
+    /**
+     * @name Two.Rectangle#copy
+     * @function
+     * @param {Two.Rectangle} rectangle - The reference {@link Two.Rectangle}
+     * @description Copy the properties of one {@link Two.Rectangle} onto another.
+     */
+    copy(rectangle: Rectangle): Rectangle;
+    /**
+     * @name Two.Rectangle#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Rectangle}
+     * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
+     */
+    clone(parent: Group): Rectangle;
   }
   import { Path } from 'two.js/src/path';
   import { Vector } from 'two.js/src/vector';
+  import { Group } from 'two.js/src/group';
 }
 declare module 'two.js/src/effects/image' {
+  type ModeProperties = 'fill' | 'fit' | 'crop' | 'tile' | 'stretch';
   /**
    * @name Two.Image
    * @class
@@ -3197,7 +3368,7 @@ declare module 'two.js/src/effects/image' {
       oy?: number,
       width?: number,
       height?: number,
-      mode?: 'fill' | 'fit' | 'crop' | 'tile' | 'stretch'
+      mode?: ModeProperties
     );
     /**
      * @name Two.Image#_flagTexture
@@ -3228,7 +3399,7 @@ declare module 'two.js/src/effects/image' {
      * @name Two.Image#mode
      * @property {String} - The scaling mode for the image. Can be 'fill', 'fit', 'crop', 'tile', or 'stretch'. Defaults to 'fill'.
      */
-    mode: 'fill' | 'fit' | 'crop' | 'tile' | 'stretch';
+    mode: ModeProperties;
     /**
      * @name Two.Image#dispose
      * @function
@@ -3587,6 +3758,11 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
   import { Vector } from 'two.js/src/vector';
 }
 declare module 'two.js/src/text' {
+  export type AlignmentProperties = 'left' | 'center' | 'right';
+  export type StyleProperties = 'normal' | 'italic';
+  export type DecorationProperties = 'underline' | 'strikethrough' | 'none';
+  export type DirectionProperties = 'ltr' | 'rtl';
+  export type BaselineProperties = 'top' | 'middle' | 'bottom' | 'baseline';
   /**
      * @name Two.Text
      * @class
@@ -3616,6 +3792,38 @@ declare module 'two.js/src/text' {
      * @returns {Object} - The width and height of the {@link Two.Text} instance.
      */
     static Measure(text: Text): Dimensions;
+    /**
+     * @name Two.Text.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Text} to create a new instance
+     * @returns {Two.Text}
+     * @description Create a new {@link Two.Text} from an object notation of a {@link Two.Text}.
+     * @nota-bene Works in conjunction with {@link Two.Text#toObject}
+     */
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Shape.fromObject> & {
+            value?: string;
+            family?: string;
+            size?: number;
+            leading?: number;
+            alignment?: AlignmentProperties;
+            linewidth?: number;
+            style?: StyleProperties;
+            weight?: number | string;
+            decoration?: DecorationProperties;
+            direction?: DirectionProperties;
+            baseline?: BaselineProperties;
+            opacity?: number;
+            visible?: boolean;
+            fill?: string;
+            stroke?: string;
+            dashes?: number[] & {
+              offset?: number;
+            };
+          })
+    ): Text;
 
     constructor(
       message?: string,
@@ -3626,13 +3834,13 @@ declare module 'two.js/src/text' {
         family?: string;
         size?: number;
         leading?: number;
-        alignment?: 'left' | 'center' | 'right';
+        alignment?: AlignmentProperties;
         linewidth?: number;
-        style?: 'normal' | 'italic';
+        style?: StyleProperties;
         weight?: number | string;
-        decoration?: 'underline' | 'strikethrough' | 'none';
-        direction?: 'ltr' | 'rtl';
-        baseline?: 'top' | 'middle' | 'bottom' | 'baseline';
+        decoration?: DecorationProperties;
+        direction?: DirectionProperties;
+        baseline?: BaselineProperties;
         opacity?: number;
         visible?: boolean;
         fill?: string | Gradient | Texture;

@@ -319,6 +319,8 @@ export class Group extends Shape {
             return Circle.fromObject(child);
           case 'ellipse':
             return Ellipse.fromObject(child);
+          case 'image':
+            return Image.fromObject(child);
           case 'points':
             return Points.fromObject(child);
           case 'polygon':
@@ -434,7 +436,7 @@ export class Group extends Shape {
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
-    
+
     // Recursively dispose all children
     if (this.children) {
       for (let i = 0; i < this.children.length; i++) {
@@ -444,7 +446,7 @@ export class Group extends Shape {
         }
       }
     }
-    
+
     // Unbind children collection events
     if (this.children && typeof this.children.unbind === 'function') {
       try {
@@ -453,7 +455,7 @@ export class Group extends Shape {
         // Ignore unbind errors for incomplete Collection objects
       }
     }
-    
+
     return this;
   }
 

@@ -63,7 +63,7 @@ export class Rectangle extends Path {
    * @name Two.Rectangle.Properties
    * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
    */
-  static Properties = ['width', 'height'];
+  static Properties = ['width', 'height', 'origin'];
 
   /**
    * @name Two.Rectangle.fromObject
