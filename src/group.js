@@ -16,6 +16,7 @@ import { Star } from './shapes/star.js';
 import { Text } from './text.js';
 import { Element } from './element.js';
 import { ImageSequence } from 'effects/image-sequence.js';
+import { Sprite } from 'effects/sprite.js';
 
 // Constants
 
@@ -318,14 +319,18 @@ export class Group extends Shape {
             return ArcSegment.fromObject(child);
           case 'circle':
             return Circle.fromObject(child);
+          case 'element':
+            return Element.fromObject(child);
           case 'ellipse':
             return Ellipse.fromObject(child);
+          case 'group':
+            return Group.fromObject(child);
           case 'image':
             return Image.fromObject(child);
           case 'image-sequence':
             return ImageSequence.fromObject(child);
-          case 'sprite':
-            return Image.fromObject(child);
+          case 'path':
+            return Path.fromObject(child);
           case 'points':
             return Points.fromObject(child);
           case 'polygon':
@@ -334,18 +339,14 @@ export class Group extends Shape {
             return Rectangle.fromObject(child);
           case 'rounded-rectangle':
             return RoundedRectangle.fromObject(child);
-          case 'star':
-            return Star.fromObject(child);
-          case 'path':
-            return Path.fromObject(child);
-          case 'text':
-            return Text.fromObject(child);
-          case 'group':
-            return Group.fromObject(child);
           case 'shape':
             return Shape.fromObject(child);
-          case 'element':
-            return Element.fromObject(child);
+          case 'sprite':
+            return Sprite.fromObject(child);
+          case 'star':
+            return Star.fromObject(child);
+          case 'text':
+            return Text.fromObject(child);
         }
       }
       // Commonly null for empty set
