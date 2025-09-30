@@ -5,7 +5,7 @@ const _ = require('underscore');
 const gzip = require('gzip-size');
 
 const publishDateString = new Date().toISOString();
-const config = getJSON(path.resolve(__dirname, '../package.json'));
+const config = getJSON('package');
 const paths = {
   entry: path.resolve(__dirname, '../src/two.js'),
   umd: path.resolve(__dirname, '../build/two.js'),
@@ -85,10 +85,10 @@ function publishModule() {
   let size;
   const result = {};
 
-  size = getFileSize(path.resolve(__dirname, '../build/two.js'));
+  size = getFileSize('two.js');
   result.development = formatFileSize(size);
 
-  size = getFileSize(path.resolve(__dirname, '../build/two.min.js'));
+  size = getFileSize('two.min.js');
   result.production = formatFileSize(size);
 
   const contents = JSON.stringify(result);
@@ -97,8 +97,8 @@ function publishModule() {
   return fs.promises.writeFile(outputPath, contents);
 }
 
-function getFileSize(filepath) {
-  const file = fs.readFileSync(filepath);
+function getFileSize(filename) {
+  const file = fs.readFileSync(path.resolve(__dirname, '../build', filename));
   return gzip.sync(file);
 }
 
@@ -137,9 +137,9 @@ async function build() {
   );
 }
 
-function getJSON(filepath) {
-  const buffer = fs.readFileSync(filepath);
-  return JSON.parse(buffer);
+function getJSON(filename) {
+  var file = fs.readFileSync(path.resolve(__dirname, '..', `${filename}.json`));
+  return JSON.parse(file);
 }
 
 build();
