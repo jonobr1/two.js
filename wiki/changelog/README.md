@@ -11,6 +11,17 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
+- Added `Two.Path.strokeAttenuation`, `Two.Group.strokeAttenuation`, `Two.Points.strokeAttenuation`, `Two.Text.strokeAttenuation`
+- Improved type signatures on all `fromObject` methods for better hinting
+- Improved precision for curve details
+- Added Privacy Policy
+- Added SECURITY.md
+- Added Incident Response Plan
+- Enabled Code Scanning
+- Added more tests for security vulnerabilities
+
 ## September 8, 2025 v0.8.20
 
 <h3 class="visible">Sep 8, 2025</h3><version-link v="v0.8.20" />
