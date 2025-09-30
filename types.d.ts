@@ -3323,7 +3323,7 @@ declare module 'two.js/src/shapes/rectangle' {
   import { Group } from 'two.js/src/group';
 }
 declare module 'two.js/src/effects/image' {
-  type ModeProperties = 'fill' | 'fit' | 'crop' | 'tile' | 'stretch';
+  export type ModeProperties = 'fill' | 'fit' | 'crop' | 'tile' | 'stretch';
   /**
    * @name Two.Image
    * @class
@@ -3337,31 +3337,43 @@ declare module 'two.js/src/effects/image' {
    */
   export class Image extends Rectangle {
     /**
-     * @name Two.Image.fill
-     * @property {String} - Scale image to fill the bounds while preserving aspect ratio.
+     * @name Two.Image.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Image}.
      */
-    static fill: 'fill';
+    static Properties: ('texture' | 'mode' | string)[];
     /**
-     * @name Two.Image.fit
-     * @property {String} - Scale image to fit within bounds while preserving aspect ratio.
+     * @name Two.Image.Modes
+     * @property {Object} mode - Different mode types to render an image inspired by Figma.
+     * @property {String} mode.fill - Scale image to fill the bounds while preserving aspect ratio.
+     * @property {String} mode.fit - Scale image to fit within bounds while preserving aspect ratio.
+     * @property {String} mode.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+     * @property {String} mode.tile - Repeat image at original size to fill the bounds.
+     * @property {String} mode.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
      */
-    static fit: 'fit';
-    /**
-     * @name Two.Image.crop
-     * @property {String} - Scale image to fill bounds while preserving aspect ratio, cropping excess.
-     */
-    static crop: 'crop';
-    /**
-     * @name Two.Image.tile
-     * @property {String} - Repeat image at original size to fill the bounds.
-     */
-    static tile: 'tile';
-    /**
-     * @name Two.Image.stretch
-     * @property {String} - Stretch image to fill dimensions, ignoring aspect ratio.
-     */
-    static stretch: 'stretch';
+    static Modes: {
+      fill: 'fill';
+      fit: 'fit';
+      crop: 'crop';
+      tile: 'tile';
+      stretch: 'stretch';
+    };
 
+    /**
+     * @name Two.Image.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Image} to create a new instance
+     * @returns {Two.Image}
+     * @description Create a new {@link Two.Image} from an object notation of a {@link Two.Image}.
+     * @nota-bene Works in conjunction with {@link Two.Image#toObject}
+     */
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Rectangle.fromObject> & {
+            texture?: Parameters<typeof Texture.fromObject>;
+            mode?: ModeProperties;
+          })
+    ): Image;
     constructor(
       path?: string | Texture,
       ox?: number,
