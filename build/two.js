@@ -116,6 +116,7 @@ var Two = (() => {
     TWO_PI: () => TWO_PI,
     decomposeMatrix: () => decomposeMatrix,
     getComputedMatrix: () => getComputedMatrix,
+    getEffectiveStrokeWidth: () => getEffectiveStrokeWidth,
     getPoT: () => getPoT,
     lerp: () => lerp,
     mod: () => mod,
@@ -207,6 +208,25 @@ var Two = (() => {
   var floor = Math.floor;
   function toFixed(v) {
     return floor(v * 1e6) / 1e6;
+  }
+  function getEffectiveStrokeWidth(object, worldMatrix) {
+    const linewidth = object._linewidth;
+    if (object.strokeAttenuation) {
+      return linewidth;
+    }
+    if (!worldMatrix) {
+      worldMatrix = object.worldMatrix || getComputedMatrix(object);
+    }
+    const decomposed = decomposeMatrix(
+      worldMatrix.elements[0],
+      worldMatrix.elements[3],
+      worldMatrix.elements[1],
+      worldMatrix.elements[4],
+      worldMatrix.elements[2],
+      worldMatrix.elements[5]
+    );
+    const scale = Math.max(Math.abs(decomposed.scaleX), Math.abs(decomposed.scaleY));
+    return scale > 0 ? linewidth / scale : linewidth;
   }
 
   // src/utils/path-commands.js
@@ -1200,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2025-09-30T22:51:48.793Z",
+    PublishDate: "2025-09-30T22:57:13.725Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -4273,6 +4293,12 @@ var Two = (() => {
      */
     _flagMiter = true;
     /**
+     * @name Two.Path#_flagStrokeAttenuation
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#strokeAttenuation} needs updating.
+     */
+    _flagStrokeAttenuation = true;
+    /**
      * @name Two.Path#_flagMask
      * @private
      * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
@@ -4387,6 +4413,12 @@ var Two = (() => {
      * @see {@link Two.Path#dashes}
      */
     _dashes = null;
+    /**
+     * @name Two.Path#_strokeAttenuation
+     * @private
+     * @see {@link Two.Path#strokeAttenuation}
+     */
+    _strokeAttenuation = true;
     constructor(vertices, closed2, curved, manual) {
       super();
       for (let prop in proto10) {
@@ -4436,7 +4468,8 @@ var Two = (() => {
       "automatic",
       "beginning",
       "ending",
-      "dashes"
+      "dashes",
+      "strokeAttenuation"
     ];
     static Utils = {
       getCurveLength: getCurveLength2
@@ -5062,7 +5095,7 @@ var Two = (() => {
      * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
      */
     flagReset() {
-      this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = false;
+      this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = this._flagStrokeAttenuation = false;
       Shape.prototype.flagReset.call(this);
       return this;
     }
@@ -5290,6 +5323,22 @@ var Two = (() => {
           v.offset = this.dashes && this._dashes.offset || 0;
         }
         this._dashes = v;
+      }
+    },
+    /**
+     * @name Two.Path#strokeAttenuation
+     * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+     * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+     */
+    strokeAttenuation: {
+      enumerable: true,
+      get: function() {
+        return this._strokeAttenuation;
+      },
+      set: function(v) {
+        this._strokeAttenuation = !!v;
+        this._flagStrokeAttenuation = true;
+        this._flagLinewidth = true;
       }
     }
   };
@@ -6769,6 +6818,7 @@ var Two = (() => {
     _flagVisible = true;
     _flagSize = true;
     _flagSizeAttenuation = true;
+    _flagStrokeAttenuation = true;
     _length = 0;
     _fill = "#fff";
     _stroke = "#000";
@@ -6780,6 +6830,7 @@ var Two = (() => {
     _beginning = 0;
     _ending = 1;
     _dashes = null;
+    _strokeAttenuation = true;
     constructor(vertices) {
       super();
       for (let prop in proto16) {
@@ -6821,7 +6872,8 @@ var Two = (() => {
       "sizeAttenuation",
       "beginning",
       "ending",
-      "dashes"
+      "dashes",
+      "strokeAttenuation"
     ];
     /**
      * @name Two.Points.fromObject
@@ -7215,6 +7267,22 @@ var Two = (() => {
           v.offset = this.dashes && this._dashes.offset || 0;
         }
         this._dashes = v;
+      }
+    },
+    /**
+     * @name Two.Points#strokeAttenuation
+     * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+     * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+     */
+    strokeAttenuation: {
+      enumerable: true,
+      get: function() {
+        return this._strokeAttenuation;
+      },
+      set: function(v) {
+        this._strokeAttenuation = !!v;
+        this._flagStrokeAttenuation = true;
+        this._flagLinewidth = true;
       }
     }
   };
@@ -8071,9 +8139,9 @@ var Two = (() => {
      */
     _flagVisible = true;
     /**
-     * @name Two.Path#_flagMask
+     * @name Two.Text#_flagMask
      * @private
-     * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
+     * @property {Boolean} - Determines whether the {@link Two.Text#mask} needs updating.
      */
     _flagMask = false;
     /**
@@ -8088,6 +8156,12 @@ var Two = (() => {
      * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
      */
     _flagDirection = true;
+    /**
+     * @name Two.Text#_flagStrokeAttenuation
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#strokeAttenuation} needs updating.
+     */
+    _flagStrokeAttenuation = true;
     // Underlying Properties
     /**
      * @name Two.Text#value
@@ -8187,6 +8261,12 @@ var Two = (() => {
      * @see {@link Two.Text#dashes}
      */
     _dashes = null;
+    /**
+     * @name Two.Text#_strokeAttenuation
+     * @private
+     * @see {@link Two.Text#strokeAttenuation}
+     */
+    _strokeAttenuation = true;
     constructor(message, x, y, styles) {
       super();
       for (let prop in proto20) {
@@ -8239,7 +8319,8 @@ var Two = (() => {
       "visible",
       "fill",
       "stroke",
-      "dashes"
+      "dashes",
+      "strokeAttenuation"
     ];
     /**
      *
@@ -8353,7 +8434,7 @@ var Two = (() => {
      * @function
      * @returns {Two.Text}
      * @description Release the text's renderer resources and detach all events.
-     * This method disposes fill and stroke effects (calling dispose() on 
+     * This method disposes fill and stroke effects (calling dispose() on
      * Gradients and Textures for thorough cleanup) while preserving the
      * renderer type for potential re-attachment to a new renderer.
      */
@@ -8654,6 +8735,22 @@ var Two = (() => {
           v.offset = this.dashes && this._dashes.offset || 0;
         }
         this._dashes = v;
+      }
+    },
+    /**
+     * @name Two.Text#strokeAttenuation
+     * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+     * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+     */
+    strokeAttenuation: {
+      enumerable: true,
+      get: function() {
+        return this._strokeAttenuation;
+      },
+      set: function(v) {
+        this._strokeAttenuation = !!v;
+        this._flagStrokeAttenuation = true;
+        this._flagLinewidth = true;
       }
     }
   };
@@ -9265,6 +9362,12 @@ var Two = (() => {
      * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
      */
     _mask = null;
+    /**
+     * @name Two.Group#_strokeAttenuation
+     * @private
+     * @see {@link Two.Group#strokeAttenuation}
+     */
+    _strokeAttenuation = true;
     constructor(children) {
       super();
       for (let prop in proto22) {
@@ -9997,6 +10100,26 @@ var Two = (() => {
         this._flagMask = true;
         if (_.isObject(v) && !v.clip) {
           v.clip = true;
+        }
+      }
+    },
+    /**
+     * @name Two.Group#strokeAttenuation
+     * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space for all child shapes.
+     * @description When `strokeAttenuation` is `false`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke widths scale normally with transformations.
+     */
+    strokeAttenuation: {
+      enumerable: true,
+      get: function() {
+        return this._strokeAttenuation;
+      },
+      set: function(v) {
+        this._strokeAttenuation = !!v;
+        for (let i = 0; i < this.children.length; i++) {
+          const child = this.children[i];
+          if (child.strokeAttenuation !== void 0) {
+            child.strokeAttenuation = v;
+          }
         }
       }
     }
@@ -11499,7 +11622,7 @@ var Two = (() => {
             ctx.strokeStyle = stroke._renderer.effect;
           }
           if (linewidth) {
-            ctx.lineWidth = linewidth;
+            ctx.lineWidth = getEffectiveStrokeWidth(this);
           }
           if (miter) {
             ctx.miterLimit = miter;
@@ -11695,7 +11818,7 @@ var Two = (() => {
             ctx.strokeStyle = stroke._renderer.effect;
           }
           if (linewidth) {
-            ctx.lineWidth = linewidth;
+            ctx.lineWidth = getEffectiveStrokeWidth(this);
           }
         }
         if (typeof opacity === "number") {
@@ -11831,7 +11954,7 @@ var Two = (() => {
             ctx.strokeStyle = stroke._renderer.effect;
           }
           if (linewidth) {
-            ctx.lineWidth = linewidth;
+            ctx.lineWidth = getEffectiveStrokeWidth(this);
           }
         }
         if (typeof opacity === "number") {
@@ -12574,7 +12697,7 @@ var Two = (() => {
           }
         }
         if (this._flagLinewidth) {
-          changed["stroke-width"] = this._linewidth;
+          changed["stroke-width"] = getEffectiveStrokeWidth(this);
         }
         if (this._flagOpacity) {
           changed["stroke-opacity"] = this._opacity;
@@ -12691,7 +12814,7 @@ var Two = (() => {
           }
         }
         if (this._flagLinewidth) {
-          changed["stroke-width"] = this._linewidth;
+          changed["stroke-width"] = getEffectiveStrokeWidth(this);
         }
         if (this._flagOpacity) {
           changed["stroke-opacity"] = this._opacity;
@@ -12785,7 +12908,7 @@ var Two = (() => {
           }
         }
         if (this._flagLinewidth) {
-          changed["stroke-width"] = this._linewidth;
+          changed["stroke-width"] = getEffectiveStrokeWidth(this);
         }
         if (this._flagOpacity) {
           changed.opacity = this._opacity;
@@ -13389,7 +13512,7 @@ var Two = (() => {
             ctx.strokeStyle = stroke._renderer.effect;
           }
           if (linewidth) {
-            ctx.lineWidth = linewidth;
+            ctx.lineWidth = getEffectiveStrokeWidth(elem);
           }
           if (miter) {
             ctx.miterLimit = miter;
@@ -13736,7 +13859,7 @@ var Two = (() => {
             ctx.strokeStyle = stroke._renderer.effect;
           }
           if (linewidth) {
-            ctx.lineWidth = linewidth / aspect;
+            ctx.lineWidth = getEffectiveStrokeWidth(elem) / aspect;
           }
         }
         if (typeof opacity === "number") {
@@ -13949,7 +14072,7 @@ var Two = (() => {
             ctx.strokeStyle = stroke._renderer.effect;
           }
           if (linewidth) {
-            ctx.lineWidth = linewidth;
+            ctx.lineWidth = getEffectiveStrokeWidth(elem);
           }
         }
         if (typeof opacity === "number") {
