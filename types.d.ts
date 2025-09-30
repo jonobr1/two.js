@@ -2026,14 +2026,13 @@ declare module 'two.js/src/utils/shape' {
 }
 declare module 'two.js/src/effects/stop' {
   /**
-     * @name Two.Stop
-     * @class
-
-     * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
-     * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
-     * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
-     * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
-     */
+   * @name Two.Stop
+   * @class
+   * @param {Number} [offset] - The offset percentage of the stop represented as a zero-to-one value. Default value flip flops from zero-to-one as new stops are created.
+   * @param {String} [color] - The color of the stop. Default value flip flops from white to black as new stops are created.
+   * @param {Number} [opacity] - The opacity value. Default value is 1, cannot be lower than 0.
+   * @nota-bene Used specifically in conjunction with {@link Two.Gradient}s to control color graduation.
+   */
   export class Stop extends TwoElement {
     /**
      * @name Two.Stop.Index
@@ -2151,12 +2150,11 @@ declare module 'two.js/src/effects/gradient' {
   type SpreadProperties = 'pad' | 'reflect' | 'repeat';
   type UnitsProperties = 'userSpaceOnUse' | 'objectBoundingBox';
   /**
-     * @name Two.Gradient
-     * @class
-
-     * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
-     * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
-     */
+   * @name Two.Gradient
+   * @class
+   * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @description This is the base class for constructing different types of gradients with Two.js. The two common gradients are {@link Two.LinearGradient} and {@link Two.RadialGradient}.
+   */
   export class Gradient extends TwoElement {
     /**
      * @name Two.Gradient.Stop
@@ -2272,16 +2270,15 @@ declare module 'two.js/src/effects/gradient' {
 }
 declare module 'two.js/src/effects/linear-gradient' {
   /**
-     * @name Two.LinearGradient
-     * @class
-
-     * @param {Number} [x1=0] - The x position of the first end point of the linear gradient.
-     * @param {Number} [y1=0] - The y position of the first end point of the linear gradient.
-     * @param {Number} [x2=0] - The x position of the second end point of the linear gradient.
-     * @param {Number} [y2=0] - The y position of the second end point of the linear gradient.
-     * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
-     * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
-     */
+   * @name Two.LinearGradient
+   * @class
+   * @param {Number} [x1=0] - The x position of the first end point of the linear gradient.
+   * @param {Number} [y1=0] - The y position of the first end point of the linear gradient.
+   * @param {Number} [x2=0] - The x position of the second end point of the linear gradient.
+   * @param {Number} [y2=0] - The y position of the second end point of the linear gradient.
+   * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @nota-bene The linear gradient lives within the space of the parent object's matrix space.
+   */
   export class LinearGradient extends Gradient {
     /**
      * @name Two.LinearGradient.fromObject
@@ -2370,17 +2367,16 @@ declare module 'two.js/src/effects/linear-gradient' {
 }
 declare module 'two.js/src/effects/radial-gradient' {
   /**
-     * @name Two.RadialGradient
-     * @class
-
-     * @param {Number} [x=0] - The x position of the origin of the radial gradient.
-     * @param {Number} [y=0] - The y position of the origin of the radial gradient.
-     * @param {Number} [radius=0] - The radius of the radial gradient.
-     * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
-     * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
-     * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
-     * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
-     */
+   * @name Two.RadialGradient
+   * @class
+   * @param {Number} [x=0] - The x position of the origin of the radial gradient.
+   * @param {Number} [y=0] - The y position of the origin of the radial gradient.
+   * @param {Number} [radius=0] - The radius of the radial gradient.
+   * @param {Stop[]} [stops] - A list of {@link Two.Stop}s that contain the gradient fill pattern for the gradient.
+   * @param {Number} [focalX=0] - The x position of the focal point on the radial gradient.
+   * @param {Number} [focalY=0] - The y position of the focal point on the radial gradient.
+   * @nota-bene The radial gradient lives within the space of the parent object's matrix space.
+   */
   export class RadialGradient extends Gradient {
     /**
      * @name Two.RadialGradient.fromObject
@@ -3250,7 +3246,7 @@ declare module 'two.js/src/shapes/rectangle' {
      * @name Two.Rectangle.Properties
      * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
      */
-    static Properties: ('width' | 'height' | string)[];
+    static Properties: ('width' | 'height' | 'origin' | string)[];
     /**
      * @name Two.Rectangle.fromObject
      * @function
