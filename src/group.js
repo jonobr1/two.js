@@ -355,9 +355,24 @@ export class Group extends Shape {
     }
   }
 
+  /**
+   * @name Two.Group#copy
+   * @function
+   * @param {Two.Group} [group] - The reference {@link Two.Group}
+   * @returns {Two.Group}
+   * @description Copy the properties of one {@link Two.Group} onto another.
+   */
   copy(group) {
     super.copy.call(this, group);
-    console.warn('Two.Group.copy is not supported yet.');
+    console.warn(
+      'Two.js: attempting to copy group. Two.Group.children copying not supported.'
+    );
+    for (let i = 0; i < Group.Properties.length; i++) {
+      const k = Group.Properties[i];
+      if (k in group) {
+        this[k] = group[k];
+      }
+    }
     return this;
   }
 

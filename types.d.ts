@@ -1683,6 +1683,13 @@ declare module 'two.js/src/group' {
      * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
      */
     children: Children;
+    /**
+     * @name Two.Group#copy
+     * @function
+     * @param {Two.Group} [group] - The reference {@link Two.Group}
+     * @returns {Two.Group}
+     * @description Copy the properties of one {@link Two.Group} onto another.
+     */
     copy(group: Group): Group;
     /**
      * @name Two.Group#toObject
