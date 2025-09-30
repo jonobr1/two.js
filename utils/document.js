@@ -4,18 +4,18 @@ var path = require('path');
 var compiler = require('jsdoc-api');
 var sourceFiles = require('./source-files');
 
-var pkg = JSON.parse(fs.readFileSync(
-  path.resolve(__dirname, '../package.json')));
+var pkg = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../package.json'))
+);
 var directory = [];
 
 var template = _.template(
-  fs.readFileSync(
-    path.resolve(__dirname, './docs.template'),
-    { encoding: 'utf8' }
-  )
+  fs.readFileSync(path.resolve(__dirname, './docs.template'), {
+    encoding: 'utf8',
+  })
 );
 
-pkg.template = function(str) {
+pkg.template = function (str) {
   if (typeof str === 'string') {
     var regex = /\$\w*/g;
     var match = str.match(regex);
@@ -30,58 +30,52 @@ pkg.template = function(str) {
 preprocess();
 
 function preprocess() {
-
-  _.each(sourceFiles, function(file) {
-
+  _.each(sourceFiles, function (file) {
     var sourceFile = path.resolve(__dirname, '../', file);
-    var pivotDir = ['/docs/', file.replace('jsm/', '')
-      .replace('src/', '').replace('.js', '/')].join('');
+    var pivotDir = [
+      '/docs/',
+      file.replace('jsm/', '').replace('src/', '').replace('.js', '/'),
+    ].join('');
 
     var citations = compiler.explainSync({
       files: sourceFile,
-      cache: false
+      cache: false,
     });
 
     var root = getRoot(citations);
 
     directory.push({ name: root.longname, dir: pivotDir });
-
   });
 
   process();
-
 }
 
 function process() {
-
-  _.each(sourceFiles, function(file) {
-
+  _.each(sourceFiles, function (file) {
     var sourceFile = path.resolve(__dirname, '../', file);
-    var pivotDir = ['/docs/', file.replace('jsm/', '')
-      .replace('src/', '').replace('.js', '/')].join('');
+    var pivotDir = [
+      '/docs/',
+      file.replace('jsm/', '').replace('src/', '').replace('.js', '/'),
+    ].join('');
 
     var outputDir = path.resolve(__dirname, '../wiki' + pivotDir);
     var outputFile = path.join(outputDir, '/README.md');
 
     var citations = compiler.explainSync({
       files: sourceFile,
-      cache: false
+      cache: false,
     });
 
-    citations.slice(0).forEach(function(object) {
-
+    citations.slice(0).forEach(function (object) {
       var a = object.undocumented;
       var b = /package:undefined/i.test(object.longname);
       var c = /Two\.Utils\.Events\.(bind|unbind)/i.test(object.memberof);
       var d = /(private|protected)/i.test(object.access);
 
       if (a || b || c || d) {
-
         // Remove private / hidden / incomplete documented citations
         citations.splice(citations.indexOf(object), 1);
-
       } else {
-
         expandLink(object, 'description');
         _.each(object.params, expandParam, object);
         _.each(object.returns, expandParam, object);
@@ -90,11 +84,11 @@ function process() {
         object.see = _.map(object.see, expandSee, object);
 
         var sn;
-        sn = object.longname.replace(/#/ig, '.');
+        sn = object.longname.replace(/#/gi, '.');
         var snList = sn.split('.');
-        var snIndex = (snList.length > 2) ? 2 : 1;
+        var snIndex = snList.length > 2 ? 2 : 1;
         object.shortname = snList.slice(snIndex).join('.');
-        object.prefixname = sn.replace(object.shortname, "");
+        object.prefixname = sn.replace(object.shortname, '');
 
         // name and href for augments property
         var an;
@@ -108,17 +102,15 @@ function process() {
         if (an) {
           object.augmentsHref = getHref(an.slice(1).join('.'));
         }
-
       }
-
     });
 
     var citationsByScope = {
       instance: [],
-      static: []
+      static: [],
     };
 
-    _.each(citations, function(citation) {
+    _.each(citations, function (citation) {
       if (/#/i.test(citation.longname)) {
         citationsByScope.instance.push(citation);
       } else {
@@ -137,33 +129,43 @@ function process() {
     //   })
     // );
 
-    fs.mkdirSync(outputDir + '/', { recursive: true });
-    fs.writeFileSync(outputFile.replace('README.md', 'docs.json'),
-      JSON.stringify(citations));
+    // Ensure outputDir is inside the project root
+    var projectRoot = path.resolve(__dirname, '../');
+    var relative = path.relative(projectRoot, outputDir);
 
-    fs.writeFileSync(outputFile, template({
-      root: getRoot(citations, true),
-      citations: citations,
-      package: pkg
-    }));
+    if (relative && !relative.startsWith('..') && !path.isAbsolute(relative)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    } else {
+      throw new Error(
+        'Refusing to create output directory outside project root: ' + outputDir
+      );
+    }
+    fs.writeFileSync(
+      outputFile.replace('README.md', 'docs.json'),
+      JSON.stringify(citations)
+    );
+
+    fs.writeFileSync(
+      outputFile,
+      template({
+        root: getRoot(citations, true),
+        citations: citations,
+        package: pkg,
+      })
+    );
 
     console.log('Generated', outputFile);
-
   });
-
 }
 
 function getHref(name) {
-
   name = name.toLowerCase();
 
   for (var i = 0; i < sourceFiles.length; i++) {
-
     var sf = sourceFiles[i];
     if (sf.includes(name)) {
       return transform(sf);
     }
-
   }
 
   return null;
@@ -172,10 +174,7 @@ function getHref(name) {
     var path = str.replace('src/', '').replace('jsm/', '').replace('.js', '');
     return `/docs/${path}/`;
   }
-
 }
-
-
 
 function getRoot(citations, shouldSplice) {
   var list = citations.slice(0);
@@ -214,26 +213,20 @@ function expandParam(param) {
 }
 
 function expandLink(object, property) {
-
   var value = object[property];
   var shouldRecurse = false;
 
   if (value) {
-
     var regex = /\{@link ([\w\d:/?\-.#]*)\}/i;
     var link = value.match(regex);
 
     if (link && link.length > 1) {
-
       var name = link[1];
 
       if (/http/i.test(name)) {
-
         object[property] = value.replace(regex, '[$1]($1)');
         shouldRecurse = true;
-
       } else {
-
         var fragments = name.split(/[.#]/i);
         var longname = name.replace(/#/i, '.');
 
@@ -250,16 +243,13 @@ function expandLink(object, property) {
           '(',
           dir,
           hash ? '#' + hash.toLowerCase() : '',
-          ')'
+          ')',
         ].join('');
 
         object[property] = value.replace(regex, href);
         shouldRecurse = true;
-
       }
-
     }
-
   }
 
   if (shouldRecurse) {
@@ -267,7 +257,6 @@ function expandLink(object, property) {
   }
 
   return object;
-
 }
 
 function getDirectoryMatch(str) {
