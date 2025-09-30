@@ -94,8 +94,15 @@ export class Rectangle extends Path {
 
     for (let i = 0; i < Rectangle.Properties.length; i++) {
       const k = Rectangle.Properties[i];
-      if (k in rectangle && typeof rectangle[k] === 'number') {
-        this[k] = rectangle[k];
+      if (k in rectangle) {
+        if (typeof rectangle[k] === 'number') {
+          this[k] = rectangle[k];
+        } else if (
+          rectangle[k] instanceof Vector &&
+          this[k] instanceof Vector
+        ) {
+          this[k].copy(rectangle[k]);
+        }
       }
     }
 
