@@ -489,24 +489,30 @@ export class Text extends Shape {
    * @function
    * @returns {Two.Text}
    * @description Release the text's renderer resources and detach all events.
+   * This method disposes fill and stroke effects (calling dispose() on
    * Gradients and Textures for thorough cleanup) while preserving the
    * renderer type for potential re-attachment to a new renderer.
    */
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
+
     // Dispose fill effect (more thorough than unbind)
     if (typeof this.fill === 'object' && this.fill && 'dispose' in this.fill) {
       this.fill.dispose();
-    } else if (typeof this.fill === 'object' && this.fill && 'unbind' in this.fill) {
+    } else if (
+      typeof this.fill === 'object' &&
+      this.fill &&
+      'unbind' in this.fill
     ) {
       this.fill.unbind();
     }
-    
+
     // Dispose stroke effect (more thorough than unbind)
-    if (typeof this.stroke === 'object' && this.stroke && 'dispose' in this.stroke) {
     if (
       typeof this.stroke === 'object' &&
+      this.stroke &&
+      'dispose' in this.stroke
     ) {
       this.stroke.dispose();
     } else if (
