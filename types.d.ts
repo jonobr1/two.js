@@ -4839,6 +4839,7 @@ declare module 'two.js/src/shapes/points' {
      * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
      */
     strokeAttenuation: boolean;
+    /**
      * @name Two.Points#copy
      * @function
      * @param {Two.Points} points - The reference {@link Two.Points}
