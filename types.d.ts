@@ -1234,7 +1234,16 @@ declare module 'two.js/src/shape' {
      * @description The foundational transformation object for the Two.js scenegraph.
      */
   export class Shape extends TwoElement {
-    static Properties: string[];
+    static Properties: (
+      | 'position'
+      | 'rotation'
+      | 'scale'
+      | 'skewX'
+      | 'skewY'
+      | 'matrix'
+      | 'worldMatrix'
+      | string
+    )[];
     /**
      * @name Two.Shape.fromObject
      * @function
@@ -1260,7 +1269,7 @@ declare module 'two.js/src/shape' {
             scale?: number | { x: number; y: number } | Vector;
             skewX?: number;
             skewY?: number;
-            matrix: Parameters<typeof Matrix.fromObject>;
+            matrix: Parameters<typeof Matrix.fromObject>[0];
           })
     ): Shape;
     /**
@@ -1490,9 +1499,9 @@ declare module 'two.js/src/children' {
 }
 declare module 'two.js/src/group' {
   type ChildParams =
-    | Parameters<typeof Path.fromObject>
-    | Parameters<typeof Text.fromObject>
-    | Parameters<typeof Points.fromObject>;
+    | Parameters<typeof Path.fromObject>[0]
+    | Parameters<typeof Text.fromObject>[0]
+    | Parameters<typeof Points.fromObject>[0];
   /**
    * @name Two.Group
    * @class
@@ -1531,8 +1540,8 @@ declare module 'two.js/src/group' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Shape.fromObject> & {
-            children?: (ChildParams | Parameters<typeof Group.fromObject>)[];
+        | (Parameters<typeof Shape.fromObject>[0] & {
+            children?: (ChildParams | Parameters<typeof Group.fromObject>[0])[];
             opacity?: number;
             mask?: ChildParams;
           })
@@ -2075,7 +2084,7 @@ declare module 'two.js/src/effects/stop' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof TwoElement.fromObject> & {
+        | (Parameters<typeof TwoElement.fromObject>[0] & {
             offset?: number;
             color?: string;
             opacity?: number;
@@ -2197,7 +2206,7 @@ declare module 'two.js/src/effects/gradient' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof TwoElement.fromObject> & {
+        | (Parameters<typeof TwoElement.fromObject>[0] & {
             stops?: number[];
             spread?: SpreadProperties;
             units?: UnitsProperties;
@@ -2311,7 +2320,7 @@ declare module 'two.js/src/effects/linear-gradient' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Gradient.fromObject> & {
+        | (Parameters<typeof Gradient.fromObject>[0] & {
             left?: { x: number; y: number } | Vector;
             right?: { x: number; y: number } | Vector;
           })
@@ -2409,7 +2418,7 @@ declare module 'two.js/src/effects/radial-gradient' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Gradient.fromObject> & {
+        | (Parameters<typeof Gradient.fromObject>[0] & {
             radius?: number;
             center?: { x: number; y: number } | Vector;
             focal?: { x: number; y: number } | Vector;
@@ -2588,7 +2597,7 @@ declare module 'two.js/src/effects/texture' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof TwoElement.fromObject> & {
+        | (Parameters<typeof TwoElement.fromObject>[0] & {
             src?: string;
             repeat?: RepeatProperties;
             offset?: { x: number; y: number } | Vector;
@@ -2786,7 +2795,7 @@ declare module 'two.js/src/path' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Shape.fromObject> & {
+        | (Parameters<typeof Shape.fromObject>[0] & {
             vertices?: ({ x: number; y: number } | Anchor | Vector)[];
             fill?: string;
             stroke?: string;
@@ -3290,7 +3299,7 @@ declare module 'two.js/src/shapes/rectangle' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Path.fromObject> & {
+        | (Parameters<typeof Path.fromObject>[0] & {
             width?: number;
             height?: number;
             origin?: { x: number; y: number } | Vector;
@@ -3404,8 +3413,8 @@ declare module 'two.js/src/effects/image' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Rectangle.fromObject> & {
-            texture?: Parameters<typeof Texture.fromObject>;
+        | (Parameters<typeof Rectangle.fromObject>[0] & {
+            texture?: Parameters<typeof Texture.fromObject>[0];
             mode?: ModeProperties;
           })
     ): Image;
@@ -3500,8 +3509,8 @@ declare module 'two.js/src/effects/sprite' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Rectangle.fromObject> & {
-            texture?: Parameters<typeof Texture.fromObject>;
+        | (Parameters<typeof Rectangle.fromObject>[0] & {
+            texture?: Parameters<typeof Texture.fromObject>[0];
             columns?: number;
             rows?: number;
             frameRate?: number;
@@ -3723,7 +3732,7 @@ declare module 'two.js/src/shapes/circle' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Path.fromObject> & {
+        | (Parameters<typeof Path.fromObject>[0] & {
             radius?: number;
           })
     ): Circle;
@@ -3779,7 +3788,7 @@ declare module 'two.js/src/shapes/ellipse' {
     fromObject(
       obj:
         | object
-        | (Parameters<typeof Path.fromObject> & {
+        | (Parameters<typeof Path.fromObject>[0] & {
             width?: number;
             height?: number;
           })
@@ -3885,7 +3894,7 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
     fromObject(
       obj:
         | object
-        | (Parameters<typeof Path.fromObject> & {
+        | (Parameters<typeof Path.fromObject>[0] & {
             width?: number;
             height?: number;
             radius?: number;
@@ -3995,7 +4004,7 @@ declare module 'two.js/src/text' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Shape.fromObject> & {
+        | (Parameters<typeof Shape.fromObject>[0] & {
             value?: string;
             family?: string;
             size?: number;
@@ -4405,8 +4414,8 @@ declare module 'two.js/src/effects/image-sequence' {
     fromObject(
       obj:
         | object
-        | (Parameters<typeof Rectangle.fromObject> & {
-            textures?: Parameters<typeof Texture.fromObject>[];
+        | (Parameters<typeof Rectangle.fromObject>[0] & {
+            textures?: Parameters<typeof Texture.fromObject>[0][];
             frameRate?: number;
             index?: number;
             firstFrame?: number;
@@ -4592,7 +4601,7 @@ declare module 'two.js/src/shapes/arc-segment' {
     fromObject(
       obj:
         | object
-        | (Parameters<typeof Path.fromObject> & {
+        | (Parameters<typeof Path.fromObject>[0] & {
             startAngle?: number;
             endAngle?: number;
             innerRadius?: number;
@@ -4719,7 +4728,7 @@ declare module 'two.js/src/shapes/points' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Shape.fromObject> & {
+        | (Parameters<typeof Shape.fromObject>[0] & {
             fill?: string;
             stroke?: string;
             linewidth?: number;
@@ -4970,7 +4979,7 @@ declare module 'two.js/src/shapes/polygon' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Path.fromObject> & {
+        | (Parameters<typeof Path.fromObject>[0] & {
             width?: number;
             height?: number;
             sides?: number;
@@ -5063,7 +5072,7 @@ declare module 'two.js/src/shapes/star' {
     static fromObject(
       obj:
         | object
-        | (Parameters<typeof Path.fromObject> & {
+        | (Parameters<typeof Path.fromObject>[0] & {
             innerRadius?: number;
             outerRadius?: number;
             sides?: number;

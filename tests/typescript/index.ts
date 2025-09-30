@@ -7,6 +7,12 @@ const two = new Two({
 
 let path;
 
+path = Two.Circle.fromObject({
+  radius: 5,
+  rotation: Math.PI,
+  position: { x: 0, y: 0 },
+});
+
 path = new Two.Line(5, 5, 10, 10);
 two.add(path);
 
