@@ -129,9 +129,9 @@ export class Text extends Shape {
   _flagVisible = true;
 
   /**
-   * @name Two.Path#_flagMask
+   * @name Two.Text#_flagMask
    * @private
-   * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
+   * @property {Boolean} - Determines whether the {@link Two.Text#mask} needs updating.
    */
   _flagMask = false;
 
@@ -148,6 +148,13 @@ export class Text extends Shape {
    * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
    */
   _flagDirection = true;
+
+  /**
+   * @name Two.Text#_flagStrokeAttenuation
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Text#strokeAttenuation} needs updating.
+   */
+  _flagStrokeAttenuation = true;
 
   // Underlying Properties
 
@@ -267,6 +274,13 @@ export class Text extends Shape {
    */
   _dashes = null;
 
+  /**
+   * @name Two.Text#_strokeAttenuation
+   * @private
+   * @see {@link Two.Text#strokeAttenuation}
+   */
+  _strokeAttenuation = true;
+
   constructor(message, x, y, styles) {
     super();
 
@@ -340,6 +354,7 @@ export class Text extends Shape {
     'fill',
     'stroke',
     'dashes',
+    'strokeAttenuation',
   ];
 
   /**
@@ -474,28 +489,34 @@ export class Text extends Shape {
    * @function
    * @returns {Two.Text}
    * @description Release the text's renderer resources and detach all events.
-   * This method disposes fill and stroke effects (calling dispose() on 
    * Gradients and Textures for thorough cleanup) while preserving the
    * renderer type for potential re-attachment to a new renderer.
    */
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
-    
     // Dispose fill effect (more thorough than unbind)
     if (typeof this.fill === 'object' && this.fill && 'dispose' in this.fill) {
       this.fill.dispose();
     } else if (typeof this.fill === 'object' && this.fill && 'unbind' in this.fill) {
+    ) {
       this.fill.unbind();
     }
     
     // Dispose stroke effect (more thorough than unbind)
     if (typeof this.stroke === 'object' && this.stroke && 'dispose' in this.stroke) {
+    if (
+      typeof this.stroke === 'object' &&
+    ) {
       this.stroke.dispose();
-    } else if (typeof this.stroke === 'object' && this.stroke && 'unbind' in this.stroke) {
+    } else if (
+      typeof this.stroke === 'object' &&
+      this.stroke &&
+      'unbind' in this.stroke
+    ) {
       this.stroke.unbind();
     }
-    
+
     return this;
   }
 
@@ -839,6 +860,22 @@ const proto = {
         v.offset = (this.dashes && this._dashes.offset) || 0;
       }
       this._dashes = v;
+    },
+  },
+  /**
+   * @name Two.Text#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function () {
+      return this._strokeAttenuation;
+    },
+    set: function (v) {
+      this._strokeAttenuation = !!v;
+      this._flagStrokeAttenuation = true;
+      this._flagLinewidth = true;
     },
   },
 };

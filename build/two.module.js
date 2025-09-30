@@ -1208,7 +1208,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2025-09-30T22:09:35.343Z",
+  PublishDate: "2025-09-30T22:51:48.793Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.

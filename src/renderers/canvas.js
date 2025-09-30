@@ -1,5 +1,5 @@
 import { Commands } from '../utils/path-commands.js';
-import { decomposeMatrix, mod, TWO_PI } from '../utils/math.js';
+import { decomposeMatrix, mod, TWO_PI, getEffectiveStrokeWidth } from '../utils/math.js';
 import { Curve } from '../utils/curves.js';
 import { Events } from '../events.js';
 import { getRatio } from '../utils/device-pixel-ratio.js';
@@ -232,7 +232,7 @@ const canvas = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(this);
         }
         if (miter) {
           ctx.miterLimit = miter;
@@ -490,7 +490,7 @@ const canvas = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(this);
         }
       }
       if (typeof opacity === 'number') {
@@ -664,7 +664,7 @@ const canvas = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(this);
         }
       }
       if (typeof opacity === 'number') {

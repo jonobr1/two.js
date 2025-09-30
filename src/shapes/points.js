@@ -41,6 +41,7 @@ export class Points extends Shape {
   _flagVisible = true;
   _flagSize = true;
   _flagSizeAttenuation = true;
+  _flagStrokeAttenuation = true;
 
   _length = 0;
   _fill = '#fff';
@@ -53,6 +54,7 @@ export class Points extends Shape {
   _beginning = 0;
   _ending = 1.0;
   _dashes = null;
+  _strokeAttenuation = true;
 
   constructor(vertices) {
     super();
@@ -180,6 +182,7 @@ export class Points extends Shape {
     'beginning',
     'ending',
     'dashes',
+    'strokeAttenuation',
   ];
 
   /**
@@ -700,6 +703,23 @@ const proto = {
         v.offset = (this.dashes && this._dashes.offset) || 0;
       }
       this._dashes = v;
+    },
+  },
+
+  /**
+   * @name Two.Points#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function () {
+      return this._strokeAttenuation;
+    },
+    set: function (v) {
+      this._strokeAttenuation = !!v;
+      this._flagStrokeAttenuation = true;
+      this._flagLinewidth = true;
     },
   },
 };

@@ -116,6 +116,13 @@ export class Path extends Shape {
   _flagMiter = true;
 
   /**
+   * @name Two.Path#_flagStrokeAttenuation
+   * @private
+   * @property {Boolean} - Determines whether the {@link Two.Path#strokeAttenuation} needs updating.
+   */
+  _flagStrokeAttenuation = true;
+
+  /**
    * @name Two.Path#_flagMask
    * @private
    * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
@@ -249,6 +256,13 @@ export class Path extends Shape {
    * @see {@link Two.Path#dashes}
    */
   _dashes = null;
+
+  /**
+   * @name Two.Path#_strokeAttenuation
+   * @private
+   * @see {@link Two.Path#strokeAttenuation}
+   */
+  _strokeAttenuation = true;
 
   constructor(vertices, closed, curved, manual) {
     super();
@@ -407,6 +421,7 @@ export class Path extends Shape {
     'beginning',
     'ending',
     'dashes',
+    'strokeAttenuation',
   ];
 
   static Utils = {
@@ -1231,6 +1246,7 @@ export class Path extends Shape {
       this._flagJoin =
       this._flagMiter =
       this._flagClip =
+      this._flagStrokeAttenuation =
         false;
 
     Shape.prototype.flagReset.call(this);
@@ -1514,6 +1530,23 @@ const proto = {
         v.offset = (this.dashes && this._dashes.offset) || 0;
       }
       this._dashes = v;
+    },
+  },
+
+  /**
+   * @name Two.Path#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function () {
+      return this._strokeAttenuation;
+    },
+    set: function (v) {
+      this._strokeAttenuation = !!v;
+      this._flagStrokeAttenuation = true;
+      this._flagLinewidth = true;
     },
   },
 };

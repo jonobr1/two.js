@@ -1,7 +1,7 @@
 import { Commands } from '../utils/path-commands.js';
 
 import { root } from '../utils/root.js';
-import { getPoT, mod, NumArray, TWO_PI } from '../utils/math.js';
+import { getPoT, mod, NumArray, TWO_PI, getEffectiveStrokeWidth } from '../utils/math.js';
 import { shaders } from '../utils/shaders.js';
 import { Events } from '../events.js';
 import { TwoError } from '../utils/error.js';
@@ -235,7 +235,7 @@ const webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(elem);
         }
         if (miter) {
           ctx.miterLimit = miter;
@@ -731,7 +731,7 @@ const webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth / aspect;
+          ctx.lineWidth = getEffectiveStrokeWidth(elem) / aspect;
         }
       }
       if (typeof opacity === 'number') {
@@ -1039,7 +1039,7 @@ const webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(elem);
         }
       }
       if (typeof opacity === 'number') {

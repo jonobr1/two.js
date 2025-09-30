@@ -3,7 +3,7 @@ QUnit.module('Primitives');
 QUnit.test('Two.Points', function (assert) {
   var props = Two.Points.Properties.slice(0, 7);
 
-  assert.expect(props.length + 13);
+  assert.expect(props.length + 15);
 
   var two = new Two();
   var points = new Two.Points();
@@ -41,6 +41,18 @@ QUnit.test('Two.Points', function (assert) {
     points._sizeAttenuation,
     true,
     'Can set property sizeAttenuation correctly.'
+  );
+
+  points.strokeAttenuation = true;
+  assert.equal(
+    points.strokeAttenuation,
+    true,
+    'Can get property strokeAttenuation correctly.'
+  );
+  assert.equal(
+    points._strokeAttenuation,
+    true,
+    'Can set property strokeAttenuation correctly.'
   );
 
   points.dashes = [2, 2];

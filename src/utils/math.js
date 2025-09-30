@@ -140,8 +140,46 @@ function toFixed(v) {
   return floor(v * 1000000) / 1000000;
 }
 
+/**
+ * @name Two.Utils.getEffectiveStrokeWidth
+ * @function
+ * @param {Two.Path|Two.Group} object - The object to calculate effective stroke width for.
+ * @param {Two.Matrix} [worldMatrix] - The world transformation matrix. If not provided, will be calculated.
+ * @returns {Number} The effective stroke width. If `object.strokeAttenuation` is true, returns the original linewidth (scales with transforms). If false, returns the linewidth compensated for world scale to maintain constant screen-space width.
+ * @description Calculates the effective stroke width for an object. If `strokeAttenuation` is true, returns the original linewidth (which scales with transforms). If `strokeAttenuation` is false, compensates for world scale so the stroke width remains constant in screen space.
+ */
+function getEffectiveStrokeWidth(object, worldMatrix) {
+  const linewidth = object._linewidth;
+  
+  // If strokeAttenuation is true (default), return original linewidth (scales with transforms)
+  if (object.strokeAttenuation) {
+    return linewidth;
+  }
+  
+  // Calculate world matrix if not provided
+  if (!worldMatrix) {
+    worldMatrix = object.worldMatrix || getComputedMatrix(object);
+  }
+  
+  // Decompose matrix to get scale
+  const decomposed = decomposeMatrix(
+    worldMatrix.elements[0],
+    worldMatrix.elements[3], 
+    worldMatrix.elements[1],
+    worldMatrix.elements[4],
+    worldMatrix.elements[2],
+    worldMatrix.elements[5]
+  );
+  
+  // Use the larger of the two scale factors to maintain uniform appearance
+  const scale = Math.max(Math.abs(decomposed.scaleX), Math.abs(decomposed.scaleY));
+  
+  // Compensate for scale to maintain constant screen-space width
+  return scale > 0 ? linewidth / scale : linewidth;
+}
+
 
 export {
   decomposeMatrix, getComputedMatrix, getPoT, setMatrix, lerp, mod, NumArray,
-  toFixed, TWO_PI, HALF_PI
+  toFixed, getEffectiveStrokeWidth, TWO_PI, HALF_PI
 };

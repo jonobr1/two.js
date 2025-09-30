@@ -197,6 +197,13 @@ export class Group extends Shape {
    */
   _mask = null;
 
+  /**
+   * @name Two.Group#_strokeAttenuation
+   * @private
+   * @see {@link Two.Group#strokeAttenuation}
+   */
+  _strokeAttenuation = true;
+
   constructor(children) {
     super();
 
@@ -1081,6 +1088,27 @@ const proto = {
       this._flagMask = true;
       if (_.isObject(v) && !v.clip) {
         v.clip = true;
+      }
+    },
+  },
+
+  /**
+   * @name Two.Group#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space for all child shapes.
+   * @description When `strokeAttenuation` is `false`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke widths scale normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function () {
+      return this._strokeAttenuation;
+    },
+    set: function (v) {
+      this._strokeAttenuation = !!v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        if (child.strokeAttenuation !== undefined) {
+          child.strokeAttenuation = v;
+        }
       }
     },
   },
