@@ -1220,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2025-09-30T22:57:13.725Z",
+    PublishDate: "2025-09-30T23:07:29.635Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1933,7 +1933,7 @@ var Two = (() => {
     /**
      * @name Two.Element#className
      * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-     * @nota-bene Only available for the SVG renderer.
+     * @nota-bene Only rendered to DOM in the SVG renderer.
      */
     _className = "";
     /**
@@ -2196,7 +2196,7 @@ var Two = (() => {
     static ImageRegistry = new Registry();
     /**
      * @name Two.Texture.getAbsoluteURL
-     * @property {Function} - Serializes a URL as an absolute path for canonical attribution in {@link Two.ImageRegistry}.
+     * @property {Function} - Serializes a URL as an absolute path for canonical attribution in {@link Two.Texture.ImageRegistry}.
      * @param {String} path
      * @returns {String} - The serialized absolute path.
      */
@@ -11284,12 +11284,12 @@ var Two = (() => {
     }
     /**
      * @name Two.Image.Modes
-     * @property {Object} mode - Different mode types to render an image inspired by Figma.
-     * @property {String} mode.fill - Scale image to fill the bounds while preserving aspect ratio.
-     * @property {String} mode.fit - Scale image to fit within bounds while preserving aspect ratio.
-     * @property {String} mode.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
-     * @property {String} mode.tile - Repeat image at original size to fill the bounds.
-     * @property {String} mode.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
+     * @property {Object} Modes - Different mode types to render an image inspired by Figma.
+     * @property {String} Modes.fill - Scale image to fill the bounds while preserving aspect ratio.
+     * @property {String} Modes.fit - Scale image to fit within bounds while preserving aspect ratio.
+     * @property {String} Modes.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+     * @property {String} Modes.tile - Repeat image at original size to fill the bounds.
+     * @property {String} Modes.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
      */
     static Modes = {
       fill: "fill",

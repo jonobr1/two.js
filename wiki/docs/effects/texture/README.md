@@ -284,7 +284,7 @@ __Returns__: String
 <div class="properties">
 
 
-Serializes a URL as an absolute path for canonical attribution in [Two.ImageRegistry](/docs/two/#imageregistry).
+Serializes a URL as an absolute path for canonical attribution in [Two.Texture.ImageRegistry](/docs/effects/texture/#imageregistry).
 
 
 </div>

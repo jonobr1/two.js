@@ -71,8 +71,8 @@ Approximate aspect ratio of a typeface's character width to height.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L316">
-    text.js:316
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L330">
+    text.js:330
   </a>
 
 </div>
@@ -118,8 +118,8 @@ A list of properties that are on every [Two.Text](/docs/text/).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L322">
-    text.js:322
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L336">
+    text.js:336
   </a>
 
 </div>
@@ -174,8 +174,8 @@ __Returns__: Object
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L345">
-    text.js:345
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L360">
+    text.js:360
   </a>
 
 </div>
@@ -234,8 +234,8 @@ Create a new [Two.Text](/docs/text/) from an object notation of a [Two.Text](/do
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L381">
-    text.js:381
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L396">
+    text.js:396
   </a>
 
 </div>
@@ -291,8 +291,8 @@ The characters to be rendered to the the screen. Referred to in the documentatio
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L154">
-    text.js:154
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L161">
+    text.js:161
   </a>
 
 </div>
@@ -338,8 +338,8 @@ The font family Two.js should attempt to register for rendering. The default val
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L160">
-    text.js:160
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L167">
+    text.js:167
   </a>
 
 </div>
@@ -385,8 +385,8 @@ The font size in Two.js point space. Defaults to `13`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L166">
-    text.js:166
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L173">
+    text.js:173
   </a>
 
 </div>
@@ -432,8 +432,8 @@ The height between lines measured from base to base in Two.js point space. Defau
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L172">
-    text.js:172
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L179">
+    text.js:179
   </a>
 
 </div>
@@ -479,8 +479,8 @@ Alignment of text in relation to [Two.Text.translation](/docs/text/#translation)
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L178">
-    text.js:178
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L185">
+    text.js:185
   </a>
 
 </div>
@@ -526,8 +526,8 @@ The vertical aligment of the text in relation to [Two.Text.translation](/docs/te
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L184">
-    text.js:184
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L191">
+    text.js:191
   </a>
 
 </div>
@@ -583,8 +583,8 @@ The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L191">
-    text.js:191
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L198">
+    text.js:198
   </a>
 
 </div>
@@ -630,8 +630,8 @@ A number at intervals of 100 to describe the font's weight. This compatibility v
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L197">
-    text.js:197
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L204">
+    text.js:204
   </a>
 
 </div>
@@ -677,8 +677,8 @@ String to delineate whether text should be decorated with for instance an `'unde
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L203">
-    text.js:203
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L210">
+    text.js:210
   </a>
 
 </div>
@@ -724,8 +724,8 @@ String to determine what direction the text should run. Possibly values are `'lt
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L209">
-    text.js:209
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L216">
+    text.js:216
   </a>
 
 </div>
@@ -777,8 +777,8 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L215">
-    text.js:215
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L222">
+    text.js:222
   </a>
 
 </div>
@@ -830,8 +830,8 @@ See: [https://developer.mozilla.org/en-US/docs/Web/CSS/color_value](https://deve
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L222">
-    text.js:222
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L229">
+    text.js:229
   </a>
 
 </div>
@@ -877,8 +877,8 @@ The thickness in pixels of the stroke.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L229">
-    text.js:229
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L236">
+    text.js:236
   </a>
 
 </div>
@@ -924,8 +924,8 @@ The opaqueness of the text object.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L235">
-    text.js:235
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L242">
+    text.js:242
   </a>
 
 </div>
@@ -981,8 +981,8 @@ Display the text object or not.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L242">
-    text.js:242
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L249">
+    text.js:249
   </a>
 
 </div>
@@ -1038,8 +1038,8 @@ The shape whose alpha property becomes a clipping area for the text.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L249">
-    text.js:249
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L256">
+    text.js:256
   </a>
 
 </div>
@@ -1095,8 +1095,8 @@ Object to define clipping area.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L256">
-    text.js:256
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L263">
+    text.js:263
   </a>
 
 </div>
@@ -1164,8 +1164,8 @@ See: [https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharra
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L290">
-    text.js:290
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L304">
+    text.js:304
   </a>
 
 </div>
@@ -1211,8 +1211,8 @@ A number in pixels to offset [Two.Text.dashes](/docs/text/#dashes) display.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L298">
-    text.js:298
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L312">
+    text.js:312
   </a>
 
 </div>
@@ -1263,8 +1263,8 @@ Copy the properties of one [Two.Text](/docs/text/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L405">
-    text.js:405
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L420">
+    text.js:420
   </a>
 
 </div>
@@ -1323,8 +1323,8 @@ Create a new instance of [Two.Text](/docs/text/) with the same properties of the
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L424">
-    text.js:424
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L439">
+    text.js:439
   </a>
 
 </div>
@@ -1376,8 +1376,8 @@ Return a JSON compatible plain object that represents the text object.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L453">
-    text.js:453
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L468">
+    text.js:468
   </a>
 
 </div>
@@ -1430,7 +1430,7 @@ __Returns__: Two.Text
 <div class="description">
 
 Release the text's renderer resources and detach all events.
-This method disposes fill and stroke effects (calling dispose() on 
+This method disposes fill and stroke effects (calling dispose() on
 Gradients and Textures for thorough cleanup) while preserving the
 renderer type for potential re-attachment to a new renderer.
 
@@ -1442,8 +1442,8 @@ renderer type for potential re-attachment to a new renderer.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L472">
-    text.js:472
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L487">
+    text.js:487
   </a>
 
 </div>
@@ -1487,8 +1487,8 @@ Short hand method to set fill to `none`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L502">
-    text.js:502
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L529">
+    text.js:529
   </a>
 
 </div>
@@ -1532,8 +1532,8 @@ Short hand method to set stroke to `none`.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L512">
-    text.js:512
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L539">
+    text.js:539
   </a>
 
 </div>
@@ -1594,8 +1594,61 @@ Return an object with top, left, right, bottom, width, and height parameters of 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L527">
-    text.js:527
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L554">
+    text.js:554
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance member ">
+
+## strokeAttenuation
+
+<h2 class="longname" aria-hidden="true"><a href="#strokeAttenuation"><span class="prefix">Two.Text.</span><span class="shortname">strokeAttenuation</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+<div class="properties">
+
+
+When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+
+
+</div>
+
+
+
+
+
+
+<div class="description">
+
+When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L871">
+    text.js:871
   </a>
 
 </div>

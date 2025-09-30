@@ -224,7 +224,7 @@ export class Texture extends Element {
 
   /**
    * @name Two.Texture.getAbsoluteURL
-   * @property {Function} - Serializes a URL as an absolute path for canonical attribution in {@link Two.ImageRegistry}.
+   * @property {Function} - Serializes a URL as an absolute path for canonical attribution in {@link Two.Texture.ImageRegistry}.
    * @param {String} path
    * @returns {String} - The serialized absolute path.
    */

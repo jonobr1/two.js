@@ -259,7 +259,7 @@ A class to be applied to the element to be compatible with CSS styling.
 
 
 ::: tip nota-bene
-Only available for the SVG renderer.
+Only rendered to DOM in the SVG renderer.
 :::
 
 

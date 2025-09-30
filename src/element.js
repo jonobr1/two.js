@@ -39,7 +39,7 @@ export class Element extends Events {
   /**
    * @name Two.Element#className
    * @property {String} - A class to be applied to the element to be compatible with CSS styling.
-   * @nota-bene Only available for the SVG renderer.
+   * @nota-bene Only rendered to DOM in the SVG renderer.
    */
   _className = '';
 

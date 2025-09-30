@@ -394,8 +394,8 @@ Create a new instance of [Two.Rectangle](/docs/shapes/rectangle/) with the same 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L179">
-    rectangle.js:179
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L183">
+    rectangle.js:183
   </a>
 
 </div>
@@ -447,8 +447,8 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L211">
-    rectangle.js:211
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shapes/rectangle.js#L219">
+    rectangle.js:219
   </a>
 
 </div>

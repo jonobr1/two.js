@@ -75,12 +75,12 @@ export class Image extends Rectangle {
 
   /**
    * @name Two.Image.Modes
-   * @property {Object} mode - Different mode types to render an image inspired by Figma.
-   * @property {String} mode.fill - Scale image to fill the bounds while preserving aspect ratio.
-   * @property {String} mode.fit - Scale image to fit within bounds while preserving aspect ratio.
-   * @property {String} mode.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
-   * @property {String} mode.tile - Repeat image at original size to fill the bounds.
-   * @property {String} mode.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
+   * @property {Object} Modes - Different mode types to render an image inspired by Figma.
+   * @property {String} Modes.fill - Scale image to fill the bounds while preserving aspect ratio.
+   * @property {String} Modes.fit - Scale image to fit within bounds while preserving aspect ratio.
+   * @property {String} Modes.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+   * @property {String} Modes.tile - Repeat image at original size to fill the bounds.
+   * @property {String} Modes.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
    */
   static Modes = {
     fill: 'fill',

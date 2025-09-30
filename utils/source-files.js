@@ -28,11 +28,12 @@ var sourceFiles = [
   'src/effects/radial-gradient.js',
   'src/effects/texture.js',
   'src/effects/sprite.js',
-  'src/effects/image-sequence.js',
+  'src/effects/image.js',
   'src/group.js',
   'extras/jsm/arc.js',
   'extras/jsm/zui.js',
   'src/shapes/arc-segment.js',
+  'src/effects/image-sequence.js',
 ];
 
 if (typeof module != 'undefined' && module.exports) {
