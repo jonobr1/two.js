@@ -15,6 +15,7 @@ import { RoundedRectangle } from './shapes/rounded-rectangle.js';
 import { Star } from './shapes/star.js';
 import { Text } from './text.js';
 import { Element } from './element.js';
+import { ImageSequence } from 'effects/image-sequence.js';
 
 // Constants
 
@@ -321,6 +322,8 @@ export class Group extends Shape {
             return Ellipse.fromObject(child);
           case 'image':
             return Image.fromObject(child);
+          case 'image-sequence':
+            return ImageSequence.fromObject(child);
           case 'sprite':
             return Image.fromObject(child);
           case 'points':

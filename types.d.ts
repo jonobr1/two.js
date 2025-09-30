@@ -4330,10 +4330,44 @@ declare module 'two.js/src/effects/image-sequence' {
      */
   export class ImageSequence extends Rectangle {
     /**
+     * @name Two.ImageSequence.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
+     */
+    Properties: (
+      | 'textures'
+      | 'frameRate'
+      | 'index'
+      | 'firstFrame'
+      | 'lastFrame'
+      | 'loop'
+      | string
+    )[];
+    /**
      * @name Two.ImageSequence.DefaultFrameRate
      * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
      */
-    static DefaultFrameRate: number;
+    static DefaultFrameRate: 30;
+    /**
+     * @name Two.ImageSequence.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.ImageSequence} to create a new instance
+     * @returns {Two.ImageSequence}
+     * @description Create a new {@link Two.ImageSequence} from an object notation of a {@link Two.ImageSequence}.
+     * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
+     */
+    fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Rectangle.fromObject> & {
+            textures?: Parameters<typeof Texture.fromObject>[];
+            frameRate?: number;
+            index?: number;
+            firstFrame?: number;
+            lastFrame?: number;
+            loop?: boolean;
+          })
+    ): ImageSequence;
+
     constructor(
       paths?: string | string[] | Texture | Texture[],
       ox?: number,
@@ -4418,13 +4452,20 @@ declare module 'two.js/src/effects/image-sequence' {
      * @see {@link Two.ImageSequence#frameRate}
      */
     private _frameRate;
-    textures: any[];
+    textures: Texture[];
     frameRate: number;
     /**
      * @name Two.ImageSequence#index
      * @property {Number} - The index of the current tile of the sprite to display. Defaults to `0`.
      */
     index: number;
+    /**
+     * @name Two.ImageSequence#copy
+     * @function
+     * @param {Two.ImageSequence} imageSequence - The reference {@link Two.ImageSequence}
+     * @description Copy the properties of one {@link Two.ImageSequence} onto another.
+     */
+    copy(imageSeqence: ImageSequence): ImageSequence;
     /**
      * @name Two.ImageSequence#play
      * @function
@@ -4451,6 +4492,14 @@ declare module 'two.js/src/effects/image-sequence' {
      */
     stop(): ImageSequence;
     /**
+     * @name Two.ImageSequence#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.ImageSequence}
+     * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
+     */
+    clone(parent: Group): ImageSequence;
+    /**
      * @name Two.ImageSequence#dispose
      * @function
      * @description Release the image sequence's renderer resources and detach all events.
@@ -4463,6 +4512,7 @@ declare module 'two.js/src/effects/image-sequence' {
   }
   import { Rectangle } from 'two.js/src/shapes/rectangle';
   import { Texture } from 'two.js/src/effects/texture';
+  import { Group } from 'two.js/src/group';
 }
 declare module 'two.js/src/shapes/arc-segment' {
   /**
