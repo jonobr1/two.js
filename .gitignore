@@ -6,7 +6,7 @@ docs.json
 dist
 .idea
 .codacy
+tests/typescript/package-lock.json
 
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
-tests/typescript/package-lock.json
