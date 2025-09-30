@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 var sourceFiles = require('../../utils/source-files');
-var fileSizes = getJSON('../../utils/file-sizes.json');
+var fileSizes = getJSON('file-sizes');
 
 var root = { title: 'Base', children: [] };
 var effects = { title: 'Effects', children: [] };
@@ -13,12 +13,12 @@ var extras = { title: 'Extras', children: [] };
 var sidebarForDocs = [root, effects, renderers, shapes, extras];
 
 for (var i = 0; i < sourceFiles.length; i++) {
-
   // var name = sourceFiles[i].replace(/.*\/([a-zA-Z\-]*)\.js$/i, '$1');
   var name = sourceFiles[i]
     .replace('jsm/', '')
     .replace('extras', '/extras')
-    .replace('src/', '/').replace('.js', '/');
+    .replace('src/', '/')
+    .replace('.js', '/');
 
   name = `/docs${name}`;
 
@@ -33,30 +33,71 @@ for (var i = 0; i < sourceFiles.length; i++) {
   } else {
     root.children.push(name);
   }
-
 }
 
-function getJSON(filepath) {
-  var file = fs.readFileSync(path.resolve(__dirname, filepath));
+function getJSON(filename) {
+  var file = fs.readFileSync(
+    path.resolve(__dirname, '../../utils/', `${filename}.json`)
+  );
   return JSON.parse(file);
 }
 
 module.exports = {
   head: [
     ['link', { rel: 'icon', href: '/images/favicon.gif' }],
-    ['link', { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' }],
-    ['meta', { name: 'google-site-verification', content: 'eNzLpThZ5XFyxVRedxqW7JxwibqK83DLO-Pqx9rTIDo' }],
+    [
+      'link',
+      { rel: 'stylesheet', href: 'https://use.typekit.net/edp1hux.css' },
+    ],
+    [
+      'meta',
+      {
+        name: 'google-site-verification',
+        content: 'eNzLpThZ5XFyxVRedxqW7JxwibqK83DLO-Pqx9rTIDo',
+      },
+    ],
     ['meta', { property: 'og:title', content: 'Two.js' }],
-    ['meta', { property: 'og:description', content: 'A renderer agnostic two-dimensional drawing api for the web.' }],
+    [
+      'meta',
+      {
+        property: 'og:description',
+        content: 'A renderer agnostic two-dimensional drawing api for the web.',
+      },
+    ],
     ['meta', { property: 'og:url', content: 'https://two.js.org/' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:image', content: 'https://two.js.org/images/thumbnail.jpg' }],
+    [
+      'meta',
+      {
+        property: 'og:image',
+        content: 'https://two.js.org/images/thumbnail.jpg',
+      },
+    ],
     ['meta', { name: 'twitter:card', content: 'summary' }],
     ['meta', { name: 'twitter:site', content: '@jonofyi' }],
     ['meta', { name: 'twitter:title', content: 'Two.js' }],
-    ['meta', { name: 'twitter:description', content: 'A renderer agnostic two-dimensional drawing api for the web.' }],
-    ['meta', { name: 'twitter:image', content: 'https://two.js.org/images/thumbnail.jpg' }],
-    ['script', { type: 'text/javascript', src: 'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js', async: '' }]
+    [
+      'meta',
+      {
+        name: 'twitter:description',
+        content: 'A renderer agnostic two-dimensional drawing api for the web.',
+      },
+    ],
+    [
+      'meta',
+      {
+        name: 'twitter:image',
+        content: 'https://two.js.org/images/thumbnail.jpg',
+      },
+    ],
+    [
+      'script',
+      {
+        type: 'text/javascript',
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js',
+        async: '',
+      },
+    ],
   ],
   description: 'A renderer agnostic two-dimensional drawing api for the web.',
   themeConfig: {
@@ -76,21 +117,24 @@ module.exports = {
     productionSize: fileSizes.production,
     nav: [
       {
-        text: 'Docs', link: '/docs/two/'
+        text: 'Docs',
+        link: '/docs/two/',
       },
       {
-        text: 'Examples', link: '/examples/'
+        text: 'Examples',
+        link: '/examples/',
       },
       {
-        text: 'Changelog', link: '/changelog/'
-      }
+        text: 'Changelog',
+        link: '/changelog/',
+      },
     ],
     sidebar: {
       '/changelog/': ['/changelog/'],
-      '/docs/': sidebarForDocs
+      '/docs/': sidebarForDocs,
     },
     markdown: {
-      lineNumbers: true
-    }
-  }
+      lineNumbers: true,
+    },
+  },
 };
