@@ -1,5 +1,10 @@
 import { Commands } from '../utils/path-commands.js';
-import { decomposeMatrix, mod, TWO_PI, getEffectiveStrokeWidth } from '../utils/math.js';
+import {
+  decomposeMatrix,
+  mod,
+  TWO_PI,
+  getEffectiveStrokeWidth,
+} from '../utils/math.js';
 import { Curve } from '../utils/curves.js';
 import { Events } from '../events.js';
 import { getRatio } from '../utils/device-pixel-ratio.js';
@@ -1253,6 +1258,11 @@ function svgAngle(ux, uy, vx, vy) {
 // Returns true if this is a non-transforming matrix
 function isDefaultMatrix(m) {
   return (
-    m[0] == 1 && m[3] == 0 && m[1] == 0 && m[4] == 1 && m[2] == 0 && m[5] == 0
+    m[0] === 1 &&
+    m[3] === 0 &&
+    m[1] === 0 &&
+    m[4] === 1 &&
+    m[2] === 0 &&
+    m[5] === 0
   );
 }

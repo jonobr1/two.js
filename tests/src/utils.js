@@ -89,7 +89,7 @@
       xhr.open('GET', path, true);
 
       xhr.onreadystatechange = function (e) {
-        if (xhr.readyState != 4 || xhr.status != 200) {
+        if (xhr.readyState !== 4 || xhr.status !== 200) {
           return;
         }
 
@@ -113,7 +113,7 @@
       }
 
       xhr.onreadystatechange = function (e) {
-        if (xhr.readyState != 4 || xhr.status != 200) {
+        if (xhr.readyState !== 4 || xhr.status !== 200) {
           return;
         }
 

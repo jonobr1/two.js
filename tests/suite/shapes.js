@@ -587,7 +587,7 @@ QUnit.test('Two.Rectangle', function (assert) {
 
   for (var i = 0; i < Two.Rectangle.Properties.length; i++) {
     var prop = Two.Rectangle.Properties[i];
-    var isOrigin = i == 2;
+    var isOrigin = i === 2;
     assert.equal(
       isOrigin ? JSON.stringify(path[prop].toObject()) : path[prop],
       properties[i],
