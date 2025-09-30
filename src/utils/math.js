@@ -143,10 +143,10 @@ function toFixed(v) {
 /**
  * @name Two.Utils.getEffectiveStrokeWidth
  * @function
- * @param {Two.Path|Two.Group} object - The object to calculate effective stroke width for
+ * @param {Two.Path|Two.Group} object - The object to calculate effective stroke width for.
  * @param {Two.Matrix} [worldMatrix] - The world transformation matrix. If not provided, will be calculated.
- * @returns {Number} The effective stroke width adjusted for strokeAttenuation setting
- * @description Calculate effective stroke width, compensating for world scale if strokeAttenuation is false
+ * @returns {Number} The effective stroke width. If `object.strokeAttenuation` is true, returns the original linewidth (scales with transforms). If false, returns the linewidth compensated for world scale to maintain constant screen-space width.
+ * @description Calculates the effective stroke width for an object. If `strokeAttenuation` is true, returns the original linewidth (which scales with transforms). If `strokeAttenuation` is false, compensates for world scale so the stroke width remains constant in screen space.
  */
 function getEffectiveStrokeWidth(object, worldMatrix) {
   const linewidth = object._linewidth;
