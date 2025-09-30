@@ -4650,15 +4650,44 @@ declare module 'two.js/src/shapes/arc-segment' {
 }
 declare module 'two.js/src/shapes/points' {
   /**
-     * @name Two.Points
-     * @class
-
-     * @param {Vector[]} [vertices] - A list of {@link Two.Vector}s that represent the order and coordinates to construct a rendered set of points.
-     * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
-     */
+   * @name Two.Points
+   * @class
+   * @param {Vector[]} [vertices] - A list of {@link Two.Vector}s that represent the order and coordinates to construct a rendered set of points.
+   * @description This is a primary primitive class for quickly and easily drawing points in Two.js. Unless specified methods return their instance of `Two.Points` for the purpose of chaining.
+   */
   export class Points extends Shape {
-    static Properties: string[];
-    constructor(vertices?: any[]);
+    static Properties: (
+      | 'fill'
+      | 'stroke'
+      | 'linewidth'
+      | 'opacity'
+      | 'visible'
+      | 'size'
+      | 'sizeAttenuation'
+      | 'beginning'
+      | 'ending'
+      | 'dashes'
+      | string
+    )[];
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Shape.fromObject> & {
+            fill?: string;
+            stroke?: string;
+            linewidth?: number;
+            opacity?: number;
+            visible?: boolean;
+            size?: number;
+            sizeAttenuation?: boolean;
+            beginning?: number;
+            ending?: number;
+            dashes: number[] & {
+              offset?: number;
+            };
+          })
+    ): Points;
+    constructor(vertices?: Vector[]);
     private _flagVertices;
     private _flagLength;
     private _flagFill;
@@ -4757,6 +4786,21 @@ declare module 'two.js/src/shapes/points' {
       offset?: number;
     };
     /**
+     * @name Two.Points#copy
+     * @function
+     * @param {Two.Points} points - The reference {@link Two.Points}
+     * @description Copy the properties of one {@link Two.Points} onto another.
+     */
+    copy(points: Points): Points;
+    /**
+     * @name Two.Points#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Points}
+     * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
+     */
+    clone(parent: Group): Points;
+    /**
      * @name Two.Points#toObject
      * @function
      * @returns {Object}
@@ -4839,6 +4883,7 @@ declare module 'two.js/src/shapes/points' {
     flagReset(): Points;
   }
   import { Shape } from 'two.js/src/shape';
+  import { Group } from 'two.js/src/group';
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Texture } from 'two.js/src/effects/texture';
   import { BoundingBox } from 'two.js';
