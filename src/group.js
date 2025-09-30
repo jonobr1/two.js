@@ -321,6 +321,8 @@ export class Group extends Shape {
             return Ellipse.fromObject(child);
           case 'image':
             return Image.fromObject(child);
+          case 'sprite':
+            return Image.fromObject(child);
           case 'points':
             return Points.fromObject(child);
           case 'polygon':

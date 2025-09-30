@@ -3439,6 +3439,43 @@ declare module 'two.js/src/effects/sprite' {
      * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
      */
   export class Sprite extends Rectangle {
+    /**
+     * @name Two.Sprite.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
+     */
+    static Properties: (
+      | 'texture'
+      | 'columns'
+      | 'rows'
+      | 'frameRate'
+      | 'index'
+      | 'firstFrame'
+      | 'lastFrame'
+      | 'loop'
+      | string
+    )[];
+    /**
+     * @name Two.Sprite.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Sprite} to create a new instance
+     * @returns {Two.Sprite}
+     * @description Create a new {@link Two.Sprite} from an object notation of a {@link Two.Sprite}.
+     * @nota-bene Works in conjunction with {@link Two.Sprite#toObject}
+     */
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Rectangle.fromObject> & {
+            texture?: Parameters<typeof Texture.fromObject>;
+            columns?: number;
+            rows?: number;
+            frameRate?: number;
+            index?: number;
+            firstFrame?: number;
+            lastFrame?: number;
+            loop?: boolean;
+          })
+    ): Sprite;
     constructor(
       path?: string | Texture,
       ox?: number,
@@ -3559,6 +3596,13 @@ declare module 'two.js/src/effects/sprite' {
      */
     index: number;
     /**
+     * @name Two.Sprite#copy
+     * @function
+     * @param {Two.Sprite} sprite - The reference {@link Two.Sprite}
+     * @description Copy the properties of one {@link Two.Sprite} onto another.
+     */
+    copy(sprite: Sprite): Sprite;
+    /**
      * @name Two.Sprite#play
      * @function
      * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
@@ -3584,6 +3628,14 @@ declare module 'two.js/src/effects/sprite' {
      */
     stop(): Sprite;
     /**
+     * @name Two.Sprite#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Sprite}
+     * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
+     */
+    clone(parent?: Group): Sprite;
+    /**
      * @name Two.Sprite#dispose
      * @function
      * @description Release the sprite's renderer resources and detach all events.
@@ -3596,17 +3648,17 @@ declare module 'two.js/src/effects/sprite' {
   }
   import { Rectangle } from 'two.js/src/shapes/rectangle';
   import { Texture } from 'two.js/src/effects/texture';
+  import { Group } from 'two.js/src/group';
 }
 declare module 'two.js/src/shapes/circle' {
   /**
-     * @name Two.Circle
-     * @class
-
-     * @param {Number} [x=0] - The x position of the circle.
-     * @param {Number} [y=0] - The y position of the circle.
-     * @param {Number} [radius=0] - The radius value of the circle.
-     * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
-     */
+   * @name Two.Circle
+   * @class
+   * @param {Number} [x=0] - The x position of the circle.
+   * @param {Number} [y=0] - The y position of the circle.
+   * @param {Number} [radius=0] - The radius value of the circle.
+   * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
+   */
   export class Circle extends Path {
     /**
      * @name Two.Circle#_flagRadius
@@ -3620,25 +3672,83 @@ declare module 'two.js/src/shapes/circle' {
      * @see {@link Two.Circle#radius}
      */
     private _radius;
-    static Properties: string[];
+    /**
+     * @name Two.Circle.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Circle}.
+     */
+    static Properties: ('radius' | string)[];
+    /**
+     * @name Two.Circle.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Circle} to create a new instance
+     * @returns {Two.Circle}
+     * @description Create a new {@link Two.Circle} from an object notation of a {@link Two.Circle}.
+     * @nota-bene Works in conjunction with {@link Two.Circle#toObject}
+     */
+    static fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Path.fromObject> & {
+            radius?: number;
+          })
+    ): Circle;
     constructor(x?: number, y?: number, radius?: number, resolution?: number);
+    /**
+     * @name Two.Circle#radius
+     * @property {Number} - The size of the radius of the circle.
+     */
     radius: number;
+    /**
+     * @name Two.Circle#copy
+     * @function
+     * @param {Two.Circle} circle - The reference {@link Two.Circle}
+     * @description Copy the properties of one {@link Two.Circle} onto another.
+     */
+    copy(circle: Circle): Circle;
+    /**
+     * @name Two.Circle#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Circle}
+     * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
+     */
+    clone(parent: Group): Circle;
   }
   import { Path } from 'two.js/src/path';
+  import { Group } from 'two.js/src/group';
 }
 declare module 'two.js/src/shapes/ellipse' {
   /**
-     * @name Two.Ellipse
-     * @class
-
-     * @param {Number} [x=0] - The x position of the ellipse.
-     * @param {Number} [y=0] - The y position of the ellipse.
-     * @param {Number} [rx=0] - The radius value of the ellipse in the x direction.
-     * @param {Number} [ry=0] - The radius value of the ellipse in the y direction.
-     * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
-     */
+   * @name Two.Ellipse
+   * @class
+   * @param {Number} [x=0] - The x position of the ellipse.
+   * @param {Number} [y=0] - The y position of the ellipse.
+   * @param {Number} [rx=0] - The radius value of the ellipse in the x direction.
+   * @param {Number} [ry=0] - The radius value of the ellipse in the y direction.
+   * @param {Number} [resolution=4] - The number of vertices used to construct the ellipse.
+   */
   export class Ellipse extends Path {
-    static Properties: string[];
+    /**
+     * @name Two.Ellipse.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
+     */
+    static Properties: ('width' | 'height' | string)[];
+    /**
+     * @name Two.Ellipse.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Ellipse} to create a new instance
+     * @returns {Two.Ellipse}
+     * @description Create a new {@link Two.Ellipse} from an object notation of a {@link Two.Ellipse}.
+     * @nota-bene Works in conjunction with {@link Two.Ellipse#toObject}
+     */
+    fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Path.fromObject> & {
+            width?: number;
+            height?: number;
+          })
+    ): Ellipse;
     constructor(
       x?: number,
       y?: number,
@@ -3672,6 +3782,13 @@ declare module 'two.js/src/shapes/ellipse' {
     private _height;
     width: number;
     height: number;
+    /**
+     * @name Two.Ellipse#copy
+     * @function
+     * @param {Two.Ellipse} ellipse - The reference {@link Two.Ellipse}
+     * @description Copy the properties of one {@link Two.Ellipse} onto another.
+     */
+    copy(ellipse: Ellipse): Ellipse;
   }
   import { Path } from 'two.js/src/path';
 }
@@ -3686,7 +3803,7 @@ declare module 'two.js/src/shapes/line' {
      * @param {Number} [y2=0] - The y position of the second vertex on the line.
      */
   export class Line extends Path {
-    static Properties: string[];
+    static Properties: ('left' | 'right' | string)[];
     constructor(x1?: number, y1?: number, x2?: number, y2?: number);
 
     /**
@@ -3717,7 +3834,28 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
      * @param {Number} [resolution=12] - The number of vertices used to construct the rounded rectangle.
      */
   export class RoundedRectangle extends Path {
-    static Properties: string[];
+    /**
+     * @name Two.RoundedRectangle.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.RoundedRectangle}.
+     */
+    static Properties: ('width' | 'height' | 'radius' | string)[];
+    /**
+     * @name Two.RoundedRectangle.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.RoundedRectangle} to create a new instance
+     * @returns {Two.RoundedRectangle}
+     * @description Create a new {@link Two.RoundedRectangle} from an object notation of a {@link Two.RoundedRectangle}.
+     * @nota-bene Works in conjunction with {@link Two.RoundedRectangle#toObject}
+     */
+    fromObject(
+      obj:
+        | object
+        | (Parameters<typeof Path.fromObject> & {
+            width?: number;
+            height?: number;
+            radius?: number;
+          })
+    ): RoundedRectangle;
     constructor(
       x?: number,
       y?: number,
@@ -3761,10 +3899,18 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
      * @see {@link Two.RoundedRectangle#radius}
      */
     private _radius;
-    closed: boolean;
     width: number;
     height: number;
     radius: number | Vector;
+    /**
+     * @name Two.RoundedRectangle.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.RoundedRectangle} to create a new instance
+     * @returns {Two.RoundedRectangle}
+     * @description Create a new {@link Two.RoundedRectangle} from an object notation of a {@link Two.RoundedRectangle}.
+     * @nota-bene Works in conjunction with {@link Two.RoundedRectangle#toObject}
+     */
+    copy(roundedRectangle: RoundedRectangle): RoundedRectangle;
   }
   import { Path } from 'two.js/src/path';
   import { Vector } from 'two.js/src/vector';
@@ -3776,16 +3922,15 @@ declare module 'two.js/src/text' {
   export type DirectionProperties = 'ltr' | 'rtl';
   export type BaselineProperties = 'top' | 'middle' | 'bottom' | 'baseline';
   /**
-     * @name Two.Text
-     * @class
-
-     * @param {String} [message] - The String to be rendered to the scene.
-     * @param {Number} [x=0] - The position in the x direction for the object.
-     * @param {Number} [y=0] - The position in the y direction for the object.
-     * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
-     * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
-     * @returns {Text}
-     */
+   * @name Two.Text
+   * @class
+   * @param {String} [message] - The String to be rendered to the scene.
+   * @param {Number} [x=0] - The position in the x direction for the object.
+   * @param {Number} [y=0] - The position in the y direction for the object.
+   * @param {Object} [styles] - An object where styles are applied. Attribute must exist in Two.Text.Properties.
+   * @description This is a primitive class for creating drawable text that can be added to the scenegraph.
+   * @returns {Text}
+   */
   export class Text extends Shape {
     /**
      * @name Two.Text.Ratio
@@ -3996,17 +4141,17 @@ declare module 'two.js/src/text' {
      * @name Two.Text#alignment
      * @property {String} - Alignment of text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
      */
-    alignment: 'left' | 'center' | 'right';
+    alignment: AlignmentProperties;
     /**
      * @name Two.Text#baseline
      * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
      */
-    baseline: 'top' | 'middle' | 'bottom' | 'baseline';
+    baseline: BaselineProperties;
     /**
      * @name Two.Text#style
      * @property {String} - The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'normal'`.
      */
-    style: 'normal' | 'italic';
+    style: StyleProperties;
     /**
      * @name Two.Text#weight
      * @property {Number} - A number at intervals of 100 to describe the font's weight. This compatibility varies with the typeface's variant weights. Larger values are bolder. Smaller values are thinner. Defaults to `500`.
@@ -4016,12 +4161,12 @@ declare module 'two.js/src/text' {
      * @name Two.Text#decoration
      * @property {String} - String to delineate whether text should be decorated with for instance an `'underline'`. Defaults to `'none'`.
      */
-    decoration: 'underline' | 'strikethrough' | 'none';
+    decoration: DecorationProperties;
     /**
      * @name Two.Text#direction
      * @property {String} - String to determine what direction the text should run. Possibly values are `'ltr'` for left-to-right and `'rtl'` for right-to-left. Defaults to `'ltr'`.
      */
-    direction: 'ltr' | 'rtl';
+    direction: DirectionProperties;
     /**
      * @name Two.Text#fill
      * @property {(String|Gradient|Texture)} - The value of what the text object should be filled in with.
