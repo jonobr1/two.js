@@ -27,6 +27,9 @@ var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __typeError = (msg) => {
+  throw TypeError(msg);
+};
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __spreadValues = (a, b) => {
   for (var prop in b || (b = {}))
@@ -44,33 +47,29 @@ var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
-var __accessCheck = (obj, member, msg) => {
-  if (!member.has(obj))
-    throw TypeError("Cannot " + msg);
-};
-var __privateGet = (obj, member, getter) => {
-  __accessCheck(obj, member, "read from private field");
-  return getter ? getter.call(obj) : member.get(obj);
-};
-var __privateAdd = (obj, member, value) => {
-  if (member.has(obj))
-    throw TypeError("Cannot add the same private member more than once");
-  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-};
-var __privateSet = (obj, member, value, setter) => {
-  __accessCheck(obj, member, "write to private field");
-  setter ? setter.call(obj, value) : member.set(obj, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot " + msg);
+var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read from private field"), getter ? getter.call(obj) : member.get(obj));
+var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
 // src/utils/canvas-polyfill.js
 var CanvasPolyfill = {
+  /**
+   * @param {Image}
+   */
   Image: null,
+  /**
+   * @param {Boolean}
+   */
   isHeadless: false,
+  /**
+   *
+   * @param {canvas} elem - An element to spoof as a `<canvas />`.
+   * @param {String} [name] - An optional tag and node name to spoof. Defaults to `'canvas'`.
+   * @returns {canvas} - The same `elem` passed in the first argument with updated attributes needed to be used by Two.js.
+   * @description Adds attributes invoked by Two.js in order to execute and run correctly. This is used by headless environments.
+   */
   shim: function(elem, name) {
     elem.tagName = elem.nodeName = name || "canvas";
     elem.nodeType = 1;
@@ -83,6 +82,14 @@ var CanvasPolyfill = {
     };
     return elem;
   },
+  /**
+   * @name Two.Utils.polyfill
+   * @function
+   * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
+   * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
+   * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
+   * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
+   */
   polyfill: function(canvas3, Image) {
     CanvasPolyfill.shim(canvas3);
     if (typeof Image !== "undefined") {
@@ -116,6 +123,7 @@ __export(math_exports, {
   TWO_PI: () => TWO_PI,
   decomposeMatrix: () => decomposeMatrix,
   getComputedMatrix: () => getComputedMatrix,
+  getEffectiveStrokeWidth: () => getEffectiveStrokeWidth,
   getPoT: () => getPoT,
   lerp: () => lerp,
   mod: () => mod,
@@ -208,6 +216,25 @@ var floor = Math.floor;
 function toFixed(v) {
   return floor(v * 1e6) / 1e6;
 }
+function getEffectiveStrokeWidth(object, worldMatrix) {
+  const linewidth = object._linewidth;
+  if (object.strokeAttenuation) {
+    return linewidth;
+  }
+  if (!worldMatrix) {
+    worldMatrix = object.worldMatrix || getComputedMatrix(object);
+  }
+  const decomposed = decomposeMatrix(
+    worldMatrix.elements[0],
+    worldMatrix.elements[3],
+    worldMatrix.elements[1],
+    worldMatrix.elements[4],
+    worldMatrix.elements[2],
+    worldMatrix.elements[5]
+  );
+  const scale = Math.max(Math.abs(decomposed.scaleX), Math.abs(decomposed.scaleY));
+  return scale > 0 ? linewidth / scale : linewidth;
+}
 
 // src/utils/path-commands.js
 var Commands = {
@@ -224,18 +251,42 @@ var Events = class {
     __publicField(this, "_events", {});
     __publicField(this, "_bound", false);
   }
+  /**
+   * @name Two.Events#addEventListener
+   * @function
+   * @param {String} [name] - The name of the event to bind a function to.
+   * @param {Function} [handler] - The function to be invoked when the event is dispatched.
+   * @description Call to add a listener to a specific event name.
+   */
   addEventListener(name, handler) {
     const list = this._events[name] || (this._events[name] = []);
     list.push(handler);
     this._bound = true;
     return this;
   }
+  /**
+   * @name Two.Events#on
+   * @function
+   * @description Alias for {@link Two.Events#addEventListener}.
+   */
   on() {
     return this.addEventListener.apply(this, arguments);
   }
+  /**
+   * @name Two.Events#bind
+   * @function
+   * @description Alias for {@link Two.Events#addEventListener}.
+   */
   bind() {
     return this.addEventListener.apply(this, arguments);
   }
+  /**
+   * @name Two.Events#removeEventListener
+   * @function
+   * @param {String} [name] - The name of the event intended to be removed.
+   * @param {Function} [handler] - The handler intended to be removed.
+   * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
+   */
   removeEventListener(name, handler) {
     if (!this._events) {
       return this;
@@ -265,12 +316,29 @@ var Events = class {
     }
     return this;
   }
+  /**
+   * @name Two.Events#off
+   * @function
+   * @description Alias for {@link Two.Events#removeEventListener}.
+   */
   off() {
     return this.removeEventListener.apply(this, arguments);
   }
+  /**
+   * @name Two.Events#unbind
+   * @function
+   * @description Alias for {@link Two.Events#removeEventListener}.
+   */
   unbind() {
     return this.removeEventListener.apply(this, arguments);
   }
+  /**
+   * @name Two.Events#dispatchEvent
+   * @function
+   * @param {String} name - The name of the event to dispatch.
+   * @param args - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+   * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
+   */
   dispatchEvent(name) {
     if (!this._events) {
       return this;
@@ -305,6 +373,10 @@ var Events = class {
     return this;
   }
 };
+/**
+ * @name Two.Events.Types
+ * @property {Object} - Object of different types of Two.js specific events.
+ */
 __publicField(Events, "Types", {
   play: "play",
   pause: "pause",
@@ -360,10 +432,18 @@ var proto = {
     }
   }
 };
-var _Vector = class extends Events {
+var _Vector = class _Vector extends Events {
   constructor(x = 0, y = 0) {
     super();
+    /**
+     * @name Two.Vector#_x
+     * @private
+     */
     __publicField(this, "_x", 0);
+    /**
+     * @name Two.Vector#_y
+     * @private
+     */
     __publicField(this, "_y", 0);
     for (let prop in proto) {
       Object.defineProperty(this, prop, proto[prop]);
@@ -371,18 +451,53 @@ var _Vector = class extends Events {
     this.x = x;
     this.y = y;
   }
+  /**
+   * @name Two.Vector.add
+   * @function
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
+   * @returns {Two.Vector}
+   * @description Add two vectors together.
+   */
   static add(v1, v2) {
     return new _Vector(v1.x + v2.x, v1.y + v2.y);
   }
+  /**
+   * @name Two.Vector.sub
+   * @function
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
+   * @returns {Two.Vector}
+   * @description Subtract two vectors: `v2` from `v1`.
+   */
   static sub(v1, v2) {
     return new _Vector(v1.x - v2.x, v1.y - v2.y);
   }
+  /**
+   * @name Two.Vector.subtract
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
+   */
   static subtract(v1, v2) {
     return _Vector.sub(v1, v2);
   }
+  /**
+   * @name Two.Vector.ratioBetween
+   * @function
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
+   * @returns {Number} The ratio betwen two points `v1` and `v2`.
+   */
   static ratioBetween(v1, v2) {
     return (v1.x * v2.x + v1.y * v2.y) / (v1.length() * v2.length());
   }
+  /**
+   * @name Two.Vector.angleBetween
+   * @function
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
+   * @returns {Number} The angle between points `v1` and `v2`.
+   */
   static angleBetween(v1, v2) {
     if (arguments.length >= 4) {
       const dx2 = arguments[0] - arguments[2];
@@ -393,32 +508,92 @@ var _Vector = class extends Events {
     const dy = v1.y - v2.y;
     return Math.atan2(dy, dx);
   }
+  /**
+   * @name Two.Vector.distanceBetween
+   * @function
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
+   * @returns {Number} The distance between points `v1` and `v2`. Distance is always positive.
+   */
   static distanceBetween(v1, v2) {
     return Math.sqrt(_Vector.distanceBetweenSquared(v1, v2));
   }
+  /**
+   * @name Two.Vector.distanceBetweenSquared
+   * @function
+   * @param {Two.Vector} v1 - First {@link Two.Vector}
+   * @param {Two.Vector} v2 - Second {@link Two.Vector}
+   * @returns {Number} The squared distance between points `v1` and `v2`.
+   */
   static distanceBetweenSquared(v1, v2) {
     const dx = v1.x - v2.x;
     const dy = v1.y - v2.y;
     return dx * dx + dy * dy;
   }
+  //
+  /**
+   * @name Two.Vector#set
+   * @function
+   * @param {number} x - Value of `x` component
+   * @param {number} y - Value of `y` component
+   */
   set(x, y) {
     this.x = x;
     this.y = y;
     return this;
   }
+  /**
+   * @name Two.Vector#copy
+   * @function
+   * @param {Two.Vector} v - The {@link Two.Vector} to copy
+   * @description Copy the `x` / `y` components of another object {@link Two.Vector}.
+   */
   copy(v) {
     this.x = v.x;
     this.y = v.y;
     return this;
   }
+  /**
+   * @name Two.Vector#clear
+   * @function
+   * @description Set the `x` / `y` component values of the vector to zero.
+   */
   clear() {
     this.x = 0;
     this.y = 0;
     return this;
   }
+  /**
+   * @name Two.Vector#clone
+   * @function
+   * @description Create a new vector and copy the existing values onto the newly created instance.
+   * @return {Two.Vector}
+   */
   clone() {
     return new _Vector(this.x, this.y);
   }
+  /**
+   * @name Two.Vector#add
+   * @function
+   * @param {Two.Vector} v - The {@link Two.Vector} to add
+   * @description Add an object with `x` / `y` component values to the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#add
+   * @function
+   * @param {Number} n - Number to add
+   * @description Add the **same** number to both `x` / `y` component values of the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#add
+   * @function
+   * @param {Number} x - Number to add to `x` component
+   * @param {Number} y - Number to add to `y` component
+   * @description Add `x` / `y` values to their respective component value on the instance.
+   * @overloaded
+   */
   add(x, y) {
     if (arguments.length <= 0) {
       return this;
@@ -436,9 +611,36 @@ var _Vector = class extends Events {
     }
     return this;
   }
+  /**
+   * @name Two.Vector#addSelf
+   * @function
+   * @description Alias for {@link Two.Vector.add}.
+   */
   addSelf(v) {
     return this.add.apply(this, arguments);
   }
+  /**
+   * @name Two.Vector#sub
+   * @function
+   * @param {Two.Vector} v - The amount as a {@link Two.Vector} to subtract
+   * @description Subtract an object with `x` / `y` component values to the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#sub
+   * @function
+   * @param {Number} n - Number to subtract
+   * @description Subtract the **same** number to both `x` / `y` component values of the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#sub
+   * @function
+   * @param {Number} x - Number to subtract from `x` component
+   * @param {Number} y - Number to subtract from `y` component
+   * @description Subtract `x` / `y` values to their respective component value on the instance.
+   * @overloaded
+   */
   sub(x, y) {
     if (arguments.length <= 0) {
       return this;
@@ -456,15 +658,52 @@ var _Vector = class extends Events {
     }
     return this;
   }
+  /**
+   * @name Two.Vector#subtract
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
+   */
   subtract() {
     return this.sub.apply(this, arguments);
   }
+  /**
+   * @name Two.Vector#subSelf
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
+   */
   subSelf(v) {
     return this.sub.apply(this, arguments);
   }
+  /**
+   * @name Two.Vector#subtractSelf
+   * @function
+   * @description Alias for {@link Two.Vector.sub}.
+   */
   subtractSelf(v) {
     return this.sub.apply(this, arguments);
   }
+  /**
+   * @name Two.Vector#multiply
+   * @function
+   * @param {Two.Vector} v - The {@link Two.Vector} to multiply
+   * @description Multiply an object with `x` / `y` component values to the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#multiply
+   * @function
+   * @param {Number} n - The number to multiply
+   * @description Multiply the **same** number to both x / y component values of the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#multiply
+   * @function
+   * @param {Number} x - The number to multiply to `x` component
+   * @param {Number} y - The number to multiply to `y` component
+   * @description Multiply `x` / `y` values to their respective component value on the instance.
+   * @overloaded
+   */
   multiply(x, y) {
     if (arguments.length <= 0) {
       return this;
@@ -482,12 +721,45 @@ var _Vector = class extends Events {
     }
     return this;
   }
+  /**
+   * @name Two.Vector#multiplySelf
+   * @function
+   * @description Alias for {@link Two.Vector.multiply}.
+   */
   multiplySelf(v) {
     return this.multiply.apply(this, arguments);
   }
+  /**
+   * @name Two.Vector#multiplyScalar
+   * @function
+   * @param {Number} s - The scalar to multiply by.
+   * @description Mulitiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
+   */
   multiplyScalar(s) {
     return this.multiply(s);
   }
+  /**
+   * @name Two.Vector#divide
+   * @function
+   * @param {Two.Vector} v - The {@link Two.Vector} to divide
+   * @description Divide an object with `x` / `y` component values to the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#divide
+   * @function
+   * @param {Number} n - The number to divide
+   * @description Divide the **same** number to both x / y component values of the instance.
+   * @overloaded
+   */
+  /**
+   * @name Two.Vector#divide
+   * @function
+   * @param {Number} x - The number to divide on the `x` component
+   * @param {Number} y - The number to divide on the `y` component
+   * @description Divide `x` / `y` values to their respective component value on the instance.
+   * @overloaded
+   */
   divide(x, y) {
     if (arguments.length <= 0) {
       return this;
@@ -511,57 +783,155 @@ var _Vector = class extends Events {
     }
     return this;
   }
+  /**
+   * @name Two.Vector#divideSelf
+   * @function
+   * @description Alias for {@link Two.Vector.divide}.
+   */
   divideSelf(v) {
     return this.divide.apply(this, arguments);
   }
+  /**
+   * @name Two.Vector#divideScalar
+   * @function
+   * @param {Number} s - The scalar to divide by.
+   * @description Divide the vector by a single number. Shorthand to call {@link Two.Vector#divide} directly.
+   */
   divideScalar(s) {
     return this.divide(s);
   }
+  /**
+   * @name Two.Vector#negate
+   * @function
+   * @description Invert each component's sign value.
+   */
   negate() {
     return this.multiply(-1);
   }
+  /**
+   * @name Two.Vector#dot
+   * @function
+   * @returns {Number}
+   * @description Get the [dot product](https://en.wikipedia.org/wiki/Dot_product) of the vector.
+   */
   dot(v) {
     return this.x * v.x + this.y * v.y;
   }
+  /**
+   * @name Two.Vector#length
+   * @function
+   * @returns {Number}
+   * @description Get the length of a vector.
+   */
   length() {
     return Math.sqrt(this.lengthSquared());
   }
+  /**
+   * @name Two.Vector#lengthSquared
+   * @function
+   * @returns {Number}
+   * @description Get the length of the vector to the power of two. Widely used as less expensive than {@link Two.Vector#length} because it isn't square-rooting any numbers.
+   */
   lengthSquared() {
     return this.x * this.x + this.y * this.y;
   }
+  /**
+   * @name Two.Vector#normalize
+   * @function
+   * @description Normalize the vector from negative one to one.
+   */
   normalize() {
     return this.divideScalar(this.length());
   }
+  /**
+   * @name Two.Vector#distanceTo
+   * @function
+   * @returns {Number}
+   * @description Get the distance between two vectors.
+   */
   distanceTo(v) {
     return Math.sqrt(this.distanceToSquared(v));
   }
+  /**
+   * @name Two.Vector#distanceToSquared
+   * @function
+   * @returns {Number}
+   * @description Get the distance between two vectors to the power of two. Widely used as less expensive than {@link Two.Vector#distanceTo} because it isn't square-rooting any numbers.
+   */
   distanceToSquared(v) {
     const dx = this.x - v.x;
     const dy = this.y - v.y;
     return dx * dx + dy * dy;
   }
+  /**
+   * @name Two.Vector#setLength
+   * @function
+   * @param {Number} l - length to set vector to.
+   * @description Set the length of a vector.
+   */
   setLength(l) {
     return this.normalize().multiplyScalar(l);
   }
+  /**
+   * @name Two.Vector#equals
+   * @function
+   * @param {Two.Vector} v - The vector to compare against.
+   * @param {Number} [eps=0.0001] - An options epsilon for precision.
+   * @returns {Boolean}
+   * @description Qualify if one vector roughly equal another. With a margin of error defined by epsilon.
+   */
   equals(v, eps) {
     eps = typeof eps === "undefined" ? 1e-4 : eps;
     return this.distanceTo(v) < eps;
   }
+  /**
+   * @name Two.Vector#lerp
+   * @function
+   * @param {Two.Vector} v - The destination vector to step towards.
+   * @param {Number} t - The zero to one value of how close the current vector gets to the destination vector.
+   * @description Linear interpolate one vector to another by an amount `t` defined as a zero to one number.
+   * @see [Matt DesLauriers](https://twitter.com/mattdesl/status/1031305279227478016) has a good thread about this.
+   */
   lerp(v, t) {
     const x = (v.x - this.x) * t + this.x;
     const y = (v.y - this.y) * t + this.y;
     return this.set(x, y);
   }
+  /**
+   * @name Two.Vector#isZero
+   * @function
+   * @param {Number} [eps=0.0001] - Optional precision amount to check against.
+   * @returns {Boolean}
+   * @description Check to see if vector is roughly zero, based on the `epsilon` precision value.
+   */
   isZero(eps) {
     eps = typeof eps === "undefined" ? 1e-4 : eps;
     return this.length() < eps;
   }
+  /**
+   * @name Two.Vector#toString
+   * @function
+   * @returns {String}
+   * @description Return a comma-separated string of x, y value. Great for storing in a database.
+   */
   toString() {
     return this.x + ", " + this.y;
   }
+  /**
+   * @name Two.Vector#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the vector.
+   */
   toObject() {
     return { x: toFixed(this.x), y: toFixed(this.y) };
   }
+  /**
+   * @name Two.Vector#rotate
+   * @function
+   * @param {Number} radians - The amount to rotate the vector by in radians.
+   * @description Rotate a vector.
+   */
   rotate(radians) {
     const x = this.x;
     const y = this.y;
@@ -572,15 +942,40 @@ var _Vector = class extends Events {
     return this;
   }
 };
+/**
+ * @name Two.Vector.zero
+ * @readonly
+ * @property {Two.Vector} - Handy reference to a vector with component values 0, 0 at all times.
+ */
+__publicField(_Vector, "zero", new _Vector());
+/**
+ * @name Two.Vector.left
+ * @readonly
+ * @property {Two.Vector} - Handy reference to a vector with component values -1, 0 at all times.
+ */
+__publicField(_Vector, "left", new _Vector(-1, 0));
+/**
+ * @name Two.Vector.right
+ * @readonly
+ * @property {Two.Vector} - Handy reference to a vector with component values 1, 0 at all times.
+ */
+__publicField(_Vector, "right", new _Vector(1, 0));
+/**
+ * @name Two.Vector.up
+ * @readonly
+ * @property {Two.Vector} - Handy reference to a vector with component values 0, -1 at all times.
+ */
+__publicField(_Vector, "up", new _Vector(0, -1));
+/**
+ * @name Two.Vector.down
+ * @readonly
+ * @property {Two.Vector} - Handy reference to a vector with component values 0, 1 at all times.
+ */
+__publicField(_Vector, "down", new _Vector(0, 1));
 var Vector = _Vector;
-__publicField(Vector, "zero", new _Vector());
-__publicField(Vector, "left", new _Vector(-1, 0));
-__publicField(Vector, "right", new _Vector(1, 0));
-__publicField(Vector, "up", new _Vector(0, -1));
-__publicField(Vector, "down", new _Vector(0, 1));
 
 // src/anchor.js
-var Anchor = class extends Vector {
+var Anchor = class _Anchor extends Vector {
   constructor(x = 0, y = 0, ax = 0, ay = 0, bx = 0, by = 0, command = Commands.move) {
     super(x, y);
     __publicField(this, "controls", {
@@ -599,7 +994,7 @@ var Anchor = class extends Vector {
     }
     this.command = command;
     this.relative = true;
-    const broadcast = Anchor.makeBroadcast(this);
+    const broadcast = _Anchor.makeBroadcast(this);
     this.controls.left.set(ax, ay).addEventListener(Events.Types.change, broadcast);
     this.controls.right.set(bx, by).addEventListener(Events.Types.change, broadcast);
   }
@@ -611,9 +1006,23 @@ var Anchor = class extends Vector {
       }
     }
   }
+  /**
+   * @name Two.Anchor.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Anchor} to create a new instance
+   * @returns {Two.Anchor}
+   * @description Create a new {@link Two.Anchor} from an object notation of a {@link Two.Anchor}.
+   * @nota-bene Works in conjunction with {@link Two.Anchor#toObject}
+   */
   static fromObject(obj) {
-    return new Anchor().copy(obj);
+    return new _Anchor().copy(obj);
   }
+  /**
+   * @name Two.Anchor#copy
+   * @function
+   * @param {Two.Anchor} v - The anchor to apply values to.
+   * @description Copy the properties of one {@link Two.Anchor} onto another.
+   */
   copy(v) {
     this.x = v.x;
     this.y = v.y;
@@ -648,9 +1057,22 @@ var Anchor = class extends Vector {
     }
     return this;
   }
+  /**
+   * @name Two.Anchor#clone
+   * @function
+   * @returns {Two.Anchor}
+   * @description Create a new {@link Two.Anchor}, set all its values to the current instance and return it for use.
+   */
   clone() {
-    return new Anchor().copy(this);
+    return new _Anchor().copy(this);
   }
+  /**
+   * @name Two.Anchor#toObject
+   * @function
+   * @returns {Object} - An object with properties filled out to mirror {@link Two.Anchor}.
+   * @description Create a JSON compatible plain object of the current instance. Intended for use with storing values in a database.
+   * @nota-bene Works in conjunction with {@link Two.Anchor.fromObject}
+   */
   toObject() {
     return {
       x: toFixed(this.x),
@@ -668,6 +1090,12 @@ var Anchor = class extends Vector {
       sweepFlag: toFixed(this.sweepFlag)
     };
   }
+  /**
+   * @name Two.Anchor#toString
+   * @function
+   * @returns {String} - A String with comma-separated values reflecting the various values on the current instance.
+   * @description Create a string form of the current instance. Intended for use with storing values in a database. This is lighter to store than the JSON compatible {@link Two.Anchor#toObject}.
+   */
   toString() {
     return JSON.stringify(this.toObject());
   }
@@ -775,18 +1203,58 @@ var proto2 = {
 // src/constants.js
 var count = 0;
 var Constants = {
+  /**
+   * @name Two.NextFrameId
+   * @property {Number}
+   * @description The id of the next `requestAnimationFrame` function. Used to control the (or cancel) the default behavior of Two.js animation loops.
+   */
   NextFrameId: null,
+  // Primitive
+  /**
+   * @name Two.Types
+   * @property {Object} - The different rendering types available in the library.
+   */
   Types: {
     webgl: "WebGLRenderer",
     svg: "SVGRenderer",
     canvas: "CanvasRenderer"
   },
+  /**
+   * @name Two.Version
+   * @property {String} - The current working version of the library.
+   */
   Version: "v0.8.20",
-  PublishDate: "2025-08-07T03:41:10.194Z",
+  /**
+   * @name Two.PublishDate
+   * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
+   */
+  PublishDate: "2025-09-30T22:28:33.259Z",
+  /**
+   * @name Two.Identifier
+   * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
+   */
   Identifier: "two-",
+  /**
+   * @name Two.Resolution
+   * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
+   */
   Resolution: 12,
+  /**
+   * @name Two.AutoCalculateImportedMatrices
+   * @property {Boolean} - When importing SVGs through the {@link Two#interpret} and {@link Two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
+   * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
+   */
   AutoCalculateImportedMatrices: true,
+  /**
+   * @name Two.Instances
+   * @property {Two[]} - Registered list of all Two.js instances in the current session.
+   */
   Instances: [],
+  /**
+   * @function Two.uniqueId
+   * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
+   * @returns {Number} Ever increasing Number.
+   */
   uniqueId: function() {
     return count++;
   }
@@ -802,6 +1270,9 @@ var Curve = {
     angle: 0,
     epsilon: Number.EPSILON
   },
+  // Lookup tables for abscissas and weights with values for n = 2 .. 16.
+  // As values are symmetric, only store half of them and adapt algorithm
+  // to factor in symmetry.
   abscissas: [
     [0.5773502691896257],
     [0, 0.7745966692414834],
@@ -1158,8 +1629,7 @@ function getAnchorsFromArcData(center, xAxisRotation, rx, ry, ts, td, ccw) {
 // src/utils/underscore.js
 var slice = Array.prototype.slice;
 function isArrayLike(collection) {
-  if (collection === null || collection === void 0)
-    return false;
+  if (collection === null || collection === void 0) return false;
   const length = collection.length;
   return typeof length == "number" && length >= 0 && length < 4294967296;
 }
@@ -1209,6 +1679,11 @@ var _ = {
     }
     return obj;
   },
+  /**
+   * @name Two.Utils.performance
+   * @property {Date} - A special `Date` like object to get the current millis of the session. Used internally to calculate time between frames.
+   * e.g: `Utils.performance.now() // milliseconds since epoch`
+   */
   performance: root.performance && root.performance.now ? root.performance : Date
 };
 
@@ -1242,7 +1717,7 @@ var dom = {
       request = request || fallbackRequest;
     }
     function fallbackRequest(callback, element) {
-      const currTime = new Date().getTime();
+      const currTime = (/* @__PURE__ */ new Date()).getTime();
       const timeToCall = Math.max(0, 16 - (currTime - lastTime));
       const id = root.setTimeout(nextRequest, timeToCall);
       lastTime = currTime + timeToCall;
@@ -1291,17 +1766,44 @@ var Registry = class {
   constructor() {
     __publicField(this, "map", {});
   }
+  /**
+   * @name Two.Registry#add
+   * @function
+   * @param {String} id - A unique identifier.
+   * @param obj - Any type of variable to be registered to the directory.
+   * @description Adds any value to the directory. Assigned by the `id`.
+   */
   add(id, obj) {
     this.map[id] = obj;
     return this;
   }
+  /**
+   * @name Two.Registry#remove
+   * @function
+   * @param {String} id - A unique identifier.
+   * @description Remove any value from the directory by its `id`.
+   */
   remove(id) {
     delete this.map[id];
     return this;
   }
+  /**
+   * @name Two.Registry#get
+   * @function
+   * @param {String} id - A unique identifier.
+   * @returns {?Object} The associated value. If unavailable then `undefined` is returned.
+   * @description Get a registered value by its `id`.
+   */
   get(id) {
     return this.map[id];
   }
+  /**
+   * @name Two.Registry#contains
+   * @function
+   * @param {String} id - A unique identifier.
+   * @returns {Boolean}
+   * @description Convenience method to see if a value is registered to an `id` already.
+   */
   contains(id) {
     return id in this.map;
   }
@@ -1312,6 +1814,10 @@ var _events;
 var Collection = class extends Array {
   constructor() {
     super();
+    // Warning: Multiple inheritance hack
+    /**
+     * @private
+     */
     __privateAdd(this, _events, new Events());
     if (arguments[0] && Array.isArray(arguments[0])) {
       if (arguments[0].length > 0) {
@@ -1321,12 +1827,14 @@ var Collection = class extends Array {
       this.push.apply(this, arguments);
     }
   }
+  // N.B: Technique to disable enumeration on object
   get _events() {
     return __privateGet(this, _events);
   }
   set _events(e) {
     __privateSet(this, _events, e);
   }
+  // Getters and setters aren't enumerable
   get _bound() {
     return __privateGet(this, _events)._bound;
   }
@@ -1427,19 +1935,57 @@ var Collection = class extends Array {
 _events = new WeakMap();
 
 // src/element.js
-var _Element = class extends Events {
+var _Element = class _Element extends Events {
   constructor() {
     super();
+    /**
+     * @name Two.Element#_flagId
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Element#id} needs updating.
+     */
     __publicField(this, "_flagId", false);
+    /**
+     * @name Two.Element#_flagClassName
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#className} need updating.
+     */
     __publicField(this, "_flagClassName", false);
+    /**
+     * @name Two.Element#renderer
+     * @property {Object} - Object access to store relevant renderer specific variables. Warning: manipulating this object can create unintended consequences.
+     * @nota-bene With the {@link Two.SVGRenderer} you can access the underlying SVG element created via `shape.renderer.elem`.
+     */
     __publicField(this, "_renderer", {});
+    /**
+     * @name Two.Element#id
+     * @property {String} - Session specific unique identifier.
+     * @nota-bene In the {@link Two.SVGRenderer} change this to change the underlying SVG element's id too.
+     */
     __publicField(this, "_id", Constants.Identifier + Constants.uniqueId());
+    /**
+     * @name Two.Element#className
+     * @property {String} - A class to be applied to the element to be compatible with CSS styling.
+     * @nota-bene Only available for the SVG renderer.
+     */
     __publicField(this, "_className", "");
+    /**
+     * @name Two.Element#classList
+     * @property {String[]}
+     * @description A list of class strings stored if imported / interpreted  from an SVG element.
+     */
     __publicField(this, "classList", []);
     for (let prop in proto3) {
       Object.defineProperty(this, prop, proto3[prop]);
     }
   }
+  /**
+   * @name Two.Element.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Element} to create a new instance
+   * @returns {Two.Element}
+   * @description Create a new {@link Two.Element} from an object notation of a {@link Two.Element}.
+   * @nota-bene Works in conjunction with {@link Two.Element#toObject}
+   */
   static fromObject(obj) {
     const elem = new _Element().copy(obj);
     if ("id" in obj) {
@@ -1447,6 +1993,11 @@ var _Element = class extends Events {
     }
     return elem;
   }
+  /**
+   * @name Two.Element#flagReset
+   * @function
+   * @description Called internally by Two.js's renderer to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagId = this._flagClassName = false;
     return this;
@@ -1463,6 +2014,12 @@ var _Element = class extends Events {
       className: this.className
     };
   }
+  /**
+   * @name Two.Element#dispose
+   * @function
+   * @description Release the element's renderer object and detach any events.
+   * This cleans up renderer-specific resources and unbinds all event listeners.
+   */
   dispose() {
     const rendererType = this._renderer.type;
     this._renderer = { type: rendererType };
@@ -1472,8 +2029,8 @@ var _Element = class extends Events {
     return this;
   }
 };
+__publicField(_Element, "Properties", ["renderer", "id", "className"]);
 var Element = _Element;
-__publicField(Element, "Properties", ["renderer", "id", "className"]);
 var proto3 = {
   renderer: {
     enumerable: false,
@@ -1524,21 +2081,86 @@ var regex = {
 if (root.document) {
   anchor = document.createElement("a");
 }
-var _Texture = class extends Element {
+var _Texture = class _Texture extends Element {
   constructor(src, callback) {
     super();
+    /**
+     * @name Two.Texture#_flagSrc
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#src} needs updating.
+     */
     __publicField(this, "_flagSrc", false);
+    /**
+     * @name Two.Texture#_flagImage
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#image} needs updating.
+     */
     __publicField(this, "_flagImage", false);
+    /**
+     * @name Two.Texture#_flagVideo
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#video} needs updating.
+     */
     __publicField(this, "_flagVideo", false);
+    /**
+     * @name Two.Texture#_flagLoaded
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#loaded} needs updating.
+     */
     __publicField(this, "_flagLoaded", false);
+    /**
+     * @name Two.Texture#_flagRepeat
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#repeat} needs updating.
+     */
     __publicField(this, "_flagRepeat", false);
+    /**
+     * @name Two.Texture#_flagOffset
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#offset} needs updating.
+     */
     __publicField(this, "_flagOffset", false);
+    /**
+     * @name Two.Texture#_flagScale
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Texture#scale} needs updating.
+     */
     __publicField(this, "_flagScale", false);
+    /**
+     * @name Two.Texture#_src
+     * @private
+     * @see {@link Two.Texture#src}
+     */
     __publicField(this, "_src", "");
+    /**
+     * @name Two.Texture#_image
+     * @private
+     * @see {@link Two.Texture#image}
+     */
     __publicField(this, "_image", null);
+    /**
+     * @name Two.Texture#_loaded
+     * @private
+     * @see {@link Two.Texture#loaded}
+     */
     __publicField(this, "_loaded", false);
+    /**
+     * @name Two.Texture#_repeat
+     * @private
+     * @see {@link Two.Texture#repeat}
+     */
     __publicField(this, "_repeat", "no-repeat");
+    /**
+     * @name Two.Texture#_scale
+     * @private
+     * @see {@link Two.Texture#scale}
+     */
     __publicField(this, "_scale", 1);
+    /**
+     * @name Two.Texture#_offset
+     * @private
+     * @see {@link Two.Texture#offset}
+     */
     __publicField(this, "_offset", null);
     for (let prop in proto4) {
       Object.defineProperty(this, prop, proto4[prop]);
@@ -1568,6 +2190,14 @@ var _Texture = class extends Element {
     }
     this._update();
   }
+  /**
+   * @name Two.Texture.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Texture} to create a new instance
+   * @returns {Two.Texture}
+   * @description Create a new {@link Two.Texture} from an object notation of a {@link Two.Texture}.
+   * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
+   */
   fromObject(obj) {
     const texture = new _Texture().copy(obj);
     if ("id" in obj) {
@@ -1575,6 +2205,12 @@ var _Texture = class extends Element {
     }
     return texture;
   }
+  /**
+   * @name Two.Texture.getAbsoluteURL
+   * @property {Function} - Serializes a URL as an absolute path for canonical attribution in {@link Two.ImageRegistry}.
+   * @param {String} path
+   * @returns {String} - The serialized absolute path.
+   */
   static getAbsoluteURL(path) {
     if (!anchor) {
       return path;
@@ -1582,13 +2218,33 @@ var _Texture = class extends Element {
     anchor.href = path;
     return anchor.href;
   }
+  /**
+   * @name Two.Texture.loadHeadlessBuffer
+   * @property {Function} - Loads an image as a buffer in headless environments.
+   * @param {Two.Texture} texture - The {@link Two.Texture} to be loaded.
+   * @param {Function} onLoad - The callback function to be triggered once the image is loaded.
+   * @nota-bene - This function uses node's `fs.readFileSync` to spoof the `<img />` loading process in the browser.
+   */
   static loadHeadlessBuffer(texture, onLoad) {
     texture.image.onload = onLoad;
     texture.image.src = texture.src;
   }
+  /**
+   * @name Two.Texture.getTag
+   * @property {Function} - Retrieves the tag name of an image, video, or canvas node.
+   * @param {HTMLImageElement} image - The image to infer the tag name from.
+   * @returns {String} - Returns the tag name of an image, video, or canvas node.
+   */
   static getTag(image) {
-    return image && image.nodeName && image.nodeName.toLowerCase() || "img";
+    return image && image.nodeName && image.nodeName.toLowerCase() || // Headless environments
+    "img";
   }
+  /**
+   * @name Two.Texture.getImage
+   * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonical versions set in {@link Two.Texture.ImageRegistry}.
+   * @param {String} src - The URL path of the image.
+   * @returns {HTMLImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
+   */
   static getImage(src) {
     const absoluteSrc = _Texture.getAbsoluteURL(src);
     if (_Texture.ImageRegistry.contains(absoluteSrc)) {
@@ -1611,6 +2267,12 @@ var _Texture = class extends Element {
     image.referrerPolicy = "no-referrer";
     return image;
   }
+  /**
+   * @name Two.Texture.load
+   * @function
+   * @param {Two.Texture} texture - The texture to load.
+   * @param {Function} callback - The function to be called once the texture is loaded.
+   */
   static load(texture, callback) {
     let image = texture.image;
     let tag = _Texture.getTag(image);
@@ -1631,6 +2293,12 @@ var _Texture = class extends Element {
       _Texture.Register[tag](texture, callback);
     }
   }
+  /**
+   * @name Two.Texture#clone
+   * @function
+   * @returns {Two.Texture}
+   * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
+   */
   clone() {
     const clone = new _Texture(this.src);
     clone.repeat = this.repeat;
@@ -1638,6 +2306,12 @@ var _Texture = class extends Element {
     clone.scale = this.scale;
     return clone;
   }
+  /**
+   * @name Two.Texture#copy
+   * @function
+   * @param {Two.Texture} texture - The reference {@link Two.Texture}
+   * @description Copy the properties of one {@link Two.Texture} onto another.
+   */
   copy(texture) {
     this.src = texture.src;
     this.repeat = texture.repeat;
@@ -1645,6 +2319,12 @@ var _Texture = class extends Element {
     this.scale = typeof texture.scale === "number" || texture.scale instanceof Vector ? texture.scale : new Vector().copy(texture.scale);
     return this;
   }
+  /**
+   * @name Two.Texture#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the texture.
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.renderer.type = "texture";
@@ -1654,6 +2334,14 @@ var _Texture = class extends Element {
     result.scale = typeof this.scale === "number" ? this.scale : this.scale.toObject();
     return result;
   }
+  /**
+   * @name Two.Texture#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagSrc || this._flagImage) {
       this.trigger(Events.Types.change);
@@ -1673,11 +2361,22 @@ var _Texture = class extends Element {
     }
     return this;
   }
+  /**
+   * @name Two.Texture#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagSrc = this._flagImage = this._flagLoaded = this._flagRepeat = this._flagVideo = this._flagScale = this._flagOffset = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.Texture#dispose
+   * @function
+   * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+   */
   dispose() {
     super.dispose();
     if ("elem" in this._renderer) {
@@ -1690,11 +2389,28 @@ var _Texture = class extends Element {
     return this;
   }
 };
-var Texture = _Texture;
-__publicField(Texture, "Properties", ["src", "loaded", "repeat", "scale", "offset", "image"]);
-__publicField(Texture, "RegularExpressions", regex);
-__publicField(Texture, "ImageRegistry", new Registry());
-__publicField(Texture, "Register", {
+/**
+ * @name Two.Texture.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Texture}.
+ */
+__publicField(_Texture, "Properties", ["src", "loaded", "repeat", "scale", "offset", "image"]);
+/**
+ * @name Two.Texture.RegularExpressions
+ * @property {Object} - A map of compatible DOM Elements categorized by media format.
+ */
+__publicField(_Texture, "RegularExpressions", regex);
+/**
+ * @name Two.Texture.ImageRegistry
+ * @property {Two.Registry} - A canonical listing of image data used in a single session of Two.js.
+ * @nota-bene This object is used to cache image data between different textures.
+ */
+__publicField(_Texture, "ImageRegistry", new Registry());
+/**
+ * @name Two.Texture.Register
+ * @interface
+ * @description A collection of functions to register different types of textures. Used internally by a {@link Two.Texture}.
+ */
+__publicField(_Texture, "Register", {
   canvas: function(texture, callback) {
     texture._src = "#" + texture.id;
     _Texture.ImageRegistry.add(texture.src, texture.image);
@@ -1775,6 +2491,7 @@ __publicField(Texture, "Register", {
     }
   }
 });
+var Texture = _Texture;
 var proto4 = {
   src: {
     enumerable: true,
@@ -1868,14 +2585,44 @@ function FlagScale() {
 }
 
 // src/effects/stop.js
-var _Stop = class extends Element {
+var _Stop = class _Stop extends Element {
   constructor(offset, color, opacity) {
     super();
+    /**
+     * @name Two.Stop#_flagOffset
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Stop#offset} needs updating.
+     */
     __publicField(this, "_flagOffset", true);
+    /**
+     * @name Two.Stop#_flagOpacity
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Stop#opacity} needs updating.
+     */
     __publicField(this, "_flagOpacity", true);
+    /**
+     * @name Two.Stop#_flagColor
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Stop#color} needs updating.
+     */
     __publicField(this, "_flagColor", true);
+    /**
+     * @name Two.Stop#_offset
+     * @private
+     * @see {@link Two.Stop#offset}
+     */
     __publicField(this, "_offset", 0);
+    /**
+     * @name Two.Stop#_opacity
+     * @private
+     * @see {@link Two.Stop#opacity}
+     */
     __publicField(this, "_opacity", 1);
+    /**
+     * @name Two.Stop#_color
+     * @private
+     * @see {@link Two.Stop#color}
+     */
     __publicField(this, "_color", "#fff");
     for (let prop in proto5) {
       Object.defineProperty(this, prop, proto5[prop]);
@@ -1886,6 +2633,14 @@ var _Stop = class extends Element {
     this.color = typeof color === "string" ? color : _Stop.Index <= 0 ? "#fff" : "#000";
     _Stop.Index = (_Stop.Index + 1) % 2;
   }
+  /**
+   * @name Two.Stop.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Stop} to create a new instance
+   * @returns {Two.Stop}
+   * @description Create a new {@link Two.Stop} from an object notation of a {@link Two.Stop}.
+   * @nota-bene Works in conjunction with {@link Two.Stop#toObject}
+   */
   static fromObject(obj) {
     const stop = new _Stop().copy(obj);
     if ("id" in obj) {
@@ -1893,6 +2648,12 @@ var _Stop = class extends Element {
     }
     return stop;
   }
+  /**
+   * @name Two.Stop#copy
+   * @function
+   * @param {Two.Stop} stop - The reference {@link Two.Stop}
+   * @description Copy the properties of one {@link Two.Stop} onto another.
+   */
   copy(stop) {
     super.copy.call(this, stop);
     for (let i = 0; i < _Stop.Properties.length; i++) {
@@ -1903,6 +2664,13 @@ var _Stop = class extends Element {
     }
     return this;
   }
+  /**
+   * @name Two.Stop#clone
+   * @function
+   * @param {Two.Gradient} [parent] - The parent gradient to add the clone to.
+   * @returns {Two.Stop}
+   * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
+   */
   clone(parent) {
     const clone = new _Stop();
     _.each(
@@ -1917,6 +2685,12 @@ var _Stop = class extends Element {
     }
     return clone;
   }
+  /**
+   * @name Two.Stop#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.renderer.type = "stop";
@@ -1929,15 +2703,29 @@ var _Stop = class extends Element {
     );
     return result;
   }
+  /**
+   * @name Two.Stop#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagOffset = this._flagColor = this._flagOpacity = false;
     super.flagReset.call(this);
     return this;
   }
 };
+/**
+ * @name Two.Stop.Index
+ * @property {Number} - The current index being referenced for calculating a stop's default offset value.
+ */
+__publicField(_Stop, "Index", 0);
+/**
+ * @name Two.Stop.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Stop}.
+ */
+__publicField(_Stop, "Properties", ["offset", "opacity", "color"]);
 var Stop = _Stop;
-__publicField(Stop, "Index", 0);
-__publicField(Stop, "Properties", ["offset", "opacity", "color"]);
 var proto5 = {
   offset: {
     enumerable: true,
@@ -1981,7 +2769,7 @@ var proto5 = {
 };
 
 // src/effects/gradient.js
-var _Gradient = class extends Element {
+var _Gradient = class _Gradient extends Element {
   constructor(stops) {
     super();
     __publicField(this, "_flagStops", false);
@@ -2002,6 +2790,14 @@ var _Gradient = class extends Element {
       this.stops = stops;
     }
   }
+  /**
+   * @name Two.Gradient.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Gradient} to create a new instance
+   * @returns {Two.Gradient}
+   * @description Create a new {@link Two.Gradient} from an object notation of a {@link Two.Gradient}.
+   * @nota-bene Works in conjunction with {@link Two.Gradient#toObject}
+   */
   static fromObject(obj) {
     let stops = obj.stops;
     if (stops && stops.length > 0) {
@@ -2013,6 +2809,13 @@ var _Gradient = class extends Element {
     }
     return gradient;
   }
+  /**
+   * @name Two.Gradient#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Gradient}
+   * @description Create a new instance of {@link Two.Gradient} with the same properties of the current path.
+   */
   clone(parent) {
     const stops = this.stops.map((s) => {
       return s.clone();
@@ -2030,6 +2833,12 @@ var _Gradient = class extends Element {
     }
     return clone;
   }
+  /**
+   * @name Two.Gradient#copy
+   * @function
+   * @param {Two.Gradient} gradient - The reference {@link Two.Gradient}
+   * @description Copy the properties of one {@link Two.Gradient} onto another.
+   */
   copy(gradient) {
     super.copy.call(this, gradient);
     for (let i = 0; i < _Gradient.Properties.length; i++) {
@@ -2040,6 +2849,12 @@ var _Gradient = class extends Element {
     }
     return this;
   }
+  /**
+   * @name Two.Gradient#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const result = {
       stops: this.stops.map((s) => {
@@ -2055,17 +2870,36 @@ var _Gradient = class extends Element {
     );
     return result;
   }
+  /**
+   * @name Two.Gradient#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagSpread || this._flagStops) {
       this.trigger(Events.Types.change);
     }
     return this;
   }
+  /**
+   * @name Two.Gradient#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagSpread = this._flagUnits = this._flagStops = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.Gradient#dispose
+   * @function
+   * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+   */
   dispose() {
     if ("elem" in this._renderer) {
       const elem = this._renderer.elem;
@@ -2077,9 +2911,17 @@ var _Gradient = class extends Element {
     return this;
   }
 };
+/**
+ * @name Two.Gradient.Stop
+ * @see {@link Two.Stop}
+ */
+__publicField(_Gradient, "Stop", Stop);
+/**
+ * @name Two.Gradient.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Gradient}.
+ */
+__publicField(_Gradient, "Properties", ["spread", "stops", "units"]);
 var Gradient = _Gradient;
-__publicField(Gradient, "Stop", Stop);
-__publicField(Gradient, "Properties", ["spread", "stops", "units"]);
 var proto6 = {
   spread: {
     enumerable: true,
@@ -2139,9 +2981,14 @@ function UnbindStops(items) {
 }
 
 // src/effects/linear-gradient.js
-var _LinearGradient = class extends Gradient {
+var _LinearGradient = class _LinearGradient extends Gradient {
   constructor(x1, y1, x2, y2, stops) {
     super(stops);
+    /**
+     * @name Two.LinearGradient#_flagEndPoints
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.LinearGradient#left} or {@link Two.LinearGradient#right} changed and needs to update.
+     */
     __publicField(this, "_flagEndPoints", false);
     __publicField(this, "_left", null);
     __publicField(this, "_right", null);
@@ -2165,6 +3012,14 @@ var _LinearGradient = class extends Gradient {
       this.right.y = y2;
     }
   }
+  /**
+   * @name Two.LinearGradient.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.LinearGradient} to create a new instance
+   * @returns {Two.LinearGradient}
+   * @description Create a new {@link Two.LinearGradient} from an object notation of a {@link Two.LinearGradient}.
+   * @nota-bene Works in conjunction with {@link Two.LinearGradient#toObject}
+   */
   static fromObject(obj) {
     const gradient = new _LinearGradient().copy(obj);
     if ("id" in obj) {
@@ -2172,6 +3027,12 @@ var _LinearGradient = class extends Gradient {
     }
     return gradient;
   }
+  /**
+   * @name Two.LinearGradient#copy
+   * @function
+   * @param {Two.LinearGradient} gradient - The reference {@link Two.LinearGradient}
+   * @description Copy the properties of one {@link Two.LinearGradient} onto another.
+   */
   copy(gradient) {
     super.copy.call(this, gradient);
     for (let i = 0; i < _LinearGradient.Properties.length; i++) {
@@ -2182,6 +3043,13 @@ var _LinearGradient = class extends Gradient {
     }
     return this;
   }
+  /**
+   * @name Two.LinearGradient#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Gradient}
+   * @description Create a new instance of {@link Two.LinearGradient} with the same properties of the current path.
+   */
   clone(parent) {
     const stops = this.stops.map(function(stop) {
       return stop.clone();
@@ -2205,27 +3073,51 @@ var _LinearGradient = class extends Gradient {
     }
     return clone;
   }
+  /**
+   * @name Two.LinearGradient#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.left = this.left.toObject();
     result.right = this.right.toObject();
     return result;
   }
+  /**
+   * @name Two.LinearGradient#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagEndPoints || this._flagSpread || this._flagStops) {
       this.trigger(Events.Types.change);
     }
     return this;
   }
+  /**
+   * @name Two.LinearGradient#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagEndPoints = false;
     super.flagReset.call(this);
     return this;
   }
 };
+/**
+ * @name Two.LinearGradient.Stop
+ * @see {@link Two.Stop}
+ */
+__publicField(_LinearGradient, "Stop", Stop);
+__publicField(_LinearGradient, "Properties", ["left", "right"]);
 var LinearGradient = _LinearGradient;
-__publicField(LinearGradient, "Stop", Stop);
-__publicField(LinearGradient, "Properties", ["left", "right"]);
 var proto7 = {
   left: {
     enumerable: true,
@@ -2261,11 +3153,26 @@ function FlagEndPoints() {
 }
 
 // src/effects/radial-gradient.js
-var _RadialGradient = class extends Gradient {
+var _RadialGradient = class _RadialGradient extends Gradient {
   constructor(cx, cy, r, stops, fx, fy) {
     super(stops);
+    /**
+     * @name Two.RadialGradient#_flagRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#radius} changed and needs to update.
+     */
     __publicField(this, "_flagRadius", false);
+    /**
+     * @name Two.RadialGradient#_flagCenter
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#center} changed and needs to update.
+     */
     __publicField(this, "_flagCenter", false);
+    /**
+     * @name Two.RadialGradient#_flagFocal
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RadialGradient#focal} changed and needs to update.
+     */
     __publicField(this, "_flagFocal", false);
     __publicField(this, "_radius", 0);
     __publicField(this, "_center", null);
@@ -2293,6 +3200,14 @@ var _RadialGradient = class extends Gradient {
       this.focal.y = fy;
     }
   }
+  /**
+   * @name Two.RadialGradient.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.RadialGradient} to create a new instance
+   * @returns {Two.RadialGradient}
+   * @description Create a new {@link Two.RadialGradient} from an object notation of a {@link Two.RadialGradient}.
+   * @nota-bene Works in conjunction with {@link Two.RadialGradient#toObject}
+   */
   static fromObject(obj) {
     const gradient = new _RadialGradient().copy(obj);
     if ("id" in obj) {
@@ -2300,6 +3215,12 @@ var _RadialGradient = class extends Gradient {
     }
     return gradient;
   }
+  /**
+   * @name Two.RadialGradient#copy
+   * @function
+   * @param {Two.RadialGradient} gradient - The reference {@link Two.RadialGradient}
+   * @description Copy the properties of one {@link Two.RadialGradient} onto another.
+   */
   copy(gradient) {
     super.copy.call(this, gradient);
     for (let i = 0; i < _RadialGradient.Properties.length; i++) {
@@ -2314,6 +3235,13 @@ var _RadialGradient = class extends Gradient {
     }
     return this;
   }
+  /**
+   * @name Two.RadialGradient#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.RadialGradient}
+   * @description Create a new instance of {@link Two.RadialGradient} with the same properties of the current path.
+   */
   clone(parent) {
     const stops = this.stops.map(function(stop) {
       return stop.clone();
@@ -2338,6 +3266,12 @@ var _RadialGradient = class extends Gradient {
     }
     return clone;
   }
+  /**
+   * @name Two.RadialGradient#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const result = super.toObject.call(this);
     _.each(
@@ -2351,21 +3285,43 @@ var _RadialGradient = class extends Gradient {
     result.focal = this.focal.toObject();
     return result;
   }
+  /**
+   * @name Two.RadialGradient#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagRadius || this._flatCenter || this._flagFocal || this._flagSpread || this._flagStops) {
       this.trigger(Events.Types.change);
     }
     return this;
   }
+  /**
+   * @name Two.RadialGradient#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagRadius = this._flagCenter = this._flagFocal = false;
     super.flagReset.call(this);
     return this;
   }
 };
+/**
+ * @name Two.RadialGradient.Stop
+ * @see {@link Two.Stop}
+ */
+__publicField(_RadialGradient, "Stop", Stop);
+/**
+ * @name Two.RadialGradient.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.RadialGradient}.
+ */
+__publicField(_RadialGradient, "Properties", ["center", "radius", "focal"]);
 var RadialGradient = _RadialGradient;
-__publicField(RadialGradient, "Stop", Stop);
-__publicField(RadialGradient, "Properties", ["center", "radius", "focal"]);
 var proto8 = {
   radius: {
     enumerable: true,
@@ -2509,10 +3465,19 @@ var cos = Math.cos;
 var sin = Math.sin;
 var tan = Math.tan;
 var array = [];
-var _Matrix = class extends Events {
+var _Matrix = class _Matrix extends Events {
   constructor(a, b, c, d, e, f) {
     super();
+    /**
+     * @name Two.Matrix#elements
+     * @property {Number[]} - The underlying data stored as an array.
+     */
     __publicField(this, "elements", new NumArray(9));
+    /**
+     * @name Two.Matrix#manual
+     * @property {Boolean} - Determines whether Two.js automatically calculates the values for the matrix or if the developer intends to manage the matrix.
+     * @nota-bene - Setting to `true` nullifies {@link Two.Shape#translation}, {@link Two.Shape#rotation}, and {@link Two.Shape#scale}.
+     */
     __publicField(this, "manual", false);
     let elements = a;
     if (!Array.isArray(elements)) {
@@ -2523,6 +3488,15 @@ var _Matrix = class extends Events {
       this.set(elements);
     }
   }
+  /**
+   * @name Two.Matrix.Multiply
+   * @function
+   * @param {Number[]} A - The first {@link Two.Matrix} to multiply
+   * @param {Number[]} B - The second {@link Two.Matrix} to multiply
+   * @param {Number[]} [C] - An optional {@link Two.Matrix} to apply the result to
+   * @returns {Number[]} - If an optional `C` matrix isn't passed then a new one is created and returned.
+   * @description Multiply two matrices together and return the result.
+   */
   static Multiply(A, B, C) {
     if (B.length <= 3) {
       const e = A;
@@ -2551,9 +3525,37 @@ var _Matrix = class extends Events {
     C[8] = A6 * B2 + A7 * B5 + A8 * B8;
     return C;
   }
+  /**
+   * @name Two.Matrix.fromObject
+   * @function
+   * @param {Object} obj - The object notation of a Two.Matrix to create a new instance
+   * @returns {Two.Matrix}
+   * @description Create a new {@link Two.Matrix} from an object notation of a {@link Two.Matrix}.
+   * @nota-bene Works in conjunction with {@link Two.Matrix#toObject}
+   */
   static fromObject(obj) {
     return new _Matrix().copy(obj);
   }
+  /**
+   * @name Two.Matrix#set
+   * @function
+   * @param {Number} a - The value for element at the first column and first row
+   * @param {Number} b - The value for element at the second column and first row
+   * @param {Number} c - The value for element at the third column and first row
+   * @param {Number} d - The value for element at the first column and second row
+   * @param {Number} e - The value for element at the second column and second row
+   * @param {Number} f - The value for element at the third column and second row
+   * @param {Number} g - The value for element at the first column and third row
+   * @param {Number} h - The value for element at the second column and third row
+   * @param {Number} i - The value for element at the third column and third row
+   * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+   */
+  /**
+   * @name Two.Matrix#set
+   * @function
+   * @param {Number[]} a - The array of elements to apply
+   * @description Set an array of values onto the matrix. Order described in {@link Two.Matrix}.
+   */
   set(a, b, c, d, e, f, g, h, i) {
     if (typeof b === "undefined") {
       const elements = a;
@@ -2578,6 +3580,12 @@ var _Matrix = class extends Events {
     this.elements[8] = i;
     return this.trigger(Events.Types.change);
   }
+  /**
+   * @name Two.Matrix#copy
+   * @function
+   * @param {Two.Matrix} m - The matrix to copy
+   * @description Copy the matrix of one to the current instance.
+   */
   copy(m) {
     this.elements[0] = m.elements[0];
     this.elements[1] = m.elements[1];
@@ -2591,6 +3599,11 @@ var _Matrix = class extends Events {
     this.manual = m.manual;
     return this.trigger(Events.Types.change);
   }
+  /**
+   * @name Two.Matrix#identity
+   * @function
+   * @description Turn matrix to the identity, like resetting.
+   */
   identity() {
     this.elements[0] = _Matrix.Identity[0];
     this.elements[1] = _Matrix.Identity[1];
@@ -2603,6 +3616,37 @@ var _Matrix = class extends Events {
     this.elements[8] = _Matrix.Identity[8];
     return this.trigger(Events.Types.change);
   }
+  /**
+   * @name Two.Matrix#multiply
+   * @function
+   * @param {Number} s - The scalar to be multiplied.
+   * @description Multiply all components of the matrix against a single scalar value.
+   * @overloaded
+   */
+  /**
+   * @name Two.Matrix#multiply
+   * @function
+   * @param {Number} x - The `x` component to be multiplied.
+   * @param {Number} y - The `y` component to be multiplied.
+   * @param {Number} z - The `z` component to be multiplied.
+   * @description Multiply all components of a matrix against a 3 component vector.
+   * @overloaded
+   */
+  /**
+   * @name Two.Matrix#multiply
+   * @function
+   * @param {Number} a - The value at the first column and first row of the matrix to be multiplied.
+   * @param {Number} b - The value at the second column and first row of the matrix to be multiplied.
+   * @param {Number} c - The value at the third column and first row of the matrix to be multiplied.
+   * @param {Number} d - The value at the first column and second row of the matrix to be multiplied.
+   * @param {Number} e - The value at the second column and second row of the matrix to be multiplied.
+   * @param {Number} f - The value at the third column and second row of the matrix to be multiplied.
+   * @param {Number} g - The value at the first column and third row of the matrix to be multiplied.
+   * @param {Number} h - The value at the second column and third row of the matrix to be multiplied.
+   * @param {Number} i - The value at the third column and third row of the matrix to be multiplied.
+   * @description Multiply all components of a matrix against another matrix.
+   * @overloaded
+   */
   multiply(a, b, c, d, e, f, g, h, i) {
     if (typeof b === "undefined") {
       this.elements[0] *= a;
@@ -2648,6 +3692,12 @@ var _Matrix = class extends Events {
     this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
     return this.trigger(Events.Types.change);
   }
+  /**
+   * @name Two.Matrix#inverse
+   * @function
+   * @param {Two.Matrix} [output] - The optional matrix to apply the inversion to.
+   * @description Return an inverted version of the matrix. If no optional one is passed a new matrix is created and returned.
+   */
   inverse(output) {
     const a = this.elements;
     output = output || new _Matrix();
@@ -2673,6 +3723,19 @@ var _Matrix = class extends Events {
     output.elements[8] = (a11 * a00 - a01 * a10) * det;
     return output;
   }
+  /**
+   * @name Two.Matrix#scale
+   * @function
+   * @param {Number} s - The one dimensional scale to apply to the matrix.
+   * @description Uniformly scale the transformation matrix.
+   */
+  /**
+   * @name Two.Matrix#scale
+   * @function
+   * @param {Number} sx - The horizontal scale factor.
+   * @param {Number} sy - The vertical scale factor
+   * @description Scale the transformation matrix in two dimensions.
+   */
   scale(sx, sy) {
     const l = arguments.length;
     if (l <= 1) {
@@ -2680,27 +3743,66 @@ var _Matrix = class extends Events {
     }
     return this.multiply(sx, 0, 0, 0, sy, 0, 0, 0, 1);
   }
+  /**
+   * @name Two.Matrix#rotate
+   * @function
+   * @param {Number} n - The amount to rotate in Number.
+   * @description Rotate the matrix.
+   */
   rotate(n) {
     const c = cos(n);
     const s = sin(n);
     return this.multiply(c, -s, 0, s, c, 0, 0, 0, 1);
   }
+  /**
+   * @name Two.Matrix#translate
+   * @function
+   * @param {Number} x - The horizontal translation value to apply
+   * @param {Number} y - The vertical translation value to apply
+   * @description Translate the matrix to specific `x` / `y` values.
+   */
   translate(x, y) {
     return this.multiply(1, 0, x, 0, 1, y, 0, 0, 1);
   }
+  /**
+   * @name Two.Matrix#skewX
+   * @function
+   * @param {Number} n - The amount to skew
+   * @description Skew the matrix by an angle in the x axis direction.
+   */
   skewX(n) {
     const a = tan(n);
     return this.multiply(1, a, 0, 0, 1, 0, 0, 0, 1);
   }
+  /**
+   * @name Two.Matrix#skewY
+   * @function
+   * @param {Number} n - The amount to skew
+   * @description Skew the matrix by an angle in the y axis direction.
+   */
   skewY(n) {
     const a = tan(n);
     return this.multiply(1, 0, 0, a, 1, 0, 0, 0, 1);
   }
+  /**
+   * @name Two.Matrix#toString
+   * @function
+   * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+   * @returns {String} - The transformation matrix as a 6 component string separated by spaces.
+   * @description Create a transform string. Used for the Two.js rendering APIs.
+   */
   toString(fullMatrix) {
     array.length = 0;
     this.toTransformArray(fullMatrix, array);
     return array.map(toFixed).join(" ");
   }
+  /**
+   * @name Two.Matrix#toTransformArray
+   * @function
+   * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 in the format for 2D transformations.
+   * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
+   * @description Create a transform array. Used for the Two.js rendering APIs.
+   */
   toTransformArray(fullMatrix, output) {
     const elements = this.elements;
     const hasOutput = !!output;
@@ -2744,8 +3846,16 @@ var _Matrix = class extends Events {
       e,
       c,
       f
+      // Specific format see LN:19
     ];
   }
+  /**
+   * @name Two.Matrix#toArray
+   * @function
+   * @param {Boolean} [fullMatrix=false] - Return the full 9 elements of the matrix or just 6 for 2D transformations.
+   * @param {Number[]} [output] - An array empty or otherwise to apply the values to.
+   * @description Create a transform array. Used for the Two.js rendering APIs.
+   */
   toArray(fullMatrix, output) {
     const elements = this.elements;
     const hasOutput = !!output;
@@ -2784,6 +3894,12 @@ var _Matrix = class extends Events {
     }
     return [a, b, c, d, e, f];
   }
+  /**
+   * @name Two.Matrix#toObject
+   * @function
+   * @description Create a JSON compatible object that represents information of the matrix.
+   * @nota-bene Works in conjunction with {@link Two.Matrix.fromObject}
+   */
   toObject() {
     return {
       renderer: { type: "matrix" },
@@ -2791,26 +3907,82 @@ var _Matrix = class extends Events {
       manual: !!this.manual
     };
   }
+  /**
+   * @name Two.Matrix#clone
+   * @function
+   * @description Clone the current matrix.
+   */
   clone() {
     return new _Matrix().copy(this);
   }
 };
+//
+/**
+ * @name Two.Matrix.Identity
+ * @property {Number[]} - A stored reference to the default value of a 3 x 3 matrix.
+ */
+__publicField(_Matrix, "Identity", [1, 0, 0, 0, 1, 0, 0, 0, 1]);
 var Matrix2 = _Matrix;
-__publicField(Matrix2, "Identity", [1, 0, 0, 0, 1, 0, 0, 0, 1]);
 setMatrix(Matrix2);
 
 // src/shape.js
-var _Shape = class extends Element {
+var _Shape = class _Shape extends Element {
   constructor() {
     super();
+    /**
+     * @name Two.Shape#_flagMatrix
+     * @private
+     * @property {Boolean} - Determines whether the matrix needs updating.
+     */
     __publicField(this, "_flagMatrix", true);
+    /**
+     * @name Two.Shape#_flagScale
+     * @private
+     * @property {Boolean} - Determines whether the scale needs updating.
+     */
     __publicField(this, "_flagScale", false);
+    // Underlying Properties
+    /**
+     * @name Two.Shape#_matrix
+     * @private
+     * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale.
+     */
     __publicField(this, "_matrix", null);
+    /**
+     * @name Two.Shape#_worldMatrix
+     * @private
+     * @property {Two.Matrix} - The matrix value of the shape's position, rotation, and scale in the scene.
+     */
     __publicField(this, "_worldMatrix", null);
+    /**
+     * @name Two.Shape#_position
+     * @private
+     * @property {Two.Vector} - The translation values as a {@link Two.Vector}.
+     */
     __publicField(this, "_position", null);
+    /**
+     * @name Two.Shape#_rotation
+     * @private
+     * @property {Number} - The rotation value in radians.
+     */
     __publicField(this, "_rotation", 0);
+    /**
+     * @name Two.Shape#_scale
+     * @private
+     * @property {Number|Two.Vector} - The scale value in Number. Can be a vector for non-uniform scaling.
+     */
     __publicField(this, "_scale", 1);
+    /**
+     * @name Two.Shape#_skewX
+     * @private
+     * @property {Number} - The rotation value in Number.
+     */
     __publicField(this, "_skewX", 0);
+    /**
+     * @name Two.Shape#_skewY
+     * @private
+     * @property {Number} - The rotation value in Number.
+     */
     __publicField(this, "_skewY", 0);
     for (let prop in proto9) {
       Object.defineProperty(this, prop, proto9[prop]);
@@ -2825,6 +3997,14 @@ var _Shape = class extends Element {
     this.skewX = 0;
     this.skewY = 0;
   }
+  /**
+   * @name Two.Shape.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Shape} to create a new instance
+   * @returns {Two.Shape}
+   * @description Create a new {@link Two.Shape} from an object notation of a {@link Two.Shape}.
+   * @nota-bene Works in conjunction with {@link Two.Shape#toObject}
+   */
   static fromObject(obj) {
     const shape = new _Shape().copy(obj);
     if ("id" in obj) {
@@ -2838,16 +4018,31 @@ var _Shape = class extends Element {
   set renderer(v) {
     this._renderer = v;
   }
+  /**
+   * @name Two.Shape#translation
+   * @description Alias for {@link Two.Shape#position}.
+   */
   get translation() {
     return proto9.position.get.apply(this, arguments);
   }
   set translation(v) {
     proto9.position.set.apply(this, arguments);
   }
+  /**
+   * @name Two.Shape#addTo
+   * @function
+   * @param {Two.Group} group - The parent the shape adds itself to.
+   * @description Convenience method to add itself to the scenegraph.
+   */
   addTo(group) {
     group.add(this);
     return this;
   }
+  /**
+   * @name Two.Shape#remove
+   * @function
+   * @description Remove self from the scene / parent.
+   */
   remove() {
     if (!this.parent) {
       return this;
@@ -2855,6 +4050,12 @@ var _Shape = class extends Element {
     this.parent.remove(this);
     return this;
   }
+  /**
+   * @name Two.Shape#copy
+   * @function
+   * @param {Two.Shape} shape
+   * @description Copy the properties of one {@link Two.Shape} onto another.
+   */
   copy(shape) {
     super.copy.call(this, shape);
     if ("position" in shape) {
@@ -2882,6 +4083,13 @@ var _Shape = class extends Element {
     }
     return this;
   }
+  /**
+   * @name Two.Shape#clone
+   * @function
+   * @param {Two.Group} [parent] - Optional argument to automatically add the shape to a scenegraph.
+   * @returns {Two.Shape}
+   * @description Create a new {@link Two.Shape} with the same values as the current shape.
+   */
   clone(parent) {
     const clone = new _Shape();
     clone.position.copy(this.position);
@@ -2897,6 +4105,12 @@ var _Shape = class extends Element {
     }
     return clone._update();
   }
+  /**
+   * @name Two.Shape#toObject
+   * @function
+   * @description Create a JSON compatible object that represents information of the shape.
+   * @nota-bene Works in conjunction with {@link Two.Shape.fromObject}
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.renderer = { type: "shape" };
@@ -2909,6 +4123,14 @@ var _Shape = class extends Element {
     result.matrix = this.matrix.toObject();
     return result;
   }
+  /**
+   * @name Two.Shape#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update(bubbles) {
     if (!this._matrix.manual && this._flagMatrix) {
       this._matrix.identity().translate(this.position.x, this.position.y);
@@ -2928,14 +4150,19 @@ var _Shape = class extends Element {
     }
     return this;
   }
+  /**
+   * @name Two.Shape#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagMatrix = this._flagScale = false;
     super.flagReset.call(this);
     return this;
   }
 };
-var Shape = _Shape;
-__publicField(Shape, "Properties", [
+__publicField(_Shape, "Properties", [
   "position",
   "rotation",
   "scale",
@@ -2944,6 +4171,7 @@ __publicField(Shape, "Properties", [
   "matrix",
   "worldMatrix"
 ]);
+var Shape = _Shape;
 var proto9 = {
   position: {
     enumerable: true,
@@ -3037,38 +4265,196 @@ var max = Math.max;
 var ceil = Math.ceil;
 var floor2 = Math.floor;
 var vector = new Vector();
-var _Path = class extends Shape {
+var _Path = class _Path extends Shape {
   constructor(vertices, closed2, curved, manual) {
     super();
+    /**
+     * @name Two.Path#_flagVertices
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#vertices} need updating.
+     */
     __publicField(this, "_flagVertices", true);
+    /**
+     * @name Two.Path#_flagLength
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#length} needs updating.
+     */
     __publicField(this, "_flagLength", true);
+    /**
+     * @name Two.Path#_flagFill
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#fill} needs updating.
+     */
     __publicField(this, "_flagFill", true);
+    /**
+     * @name Two.Path#_flagStroke
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#stroke} needs updating.
+     */
     __publicField(this, "_flagStroke", true);
+    /**
+     * @name Two.Path#_flagLinewidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#linewidth} needs updating.
+     */
     __publicField(this, "_flagLinewidth", true);
+    /**
+     * @name Two.Path#_flagOpacity
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#opacity} needs updating.
+     */
     __publicField(this, "_flagOpacity", true);
+    /**
+     * @name Two.Path#_flagVisible
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#visible} needs updating.
+     */
     __publicField(this, "_flagVisible", true);
+    /**
+     * @name Two.Path#_flagCap
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#cap} needs updating.
+     */
     __publicField(this, "_flagCap", true);
+    /**
+     * @name Two.Path#_flagJoin
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#join} needs updating.
+     */
     __publicField(this, "_flagJoin", true);
+    /**
+     * @name Two.Path#_flagMiter
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#miter} needs updating.
+     */
     __publicField(this, "_flagMiter", true);
+    /**
+     * @name Two.Path#_flagStrokeAttenuation
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#strokeAttenuation} needs updating.
+     */
+    __publicField(this, "_flagStrokeAttenuation", true);
+    /**
+     * @name Two.Path#_flagMask
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#mask} needs updating.
+     */
     __publicField(this, "_flagMask", false);
+    /**
+     * @name Two.Path#_flagClip
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Path#clip} needs updating.
+     */
     __publicField(this, "_flagClip", false);
+    // Underlying Properties
+    /**
+     * @name Two.Path#_length
+     * @private
+     * @see {@link Two.Path#length}
+     */
     __publicField(this, "_length", 0);
+    /**
+     * @name Two.Path#_fill
+     * @private
+     * @see {@link Two.Path#fill}
+     */
     __publicField(this, "_fill", "#fff");
+    /**
+     * @name Two.Path#_stroke
+     * @private
+     * @see {@link Two.Path#stroke}
+     */
     __publicField(this, "_stroke", "#000");
+    /**
+     * @name Two.Path#_linewidth
+     * @private
+     * @see {@link Two.Path#linewidth}
+     */
     __publicField(this, "_linewidth", 1);
+    /**
+     * @name Two.Path#_opacity
+     * @private
+     * @see {@link Two.Path#opacity}
+     */
     __publicField(this, "_opacity", 1);
+    /**
+     * @name Two.Path#_visible
+     * @private
+     * @see {@link Two.Path#visible}
+     */
     __publicField(this, "_visible", true);
+    /**
+     * @name Two.Path#_cap
+     * @private
+     * @see {@link Two.Path#cap}
+     */
     __publicField(this, "_cap", "round");
+    /**
+     * @name Two.Path#_join
+     * @private
+     * @see {@link Two.Path#join}
+     */
     __publicField(this, "_join", "round");
+    /**
+     * @name Two.Path#_miter
+     * @private
+     * @see {@link Two.Path#miter}
+     */
     __publicField(this, "_miter", 4);
+    /**
+     * @name Two.Path#_closed
+     * @private
+     * @see {@link Two.Path#closed}
+     */
     __publicField(this, "_closed", true);
+    /**
+     * @name Two.Path#_curved
+     * @private
+     * @see {@link Two.Path#curved}
+     */
     __publicField(this, "_curved", false);
+    /**
+     * @name Two.Path#_automatic
+     * @private
+     * @see {@link Two.Path#automatic}
+     */
     __publicField(this, "_automatic", true);
+    /**
+     * @name Two.Path#_beginning
+     * @private
+     * @see {@link Two.Path#beginning}
+     */
     __publicField(this, "_beginning", 0);
+    /**
+     * @name Two.Path#_ending
+     * @private
+     * @see {@link Two.Path#ending}
+     */
     __publicField(this, "_ending", 1);
+    /**
+     * @name Two.Path#_mask
+     * @private
+     * @see {@link Two.Path#mask}
+     */
     __publicField(this, "_mask", null);
+    /**
+     * @name Two.Path#_clip
+     * @private
+     * @see {@link Two.Path#clip}
+     */
     __publicField(this, "_clip", false);
+    /**
+     * @name Two.Path#_dashes
+     * @private
+     * @see {@link Two.Path#dashes}
+     */
     __publicField(this, "_dashes", null);
+    /**
+     * @name Two.Path#_strokeAttenuation
+     * @private
+     * @see {@link Two.Path#strokeAttenuation}
+     */
+    __publicField(this, "_strokeAttenuation", true);
     for (let prop in proto10) {
       Object.defineProperty(this, prop, proto10[prop]);
     }
@@ -3098,6 +4484,14 @@ var _Path = class extends Shape {
     this.dashes = [];
     this.dashes.offset = 0;
   }
+  /**
+   * @name Two.Path.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Path} to create a new instance
+   * @returns {Two.Path}
+   * @description Create a new {@link Two.Path} from an object notation of a {@link Two.Path}.
+   * @nota-bene Works in conjunction with {@link Two.Path#toObject}
+   */
   static fromObject(obj) {
     const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
     const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
@@ -3107,6 +4501,12 @@ var _Path = class extends Shape {
     }
     return path;
   }
+  /**
+   * @name Two.Path#copy
+   * @function
+   * @param {Two.Path} path - The reference {@link Two.Path}
+   * @description Copy the properties of one {@link Two.Path} onto another.
+   */
   copy(path) {
     super.copy.call(this, path);
     this.vertices = [];
@@ -3126,6 +4526,13 @@ var _Path = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Path#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Path}
+   * @description Create a new instance of {@link Two.Path} with the same properties of the current path.
+   */
   clone(parent) {
     const clone = new _Path();
     for (let j = 0; j < this.vertices.length; j++) {
@@ -3149,6 +4556,13 @@ var _Path = class extends Shape {
     }
     return clone._update();
   }
+  /**
+   * @name Two.Path#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   * @nota-bene Works in conjunction with {@link Two.Path.fromObject}
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.renderer.type = "path";
@@ -3168,6 +4582,16 @@ var _Path = class extends Shape {
     );
     return result;
   }
+  /**
+   * @name Two.Path#dispose
+   * @function
+   * @returns {Two.Path}
+   * @description Release the path's renderer resources and detach all events.
+   * This method cleans up vertices collection events, individual vertex events,
+   * control point events, and disposes fill/stroke effects (calling dispose() 
+   * on Gradients and Textures for thorough cleanup) while preserving the
+   * renderer type for potential re-attachment to a new renderer.
+   */
   dispose() {
     super.dispose();
     if (this.vertices && typeof this.vertices.unbind === "function") {
@@ -3204,15 +4628,30 @@ var _Path = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Path#noFill
+   * @function
+   * @description Short hand method to set fill to `none`.
+   */
   noFill() {
     this.fill = "none";
     return this;
   }
+  /**
+   * @name Two.Path#noStroke
+   * @function
+   * @description Short hand method to set stroke to `none`.
+   */
   noStroke() {
     this.stroke = "none";
     this.linewidth = 0;
     return this;
   }
+  /**
+   * @name Two.Path#corner
+   * @function
+   * @description Orient the vertices of the shape to the upper left-hand corner of the path.
+   */
   corner() {
     const rect = this.getBoundingClientRect(true);
     const hw = rect.width / 2;
@@ -3234,6 +4673,11 @@ var _Path = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Path#center
+   * @function
+   * @description Orient the vertices of the shape to the center of the path.
+   */
   center() {
     const rect = this.getBoundingClientRect(true);
     const cx = rect.left + rect.width / 2 - this.translation.x;
@@ -3249,6 +4693,13 @@ var _Path = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Path#getBoundingClientRect
+   * @function
+   * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
+   * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+   * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
+   */
   getBoundingClientRect(shallow) {
     let matrix, border, l, i, v0, v1;
     let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
@@ -3326,6 +4777,14 @@ var _Path = class extends Shape {
       height: bottom - top
     };
   }
+  /**
+   * @name Two.Path#getPointAt
+   * @function
+   * @param {Number} t - Percentage value describing where on the {@link Two.Path} to estimate and assign coordinate values.
+   * @param {Two.Vector} [obj] - Object to apply calculated x, y to. If none available returns new `Object`.
+   * @returns {Object}
+   * @description Given a float `t` from 0 to 1, return a point or assign a passed `obj`'s coordinates to that percentage on this {@link Two.Path}'s curve.
+   */
   getPointAt(t, obj) {
     let ia, ib, result;
     let x, x1, x2, x3, x4, y, y1, y2, y3, y4, left, right;
@@ -3427,6 +4886,12 @@ var _Path = class extends Shape {
     result.t = t;
     return result;
   }
+  /**
+   * @name Two.Path#plot
+   * @function
+   * @description Based on closed / curved and sorting of vertices plot where all points should be and where the respective handles should be too.
+   * @nota-bene While this method is public it is internally called by {@link Two.Path#_update} when `automatic = true`.
+   */
   plot() {
     if (this.curved) {
       getCurveFromPoints(this._collection, this.closed);
@@ -3437,6 +4902,12 @@ var _Path = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Path#subdivide
+   * @function
+   * @param {Number} limit - How many times to recurse subdivisions.
+   * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
+   */
   subdivide(limit) {
     this._update();
     const last = this.vertices.length - 1;
@@ -3492,6 +4963,14 @@ var _Path = class extends Shape {
     this.vertices = points;
     return this;
   }
+  /**
+   * @name Two.Path#_updateLength
+   * @function
+   * @private
+   * @param {Number} [limit] -
+   * @param {Boolean} [silent=false] - If set to `true` then the path isn't updated before calculation. Useful for internal use.
+   * @description Recalculate the {@link Two.Path#length} value.
+   */
   _updateLength(limit, silent) {
     if (!silent) {
       this._update();
@@ -3527,6 +5006,14 @@ var _Path = class extends Shape {
     this._flagLength = false;
     return this;
   }
+  /**
+   * @name Two.Path#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices) {
       if (this._automatic) {
@@ -3614,14 +5101,23 @@ var _Path = class extends Shape {
     Shape.prototype._update.apply(this, arguments);
     return this;
   }
+  /**
+   * @name Two.Path#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
-    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = false;
+    this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagCap = this._flagJoin = this._flagMiter = this._flagClip = this._flagStrokeAttenuation = false;
     Shape.prototype.flagReset.call(this);
     return this;
   }
 };
-var Path = _Path;
-__publicField(Path, "Properties", [
+/**
+ * @name Two.Path.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Path}.
+ */
+__publicField(_Path, "Properties", [
   "fill",
   "stroke",
   "linewidth",
@@ -3635,11 +5131,13 @@ __publicField(Path, "Properties", [
   "automatic",
   "beginning",
   "ending",
-  "dashes"
+  "dashes",
+  "strokeAttenuation"
 ]);
-__publicField(Path, "Utils", {
+__publicField(_Path, "Utils", {
   getCurveLength: getCurveLength2
 });
+var Path = _Path;
 var proto10 = {
   linewidth: {
     enumerable: true,
@@ -3733,6 +5231,10 @@ var proto10 = {
       }
     }
   },
+  /**
+   * @name Two.Path#length
+   * @property {Number} - The sum of distances between all {@link Two.Path#vertices}.
+   */
   length: {
     get: function() {
       if (this._flagLength) {
@@ -3817,6 +5319,11 @@ var proto10 = {
       bindVertices(this._collection);
     }
   },
+  /**
+   * @name Two.Path#mask
+   * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the path.
+   * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+   */
   mask: {
     enumerable: true,
     get: function() {
@@ -3830,6 +5337,10 @@ var proto10 = {
       }
     }
   },
+  /**
+   * @name Two.Path#clip
+   * @property {Boolean} - Tells Two.js renderer if this object represents a mask for another object (or not).
+   */
   clip: {
     enumerable: true,
     get: function() {
@@ -3850,6 +5361,22 @@ var proto10 = {
         v.offset = this.dashes && this._dashes.offset || 0;
       }
       this._dashes = v;
+    }
+  },
+  /**
+   * @name Two.Path#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function() {
+      return this._strokeAttenuation;
+    },
+    set: function(v) {
+      this._strokeAttenuation = !!v;
+      this._flagStrokeAttenuation = true;
+      this._flagLinewidth = true;
     }
   }
 };
@@ -3882,18 +5409,39 @@ function FlagStroke() {
 }
 
 // src/shapes/rectangle.js
-var _Rectangle = class extends Path {
+var _Rectangle = class _Rectangle extends Path {
   constructor(x, y, width, height) {
     const points = [
       new Anchor(),
       new Anchor(),
       new Anchor(),
       new Anchor()
+      // new Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
     ];
     super(points, true, false, true);
+    /**
+     * @name Two.Rectangle#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Rectangle#width} needs updating.
+     */
     __publicField(this, "_flagWidth", 0);
+    /**
+     * @name Two.Rectangle#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Rectangle#height} needs updating.
+     */
     __publicField(this, "_flagHeight", 0);
+    /**
+     * @name Two.Rectangle#_width
+     * @private
+     * @see {@link Two.Rectangle#width}
+     */
     __publicField(this, "_width", 0);
+    /**
+     * @name Two.Rectangle#_height
+     * @private
+     * @see {@link Two.Rectangle#height}
+     */
     __publicField(this, "_height", 0);
     __publicField(this, "_origin", null);
     this._renderer.type = "rectangle";
@@ -3911,6 +5459,14 @@ var _Rectangle = class extends Path {
     }
     this._update();
   }
+  /**
+   * @name Two.Rectangle.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Rectangle} to create a new instance
+   * @returns {Two.Rectangle}
+   * @description Create a new {@link Two.Rectangle} from an object notation of a {@link Two.Rectangle}.
+   * @nota-bene Works in conjunction with {@link Two.Rectangle#toObject}
+   */
   static fromObject(obj) {
     const rectangle = new _Rectangle().copy(obj);
     if ("id" in obj) {
@@ -3918,6 +5474,12 @@ var _Rectangle = class extends Path {
     }
     return rectangle;
   }
+  /**
+   * @name Two.Rectangle#copy
+   * @function
+   * @param {Two.Rectangle} rectangle - The reference {@link Two.Rectangle}
+   * @description Copy the properties of one {@link Two.Rectangle} onto another.
+   */
   copy(rectangle) {
     super.copy.call(this, rectangle);
     for (let i = 0; i < _Rectangle.Properties.length; i++) {
@@ -3928,6 +5490,14 @@ var _Rectangle = class extends Path {
     }
     return this;
   }
+  /**
+   * @name Two.Rectangle#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices || this._flagWidth || this._flagHeight) {
       const xr = this._width / 2;
@@ -3946,11 +5516,24 @@ var _Rectangle = class extends Path {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.Rectangle#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagWidth = this._flagHeight = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.Rectangle#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Rectangle}
+   * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
+   */
   clone(parent) {
     const clone = new _Rectangle(0, 0, this.width, this.height);
     clone.translation.copy(this.translation);
@@ -3970,6 +5553,12 @@ var _Rectangle = class extends Path {
     }
     return clone;
   }
+  /**
+   * @name Two.Rectangle#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.renderer.type = "rectangle";
@@ -3979,8 +5568,12 @@ var _Rectangle = class extends Path {
     return object;
   }
 };
+/**
+ * @name Two.Rectangle.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Rectangle}.
+ */
+__publicField(_Rectangle, "Properties", ["width", "height"]);
 var Rectangle = _Rectangle;
-__publicField(Rectangle, "Properties", ["width", "height"]);
 var proto11 = {
   width: {
     enumerable: true,
@@ -4019,26 +5612,118 @@ var proto11 = {
 };
 
 // src/effects/sprite.js
-var _Sprite = class extends Rectangle {
+var _Sprite = class _Sprite extends Rectangle {
   constructor(path, ox, oy, cols, rows, frameRate) {
     super(ox, oy, 0, 0);
+    /**
+     * @name Two.Sprite#_flagTexture
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#texture} needs updating.
+     */
     __publicField(this, "_flagTexture", false);
+    /**
+     * @name Two.Sprite#_flagColumns
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#columns} need updating.
+     */
     __publicField(this, "_flagColumns", false);
+    /**
+     * @name Two.Sprite#_flagRows
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#rows} need updating.
+     */
     __publicField(this, "_flagRows", false);
+    /**
+     * @name Two.Sprite#_flagFrameRate
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#flagFrameRate} needs updating.
+     */
     __publicField(this, "_flagFrameRate", false);
+    /**
+     * @name Two.Sprite#_flagIndex
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Sprite#index} needs updating.
+     */
     __publicField(this, "_flagIndex", false);
+    // Private variables
+    /**
+     * @name Two.Sprite#_amount
+     * @private
+     * @property {Number} - Number of frames for a given {@link Two.Sprite}.
+     */
     __publicField(this, "_amount", 1);
+    /**
+     * @name Two.Sprite#_duration
+     * @private
+     * @property {Number} - Number of milliseconds a {@link Two.Sprite}.
+     */
     __publicField(this, "_duration", 0);
+    /**
+     * @name Two.Sprite#_startTime
+     * @private
+     * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.Sprite} started.
+     */
     __publicField(this, "_startTime", 0);
+    /**
+     * @name Two.Sprite#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.Sprite} is animating or not.
+     */
     __publicField(this, "_playing", false);
+    /**
+     * @name Two.Sprite#_firstFrame
+     * @private
+     * @property {Number} - The frame the {@link Two.Sprite} should start with.
+     */
     __publicField(this, "_firstFrame", 0);
+    /**
+     * @name Two.Sprite#_lastFrame
+     * @private
+     * @property {Number} - The frame the {@link Two.Sprite} should end with.
+     */
     __publicField(this, "_lastFrame", 0);
+    /**
+     * @name Two.Sprite#_loop
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.Sprite} should loop or not.
+     */
     __publicField(this, "_loop", true);
+    // Exposed through getter-setter
+    /**
+     * @name Two.Sprite#_texture
+     * @private
+     * @see {@link Two.Sprite#texture}
+     */
     __publicField(this, "_texture", null);
+    /**
+     * @name Two.Sprite#_columns
+     * @private
+     * @see {@link Two.Sprite#columns}
+     */
     __publicField(this, "_columns", 1);
+    /**
+     * @name Two.Sprite#_rows
+     * @private
+     * @see {@link Two.Sprite#rows}
+     */
     __publicField(this, "_rows", 1);
+    /**
+     * @name Two.Sprite#_frameRate
+     * @private
+     * @see {@link Two.Sprite#frameRate}
+     */
     __publicField(this, "_frameRate", 0);
+    /**
+     * @name Two.Sprite#_index
+     * @private
+     * @property {Number} - The current frame the {@link Two.Sprite} is currently displaying.
+     */
     __publicField(this, "_index", 0);
+    /**
+     * @name Two.Sprite#_origin
+     * @private
+     * @see {@link Two.Sprite#origin}
+     */
     __publicField(this, "_origin", null);
     for (let prop in proto12) {
       Object.defineProperty(this, prop, proto12[prop]);
@@ -4063,6 +5748,14 @@ var _Sprite = class extends Rectangle {
     }
     this.index = 0;
   }
+  /**
+   * @name Two.Sprite.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Sprite} to create a new instance
+   * @returns {Two.Sprite}
+   * @description Create a new {@link Two.Sprite} from an object notation of a {@link Two.Sprite}.
+   * @nota-bene Works in conjunction with {@link Two.Sprite#toObject}
+   */
   static fromObject(obj) {
     const sprite = new _Sprite().copy(obj);
     if ("id" in obj) {
@@ -4070,6 +5763,12 @@ var _Sprite = class extends Rectangle {
     }
     return sprite;
   }
+  /**
+   * @name Two.Sprite#copy
+   * @function
+   * @param {Two.Sprite} sprite - The reference {@link Two.Sprite}
+   * @description Copy the properties of one {@link Two.Sprite} onto another.
+   */
   copy(sprite) {
     super.copy.call(this, sprite);
     for (let i = 0; i < _Sprite.Properties.length; i++) {
@@ -4080,6 +5779,14 @@ var _Sprite = class extends Rectangle {
     }
     return this;
   }
+  /**
+   * @name Two.Sprite#play
+   * @function
+   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.Sprite#textures}.
+   * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the sprite is looped.
+   * @description Initiate animation playback of a {@link Two.Sprite}.
+   */
   play(firstFrame, lastFrame, onLastFrame) {
     this._playing = true;
     this._firstFrame = 0;
@@ -4101,15 +5808,32 @@ var _Sprite = class extends Rectangle {
     }
     return this;
   }
+  /**
+   * @name Two.Sprite#pause
+   * @function
+   * @description Halt animation playback of a {@link Two.Sprite}.
+   */
   pause() {
     this._playing = false;
     return this;
   }
+  /**
+   * @name Two.Sprite#stop
+   * @function
+   * @description Halt animation playback of a {@link Two.Sprite} and set the current frame back to the first frame.
+   */
   stop() {
     this._playing = false;
     this._index = 0;
     return this;
   }
+  /**
+   * @name Two.Sprite#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Sprite}
+   * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
+   */
   clone(parent) {
     const clone = new _Sprite(
       this.texture,
@@ -4130,6 +5854,12 @@ var _Sprite = class extends Rectangle {
     }
     return clone;
   }
+  /**
+   * @name Two.Sprite#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.texture = this.texture.toObject();
@@ -4142,6 +5872,16 @@ var _Sprite = class extends Rectangle {
     object.loop = this.loop;
     return object;
   }
+  /**
+   * @name Two.Sprite#dispose
+   * @function
+   * @returns {Two.Sprite}
+   * @description Release the sprite's renderer resources and detach all events.
+   * This method stops any running animation, clears animation callbacks, disposes
+   * the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+   * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
+   * for potential re-attachment.
+   */
   dispose() {
     super.dispose();
     if (this._playing) {
@@ -4156,6 +5896,14 @@ var _Sprite = class extends Rectangle {
     }
     return this;
   }
+  /**
+   * @name Two.Sprite#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     const effect = this._texture;
     const cols = this._columns;
@@ -4220,14 +5968,23 @@ var _Sprite = class extends Rectangle {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.Sprite#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagTexture = this._flagColumns = this._flagRows = this._flagFrameRate = false;
     super.flagReset.call(this);
     return this;
   }
 };
-var Sprite = _Sprite;
-__publicField(Sprite, "Properties", [
+/**
+ * @name Two.Sprite.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Sprite}.
+ */
+__publicField(_Sprite, "Properties", [
   "texture",
   "columns",
   "rows",
@@ -4237,6 +5994,7 @@ __publicField(Sprite, "Properties", [
   "lastFrame",
   "loop"
 ]);
+var Sprite = _Sprite;
 var proto12 = {
   texture: {
     enumerable: true,
@@ -4323,6 +6081,11 @@ var Children = class extends Collection {
   constructor(children) {
     children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
     super(children);
+    /**
+     * @name Two.Group.Children#ids
+     * @property {Object} - Map of all elements in the list keyed by `id`s.
+     */
+    // N.B: Technique to disable enumeration on object
     __privateAdd(this, _ids, {});
     this.attach(children);
     this.on(Events.Types.insert, this.attach);
@@ -4331,6 +6094,12 @@ var Children = class extends Collection {
   get ids() {
     return __privateGet(this, _ids);
   }
+  /**
+   * @function
+   * @name Two.Group.Children#attach
+   * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be added.
+   * @description Adds elements to the `ids` map.
+   */
   attach(children) {
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
@@ -4340,6 +6109,12 @@ var Children = class extends Collection {
     }
     return this;
   }
+  /**
+   * @function
+   * @name Two.Group.Children#detach
+   * @param {Two.Shape[]} children - The objects which extend {@link Two.Shape} to be removed.
+   * @description Removes elements to the `ids` map.
+   */
   detach(children) {
     for (let i = 0; i < children.length; i++) {
       delete this.ids[children[i].id];
@@ -4350,7 +6125,7 @@ var Children = class extends Collection {
 _ids = new WeakMap();
 
 // src/shapes/arc-segment.js
-var _ArcSegment = class extends Path {
+var _ArcSegment = class _ArcSegment extends Path {
   constructor(x, y, ir, or, sa, ea, res) {
     const amount = res || Constants.Resolution * 3;
     const points = [];
@@ -4358,13 +6133,53 @@ var _ArcSegment = class extends Path {
       points.push(new Anchor());
     }
     super(points, true, false, true);
+    /**
+     * @name Two.ArcSegment#_flagStartAngle
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#startAngle} needs updating.
+     */
     __publicField(this, "_flagStartAngle", false);
+    /**
+     * @name Two.ArcSegment#_flagEndAngle
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#endAngle} needs updating.
+     */
     __publicField(this, "_flagEndAngle", false);
+    /**
+     * @name Two.ArcSegment#_flagInnerRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#innerRadius} needs updating.
+     */
     __publicField(this, "_flagInnerRadius", false);
+    /**
+     * @name Two.ArcSegment#_flagOuterRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ArcSegment#outerRadius} needs updating.
+     */
     __publicField(this, "_flagOuterRadius", false);
+    /**
+     * @name Two.ArcSegment#_startAngle
+     * @private
+     * @see {@link Two.ArcSegment#startAngle}
+     */
     __publicField(this, "_startAngle", 0);
+    /**
+     * @name Two.ArcSegment#_endAngle
+     * @private
+     * @see {@link Two.ArcSegment#endAngle}
+     */
     __publicField(this, "_endAngle", TWO_PI);
+    /**
+     * @name Two.ArcSegment#_innerRadius
+     * @private
+     * @see {@link Two.ArcSegment#innerRadius}
+     */
     __publicField(this, "_innerRadius", 0);
+    /**
+     * @name Two.ArcSegment#_outerRadius
+     * @private
+     * @see {@link Two.ArcSegment#outerRadius}
+     */
     __publicField(this, "_outerRadius", 0);
     this._renderer.type = "arc-segment";
     for (let prop in proto13) {
@@ -4390,6 +6205,14 @@ var _ArcSegment = class extends Path {
       this.translation.y = y;
     }
   }
+  /**
+   * @name Two.ArcSegment.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.ArcSegment} to create a new instance
+   * @returns {Two.ArcSegment}
+   * @description Create a new {@link Two.ArcSegment} from an object notation of a {@link Two.ArcSegment}.
+   * @nota-bene Works in conjunction with {@link Two.ArcSegment#toObject}
+   */
   static fromObject(obj) {
     const segment = new _ArcSegment().copy(obj);
     if ("id" in obj) {
@@ -4397,6 +6220,12 @@ var _ArcSegment = class extends Path {
     }
     return segment;
   }
+  /**
+   * @name Two.ArcSegment#copy
+   * @function
+   * @param {Two.ArcSegment} arcSegment - The reference {@link Two.ArcSegment}
+   * @description Copy the properties of one {@link Two.ArcSegment} onto another.
+   */
   copy(arcSegment) {
     super.copy.call(this, arcSegment);
     for (let i = 0; i < _ArcSegment.Properties.length; i++) {
@@ -4407,6 +6236,14 @@ var _ArcSegment = class extends Path {
     }
     return this;
   }
+  /**
+   * @name Two.ArcSegment#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices || this._flagStartAngle || this._flagEndAngle || this._flagInnerRadius || this._flagOuterRadius) {
       const sa = this._startAngle;
@@ -4511,11 +6348,24 @@ var _ArcSegment = class extends Path {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.ArcSegment#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     super.flagReset.call(this);
     this._flagStartAngle = this._flagEndAngle = this._flagInnerRadius = this._flagOuterRadius = false;
     return this;
   }
+  /**
+   * @name Two.ArcSegment#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.ArcSegment}
+   * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
+   */
   clone(parent) {
     const ir = this.innerRadius;
     const or = this.outerRadius;
@@ -4540,6 +6390,12 @@ var _ArcSegment = class extends Path {
     }
     return clone;
   }
+  /**
+   * @name Two.ArcSegment#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.renderer.type = "arc-segment";
@@ -4550,8 +6406,12 @@ var _ArcSegment = class extends Path {
     return object;
   }
 };
+/**
+ * @name Two.ArcSegment.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.ArcSegment}.
+ */
+__publicField(_ArcSegment, "Properties", ["startAngle", "endAngle", "innerRadius", "outerRadius"]);
 var ArcSegment = _ArcSegment;
-__publicField(ArcSegment, "Properties", ["startAngle", "endAngle", "innerRadius", "outerRadius"]);
 var proto13 = {
   startAngle: {
     enumerable: true,
@@ -4598,7 +6458,7 @@ var proto13 = {
 // src/shapes/circle.js
 var cos2 = Math.cos;
 var sin2 = Math.sin;
-var _Circle = class extends Path {
+var _Circle = class _Circle extends Path {
   constructor(ox, oy, r, resolution) {
     const amount = resolution ? Math.max(resolution, 2) : 4;
     const points = [];
@@ -4606,7 +6466,17 @@ var _Circle = class extends Path {
       points.push(new Anchor(0, 0, 0, 0, 0, 0));
     }
     super(points, true, true, true);
+    /**
+     * @name Two.Circle#_flagRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Circle#radius} needs updating.
+     */
     __publicField(this, "_flagRadius", false);
+    /**
+     * @name Two.Circle#_radius
+     * @private
+     * @see {@link Two.Circle#radius}
+     */
     __publicField(this, "_radius", 0);
     this._renderer.type = "circle";
     for (let prop in proto14) {
@@ -4623,6 +6493,14 @@ var _Circle = class extends Path {
       this.translation.y = oy;
     }
   }
+  /**
+   * @name Two.Circle.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Circle} to create a new instance
+   * @returns {Two.Circle}
+   * @description Create a new {@link Two.Circle} from an object notation of a {@link Two.Circle}.
+   * @nota-bene Works in conjunction with {@link Two.Circle#toObject}
+   */
   static fromObject(obj) {
     const circle = new _Circle().copy(obj);
     if ("id" in obj) {
@@ -4630,6 +6508,12 @@ var _Circle = class extends Path {
     }
     return circle;
   }
+  /**
+   * @name Two.Circle#copy
+   * @function
+   * @param {Two.Circle} circle - The reference {@link Two.Circle}
+   * @description Copy the properties of one {@link Two.Circle} onto another.
+   */
   copy(circle) {
     super.copy.call(this, circle);
     for (let i = 0; i < _Circle.Properties.length; i++) {
@@ -4640,6 +6524,14 @@ var _Circle = class extends Path {
     }
     return this;
   }
+  /**
+   * @name Two.Circle#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices || this._flagRadius) {
       let length = this.vertices.length;
@@ -4668,11 +6560,24 @@ var _Circle = class extends Path {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.Circle#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagRadius = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.Circle#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Circle}
+   * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
+   */
   clone(parent) {
     const clone = new _Circle(0, 0, this.radius, this.vertices.length);
     clone.translation.copy(this.translation);
@@ -4692,6 +6597,12 @@ var _Circle = class extends Path {
     }
     return clone;
   }
+  /**
+   * @name Two.Circle#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.renderer.type = "circle";
@@ -4702,8 +6613,12 @@ var _Circle = class extends Path {
     return object;
   }
 };
+/**
+ * @name Two.Circle.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Circle}.
+ */
+__publicField(_Circle, "Properties", ["radius"]);
 var Circle = _Circle;
-__publicField(Circle, "Properties", ["radius"]);
 var proto14 = {
   radius: {
     enumerable: true,
@@ -4720,7 +6635,7 @@ var proto14 = {
 // src/shapes/ellipse.js
 var cos3 = Math.cos;
 var sin3 = Math.sin;
-var _Ellipse = class extends Path {
+var _Ellipse = class _Ellipse extends Path {
   constructor(x, y, rx, ry, resolution) {
     if (typeof ry !== "number" && typeof rx === "number") {
       ry = rx;
@@ -4731,9 +6646,29 @@ var _Ellipse = class extends Path {
       points.push(new Anchor());
     }
     super(points, true, true, true);
+    /**
+     * @name Two.Ellipse#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Ellipse#width} needs updating.
+     */
     __publicField(this, "_flagWidth", false);
+    /**
+     * @name Two.Ellipse#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Ellipse#height} needs updating.
+     */
     __publicField(this, "_flagHeight", false);
+    /**
+     * @name Two.Ellipse#_width
+     * @private
+     * @see {@link Two.Ellipse#width}
+     */
     __publicField(this, "_width", 0);
+    /**
+     * @name Two.Ellipse#_height
+     * @private
+     * @see {@link Two.Ellipse#height}
+     */
     __publicField(this, "_height", 0);
     this._renderer.type = "ellipse";
     for (let prop in proto15) {
@@ -4753,6 +6688,14 @@ var _Ellipse = class extends Path {
       this.translation.y = y;
     }
   }
+  /**
+   * @name Two.Ellipse.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Ellipse} to create a new instance
+   * @returns {Two.Ellipse}
+   * @description Create a new {@link Two.Ellipse} from an object notation of a {@link Two.Ellipse}.
+   * @nota-bene Works in conjunction with {@link Two.Ellipse#toObject}
+   */
   static fromObject(obj) {
     const ellipse = new _Ellipse().copy(obj);
     if ("id" in obj) {
@@ -4760,6 +6703,12 @@ var _Ellipse = class extends Path {
     }
     return ellipse;
   }
+  /**
+   * @name Two.Ellipse#copy
+   * @function
+   * @param {Two.Ellipse} ellipse - The reference {@link Two.Ellipse}
+   * @description Copy the properties of one {@link Two.Ellipse} onto another.
+   */
   copy(ellipse) {
     super.copy.call(this, ellipse);
     for (let i = 0; i < _Ellipse.Properties.length; i++) {
@@ -4770,6 +6719,14 @@ var _Ellipse = class extends Path {
     }
     return this;
   }
+  /**
+   * @name Two.Ellipse#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices || this._flagWidth || this._flagHeight) {
       let length = this.vertices.length;
@@ -4798,11 +6755,24 @@ var _Ellipse = class extends Path {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.Ellipse#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagWidth = this._flagHeight = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.Ellipse#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Ellipse}
+   * @description Create a new instance of {@link Two.Ellipse} with the same properties of the current path.
+   */
   clone(parent) {
     const rx = this.width / 2;
     const ry = this.height / 2;
@@ -4825,6 +6795,12 @@ var _Ellipse = class extends Path {
     }
     return clone;
   }
+  /**
+   * @name Two.Ellipse#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.renderer.type = "ellipse";
@@ -4835,8 +6811,12 @@ var _Ellipse = class extends Path {
     return object;
   }
 };
+/**
+ * @name Two.Ellipse.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Ellipse}.
+ */
+__publicField(_Ellipse, "Properties", ["width", "height"]);
 var Ellipse = _Ellipse;
-__publicField(Ellipse, "Properties", ["width", "height"]);
 var proto15 = {
   width: {
     enumerable: true,
@@ -4863,7 +6843,7 @@ var proto15 = {
 // src/shapes/points.js
 var ceil2 = Math.ceil;
 var floor3 = Math.floor;
-var _Points = class extends Shape {
+var _Points = class _Points extends Shape {
   constructor(vertices) {
     super();
     __publicField(this, "_flagVertices", true);
@@ -4875,6 +6855,7 @@ var _Points = class extends Shape {
     __publicField(this, "_flagVisible", true);
     __publicField(this, "_flagSize", true);
     __publicField(this, "_flagSizeAttenuation", true);
+    __publicField(this, "_flagStrokeAttenuation", true);
     __publicField(this, "_length", 0);
     __publicField(this, "_fill", "#fff");
     __publicField(this, "_stroke", "#000");
@@ -4886,11 +6867,47 @@ var _Points = class extends Shape {
     __publicField(this, "_beginning", 0);
     __publicField(this, "_ending", 1);
     __publicField(this, "_dashes", null);
+    __publicField(this, "_strokeAttenuation", true);
+    /**
+     * @name Two.Points#noFill
+     * @function
+     * @description Short hand method to set fill to `none`.
+     */
     __publicField(this, "noFill", Path.prototype.noFill);
+    /**
+     * @name Two.Points#noStroke
+     * @function
+     * @description Short hand method to set stroke to `none`.
+     */
     __publicField(this, "noStroke", Path.prototype.noStroke);
+    /**
+     * @name Two.Points#corner
+     * @function
+     * @description Orient the vertices of the shape to the upper left-hand corner of the points object.
+     */
     __publicField(this, "corner", Path.prototype.corner);
+    /**
+     * @name Two.Points#center
+     * @function
+     * @description Orient the vertices of the shape to the center of the points object.
+     */
     __publicField(this, "center", Path.prototype.center);
+    /**
+     * @name Two.Points#getBoundingClientRect
+     * @function
+     * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
+     * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+     * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
+     */
     __publicField(this, "getBoundingClientRect", Path.prototype.getBoundingClientRect);
+    /**
+     * @name Two.Points#_updateLength
+     * @function
+     * @private
+     * @param {Number} [limit] -
+     * @param {Boolean} [silent=false] - If set to `true` then the points object isn't updated before calculation. Useful for internal use.
+     * @description Recalculate the {@link Two.Points#length} value.
+     */
     __publicField(this, "_updateLength", Path.prototype._updateLength);
     for (let prop in proto16) {
       Object.defineProperty(this, prop, proto16[prop]);
@@ -4926,6 +6943,12 @@ var _Points = class extends Shape {
     }
     return points;
   }
+  /**
+   * @name Two.Points#copy
+   * @function
+   * @param {Two.Points} points - The reference {@link Two.Points}
+   * @description Copy the properties of one {@link Two.Points} onto another.
+   */
   copy(points) {
     super.copy.call(this, points);
     for (let j = 0; j < points.vertices.length; j++) {
@@ -4944,6 +6967,13 @@ var _Points = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Points#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Points}
+   * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
+   */
   clone(parent) {
     const clone = new _Points();
     for (let j = 0; j < this.vertices.length; j++) {
@@ -4967,6 +6997,12 @@ var _Points = class extends Shape {
     }
     return clone._update();
   }
+  /**
+   * @name Two.Points#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the points object.
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.renderer.type = "points";
@@ -4986,6 +7022,16 @@ var _Points = class extends Shape {
     );
     return result;
   }
+  /**
+   * @name Two.Points#dispose
+   * @function
+   * @returns {Two.Points}
+   * @description Release the points' renderer resources and detach all events.
+   * This method cleans up vertices collection events, individual vertex events,
+   * and disposes fill/stroke effects (calling dispose() on Gradients and
+   * Textures for thorough cleanup) while preserving the renderer type for
+   * potential re-attachment to a new renderer.
+   */
   dispose() {
     super.dispose();
     if (this.vertices && typeof this.vertices.unbind === "function") {
@@ -5014,6 +7060,12 @@ var _Points = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Points#subdivide
+   * @function
+   * @param {Number} limit - How many times to recurse subdivisions.
+   * @description Insert a {@link Two.Vector} at the midpoint between every item in {@link Two.Points#vertices}.
+   */
   subdivide(limit) {
     this._update();
     let points = [];
@@ -5033,6 +7085,14 @@ var _Points = class extends Shape {
     this.vertices = points;
     return this;
   }
+  /**
+   * @name Two.Points#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices) {
       if (this._flagLength) {
@@ -5060,14 +7120,19 @@ var _Points = class extends Shape {
     super._update.apply(this, arguments);
     return this;
   }
+  /**
+   * @name Two.Points#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagVertices = this._flagLength = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagSize = this._flagSizeAttenuation = false;
     super.flagReset.call(this);
     return this;
   }
 };
-var Points = _Points;
-__publicField(Points, "Properties", [
+__publicField(_Points, "Properties", [
   "fill",
   "stroke",
   "linewidth",
@@ -5077,8 +7142,10 @@ __publicField(Points, "Properties", [
   "sizeAttenuation",
   "beginning",
   "ending",
-  "dashes"
+  "dashes",
+  "strokeAttenuation"
 ]);
+var Points = _Points;
 var proto16 = {
   linewidth: {
     enumerable: true,
@@ -5162,6 +7229,10 @@ var proto16 = {
       }
     }
   },
+  /**
+   * @name Two.Points#length
+   * @property {Number} - The sum of distances between all {@link Two.Points#vertices}.
+   */
   length: {
     get: function() {
       if (this._flagLength) {
@@ -5221,22 +7292,73 @@ var proto16 = {
       }
       this._dashes = v;
     }
+  },
+  /**
+   * @name Two.Points#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function() {
+      return this._strokeAttenuation;
+    },
+    set: function(v) {
+      this._strokeAttenuation = !!v;
+      this._flagStrokeAttenuation = true;
+      this._flagLinewidth = true;
+    }
   }
 };
 
 // src/shapes/polygon.js
 var cos4 = Math.cos;
 var sin4 = Math.sin;
-var _Polygon = class extends Path {
+var _Polygon = class _Polygon extends Path {
   constructor(x, y, radius, sides) {
     sides = Math.max(sides || 0, 3);
     super();
+    /**
+     * @name Two.Polygon#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Polygon#width} needs updating.
+     */
     __publicField(this, "_flagWidth", false);
+    /**
+     * @name Two.Polygon#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Polygon#height} needs updating.
+     */
     __publicField(this, "_flagHeight", false);
+    /**
+     * @name Two.Polygon#_flagSides
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Polygon#sides} needs updating.
+     */
     __publicField(this, "_flagSides", false);
+    /**
+     * @name Two.Polygon#_radius
+     * @private
+     * @see {@link Two.Polygon#radius}
+     */
     __publicField(this, "_radius", 0);
+    /**
+     * @name Two.Polygon#_width
+     * @private
+     * @see {@link Two.Polygon#width}
+     */
     __publicField(this, "_width", 0);
+    /**
+     * @name Two.Polygon#_height
+     * @private
+     * @see {@link Two.Polygon#height}
+     */
     __publicField(this, "_height", 0);
+    /**
+     * @name Two.Polygon#_sides
+     * @private
+     * @see {@link Two.Polygon#sides}
+     */
     __publicField(this, "_sides", 0);
     this._renderer.type = "polygon";
     for (let prop in proto17) {
@@ -5258,6 +7380,14 @@ var _Polygon = class extends Path {
       this.translation.y = y;
     }
   }
+  /**
+   * @name Two.Polygon.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Polygon} to create a new instance
+   * @returns {Two.Polygon}
+   * @description Create a new {@link Two.Polygon} from an object notation of a {@link Two.Polygon}.
+   * @nota-bene Works in conjunction with {@link Two.Polygon#toObject}
+   */
   static fromObject(obj) {
     const polygon = new _Polygon().copy(obj);
     if ("id" in obj) {
@@ -5265,6 +7395,12 @@ var _Polygon = class extends Path {
     }
     return polygon;
   }
+  /**
+   * @name Two.Polygon#copy
+   * @function
+   * @param {Two.Polygon} polygon - The reference {@link Two.Polygon}
+   * @description Copy the properties of one {@link Two.Polygon} onto another.
+   */
   copy(polygon) {
     super.copy.call(this, polygon);
     for (let i = 0; i < _Polygon.Properties.length; i++) {
@@ -5275,6 +7411,14 @@ var _Polygon = class extends Path {
     }
     return this;
   }
+  /**
+   * @name Two.Polygon#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagSides) {
       const sides = this._sides;
@@ -5300,11 +7444,24 @@ var _Polygon = class extends Path {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.Polygon#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagWidth = this._flagHeight = this._flagSides = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.Polygon#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Polygon}
+   * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
+   */
   clone(parent) {
     const clone = new _Polygon(0, 0, 0, this.sides);
     clone.translation.copy(this.translation);
@@ -5326,6 +7483,12 @@ var _Polygon = class extends Path {
     }
     return clone;
   }
+  /**
+   * @name Two.Polygon#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.renderer.type = "polygon";
@@ -5336,8 +7499,12 @@ var _Polygon = class extends Path {
     return object;
   }
 };
+/**
+ * @name Two.Polygon.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Polygon}.
+ */
+__publicField(_Polygon, "Properties", ["width", "height", "sides"]);
 var Polygon = _Polygon;
-__publicField(Polygon, "Properties", ["width", "height", "sides"]);
 var proto17 = {
   radius: {
     enumerable: true,
@@ -5385,7 +7552,7 @@ var proto17 = {
 };
 
 // src/shapes/rounded-rectangle.js
-var _RoundedRectangle = class extends Path {
+var _RoundedRectangle = class _RoundedRectangle extends Path {
   constructor(x, y, width, height, radius) {
     if (typeof radius === "undefined" && typeof width === "number" && typeof height === "number") {
       radius = Math.floor(Math.min(width, height) / 12);
@@ -5397,11 +7564,41 @@ var _RoundedRectangle = class extends Path {
       );
     }
     super(points);
+    /**
+     * @name Two.RoundedRectangle#_flagWidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RoundedRectangle#width} needs updating.
+     */
     __publicField(this, "_flagWidth", false);
+    /**
+     * @name Two.RoundedRectangle#_flagHeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RoundedRectangle#height} needs updating.
+     */
     __publicField(this, "_flagHeight", false);
+    /**
+     * @name Two.RoundedRectangle#_flagRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.RoundedRectangle#radius} needs updating.
+     */
     __publicField(this, "_flagRadius", false);
+    /**
+     * @name Two.RoundedRectangle#_width
+     * @private
+     * @see {@link Two.RoundedRectangle#width}
+     */
     __publicField(this, "_width", 0);
+    /**
+     * @name Two.RoundedRectangle#_height
+     * @private
+     * @see {@link Two.RoundedRectangle#height}
+     */
     __publicField(this, "_height", 0);
+    /**
+     * @name Two.RoundedRectangle#_radius
+     * @private
+     * @see {@link Two.RoundedRectangle#radius}
+     */
     __publicField(this, "_radius", 12);
     this._renderer.type = "rounded-rectangle";
     for (let prop in proto18) {
@@ -5427,6 +7624,14 @@ var _RoundedRectangle = class extends Path {
       this.translation.y = y;
     }
   }
+  /**
+   * @name Two.RoundedRectangle.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.RoundedRectangle} to create a new instance
+   * @returns {Two.RoundedRectangle}
+   * @description Create a new {@link Two.RoundedRectangle} from an object notation of a {@link Two.RoundedRectangle}.
+   * @nota-bene Works in conjunction with {@link Two.RoundedRectangle#toObject}
+   */
   static fromObject(obj) {
     const rectangle = new _RoundedRectangle().copy(obj);
     if ("id" in obj) {
@@ -5434,6 +7639,12 @@ var _RoundedRectangle = class extends Path {
     }
     return rectangle;
   }
+  /**
+   * @name Two.RoundedRectangle#copy
+   * @function
+   * @param {Two.RoundedRectangle} roundedRectangle - The reference {@link Two.RoundedRectangle}
+   * @description Copy the properties of one {@link Two.RoundedRectangle} onto another.
+   */
   copy(roundedRectangle) {
     super.copy.call(this, roundedRectangle);
     for (let i = 0; i < _RoundedRectangle.Properties.length; i++) {
@@ -5449,6 +7660,14 @@ var _RoundedRectangle = class extends Path {
     }
     return this;
   }
+  /**
+   * @name Two.RoundedRectangle#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices || this._flagWidth || this._flagHeight || this._flagRadius) {
       const width = this._width;
@@ -5517,11 +7736,24 @@ var _RoundedRectangle = class extends Path {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.RoundedRectangle#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagWidth = this._flagHeight = this._flagRadius = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.RoundedRectangle#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.RoundedRectangle}
+   * @description Create a new instance of {@link Two.RoundedRectangle} with the same properties of the current path.
+   */
   clone(parent) {
     const width = this.width;
     const height = this.height;
@@ -5544,6 +7776,12 @@ var _RoundedRectangle = class extends Path {
     }
     return clone;
   }
+  /**
+   * @name Two.RoundedRectangle#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.renderer.type = "rounded-rectangle";
@@ -5555,8 +7793,12 @@ var _RoundedRectangle = class extends Path {
     return object;
   }
 };
+/**
+ * @name Two.RoundedRectangle.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.RoundedRectangle}.
+ */
+__publicField(_RoundedRectangle, "Properties", ["width", "height", "radius"]);
 var RoundedRectangle = _RoundedRectangle;
-__publicField(RoundedRectangle, "Properties", ["width", "height", "radius"]);
 var proto18 = {
   width: {
     enumerable: true,
@@ -5602,7 +7844,7 @@ function FlagRadius() {
 // src/shapes/star.js
 var cos5 = Math.cos;
 var sin5 = Math.sin;
-var _Star = class extends Path {
+var _Star = class _Star extends Path {
   constructor(x, y, innerRadius, outerRadius, sides) {
     if (arguments.length <= 3) {
       outerRadius = innerRadius;
@@ -5612,11 +7854,41 @@ var _Star = class extends Path {
       sides = 5;
     }
     super();
+    /**
+     * @name Two.Star#_flagInnerRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Star#innerRadius} needs updating.
+     */
     __publicField(this, "_flagInnerRadius", false);
+    /**
+     * @name Two.Star#_flagOuterRadius
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Star#outerRadius} needs updating.
+     */
     __publicField(this, "_flagOuterRadius", false);
+    /**
+     * @name Two.Star#_flagSides
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Star#sides} needs updating.
+     */
     __publicField(this, "_flagSides", false);
+    /**
+     * @name Two.Star#_innerRadius
+     * @private
+     * @see {@link Two.Star#innerRadius}
+     */
     __publicField(this, "_innerRadius", 0);
+    /**
+     * @name Two.Star#_outerRadius
+     * @private
+     * @see {@link Two.Star#outerRadius}
+     */
     __publicField(this, "_outerRadius", 0);
+    /**
+     * @name Two.Star#_sides
+     * @private
+     * @see {@link Two.Star#sides}
+     */
     __publicField(this, "_sides", 0);
     this._renderer.type = "star";
     for (let prop in proto19) {
@@ -5641,6 +7913,14 @@ var _Star = class extends Path {
       this.translation.y = y;
     }
   }
+  /**
+   * @name Two.Star.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Star} to create a new instance
+   * @returns {Two.Star}
+   * @description Create a new {@link Two.Star} from an object notation of a {@link Two.Star}.
+   * @nota-bene Works in conjunction with {@link Two.Star#toObject}
+   */
   static fromObject(obj) {
     const star = new _Star().copy(obj);
     if ("id" in obj) {
@@ -5648,6 +7928,12 @@ var _Star = class extends Path {
     }
     return star;
   }
+  /**
+   * @name Two.Star#copy
+   * @function
+   * @param {Two.Star} star - The reference {@link Two.Star}
+   * @description Copy the properties of one {@link Two.Star} onto another.
+   */
   copy(star) {
     super.copy.call(this, star);
     for (let i = 0; i < _Star.Properties.length; i++) {
@@ -5658,6 +7944,14 @@ var _Star = class extends Path {
     }
     return this;
   }
+  /**
+   * @name Two.Star#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     if (this._flagVertices || this._flagInnerRadius || this._flagOuterRadius || this._flagSides) {
       const sides = this._sides * 2;
@@ -5684,11 +7978,24 @@ var _Star = class extends Path {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.Star#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagInnerRadius = this._flagOuterRadius = this._flagSides = false;
     super.flagReset.call(this);
     return this;
   }
+  /**
+   * @name Two.Star#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Star}
+   * @description Create a new instance of {@link Two.Star} with the same properties of the current path.
+   */
   clone(parent) {
     const ir = this.innerRadius;
     const or = this.outerRadius;
@@ -5711,6 +8018,12 @@ var _Star = class extends Path {
     }
     return clone;
   }
+  /**
+   * @name Two.Star#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.renderer.type = "star";
@@ -5721,8 +8034,12 @@ var _Star = class extends Path {
     return object;
   }
 };
+/**
+ * @name Two.Star.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Star}.
+ */
+__publicField(_Star, "Properties", ["innerRadius", "outerRadius", "sides"]);
 var Star = _Star;
-__publicField(Star, "Properties", ["innerRadius", "outerRadius", "sides"]);
 var proto19 = {
   innerRadius: {
     enumerable: true,
@@ -5763,44 +8080,222 @@ var max2 = Math.max;
 if (root.document) {
   canvas = document.createElement("canvas");
 }
-var _Text = class extends Shape {
+var _Text = class _Text extends Shape {
   constructor(message, x, y, styles) {
     super();
+    /**
+     * @name Two.Text#_flagValue
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#value} need updating.
+     */
     __publicField(this, "_flagValue", true);
+    /**
+     * @name Two.Text#_flagFamily
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#family} need updating.
+     */
     __publicField(this, "_flagFamily", true);
+    /**
+     * @name Two.Text#_flagSize
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#size} need updating.
+     */
     __publicField(this, "_flagSize", true);
+    /**
+     * @name Two.Text#_flagLeading
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#leading} need updating.
+     */
     __publicField(this, "_flagLeading", true);
+    /**
+     * @name Two.Text#_flagAlignment
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#alignment} need updating.
+     */
     __publicField(this, "_flagAlignment", true);
+    /**
+     * @name Two.Text#_flagBaseline
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#baseline} need updating.
+     */
     __publicField(this, "_flagBaseline", true);
+    /**
+     * @name Two.Text#_flagStyle
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#style} need updating.
+     */
     __publicField(this, "_flagStyle", true);
+    /**
+     * @name Two.Text#_flagWeight
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#weight} need updating.
+     */
     __publicField(this, "_flagWeight", true);
+    /**
+     * @name Two.Text#_flagDecoration
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#decoration} need updating.
+     */
     __publicField(this, "_flagDecoration", true);
+    /**
+     * @name Two.Text#_flagFill
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#fill} need updating.
+     */
     __publicField(this, "_flagFill", true);
+    /**
+     * @name Two.Text#_flagStroke
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#stroke} need updating.
+     */
     __publicField(this, "_flagStroke", true);
+    /**
+     * @name Two.Text#_flagLinewidth
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#linewidth} need updating.
+     */
     __publicField(this, "_flagLinewidth", true);
+    /**
+     * @name Two.Text#_flagOpacity
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#opacity} need updating.
+     */
     __publicField(this, "_flagOpacity", true);
+    /**
+     * @name Two.Text#_flagVisible
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#visible} need updating.
+     */
     __publicField(this, "_flagVisible", true);
+    /**
+     * @name Two.Text#_flagMask
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#mask} needs updating.
+     */
     __publicField(this, "_flagMask", false);
+    /**
+     * @name Two.Text#_flagClip
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#clip} needs updating.
+     */
     __publicField(this, "_flagClip", false);
+    /**
+     * @name Two.Text#_flagDirection
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#direction} needs updating.
+     */
     __publicField(this, "_flagDirection", true);
+    /**
+     * @name Two.Text#_flagStrokeAttenuation
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Text#strokeAttenuation} needs updating.
+     */
+    __publicField(this, "_flagStrokeAttenuation", true);
+    // Underlying Properties
+    /**
+     * @name Two.Text#value
+     * @property {String} - The characters to be rendered to the the screen. Referred to in the documentation sometimes as the `message`.
+     */
     __publicField(this, "_value", "");
+    /**
+     * @name Two.Text#family
+     * @property {String} - The font family Two.js should attempt to register for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
+     */
     __publicField(this, "_family", "sans-serif");
+    /**
+     * @name Two.Text#size
+     * @property {Number} - The font size in Two.js point space. Defaults to `13`.
+     */
     __publicField(this, "_size", 13);
+    /**
+     * @name Two.Text#leading
+     * @property {Number} - The height between lines measured from base to base in Two.js point space. Defaults to `17`.
+     */
     __publicField(this, "_leading", 17);
+    /**
+     * @name Two.Text#alignment
+     * @property {String} - Alignment of text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'left'`, `'center'`, `'right'`. Defaults to `'center'`.
+     */
     __publicField(this, "_alignment", "center");
+    /**
+     * @name Two.Text#baseline
+     * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+     * @nota-bene In headless environments where the canvas is based on {@link https://github.com/Automattic/node-canvas}, `baseline` seems to be the only valid property.
+     */
     __publicField(this, "_baseline", "middle");
+    /**
+     * @name Two.Text#style
+     * @property {String} - The font's style. Possible values include '`normal`', `'italic'`. Defaults to `'normal'`.
+     */
     __publicField(this, "_style", "normal");
+    /**
+     * @name Two.Text#weight
+     * @property {Number} - A number at intervals of 100 to describe the font's weight. This compatibility varies with the typeface's variant weights. Larger values are bolder. Smaller values are thinner. Defaults to `'500'`.
+     */
     __publicField(this, "_weight", 500);
+    /**
+     * @name Two.Text#decoration
+     * @property {String} - String to delineate whether text should be decorated with for instance an `'underline'`. Defaults to `'none'`.
+     */
     __publicField(this, "_decoration", "none");
+    /**
+     * @name Two.Text#direction
+     * @property {String} - String to determine what direction the text should run. Possibly values are `'ltr'` for left-to-right and `'rtl'` for right-to-left. Defaults to `'ltr'`.
+     */
     __publicField(this, "_direction", "ltr");
+    /**
+     * @name Two.Text#fill
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+     */
     __publicField(this, "_fill", "#000");
+    /**
+     * @name Two.Text#stroke
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what the text object should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+     */
     __publicField(this, "_stroke", "none");
+    /**
+     * @name Two.Text#linewidth
+     * @property {Number} - The thickness in pixels of the stroke.
+     */
     __publicField(this, "_linewidth", 1);
+    /**
+     * @name Two.Text#opacity
+     * @property {Number} - The opaqueness of the text object.
+     * @nota-bene Can be used in conjunction with CSS Colors that have an alpha value.
+     */
     __publicField(this, "_opacity", 1);
+    /**
+     * @name Two.Text#visible
+     * @property {Boolean} - Display the text object or not.
+     * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+     */
     __publicField(this, "_visible", true);
+    /**
+     * @name Two.Text#mask
+     * @property {Two.Shape} - The shape whose alpha property becomes a clipping area for the text.
+     * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     */
     __publicField(this, "_mask", null);
+    /**
+     * @name Two.Text#clip
+     * @property {Two.Shape} - Object to define clipping area.
+     * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     */
     __publicField(this, "_clip", false);
+    /**
+     * @name Two.Text#_dashes
+     * @private
+     * @see {@link Two.Text#dashes}
+     */
     __publicField(this, "_dashes", null);
+    /**
+     * @name Two.Text#_strokeAttenuation
+     * @private
+     * @see {@link Two.Text#strokeAttenuation}
+     */
+    __publicField(this, "_strokeAttenuation", true);
     for (let prop in proto20) {
       Object.defineProperty(this, prop, proto20[prop]);
     }
@@ -5826,6 +8321,13 @@ var _Text = class extends Shape {
       }
     }
   }
+  /**
+   *
+   * @name Two.Measure
+   * @function
+   * @param {Two.Text} [text] - The instance of {@link Two.Text} to measure.
+   * @returns {Object} - The width and height of the {@link Two.Text} instance.
+   */
   static Measure(text) {
     if (canvas) {
       const ctx = canvas.getContext("2d");
@@ -5853,6 +8355,14 @@ var _Text = class extends Shape {
       };
     }
   }
+  /**
+   * @name Two.Text.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.Text} to create a new instance
+   * @returns {Two.Text}
+   * @description Create a new {@link Two.Text} from an object notation of a {@link Two.Text}.
+   * @nota-bene Works in conjunction with {@link Two.Text#toObject}
+   */
   static fromObject(obj) {
     const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
     const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
@@ -5862,6 +8372,12 @@ var _Text = class extends Shape {
     }
     return text;
   }
+  /**
+   * @name Two.Text#copy
+   * @function
+   * @param {Two.Text} text
+   * @description Copy the properties of one {@link Two.Text} onto another.
+   */
   copy(text) {
     super.copy.call(this, text);
     for (let i = 0; i < _Text.Properties.length; i++) {
@@ -5872,6 +8388,13 @@ var _Text = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Text#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Text}
+   * @description Create a new instance of {@link Two.Text} with the same properties of the current text object.
+   */
   clone(parent) {
     const clone = new _Text(this.value);
     clone.translation.copy(this.translation);
@@ -5889,6 +8412,13 @@ var _Text = class extends Shape {
     }
     return clone._update();
   }
+  /**
+   * @name Two.Text#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the text object.
+   * @nota-bene Works in conjunction with {@link Two.Text.fromObject}
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.renderer.type = "text";
@@ -5898,6 +8428,15 @@ var _Text = class extends Shape {
     }
     return result;
   }
+  /**
+   * @name Two.Text#dispose
+   * @function
+   * @returns {Two.Text}
+   * @description Release the text's renderer resources and detach all events.
+   * This method disposes fill and stroke effects (calling dispose() on
+   * Gradients and Textures for thorough cleanup) while preserving the
+   * renderer type for potential re-attachment to a new renderer.
+   */
   dispose() {
     super.dispose();
     if (typeof this.fill === "object" && this.fill && "dispose" in this.fill) {
@@ -5912,15 +8451,35 @@ var _Text = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Text#noFill
+   * @function
+   * @description Short hand method to set fill to `none`.
+   */
   noFill() {
     this.fill = "none";
     return this;
   }
+  /**
+   * @name Two.Text#noStroke
+   * @function
+   * @description Short hand method to set stroke to `none`.
+   */
   noStroke() {
     this.stroke = "none";
     this.linewidth = 0;
     return this;
   }
+  // A shim to not break `getBoundingClientRect` calls.
+  // TODO: Implement a way to calculate proper bounding
+  // boxes of `Two.Text`.
+  /**
+   * @name Two.Text#getBoundingClientRect
+   * @function
+   * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
+   * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+   * @description Return an object with top, left, right, bottom, width, and height parameters of the text object.
+   */
   getBoundingClientRect(shallow) {
     let matrix;
     let left, right, top, bottom;
@@ -5967,15 +8526,28 @@ var _Text = class extends Shape {
       height: bottom - top
     };
   }
+  /**
+   * @name Two.Text#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     super.flagReset.call(this);
     this._flagValue = this._flagFamily = this._flagSize = this._flagLeading = this._flagAlignment = this._flagFill = this._flagStroke = this._flagLinewidth = this._flagOpacity = this._flagVisible = this._flagClip = this._flagDecoration = this._flagClassName = this._flagBaseline = this._flagWeight = this._flagStyle = this._flagDirection = false;
     return this;
   }
 };
-var Text = _Text;
-__publicField(Text, "Ratio", 0.6);
-__publicField(Text, "Properties", [
+/**
+ * @name Two.Text.Ratio
+ * @property {Number} - Approximate aspect ratio of a typeface's character width to height.
+ */
+__publicField(_Text, "Ratio", 0.6);
+/**
+ * @name Two.Text.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Text}.
+ */
+__publicField(_Text, "Properties", [
   "value",
   "family",
   "size",
@@ -5991,8 +8563,10 @@ __publicField(Text, "Properties", [
   "visible",
   "fill",
   "stroke",
-  "dashes"
+  "dashes",
+  "strokeAttenuation"
 ]);
+var Text = _Text;
 var proto20 = {
   value: {
     enumerable: true,
@@ -6190,6 +8764,22 @@ var proto20 = {
       }
       this._dashes = v;
     }
+  },
+  /**
+   * @name Two.Text#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
+   * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function() {
+      return this._strokeAttenuation;
+    },
+    set: function(v) {
+      this._strokeAttenuation = !!v;
+      this._flagStrokeAttenuation = true;
+      this._flagLinewidth = true;
+    }
   }
 };
 function FlagFill2() {
@@ -6202,32 +8792,155 @@ function FlagStroke2() {
 // src/group.js
 var min3 = Math.min;
 var max3 = Math.max;
-var _Group = class extends Shape {
+var _Group = class _Group extends Shape {
   constructor(children) {
     super();
+    /**
+     * @name Two.Group#_flagAdditions
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#additions} needs updating.
+     */
     __publicField(this, "_flagAdditions", false);
+    /**
+     * @name Two.Group#_flagSubtractions
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#subtractions} needs updating.
+     */
     __publicField(this, "_flagSubtractions", false);
+    /**
+     * @name Two.Group#_flagOrder
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#order} needs updating.
+     */
     __publicField(this, "_flagOrder", false);
+    /**
+     * @name Two.Group#_flagVisible
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#visible} needs updating.
+     */
+    /**
+     * @name Two.Group#_flagOpacity
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#opacity} needs updating.
+     */
     __publicField(this, "_flagOpacity", true);
+    /**
+     * @name Two.Group#_flagBeginning
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#beginning} needs updating.
+     */
     __publicField(this, "_flagBeginning", false);
+    /**
+     * @name Two.Group#_flagEnding
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#ending} needs updating.
+     */
     __publicField(this, "_flagEnding", false);
+    /**
+     * @name Two.Group#_flagLength
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#length} needs updating.
+     */
     __publicField(this, "_flagLength", false);
+    /**
+     * @name Two.Group#_flagMask
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Group#mask} needs updating.
+     */
     __publicField(this, "_flagMask", false);
+    // Underlying Properties
+    /**
+     * @name Two.Group#fill
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be filled in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+     */
     __publicField(this, "_fill", "#fff");
+    /**
+     * @name Two.Group#stroke
+     * @property {(String|Two.Gradient|Two.Texture)} - The value of what all child shapes should be outlined in with.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/CSS/color_value} for more information on CSS's colors as `String`.
+     */
     __publicField(this, "_stroke", "#000");
+    /**
+     * @name Two.Group#linewidth
+     * @property {Number} - The thickness in pixels of the stroke for all child shapes.
+     */
     __publicField(this, "_linewidth", 1);
+    /**
+     * @name Two.Group#opacity
+     * @property {Number} - The opaqueness of all child shapes.
+     * @nota-bene Becomes multiplied by the individual child's opacity property.
+     */
     __publicField(this, "_opacity", 1);
+    /**
+     * @name Two.Group#visible
+     * @property {Boolean} - Display the path or not.
+     * @nota-bene For {@link Two.CanvasRenderer} and {@link Two.WebGLRenderer} when set to false all updating is disabled improving performance dramatically with many objects in the scene.
+     */
     __publicField(this, "_visible", true);
+    /**
+     * @name Two.Group#cap
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinecapProperty}
+     */
     __publicField(this, "_cap", "round");
+    /**
+     * @name Two.Group#join
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeLinejoinProperty}
+     */
     __publicField(this, "_join", "round");
+    /**
+     * @name Two.Group#miter
+     * @property {String}
+     * @see {@link https://www.w3.org/TR/SVG11/painting.html#StrokeMiterlimitProperty}
+     */
     __publicField(this, "_miter", 4);
+    /**
+     * @name Two.Group#closed
+     * @property {Boolean} - Determines whether a final line is drawn between the final point in the `vertices` array and the first point of all child shapes.
+     */
     __publicField(this, "_closed", true);
+    /**
+     * @name Two.Group#curved
+     * @property {Boolean} - When the child's path is `automatic = true` this boolean determines whether the lines between the points are curved or not.
+     */
     __publicField(this, "_curved", false);
+    /**
+     * @name Two.Group#automatic
+     * @property {Boolean} - Determines whether or not Two.js should calculate curves, lines, and commands automatically for you or to let the developer manipulate them for themselves.
+     */
     __publicField(this, "_automatic", true);
+    /**
+     * @name Two.Group#beginning
+     * @property {Number} - Number between zero and one to state the beginning of where the path is rendered.
+     * @description {@link Two.Group#beginning} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#ending}.
+     */
     __publicField(this, "_beginning", 0);
+    /**
+     * @name Two.Group#ending
+     * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
+     * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
+     */
     __publicField(this, "_ending", 1);
+    /**
+     * @name Two.Group#length
+     * @property {Number} - The sum of distances between all child lengths.
+     */
     __publicField(this, "_length", 0);
+    /**
+     * @name Two.Group#mask
+     * @property {Two.Shape} - The Two.js object to clip from a group's rendering.
+     */
     __publicField(this, "_mask", null);
+    /**
+     * @name Two.Group#_strokeAttenuation
+     * @private
+     * @see {@link Two.Group#strokeAttenuation}
+     */
+    __publicField(this, "_strokeAttenuation", true);
     for (let prop in proto21) {
       Object.defineProperty(this, prop, proto21[prop]);
     }
@@ -6236,16 +8949,33 @@ var _Group = class extends Shape {
     this.subtractions = [];
     this.children = Array.isArray(children) ? children : Array.prototype.slice.call(arguments);
   }
+  /**
+   * @name Two.Group.InsertChildren
+   * @function
+   * @param {Two.Shape[]} children - The objects to be inserted.
+   * @description Cached method to let renderers know children have been added to a {@link Two.Group}.
+   */
   static InsertChildren(children) {
     for (let i = 0; i < children.length; i++) {
       replaceParent.call(this, children[i], this);
     }
   }
+  /**
+   * @name Two.Group.RemoveChildren
+   * @function
+   * @param {Two.Shape[]} children - The objects to be removed.
+   * @description Cached method to let renderers know children have been removed from a {@link Two.Group}.
+   */
   static RemoveChildren(children) {
     for (let i = 0; i < children.length; i++) {
       replaceParent.call(this, children[i]);
     }
   }
+  /**
+   * @name Two.Group.OrderChildren
+   * @function
+   * @description Cached method to let renderers know order has been updated on a {@link Two.Group}.
+   */
   static OrderChildren(children) {
     this._flagOrder = true;
   }
@@ -6308,6 +9038,13 @@ var _Group = class extends Shape {
     console.warn("Two.Group.copy is not supported yet.");
     return this;
   }
+  /**
+   * @name Two.Group#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.Group}
+   * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
+   */
   clone(parent) {
     const clone = new _Group();
     const children = this.children.map(function(child) {
@@ -6330,6 +9067,12 @@ var _Group = class extends Shape {
     }
     return clone._update();
   }
+  /**
+   * @name Two.Group#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the group.
+   */
   toObject() {
     const result = super.toObject.call(this);
     result.renderer.type = "group";
@@ -6346,6 +9089,15 @@ var _Group = class extends Shape {
     );
     return result;
   }
+  /**
+   * @name Two.Group#dispose
+   * @function
+   * @returns {Two.Group}
+   * @description Release the group's renderer resources and detach all events.
+   * This method recursively disposes all child objects, unbinds the children
+   * collection events, and preserves the renderer type for potential re-attachment
+   * to a new renderer.
+   */
   dispose() {
     super.dispose();
     if (this.children) {
@@ -6364,6 +9116,11 @@ var _Group = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Group#corner
+   * @function
+   * @description Orient the children of the group to the upper left-hand corner of that group.
+   */
   corner() {
     const rect = this.getBoundingClientRect(true);
     for (let i = 0; i < this.children.length; i++) {
@@ -6377,6 +9134,11 @@ var _Group = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Group#center
+   * @function
+   * @description Orient the children of the group to the center of that group.
+   */
   center() {
     const rect = this.getBoundingClientRect(true);
     const cx = rect.left + rect.width / 2 - this.translation.x;
@@ -6394,6 +9156,12 @@ var _Group = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Group#getById
+   * @function
+   * @description Recursively search for id. Returns the first element found.
+   * @returns {Two.Shape} - Or `null` if nothing is found.
+   */
   getById(id) {
     let found = null;
     function search(node) {
@@ -6414,6 +9182,12 @@ var _Group = class extends Shape {
     }
     return search(this);
   }
+  /**
+   * @name Two.Group#getByClassName
+   * @function
+   * @description Recursively search for classes. Returns an array of matching elements.
+   * @returns {Two.Shape[]} - Or empty array if nothing is found.
+   */
   getByClassName(className) {
     const found = [];
     function search(node) {
@@ -6430,6 +9204,12 @@ var _Group = class extends Shape {
     }
     return search(this);
   }
+  /**
+   * @name Two.Group#getByType
+   * @function
+   * @description Recursively search for children of a specific type, e.g. {@link Two.Path}. Pass a reference to this type as the param. Returns an array of matching elements.
+   * @returns {Two.Shape[]} - Empty array if nothing is found.
+   */
   getByType(type) {
     const found = [];
     function search(node) {
@@ -6446,6 +9226,12 @@ var _Group = class extends Shape {
     }
     return search(this);
   }
+  /**
+   * @name Two.Group#add
+   * @function
+   * @param {Two.Shape[]|...Two.Shape} objects - An array of objects to be added. Can also be supplied as individual arguments.
+   * @description Add objects to the group.
+   */
   add(objects) {
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
@@ -6465,6 +9251,12 @@ var _Group = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Group#remove
+   * @function
+   * @param {Two.Shape[]|...Two.Shape} [objects=self] - An array of objects to be removed. Can be also removed as individual arguments. If no arguments are passed, then it removes itself from its parent.
+   * @description Remove objects from the group.
+   */
   remove(objects) {
     const l = arguments.length, grandparent = this.parent;
     if (l <= 0 && grandparent) {
@@ -6488,6 +9280,13 @@ var _Group = class extends Shape {
     }
     return this;
   }
+  /**
+   * @name Two.Group#getBoundingClientRect
+   * @function
+   * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
+   * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+   * @description Return an object with top, left, right, bottom, width, and height parameters of the group.
+   */
   getBoundingClientRect(shallow) {
     let rect, matrix, tc, lc, rc, bc;
     this._update(true);
@@ -6532,18 +9331,33 @@ var _Group = class extends Shape {
       height: bottom - top
     };
   }
+  /**
+   * @name Two.Group#noFill
+   * @function
+   * @description Apply `noFill` method to all child shapes.
+   */
   noFill() {
     this.children.forEach(function(child) {
       child.noFill();
     });
     return this;
   }
+  /**
+   * @name Two.Group#noStroke
+   * @function
+   * @description Apply `noStroke` method to all child shapes.
+   */
   noStroke() {
     this.children.forEach(function(child) {
       child.noStroke();
     });
     return this;
   }
+  /**
+   * @name Two.Group#subdivide
+   * @function
+   * @description Apply `subdivide` method to all child shapes.
+   */
   subdivide() {
     const args = arguments;
     this.children.forEach(function(child) {
@@ -6551,6 +9365,14 @@ var _Group = class extends Shape {
     });
     return this;
   }
+  /**
+   * @name Two.Group#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     let i, l, child;
     if (this._flagBeginning || this._flagEnding) {
@@ -6584,6 +9406,12 @@ var _Group = class extends Shape {
     }
     return super._update.apply(this, arguments);
   }
+  /**
+   * @name Two.Group#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     if (this._flagAdditions) {
       this.additions.length = 0;
@@ -6598,9 +9426,12 @@ var _Group = class extends Shape {
     return this;
   }
 };
-var Group = _Group;
-__publicField(Group, "Children", Children);
-__publicField(Group, "Properties", [
+__publicField(_Group, "Children", Children);
+/**
+ * @name Two.Group.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.Group}.
+ */
+__publicField(_Group, "Properties", [
   "fill",
   "stroke",
   "linewidth",
@@ -6611,6 +9442,7 @@ __publicField(Group, "Properties", [
   "curved",
   "automatic"
 ]);
+var Group = _Group;
 var proto21 = {
   visible: {
     enumerable: true,
@@ -6819,6 +9651,26 @@ var proto21 = {
       this._flagMask = true;
       if (_.isObject(v) && !v.clip) {
         v.clip = true;
+      }
+    }
+  },
+  /**
+   * @name Two.Group#strokeAttenuation
+   * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space for all child shapes.
+   * @description When `strokeAttenuation` is `false`, this property is applied to all child shapes, making their stroke widths automatically adjust to compensate for the group's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke widths scale normally with transformations.
+   */
+  strokeAttenuation: {
+    enumerable: true,
+    get: function() {
+      return this._strokeAttenuation;
+    },
+    set: function(v) {
+      this._strokeAttenuation = !!v;
+      for (let i = 0; i < this.children.length; i++) {
+        const child = this.children[i];
+        if (child.strokeAttenuation !== void 0) {
+          child.strokeAttenuation = v;
+        }
       }
     }
   }
@@ -7093,11 +9945,9 @@ function applySvgAttributes(node, elem, parentStyles) {
     value = styles[key];
     switch (key) {
       case "gradientTransform":
-        if (/none/i.test(value))
-          break;
+        if (/none/i.test(value)) break;
         m = node.gradientTransform && node.gradientTransform.baseVal && node.gradientTransform.baseVal.length > 0 ? node.gradientTransform.baseVal[0].matrix : node.getCTM ? node.getCTM() : null;
-        if (m === null)
-          break;
+        if (m === null) break;
         transforms = decomposeMatrix(m);
         switch (elem._renderer.type) {
           case "linear-gradient":
@@ -7114,11 +9964,9 @@ function applySvgAttributes(node, elem, parentStyles) {
         }
         break;
       case "transform":
-        if (/none/i.test(value))
-          break;
+        if (/none/i.test(value)) break;
         m = node.transform && node.transform.baseVal && node.transform.baseVal.length > 0 ? node.transform.baseVal[0].matrix : node.getCTM ? node.getCTM() : null;
-        if (m === null)
-          break;
+        if (m === null) break;
         if (Constants.AutoCalculateImportedMatrices) {
           transforms = decomposeMatrix(m);
           elem.translation.set(transforms.translateX, transforms.translateY);
@@ -7285,18 +10133,15 @@ function applySvgAttributes(node, elem, parentStyles) {
         break;
     }
   }
-  if (Object.keys(node.dataset).length)
-    elem.dataset = node.dataset;
+  if (Object.keys(node.dataset).length) elem.dataset = node.dataset;
   return styles;
 }
 function updateDefsCache(node, defsCache) {
   for (let i = 0, l = node.childNodes.length; i < l; i++) {
     const n = node.childNodes[i];
-    if (!n.id)
-      continue;
+    if (!n.id) continue;
     const tagName = getTagName(node.nodeName);
-    if (tagName === "#text")
-      continue;
+    if (tagName === "#text") continue;
     defsCache.add(n.id, n);
   }
 }
@@ -7383,8 +10228,7 @@ var read = {
     for (let i = 0, l = node.childNodes.length; i < l; i++) {
       const n = node.childNodes[i];
       const tag = n.nodeName;
-      if (!tag)
-        return;
+      if (!tag) return;
       const tagName = getTagName(tag);
       if (tagName in read) {
         const o = read[tagName].call(group, n, styles);
@@ -7946,22 +10790,94 @@ function xhr(path, callback) {
 }
 
 // src/effects/image-sequence.js
-var _ImageSequence = class extends Rectangle {
+var _ImageSequence = class _ImageSequence extends Rectangle {
   constructor(paths, ox, oy, frameRate) {
     super(ox, oy, 0, 0);
+    /**
+     * @name Two.ImageSequence#_flagTextures
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#textures} need updating.
+     */
     __publicField(this, "_flagTextures", false);
+    /**
+     * @name Two.ImageSequence#_flagFrameRate
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#frameRate} needs updating.
+     */
     __publicField(this, "_flagFrameRate", false);
+    /**
+     * @name Two.ImageSequence#_flagIndex
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.ImageSequence#index} needs updating.
+     */
     __publicField(this, "_flagIndex", false);
+    // Private variables
+    /**
+     * @name Two.ImageSequence#_amount
+     * @private
+     * @property {Number} - Number of frames for a given {@link Two.ImageSequence}.
+     */
     __publicField(this, "_amount", 1);
+    /**
+     * @name Two.ImageSequence#_duration
+     * @private
+     * @property {Number} - Number of milliseconds a {@link Two.ImageSequence}.
+     */
     __publicField(this, "_duration", 0);
+    /**
+     * @name Two.ImageSequence#_index
+     * @private
+     * @property {Number} - The current frame the {@link Two.ImageSequence} is currently displaying.
+     */
     __publicField(this, "_index", 0);
+    /**
+     * @name Two.ImageSequence#_startTime
+     * @private
+     * @property {Milliseconds} - Epoch time in milliseconds of when the {@link Two.ImageSequence} started.
+     */
     __publicField(this, "_startTime", 0);
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} is animating or not.
+     */
     __publicField(this, "_playing", false);
+    /**
+     * @name Two.ImageSequence#_firstFrame
+     * @private
+     * @property {Number} - The frame the {@link Two.ImageSequence} should start with.
+     */
     __publicField(this, "_firstFrame", 0);
+    /**
+     * @name Two.ImageSequence#_lastFrame
+     * @private
+     * @property {Number} - The frame the {@link Two.ImageSequence} should end with.
+     */
     __publicField(this, "_lastFrame", 0);
+    /**
+     * @name Two.ImageSequence#_playing
+     * @private
+     * @property {Boolean} - Dictates whether the {@link Two.ImageSequence} should loop or not.
+     */
     __publicField(this, "_loop", true);
+    // Exposed through getter-setter
+    /**
+     * @name Two.ImageSequence#_textures
+     * @private
+     * @see {@link Two.ImageSequence#textures}
+     */
     __publicField(this, "_textures", null);
+    /**
+     * @name Two.ImageSequence#_frameRate
+     * @private
+     * @see {@link Two.ImageSequence#frameRate}
+     */
     __publicField(this, "_frameRate", 0);
+    /**
+     * @name Two.ImageSequence#_origin
+     * @private
+     * @see {@link Two.ImageSequence#origin}
+     */
     __publicField(this, "_origin", null);
     for (let prop in proto23) {
       Object.defineProperty(this, prop, proto23[prop]);
@@ -7985,6 +10901,14 @@ var _ImageSequence = class extends Rectangle {
     }
     this.index = 0;
   }
+  /**
+   * @name Two.ImageSequence.fromObject
+   * @function
+   * @param {Object} obj - Object notation of a {@link Two.ImageSequence} to create a new instance
+   * @returns {Two.ImageSequence}
+   * @description Create a new {@link Two.ImageSequence} from an object notation of a {@link Two.ImageSequence}.
+   * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
+   */
   static fromObject(obj) {
     const sequence = new _ImageSequence().copy(obj);
     if ("id" in obj) {
@@ -7992,6 +10916,12 @@ var _ImageSequence = class extends Rectangle {
     }
     return sequence;
   }
+  /**
+   * @name Two.ImageSequence#copy
+   * @function
+   * @param {Two.ImageSequence} imageSequence - The reference {@link Two.ImageSequence}
+   * @description Copy the properties of one {@link Two.ImageSequence} onto another.
+   */
   copy(imageSequence) {
     super.copy.call(this, imageSequence);
     for (let i = 0; i < _ImageSequence.Properties.length; i++) {
@@ -8002,6 +10932,14 @@ var _ImageSequence = class extends Rectangle {
     }
     return this;
   }
+  /**
+   * @name Two.ImageSequence#play
+   * @function
+   * @param {Number} [firstFrame=0] - The index of the frame to start the animation with.
+   * @param {Number} [lastFrame] - The index of the frame to end the animation with. Defaults to the last item in the {@link Two.ImageSequence#textures}.
+   * @param {Function} [onLastFrame] - Optional callback function to be triggered after playing the last frame. This fires multiple times when the image sequence is looped.
+   * @description Initiate animation playback of a {@link Two.ImageSequence}.
+   */
   play(firstFrame, lastFrame, onLastFrame) {
     this._playing = true;
     this._firstFrame = 0;
@@ -8023,15 +10961,32 @@ var _ImageSequence = class extends Rectangle {
     }
     return this;
   }
+  /**
+   * @name Two.ImageSequence#pause
+   * @function
+   * @description Halt animation playback of a {@link Two.ImageSequence}.
+   */
   pause() {
     this._playing = false;
     return this;
   }
+  /**
+   * @name Two.ImageSequence#stop
+   * @function
+   * @description Halt animation playback of a {@link Two.ImageSequence} and set the current frame back to the first frame.
+   */
   stop() {
     this._playing = false;
     this._index = this._firstFrame;
     return this;
   }
+  /**
+   * @name Two.ImageSequence#clone
+   * @function
+   * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+   * @returns {Two.ImageSequence}
+   * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
+   */
   clone(parent) {
     const clone = new _ImageSequence(
       this.textures,
@@ -8048,6 +11003,12 @@ var _ImageSequence = class extends Rectangle {
     }
     return clone;
   }
+  /**
+   * @name Two.ImageSequence#toObject
+   * @function
+   * @returns {Object}
+   * @description Return a JSON compatible plain object that represents the path.
+   */
   toObject() {
     const object = super.toObject.call(this);
     object.textures = this.textures.map(function(texture) {
@@ -8060,6 +11021,16 @@ var _ImageSequence = class extends Rectangle {
     object.loop = this.loop;
     return object;
   }
+  /**
+   * @name Two.ImageSequence#dispose
+   * @function
+   * @returns {Two.ImageSequence}
+   * @description Release the image sequence's renderer resources and detach all events.
+   * This method stops any running animation, clears animation callbacks, unbinds
+   * textures collection events, and disposes individual textures (calling dispose()
+   * for thorough cleanup) while preserving the renderer type for potential
+   * re-attachment to a new renderer.
+   */
   dispose() {
     super.dispose();
     if (this._playing) {
@@ -8084,6 +11055,14 @@ var _ImageSequence = class extends Rectangle {
     }
     return this;
   }
+  /**
+   * @name Two.ImageSequence#_update
+   * @function
+   * @private
+   * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+   * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+   * @nota-bene Try not to call this method more than once a frame.
+   */
   _update() {
     const effect = this._textures;
     let width, height, elapsed, amount, duration, texture;
@@ -8146,14 +11125,23 @@ var _ImageSequence = class extends Rectangle {
     super._update.call(this);
     return this;
   }
+  /**
+   * @name Two.ImageSequence#flagReset
+   * @function
+   * @private
+   * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+   */
   flagReset() {
     this._flagTextures = this._flagFrameRate = false;
     super.flagReset.call(this);
     return this;
   }
 };
-var ImageSequence = _ImageSequence;
-__publicField(ImageSequence, "Properties", [
+/**
+ * @name Two.ImageSequence.Properties
+ * @property {String[]} - A list of properties that are on every {@link Two.ImageSequence}.
+ */
+__publicField(_ImageSequence, "Properties", [
   "textures",
   "frameRate",
   "index",
@@ -8161,7 +11149,12 @@ __publicField(ImageSequence, "Properties", [
   "lastFrame",
   "loop"
 ]);
-__publicField(ImageSequence, "DefaultFrameRate", 30);
+/**
+ * @name Two.ImageSequence.DefaultFrameRate
+ * @property The default frame rate that {@link Two.ImageSequence#frameRate} is set to when instantiated.
+ */
+__publicField(_ImageSequence, "DefaultFrameRate", 30);
+var ImageSequence = _ImageSequence;
 var proto23 = {
   frameRate: {
     enumerable: true,
@@ -8394,7 +11387,7 @@ var canvas2 = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(this);
         }
         if (miter) {
           ctx.miterLimit = miter;
@@ -8590,7 +11583,7 @@ var canvas2 = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(this);
         }
       }
       if (typeof opacity === "number") {
@@ -8726,7 +11719,7 @@ var canvas2 = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(this);
         }
       }
       if (typeof opacity === "number") {
@@ -8997,8 +11990,7 @@ var canvas2 = {
     const dq = rxs * y1ps + rys * x1ps;
     const pq = (rxs * rys - dq) / dq;
     let q = sqrt(max4(0, pq));
-    if (largeArcFlag === sweepFlag)
-      q = -q;
+    if (largeArcFlag === sweepFlag) q = -q;
     const cxp = q * rx * y1p / ry;
     const cyp = -q * ry * x1p / rx;
     const cx = cos6(xAxisRotation) * cxp - sin6(xAxisRotation) * cyp + (ax + x) / 2;
@@ -9038,6 +12030,15 @@ var Renderer = class extends Events {
     this.scene = new Group();
     this.scene.parent = this;
   }
+  /**
+   * @name Two.CanvasRenderer#setSize
+   * @function
+   * @fires resize
+   * @param {Number} width - The new width of the renderer.
+   * @param {Number} height - The new height of the renderer.
+   * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
+   * @description Change the size of the renderer.
+   */
   setSize(width, height, ratio) {
     this.width = width;
     this.height = height;
@@ -9052,6 +12053,11 @@ var Renderer = class extends Events {
     }
     return this.trigger(Events.Types.resize, width, height, ratio);
   }
+  /**
+   * @name Two.CanvasRenderer#render
+   * @function
+   * @description Render the current scene to the `<canvas />`.
+   */
   render() {
     const isOne = this.ratio === 1;
     if (!isOne) {
@@ -9068,6 +12074,10 @@ var Renderer = class extends Events {
     return this;
   }
 };
+/**
+ * @name Two.CanvasRenderer.Utils
+ * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />`.
+ */
 __publicField(Renderer, "Utils", canvas2);
 function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
   const delta = endAngle - startAngle;
@@ -9133,6 +12143,7 @@ var svg = {
     bottom: "ideographic",
     baseline: "alphabetic"
   },
+  // Create an svg namespaced element.
   createElement: function(name, attrs) {
     const tag = name;
     const elem = document.createElementNS(svg.ns, tag);
@@ -9146,6 +12157,7 @@ var svg = {
     }
     return elem;
   },
+  // Add attributes from an svg element.
   setAttributes: function(elem, attrs) {
     const keys = Object.keys(attrs);
     for (let i = 0; i < keys.length; i++) {
@@ -9157,12 +12169,17 @@ var svg = {
     }
     return this;
   },
+  // Remove attributes from an svg element.
   removeAttributes: function(elem, attrs) {
     for (let key in attrs) {
       elem.removeAttribute(key);
     }
     return this;
   },
+  // Turn a set of vertices into a string for the d property of a path
+  // element. It is imperative that the string collation is as fast as
+  // possible, because this call will be happening multiple times a
+  // second.
   toString: function(points, closed2) {
     let l = points.length, last = l - 1, d, string = "";
     for (let i = 0; i < l; i++) {
@@ -9288,6 +12305,8 @@ var svg = {
     }
   },
   group: {
+    // TODO: Can speed up.
+    // TODO: How does this effect a f
     appendChild: function(object) {
       const elem = object._renderer.elem;
       if (!elem) {
@@ -9443,7 +12462,7 @@ var svg = {
         }
       }
       if (this._flagLinewidth) {
-        changed["stroke-width"] = this._linewidth;
+        changed["stroke-width"] = getEffectiveStrokeWidth(this);
       }
       if (this._flagOpacity) {
         changed["stroke-opacity"] = this._opacity;
@@ -9560,7 +12579,7 @@ var svg = {
         }
       }
       if (this._flagLinewidth) {
-        changed["stroke-width"] = this._linewidth;
+        changed["stroke-width"] = getEffectiveStrokeWidth(this);
       }
       if (this._flagOpacity) {
         changed["stroke-opacity"] = this._opacity;
@@ -9654,7 +12673,7 @@ var svg = {
         }
       }
       if (this._flagLinewidth) {
-        changed["stroke-width"] = this._linewidth;
+        changed["stroke-width"] = getEffectiveStrokeWidth(this);
       }
       if (this._flagOpacity) {
         changed.opacity = this._opacity;
@@ -9959,6 +12978,14 @@ var Renderer2 = class extends Events {
     this.domElement.defs = this.defs;
     this.domElement.style.overflow = "hidden";
   }
+  /**
+   * @name Two.SVGRenderer#setSize
+   * @function
+   * @param {Number} width - The new width of the renderer.
+   * @param {Number} height - The new height of the renderer.
+   * @description Change the size of the renderer.
+   * @nota-bene Triggers a `Two.Events.resize`.
+   */
   setSize(width, height) {
     this.width = width;
     this.height = height;
@@ -9968,12 +12995,21 @@ var Renderer2 = class extends Events {
     });
     return this.trigger(Events.Types.resize, width, height);
   }
+  /**
+   * @name Two.SVGRenderer#render
+   * @function
+   * @description Render the current scene to the `<svg />`.
+   */
   render() {
     svg.group.render.call(this.scene, this.domElement);
     svg.defs.update(this.domElement);
     return this;
   }
 };
+/**
+ * @name Two.SVGRenderer.Utils
+ * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
+ */
 __publicField(Renderer2, "Utils", svg);
 
 // src/utils/shaders.js
@@ -10101,6 +13137,12 @@ var webgl = {
         delete child._renderer.positionBuffer;
       }
     },
+    /**
+     * @function
+     // * @type {(gl: any, programs: any) => any}
+     * @param {WebGLContext} gl
+     * @param {Object} programs
+     */
     render: function(gl, programs) {
       if (!this._visible) {
         return;
@@ -10230,7 +13272,7 @@ var webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(elem);
         }
         if (miter) {
           ctx.miterLimit = miter;
@@ -10367,6 +13409,8 @@ var webgl = {
       }
       ctx.restore();
     },
+    // Returns the rect of a set of verts. Typically takes vertices that are
+    // "centered" around 0 and returns them to be anchored upper-left.
     getBoundingClientRect: function(vertices, border, rect) {
       let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity, width, height;
       vertices.forEach(function(v) {
@@ -10531,6 +13575,7 @@ var webgl = {
     }
   },
   points: {
+    // The canvas is a texture that is a rendering of one vertex
     updateCanvas: function(gl, elem) {
       let isOffset;
       const canvas3 = this.canvas;
@@ -10574,7 +13619,7 @@ var webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth / aspect;
+          ctx.lineWidth = getEffectiveStrokeWidth(elem) / aspect;
         }
       }
       if (typeof opacity === "number") {
@@ -10787,7 +13832,7 @@ var webgl = {
           ctx.strokeStyle = stroke._renderer.effect;
         }
         if (linewidth) {
-          ctx.lineWidth = linewidth;
+          ctx.lineWidth = getEffectiveStrokeWidth(elem);
         }
       }
       if (typeof opacity === "number") {
@@ -11316,6 +14361,15 @@ var Renderer3 = class extends Events {
     gl.blendEquation(gl.FUNC_ADD);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   }
+  /**
+   * @name Two.WebGLRenderer#setSize
+   * @function
+   * @fires resize
+   * @param {Number} width - The new width of the renderer.
+   * @param {Number} height - The new height of the renderer.
+   * @param {Number} [ratio] - The new pixel ratio (pixel density) of the renderer. Defaults to calculate the pixel density of the user's screen.
+   * @description Change the size of the renderer.
+   */
   setSize(width, height, ratio) {
     let w, h;
     const ctx = this.ctx;
@@ -11341,6 +14395,11 @@ var Renderer3 = class extends Events {
     this.programs.resolution.flagged = true;
     return this.trigger(Events.Types.resize, width, height, ratio);
   }
+  /**
+   * @name Two.WebGLRenderer#render
+   * @function
+   * @description Render the current scene to the `<canvas />`.
+   */
   render() {
     const gl = this.ctx;
     if (!this.overdraw) {
@@ -11352,6 +14411,10 @@ var Renderer3 = class extends Events {
     return this;
   }
 };
+/**
+ * @name Two.WebGLRenderer.Utils
+ * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<canvas />` through the WebGL API.
+ */
 __publicField(Renderer3, "Utils", webgl);
 
 // src/two.js
@@ -11367,16 +14430,52 @@ var Utils = _.extend(
   curves_exports,
   math_exports
 );
-var _Two = class {
+var _Two = class _Two {
   constructor(options) {
+    // Warning: inherit events while overriding static properties
+    /**
+     * @private
+     */
     __publicField(this, "_events", new Events());
+    /**
+     * @name Two#type
+     * @property {String} - A string representing which type of renderer the instance has instantiated.
+     */
     __publicField(this, "type", "");
+    /**
+     * @name Two#renderer
+     * @property {(Two.SVGRenderer|Two.CanvasRenderer|Two.WebGLRenderer)} - The instantiated rendering class for the instance. For a list of possible rendering types check out Two.Types.
+     */
     __publicField(this, "renderer", null);
+    /**
+     * @name Two#scene
+     * @property {Two.Group} - The base level {@link Two.Group} which houses all objects for the instance. Because it is a {@link Two.Group} transformations can be applied to it that will affect all objects in the instance. This is handy as a makeshift inverted camera.
+     */
     __publicField(this, "scene", null);
+    /**
+     * @name Two#width
+     * @property {Number} - The width of the instance's dom element.
+     */
     __publicField(this, "width", 0);
+    /**
+     * @name Two#height
+     * @property {Number} - The height of the instance's dom element.
+     */
     __publicField(this, "height", 0);
+    /**
+     * @name Two#frameCount
+     * @property {Number} - An integer representing how many frames have elapsed.
+     */
     __publicField(this, "frameCount", 0);
+    /**
+     * @name Two#timeDelta
+     * @property {Number} - A number representing how much time has elapsed since the last frame in milliseconds.
+     */
     __publicField(this, "timeDelta", 0);
+    /**
+     * @name Two#playing
+     * @property {Boolean} - A boolean representing whether or not the instance is being updated through the automatic `requestAnimationFrame`.
+     */
     __publicField(this, "playing", false);
     const params = _.defaults(options || {}, {
       fullscreen: false,
@@ -11448,6 +14547,7 @@ var _Two = class {
       raf.init();
     }
   }
+  // Getters and setters aren't enumerable
   get _bound() {
     return this._events._bound;
   }
@@ -11484,6 +14584,12 @@ var _Two = class {
   ignore() {
     return this._events.ignore.apply(this, arguments);
   }
+  /**
+   * @name Two#appendTo
+   * @function
+   * @param {Element} elem - The DOM element to append the Two.js stage to.
+   * @description Shorthand method to append your instance of Two.js to the `document`.
+   */
   appendTo(elem) {
     elem.appendChild(this.renderer.domElement);
     if (this.fit) {
@@ -11495,11 +14601,24 @@ var _Two = class {
     }
     return this;
   }
+  /**
+   * @name Two#play
+   * @function
+   * @fires play
+   * @description Call to start an internal animation loop.
+   * @nota-bene This function initiates a `requestAnimationFrame` loop.
+   */
   play() {
     this.playing = true;
     raf.init();
     return this.trigger(Events.Types.play);
   }
+  /**
+   * @name Two#pause
+   * @function
+   * @fires pause
+   * @description Call to stop the internal animation loop for a specific instance of Two.js.
+   */
   pause() {
     this.playing = false;
     return this.trigger(Events.Types.pause);
@@ -11507,6 +14626,13 @@ var _Two = class {
   setPlaying(p) {
     this.playing = p;
   }
+  /**
+   * @name Two#release
+   * @function
+   * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
+   * @returns {Two.Element} The object passed for event deallocation.
+   * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
+   */
   release(obj) {
     let i, v, child;
     if (typeof obj === "undefined") {
@@ -11580,6 +14706,13 @@ var _Two = class {
     }
     return obj;
   }
+  /**
+   * @name Two#update
+   * @function
+   * @fires update
+   * @description Update positions and calculations in one pass before rendering. Then render to the canvas.
+   * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
+   */
   update() {
     const animated = !!this._lastFrame;
     const now = _.performance.now();
@@ -11601,10 +14734,23 @@ var _Two = class {
     this.trigger(Events.Types.update, this.frameCount, this.timeDelta);
     return this.render();
   }
+  /**
+   * @name Two#render
+   * @function
+   * @fires render
+   * @description Render all drawable and visible objects of the scene.
+   */
   render() {
     this.renderer.render();
     return this.trigger(Events.Types.render, this.frameCount++);
   }
+  // Convenience Methods
+  /**
+   * @name Two#add
+   * @function
+   * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects. Alternatively can add objects as individual arguments.
+   * @description A shorthand method to add specific Two.js objects to the scene.
+   */
   add(objects) {
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
@@ -11612,6 +14758,12 @@ var _Two = class {
     this.scene.add(objects);
     return this;
   }
+  /**
+   * @name Two#remove
+   * @function
+   * @param {(Two.Shape[]|...Two.Shape)} [objects] - An array of Two.js objects.
+   * @description A shorthand method to remove specific Two.js objects from the scene.
+   */
   remove(objects) {
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
@@ -11619,15 +14771,40 @@ var _Two = class {
     this.scene.remove(objects);
     return this;
   }
+  /**
+   * @name Two#clear
+   * @function
+   * @description Removes all objects from the instance's scene. If you intend to have the browser garbage collect this, don't forget to delete the references in your application as well.
+   */
   clear() {
     this.scene.remove(this.scene.children);
     return this;
   }
+  /**
+   * @name Two#makeLine
+   * @function
+   * @param {Number} x1
+   * @param {Number} y1
+   * @param {Number} x2
+   * @param {Number} y2
+   * @returns {Two.Line}
+   * @description Creates a Two.js line and adds it to the scene.
+   */
   makeLine(x1, y1, x2, y2) {
     const line = new Line(x1, y1, x2, y2);
     this.scene.add(line);
     return line;
   }
+  /**
+   * @name Two#makeArrow
+   * @function
+   * @param {Number} x1
+   * @param {Number} y1
+   * @param {Number} x2
+   * @param {Number} y2
+   * @returns {Two.Path}
+   * @description Creates a Two.js arrow and adds it to the scene.
+   */
   makeArrow(x1, y1, x2, y2, size) {
     const headlen = typeof size === "number" ? size : 10;
     const angle = Math.atan2(y2 - y1, x2 - x1);
@@ -11685,31 +14862,93 @@ var _Two = class {
     this.scene.add(path);
     return path;
   }
+  /**
+   * @name Two#makeRectangle
+   * @function
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} width
+   * @param {Number} height
+   * @returns {Two.Rectangle}
+   * @description Creates a Two.js rectangle and adds it to the scene.
+   */
   makeRectangle(x, y, width, height) {
     const rect = new Rectangle(x, y, width, height);
     this.scene.add(rect);
     return rect;
   }
+  /**
+   * @name Two#makeRoundedRectangle
+   * @function
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} width
+   * @param {Number} height
+   * @param {Number} sides
+   * @returns {Two.RoundedRectangle}
+   * @description Creates a Two.js rounded rectangle and adds it to the scene.
+   */
   makeRoundedRectangle(x, y, width, height, sides) {
     const rect = new RoundedRectangle(x, y, width, height, sides);
     this.scene.add(rect);
     return rect;
   }
+  /**
+   * @name Two#makeCircle
+   * @function
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} radius
+   * @param {Number} [resolution=4]
+   * @returns {Two.Circle}
+   * @description Creates a Two.js circle and adds it to the scene.
+   */
   makeCircle(x, y, radius, resolution) {
     const circle = new Circle(x, y, radius, resolution);
     this.scene.add(circle);
     return circle;
   }
+  /**
+   * @name Two#makeEllipse
+   * @function
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} rx
+   * @param {Number} ry
+   * @param {Number} [resolution=4]
+   * @returns {Two.Ellipse}
+   * @description Creates a Two.js ellipse and adds it to the scene.
+   */
   makeEllipse(x, y, rx, ry, resolution) {
     const ellipse = new Ellipse(x, y, rx, ry, resolution);
     this.scene.add(ellipse);
     return ellipse;
   }
+  /**
+   * @name Two#makeStar
+   * @function
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} outerRadius
+   * @param {Number} innerRadius
+   * @param {Number} sides
+   * @returns {Two.Star}
+   * @description Creates a Two.js star and adds it to the scene.
+   */
   makeStar(x, y, outerRadius, innerRadius, sides) {
     const star = new Star(x, y, outerRadius, innerRadius, sides);
     this.scene.add(star);
     return star;
   }
+  /**
+   * @name Two#makeCurve
+   * @function
+   * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points.
+   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
+   * @returns {Two.Path} - Where `path.curved` is set to `true`.
+   * @description Creates a Two.js path that is curved and adds it to the scene.
+   * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
+   */
   makeCurve(points) {
     const l = arguments.length;
     if (!Array.isArray(points)) {
@@ -11734,11 +14973,33 @@ var _Two = class {
     this.scene.add(curve);
     return curve;
   }
+  /**
+   * @name Two#makePolygon
+   * @function
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} radius
+   * @param {Number} sides
+   * @returns {Two.Polygon}
+   * @description Creates a Two.js polygon and adds it to the scene.
+   */
   makePolygon(x, y, radius, sides) {
     const poly = new Polygon(x, y, radius, sides);
     this.scene.add(poly);
     return poly;
   }
+  /**
+   * @name Two#makeArcSegment
+   * @function
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} innerRadius
+   * @param {Number} outerRadius
+   * @param {Number} startAngle
+   * @param {Number} endAngle
+   * @param {Number} [resolution=Two.Resolution] - The number of vertices that should comprise the arc segment.
+   * @returns {Two.ArcSegment}
+   */
   makeArcSegment(x, y, innerRadius, outerRadius, startAngle, endAngle, resolution) {
     const arcSegment = new ArcSegment(
       x,
@@ -11752,6 +15013,14 @@ var _Two = class {
     this.scene.add(arcSegment);
     return arcSegment;
   }
+  /**
+   * @name Two#makePoints
+   * @function
+   * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
+   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+   * @returns {Two.Points}
+   * @description Creates a Two.js points object and adds it to the current scene.
+   */
   makePoints(p) {
     const l = arguments.length;
     let vertices = p;
@@ -11770,6 +15039,15 @@ var _Two = class {
     this.scene.add(points);
     return points;
   }
+  /**
+   * @name Two#makePath
+   * @function
+   * @param {Two.Anchor[]} [points] - An array of {@link Two.Anchor} points
+   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Anchor}s for use in the path.
+   * @returns {Two.Path}
+   * @description Creates a Two.js path and adds it to the scene.
+   * @nota-bene In either case of passing an array or passing numbered arguments the last argument is an optional `Boolean` that defines whether the path should be open or closed.
+   */
   makePath(p) {
     const l = arguments.length;
     let points = p;
@@ -11799,23 +15077,67 @@ var _Two = class {
     this.scene.add(path);
     return path;
   }
+  /**
+   * @name Two#makeText
+   * @function
+   * @param {String} message
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Object} [styles] - An object to describe any of the {@link Two.Text.Properties} including `fill`, `stroke`, `linewidth`, `family`, `alignment`, `leading`, `opacity`, etc..
+   * @returns {Two.Text}
+   * @description Creates a Two.js text object and adds it to the scene.
+   */
   makeText(message, x, y, styles) {
     const text = new Text(message, x, y, styles);
     this.add(text);
     return text;
   }
+  /**
+   * @name Two#makeLinearGradient
+   * @function
+   * @param {Number} x1
+   * @param {Number} y1
+   * @param {Number} x2
+   * @param {Number} y2
+   * @param {...Two.Stop} args - Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+   * @returns {Two.LinearGradient}
+   * @description Creates a Two.js linear gradient and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+   */
   makeLinearGradient(x1, y1, x2, y2) {
     const stops = Array.prototype.slice.call(arguments, 4);
     const gradient = new LinearGradient(x1, y1, x2, y2, stops);
     this.add(gradient);
     return gradient;
   }
+  /**
+   * @name Two#makeRadialGradient
+   * @function
+   * @param {Number} x1
+   * @param {Number} y1
+   * @param {Number} radius
+   * @param {...Two.Stop} args - Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
+   * @returns {Two.RadialGradient}
+   * @description Creates a Two.js linear-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+   */
   makeRadialGradient(x1, y1, radius) {
     const stops = Array.prototype.slice.call(arguments, 3);
     const gradient = new RadialGradient(x1, y1, radius, stops);
     this.add(gradient);
     return gradient;
   }
+  /**
+   * @name Two#makeSprite
+   * @function
+   * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} [columns=1]
+   * @param {Number} [rows=1]
+   * @param {Number} [frameRate=0]
+   * @param {Boolean} [autostart=false]
+   * @returns {Two.Sprite}
+   * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
+   */
   makeSprite(pathOrTexture, x, y, columns, rows, frameRate, autostart) {
     const sprite = new Sprite(pathOrTexture, x, y, columns, rows, frameRate);
     if (autostart) {
@@ -11824,6 +15146,17 @@ var _Two = class {
     this.add(sprite);
     return sprite;
   }
+  /**
+   * @name Two#makeImageSequence
+   * @function
+   * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
+   * @param {Number} x
+   * @param {Number} y
+   * @param {Number} [frameRate=0]
+   * @param {Boolean} [autostart=false]
+   * @returns {Two.ImageSequence}
+   * @description Creates a Two.js image sequence object and adds it to the scene.
+   */
   makeImageSequence(pathsOrTextures, x, y, frameRate, autostart) {
     const imageSequence = new ImageSequence(pathsOrTextures, x, y, frameRate);
     if (autostart) {
@@ -11832,10 +15165,25 @@ var _Two = class {
     this.add(imageSequence);
     return imageSequence;
   }
+  /**
+   * @name Two#makeTexture
+   * @function
+   * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+   * @param {Function} [callback] - Function to be invoked when the image is loaded.
+   * @returns {Two.Texture}
+   * @description Creates a Two.js texture object.
+   */
   makeTexture(pathOrSource, callback) {
     const texture = new Texture(pathOrSource, callback);
     return texture;
   }
+  /**
+   * @name Two#makeGroup
+   * @function
+   * @param {(Two.Shape[]|...Two.Shape)} [objects] - Two.js objects to be added to the group in the form of an array or as individual arguments.
+   * @returns {Two.Group}
+   * @description Creates a Two.js group object and adds it to the scene.
+   */
   makeGroup(objects) {
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
@@ -11845,6 +15193,15 @@ var _Two = class {
     group.add(objects);
     return group;
   }
+  /**
+   * @name Two#interpret
+   * @function
+   * @param {SVGElement} svg - The SVG node to be parsed.
+   * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
+   * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
+   * @returns {Two.Group}
+   * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
+   */
   interpret(svg2, shallow, add) {
     const tag = svg2.tagName.toLowerCase();
     add = typeof add !== "undefined" ? add : true;
@@ -11859,6 +15216,14 @@ var _Two = class {
     }
     return node;
   }
+  /**
+   * @name Two#load
+   * @function
+   * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
+   * @param {Function} [callback] - Function to call once loading has completed.
+   * @returns {Two.Group}
+   * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
+   */
   load(pathOrSVGContent, callback) {
     const group = new Group();
     let elem, i, child;
@@ -11884,48 +15249,93 @@ var _Two = class {
     return group;
   }
 };
+__publicField(_Two, "NextFrameId", Constants.NextFrameId);
+// Primitive
+/**
+ * @name Two.Types
+ * @property {Object} - The different rendering types available in the library.
+ */
+__publicField(_Two, "Types", Constants.Types);
+/**
+ * @name Two.Version
+ * @property {String} - The current working version of the library, `$version`.
+ */
+__publicField(_Two, "Version", Constants.Version);
+/**
+ * @name Two.PublishDate
+ * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
+ */
+__publicField(_Two, "PublishDate", Constants.PublishDate);
+/**
+ * @name Two.Identifier
+ * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
+ */
+__publicField(_Two, "Identifier", Constants.Identifier);
+/**
+ * @name Two.Resolution
+ * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
+ */
+__publicField(_Two, "Resolution", Constants.Resolution);
+/**
+ * @name Two.AutoCalculateImportedMatrices
+ * @property {Boolean} - When importing SVGs through the {@link Two#interpret} and {@link Two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
+ * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
+ */
+__publicField(_Two, "AutoCalculateImportedMatrices", Constants.AutoCalculateImportedMatrices);
+/**
+ * @name Two.Instances
+ * @property {Two[]} - Registered list of all Two.js instances in the current session.
+ */
+__publicField(_Two, "Instances", Constants.Instances);
+/**
+ * @function Two.uniqueId
+ * @description Simple method to access an incrementing value. Used for `id` allocation on all Two.js objects.
+ * @returns {Number} Ever increasing Number.
+ */
+__publicField(_Two, "uniqueId", Constants.uniqueId);
+__publicField(_Two, "Anchor", Anchor);
+__publicField(_Two, "Collection", Collection);
+__publicField(_Two, "Events", Events);
+__publicField(_Two, "Group", Group);
+__publicField(_Two, "Matrix", Matrix2);
+__publicField(_Two, "Path", Path);
+__publicField(_Two, "Registry", Registry);
+__publicField(_Two, "Element", Element);
+__publicField(_Two, "Shape", Shape);
+__publicField(_Two, "Text", Text);
+__publicField(_Two, "Vector", Vector);
+__publicField(_Two, "Gradient", Gradient);
+__publicField(_Two, "ImageSequence", ImageSequence);
+__publicField(_Two, "LinearGradient", LinearGradient);
+__publicField(_Two, "RadialGradient", RadialGradient);
+__publicField(_Two, "Sprite", Sprite);
+__publicField(_Two, "Stop", Stop);
+__publicField(_Two, "Texture", Texture);
+__publicField(_Two, "ArcSegment", ArcSegment);
+__publicField(_Two, "Circle", Circle);
+__publicField(_Two, "Ellipse", Ellipse);
+__publicField(_Two, "Line", Line);
+__publicField(_Two, "Points", Points);
+__publicField(_Two, "Polygon", Polygon);
+__publicField(_Two, "Rectangle", Rectangle);
+__publicField(_Two, "RoundedRectangle", RoundedRectangle);
+__publicField(_Two, "Star", Star);
+__publicField(_Two, "CanvasRenderer", Renderer);
+__publicField(_Two, "SVGRenderer", Renderer2);
+__publicField(_Two, "WebGLRenderer", Renderer3);
+/**
+ * @name Two.Commands
+ * @property {Object} - Map of possible path commands. Taken from the SVG specification. Commands include: `move`, `line`, `curve`, `arc`, and `close`.
+ */
+__publicField(_Two, "Commands", Commands);
+/**
+ * @name Two.Utils
+ * @property {Object} Utils - A massive object filled with utility functions and properties.
+ * @property {Object} Two.Utils.read - A collection of SVG parsing functions indexed by element name.
+ * @property {Function} Two.Utils.read.path - Parse SVG path element or `d` attribute string.
+ */
+__publicField(_Two, "Utils", Utils);
 var Two = _Two;
-__publicField(Two, "NextFrameId", Constants.NextFrameId);
-__publicField(Two, "Types", Constants.Types);
-__publicField(Two, "Version", Constants.Version);
-__publicField(Two, "PublishDate", Constants.PublishDate);
-__publicField(Two, "Identifier", Constants.Identifier);
-__publicField(Two, "Resolution", Constants.Resolution);
-__publicField(Two, "AutoCalculateImportedMatrices", Constants.AutoCalculateImportedMatrices);
-__publicField(Two, "Instances", Constants.Instances);
-__publicField(Two, "uniqueId", Constants.uniqueId);
-__publicField(Two, "Anchor", Anchor);
-__publicField(Two, "Collection", Collection);
-__publicField(Two, "Events", Events);
-__publicField(Two, "Group", Group);
-__publicField(Two, "Matrix", Matrix2);
-__publicField(Two, "Path", Path);
-__publicField(Two, "Registry", Registry);
-__publicField(Two, "Element", Element);
-__publicField(Two, "Shape", Shape);
-__publicField(Two, "Text", Text);
-__publicField(Two, "Vector", Vector);
-__publicField(Two, "Gradient", Gradient);
-__publicField(Two, "ImageSequence", ImageSequence);
-__publicField(Two, "LinearGradient", LinearGradient);
-__publicField(Two, "RadialGradient", RadialGradient);
-__publicField(Two, "Sprite", Sprite);
-__publicField(Two, "Stop", Stop);
-__publicField(Two, "Texture", Texture);
-__publicField(Two, "ArcSegment", ArcSegment);
-__publicField(Two, "Circle", Circle);
-__publicField(Two, "Ellipse", Ellipse);
-__publicField(Two, "Line", Line);
-__publicField(Two, "Points", Points);
-__publicField(Two, "Polygon", Polygon);
-__publicField(Two, "Rectangle", Rectangle);
-__publicField(Two, "RoundedRectangle", RoundedRectangle);
-__publicField(Two, "Star", Star);
-__publicField(Two, "CanvasRenderer", Renderer);
-__publicField(Two, "SVGRenderer", Renderer2);
-__publicField(Two, "WebGLRenderer", Renderer3);
-__publicField(Two, "Commands", Commands);
-__publicField(Two, "Utils", Utils);
 function fitToWindow() {
   const wr = document.body.getBoundingClientRect();
   const width = this.width = wr.width;

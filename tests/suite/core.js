@@ -1140,6 +1140,36 @@ QUnit.test('Two.Path Object Conversion', function (assert) {
   );
 });
 
+QUnit.test('Two.Path strokeAttenuation', function (assert) {
+  assert.expect(4);
+
+  var path = new Two.Path([new Two.Anchor(0, 0), new Two.Anchor(100, 100)]);
+
+  path.strokeAttenuation = true;
+  assert.equal(
+    path.strokeAttenuation,
+    true,
+    'Can get property strokeAttenuation correctly.'
+  );
+  assert.equal(
+    path._strokeAttenuation,
+    true,
+    'Can set property strokeAttenuation correctly.'
+  );
+
+  path.strokeAttenuation = false;
+  assert.equal(
+    path.strokeAttenuation,
+    false,
+    'Can set property strokeAttenuation to false correctly.'
+  );
+  assert.equal(
+    path._strokeAttenuation,
+    false,
+    'Can get property strokeAttenuation false correctly.'
+  );
+});
+
 QUnit.test('Two.Group Object Conversion', function (assert) {
   assert.expect(6);
 
@@ -1184,6 +1214,36 @@ QUnit.test('Two.Group Object Conversion', function (assert) {
   //   group.toObject(),
   //   'Two.Group.copy creates identical group'
   // );
+});
+
+QUnit.test('Two.Group strokeAttenuation', function (assert) {
+  assert.expect(4);
+
+  var group = new Two.Group();
+
+  group.strokeAttenuation = true;
+  assert.equal(
+    group.strokeAttenuation,
+    true,
+    'Can get property strokeAttenuation correctly.'
+  );
+  assert.equal(
+    group._strokeAttenuation,
+    true,
+    'Can set property strokeAttenuation correctly.'
+  );
+
+  group.strokeAttenuation = false;
+  assert.equal(
+    group.strokeAttenuation,
+    false,
+    'Can set property strokeAttenuation to false correctly.'
+  );
+  assert.equal(
+    group._strokeAttenuation,
+    false,
+    'Can get property strokeAttenuation false correctly.'
+  );
 });
 
 QUnit.test('Two.Group.getBoundingClientRect(shallow)', function (assert) {
@@ -1264,5 +1324,35 @@ QUnit.test('Two.Text Object Conversion', function (assert) {
     { ...copiedText.toObject(), id: text.id },
     text.toObject(),
     'Two.Text.copy creates identical text'
+  );
+});
+
+QUnit.test('Two.Text strokeAttenuation', function (assert) {
+  assert.expect(4);
+
+  var text = new Two.Text('Hello, World!', 100, 100);
+
+  text.strokeAttenuation = true;
+  assert.equal(
+    text.strokeAttenuation,
+    true,
+    'Can get property strokeAttenuation correctly.'
+  );
+  assert.equal(
+    text._strokeAttenuation,
+    true,
+    'Can set property strokeAttenuation correctly.'
+  );
+
+  text.strokeAttenuation = false;
+  assert.equal(
+    text.strokeAttenuation,
+    false,
+    'Can set property strokeAttenuation to false correctly.'
+  );
+  assert.equal(
+    text._strokeAttenuation,
+    false,
+    'Can get property strokeAttenuation false correctly.'
   );
 });
