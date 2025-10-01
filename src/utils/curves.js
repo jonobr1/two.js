@@ -230,8 +230,8 @@ function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
       a = -3 * y1 + 9 * y2 - 9 * y3 + 3 * y4;
       c = 3 * y2 - 3 * y1;
     }
-    if (Math.abs(a) < 1e-12) {
-      if (Math.abs(b) < 1e-12) {
+    if (Math.abs(a) < 0.001) {
+      if (Math.abs(b) < 0.001) {
         continue;
       }
       t = -c / b;
@@ -356,7 +356,7 @@ function getControlPoints(a, b, c) {
   let mid = (a1 + a2) / 2;
 
   // TODO: Issue 73
-  if (d1 < 0.0001 || d2 < 0.0001) {
+  if (d1 < 0.001 || d2 < 0.001) {
     if (typeof b.relative === 'boolean' && !b.relative) {
       b.controls.left.copy(b);
       b.controls.right.copy(b);

@@ -13,7 +13,6 @@ var extras = { title: 'Extras', children: [] };
 var sidebarForDocs = [root, effects, renderers, shapes, extras];
 
 for (var i = 0; i < sourceFiles.length; i++) {
-  // var name = sourceFiles[i].replace(/.*\/([a-zA-Z\-]*)\.js$/i, '$1');
   var name = sourceFiles[i]
     .replace('jsm/', '')
     .replace('extras', '/extras')
