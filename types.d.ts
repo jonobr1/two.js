@@ -1538,13 +1538,11 @@ declare module 'two.js/src/group' {
      */
     static Properties: string[];
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Shape.fromObject>[0] & {
-            children?: (ChildParams | Parameters<typeof Group.fromObject>[0])[];
-            opacity?: number;
-            mask?: ChildParams;
-          })
+      obj: Parameters<typeof Shape.fromObject>[0] & {
+        children?: (ChildParams | Parameters<typeof Group.fromObject>[0])[];
+        opacity?: number;
+        mask?: ChildParams;
+      }
     ): Group;
     constructor(children?: Shape[]);
     constructor(...args: Shape[]);
@@ -2082,13 +2080,11 @@ declare module 'two.js/src/effects/stop' {
      * @nota-bene Works in conjunction with {@link Two.Stop#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof TwoElement.fromObject>[0] & {
-            offset?: number;
-            color?: string;
-            opacity?: number;
-          })
+      obj: Parameters<typeof TwoElement.fromObject>[0] & {
+        offset?: number;
+        color?: string;
+        opacity?: number;
+      }
     ): Stop;
     constructor(offset?: number, color?: string, opacity?: number);
     /**
@@ -2204,13 +2200,11 @@ declare module 'two.js/src/effects/gradient' {
      * @nota-bene Works in conjunction with {@link Two.Gradient#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof TwoElement.fromObject>[0] & {
-            stops?: number[];
-            spread?: SpreadProperties;
-            units?: UnitsProperties;
-          })
+      obj: Parameters<typeof TwoElement.fromObject>[0] & {
+        stops?: number[];
+        spread?: SpreadProperties;
+        units?: UnitsProperties;
+      }
     ): Gradient;
     constructor(stops?: Stop[]);
     private _flagStops: boolean;
@@ -2318,12 +2312,10 @@ declare module 'two.js/src/effects/linear-gradient' {
      * @nota-bene Works in conjunction with {@link Two.LinearGradient#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Gradient.fromObject>[0] & {
-            left?: { x: number; y: number } | Vector;
-            right?: { x: number; y: number } | Vector;
-          })
+      obj: Parameters<typeof Gradient.fromObject>[0] & {
+        left?: { x: number; y: number } | Vector;
+        right?: { x: number; y: number } | Vector;
+      }
     ): LinearGradient;
     constructor(
       x1?: number,
@@ -2416,13 +2408,11 @@ declare module 'two.js/src/effects/radial-gradient' {
      * @nota-bene Works in conjunction with {@link Two.RadialGradient#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Gradient.fromObject>[0] & {
-            radius?: number;
-            center?: { x: number; y: number } | Vector;
-            focal?: { x: number; y: number } | Vector;
-          })
+      obj: Parameters<typeof Gradient.fromObject>[0] & {
+        radius?: number;
+        center?: { x: number; y: number } | Vector;
+        focal?: { x: number; y: number } | Vector;
+      }
     ): RadialGradient;
     constructor(
       cx?: number,
@@ -2595,14 +2585,12 @@ declare module 'two.js/src/effects/texture' {
      * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof TwoElement.fromObject>[0] & {
-            src?: string;
-            repeat?: RepeatProperties;
-            offset?: { x: number; y: number } | Vector;
-            scale?: { x: number; y: number } | Vector;
-          })
+      obj: Parameters<typeof TwoElement.fromObject>[0] & {
+        src?: string;
+        repeat?: RepeatProperties;
+        offset?: { x: number; y: number } | Vector;
+        scale?: { x: number; y: number } | Vector;
+      }
     ): Texture;
     constructor(
       src?: string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
@@ -2793,27 +2781,25 @@ declare module 'two.js/src/path' {
      * @nota-bene Works in conjunction with {@link Two.Path#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Shape.fromObject>[0] & {
-            vertices?: ({ x: number; y: number } | Anchor | Vector)[];
-            fill?: string;
-            stroke?: string;
-            linewidth?: number;
-            opacity?: number;
-            visible?: boolean;
-            cap?: CapProperties;
-            join?: JoinProperties;
-            miter?: number;
-            closed?: boolean;
-            curved?: boolean;
-            automatic?: boolean;
-            beginning?: number;
-            ending?: number;
-            dashes?: number[] & {
-              offset?: number;
-            };
-          })
+      obj: Parameters<typeof Shape.fromObject>[0] & {
+        vertices?: ({ x: number; y: number } | Anchor | Vector)[];
+        fill?: string;
+        stroke?: string;
+        linewidth?: number;
+        opacity?: number;
+        visible?: boolean;
+        cap?: CapProperties;
+        join?: JoinProperties;
+        miter?: number;
+        closed?: boolean;
+        curved?: boolean;
+        automatic?: boolean;
+        beginning?: number;
+        ending?: number;
+        dashes?: number[] & {
+          offset?: number;
+        };
+      }
     ): Path;
     constructor(
       vertices?: Anchor[],
@@ -3297,13 +3283,11 @@ declare module 'two.js/src/shapes/rectangle' {
      * @nota-bene Works in conjunction with {@link Two.Rectangle#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Path.fromObject>[0] & {
-            width?: number;
-            height?: number;
-            origin?: { x: number; y: number } | Vector;
-          })
+      obj: Parameters<typeof Path.fromObject>[0] & {
+        width?: number;
+        height?: number;
+        origin?: { x: number; y: number } | Vector;
+      }
     ): Rectangle;
     constructor(x?: number, y?: number, width?: number, height?: number);
     /**
@@ -3411,12 +3395,10 @@ declare module 'two.js/src/effects/image' {
      * @nota-bene Works in conjunction with {@link Two.Image#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Rectangle.fromObject>[0] & {
-            texture?: Parameters<typeof Texture.fromObject>[0];
-            mode?: ModeProperties;
-          })
+      obj: Parameters<typeof Rectangle.fromObject>[0] & {
+        texture?: Parameters<typeof Texture.fromObject>[0];
+        mode?: ModeProperties;
+      }
     ): Image;
     constructor(
       path?: string | Texture,
@@ -3507,18 +3489,16 @@ declare module 'two.js/src/effects/sprite' {
      * @nota-bene Works in conjunction with {@link Two.Sprite#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Rectangle.fromObject>[0] & {
-            texture?: Parameters<typeof Texture.fromObject>[0];
-            columns?: number;
-            rows?: number;
-            frameRate?: number;
-            index?: number;
-            firstFrame?: number;
-            lastFrame?: number;
-            loop?: boolean;
-          })
+      obj: Parameters<typeof Rectangle.fromObject>[0] & {
+        texture?: Parameters<typeof Texture.fromObject>[0];
+        columns?: number;
+        rows?: number;
+        frameRate?: number;
+        index?: number;
+        firstFrame?: number;
+        lastFrame?: number;
+        loop?: boolean;
+      }
     ): Sprite;
     constructor(
       path?: string | Texture,
@@ -3730,11 +3710,9 @@ declare module 'two.js/src/shapes/circle' {
      * @nota-bene Works in conjunction with {@link Two.Circle#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Path.fromObject>[0] & {
-            radius?: number;
-          })
+      obj: Parameters<typeof Path.fromObject>[0] & {
+        radius?: number;
+      }
     ): Circle;
     constructor(x?: number, y?: number, radius?: number, resolution?: number);
     /**
@@ -3786,12 +3764,10 @@ declare module 'two.js/src/shapes/ellipse' {
      * @nota-bene Works in conjunction with {@link Two.Ellipse#toObject}
      */
     fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Path.fromObject>[0] & {
-            width?: number;
-            height?: number;
-          })
+      obj: Parameters<typeof Path.fromObject>[0] & {
+        width?: number;
+        height?: number;
+      }
     ): Ellipse;
     constructor(
       x?: number,
@@ -3892,13 +3868,11 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
      * @nota-bene Works in conjunction with {@link Two.RoundedRectangle#toObject}
      */
     fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Path.fromObject>[0] & {
-            width?: number;
-            height?: number;
-            radius?: number;
-          })
+      obj: Parameters<typeof Path.fromObject>[0] & {
+        width?: number;
+        height?: number;
+        radius?: number;
+      }
     ): RoundedRectangle;
     constructor(
       x?: number,
@@ -4002,28 +3976,26 @@ declare module 'two.js/src/text' {
      * @nota-bene Works in conjunction with {@link Two.Text#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Shape.fromObject>[0] & {
-            value?: string;
-            family?: string;
-            size?: number;
-            leading?: number;
-            alignment?: AlignmentProperties;
-            linewidth?: number;
-            style?: StyleProperties;
-            weight?: number | string;
-            decoration?: DecorationProperties;
-            direction?: DirectionProperties;
-            baseline?: BaselineProperties;
-            opacity?: number;
-            visible?: boolean;
-            fill?: string;
-            stroke?: string;
-            dashes?: number[] & {
-              offset?: number;
-            };
-          })
+      obj: Parameters<typeof Shape.fromObject>[0] & {
+        value?: string;
+        family?: string;
+        size?: number;
+        leading?: number;
+        alignment?: AlignmentProperties;
+        linewidth?: number;
+        style?: StyleProperties;
+        weight?: number | string;
+        decoration?: DecorationProperties;
+        direction?: DirectionProperties;
+        baseline?: BaselineProperties;
+        opacity?: number;
+        visible?: boolean;
+        fill?: string;
+        stroke?: string;
+        dashes?: number[] & {
+          offset?: number;
+        };
+      }
     ): Text;
 
     constructor(
@@ -4412,16 +4384,14 @@ declare module 'two.js/src/effects/image-sequence' {
      * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
      */
     fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Rectangle.fromObject>[0] & {
-            textures?: Parameters<typeof Texture.fromObject>[0][];
-            frameRate?: number;
-            index?: number;
-            firstFrame?: number;
-            lastFrame?: number;
-            loop?: boolean;
-          })
+      obj: Parameters<typeof Rectangle.fromObject>[0] & {
+        textures?: Parameters<typeof Texture.fromObject>[0][];
+        frameRate?: number;
+        index?: number;
+        firstFrame?: number;
+        lastFrame?: number;
+        loop?: boolean;
+      }
     ): ImageSequence;
 
     constructor(
@@ -4599,14 +4569,12 @@ declare module 'two.js/src/shapes/arc-segment' {
      * @nota-bene Works in conjunction with {@link Two.ArcSegment#toObject}
      */
     fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Path.fromObject>[0] & {
-            startAngle?: number;
-            endAngle?: number;
-            innerRadius?: number;
-            outerRadius?: number;
-          })
+      obj: Parameters<typeof Path.fromObject>[0] & {
+        startAngle?: number;
+        endAngle?: number;
+        innerRadius?: number;
+        outerRadius?: number;
+      }
     ): ArcSegment;
     constructor(
       ox?: number,
@@ -4726,22 +4694,20 @@ declare module 'two.js/src/shapes/points' {
       | string
     )[];
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Shape.fromObject>[0] & {
-            fill?: string;
-            stroke?: string;
-            linewidth?: number;
-            opacity?: number;
-            visible?: boolean;
-            size?: number;
-            sizeAttenuation?: boolean;
-            beginning?: number;
-            ending?: number;
-            dashes: number[] & {
-              offset?: number;
-            };
-          })
+      obj: Parameters<typeof Shape.fromObject>[0] & {
+        fill?: string;
+        stroke?: string;
+        linewidth?: number;
+        opacity?: number;
+        visible?: boolean;
+        size?: number;
+        sizeAttenuation?: boolean;
+        beginning?: number;
+        ending?: number;
+        dashes: number[] & {
+          offset?: number;
+        };
+      }
     ): Points;
     constructor(vertices?: Vector[]);
     private _flagVertices;
@@ -4977,13 +4943,11 @@ declare module 'two.js/src/shapes/polygon' {
      * @nota-bene Works in conjunction with {@link Two.Polygon#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Path.fromObject>[0] & {
-            width?: number;
-            height?: number;
-            sides?: number;
-          })
+      obj: Parameters<typeof Path.fromObject>[0] & {
+        width?: number;
+        height?: number;
+        sides?: number;
+      }
     ): Polygon;
     /**
      * @name Two.Polygon#_flagWidth
@@ -5070,13 +5034,11 @@ declare module 'two.js/src/shapes/star' {
      * @nota-bene Works in conjunction with {@link Two.Star#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | (Parameters<typeof Path.fromObject>[0] & {
-            innerRadius?: number;
-            outerRadius?: number;
-            sides?: number;
-          })
+      obj: Parameters<typeof Path.fromObject>[0] & {
+        innerRadius?: number;
+        outerRadius?: number;
+        sides?: number;
+      }
     ): Star;
     constructor(
       ox?: number,
