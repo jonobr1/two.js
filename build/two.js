@@ -1220,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2025-09-30T23:58:14.873Z",
+    PublishDate: "2025-10-01T00:18:49.277Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1460,8 +1460,8 @@ var Two = (() => {
         a = -3 * y1 + 9 * y2 - 9 * y3 + 3 * y4;
         c = 3 * y2 - 3 * y1;
       }
-      if (Math.abs(a) < 1e-12) {
-        if (Math.abs(b) < 1e-12) {
+      if (Math.abs(a) < 1e-3) {
+        if (Math.abs(b) < 1e-3) {
           continue;
         }
         t = -c / b;
@@ -1530,7 +1530,7 @@ var Two = (() => {
     let d1 = Vector.distanceBetween(a, b);
     let d2 = Vector.distanceBetween(c, b);
     let mid = (a1 + a2) / 2;
-    if (d1 < 1e-4 || d2 < 1e-4) {
+    if (d1 < 1e-3 || d2 < 1e-3) {
       if (typeof b.relative === "boolean" && !b.relative) {
         b.controls.left.copy(b);
         b.controls.right.copy(b);
