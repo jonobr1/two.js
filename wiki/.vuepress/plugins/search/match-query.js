@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import RE2 from 're2';
 
 export default (query, page, additionalStr = null) => {
   let domain = get(page, 'title', '');
@@ -29,7 +28,7 @@ const matchTest = (query, domain) => {
   if (!nonASCIIRegExp.test(query)) {
     // if the query only has ASCII chars, treat as English
     const hasTrailingSpace = query.endsWith(' ');
-    const searchRegex = new RE2(
+    const searchRegex = new RegExp(
       words
         .map((word, index) => {
           if (words.length === index + 1 && !hasTrailingSpace) {
