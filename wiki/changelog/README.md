@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## October 1, 2025 v0.8.21
+
+<h3 class="visible">Oct 1, 2025</h3><version-link v="v0.8.21" />
 
 - Added `Two.Path.strokeAttenuation`, `Two.Group.strokeAttenuation`, `Two.Points.strokeAttenuation`, `Two.Text.strokeAttenuation`
 - Improved type signatures on all `fromObject` methods for better hinting
