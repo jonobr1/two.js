@@ -9,8 +9,11 @@ let path;
 
 path = Two.Circle.fromObject({
   radius: 5,
-  rotation: Math.PI,
-  position: { x: 0, y: 0 },
+  stroke: 'blue',
+  fill: 'yellow',
+  // position: new Two.Vector(),
+  rotation: 5,
+  translation: { x: 0, y: 0 },
 });
 
 path = new Two.Line(5, 5, 10, 10);

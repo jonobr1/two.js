@@ -1253,24 +1253,23 @@ declare module 'two.js/src/shape' {
      * @nota-bene Works in conjunction with {@link Two.Shape#toObject}
      */
     static fromObject(
-      obj:
-        | object
-        | ((
-            | {
-                translation?: { x: number; y: number } | Vector;
-                position?: never;
-              }
-            | {
-                position?: { x: number; y: number } | Vector;
-                translation?: never;
-              }
-          ) & {
-            rotation?: number;
-            scale?: number | { x: number; y: number } | Vector;
-            skewX?: number;
-            skewY?: number;
-            matrix: Parameters<typeof Matrix.fromObject>[0];
-          })
+      obj: Parameters<typeof TwoElement.fromObject>[0] &
+        ((
+          | {
+              translation?: { x: number; y: number } | Vector;
+              position?: never;
+            }
+          | {
+              position?: { x: number; y: number } | Vector;
+              translation?: never;
+            }
+        ) & {
+          rotation?: number;
+          scale?: number | { x: number; y: number } | Vector;
+          skewX?: number;
+          skewY?: number;
+          matrix?: Parameters<typeof Matrix.fromObject>[0];
+        })
     ): Shape;
     /**
      * @name Two.Shape#_flagMatrix
