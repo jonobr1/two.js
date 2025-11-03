@@ -1228,7 +1228,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2025-11-03T17:03:27.665Z",
+  PublishDate: "2025-11-03T22:27:20.095Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -4016,6 +4016,18 @@ var _Shape = class _Shape extends Element {
     this.parent.remove(this);
     return this;
   }
+  /**
+   * @name Two.Shape#contains
+   * @function
+   * @param {Number} x - x coordinate to hit test against
+   * @param {Number} y - y coordinate to hit test against
+   * @param {Object} [options] - Optional options object
+   * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `shape.visible = false` shapes
+   * @param {Number} [options.tolerance] - Padding to hit test against in pixels
+   * @returns {Boolean}
+   * @description Check to see if coordinates are within a {@link Two.Shape}'s bounding rectangle
+   * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
+   */
   contains(x, y, options) {
     const opts = options || {};
     const ignoreVisibility = opts.ignoreVisibility === true;
@@ -4248,7 +4260,7 @@ function FlagMatrix() {
 // src/utils/hit-test.js
 var TRANSPARENT_REGEX = /^(?:none|transparent)$/i;
 var DEFAULT_PRECISION = 8;
-var EPSILON = 1e-9;
+var EPSILON = Number.EPSILON;
 function createPoint(x, y) {
   return { x, y };
 }
@@ -4329,10 +4341,7 @@ function sampleArcPoints(prev, anchor2, precision) {
     }
     return deltaAngle;
   })();
-  const steps = Math.max(
-    Constants.Resolution,
-    Math.max(precision * 2, 1)
-  );
+  const steps = Math.max(Constants.Resolution, Math.max(precision * 2, 1));
   const points = [];
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
@@ -4530,6 +4539,269 @@ function boundsContains(rect, x, y, tolerance = 0) {
   const top = rect.top - tolerance;
   const bottom = rect.bottom + tolerance;
   return x >= left && x <= right && y >= top && y <= bottom;
+}
+
+// src/utils/path.js
+var EPSILON2 = Number.EPSILON;
+function isRelativeAnchor(anchor2) {
+  return !(typeof anchor2.relative === "boolean") || !!anchor2.relative;
+}
+function setHandleComponent(anchor2, side, dx, dy) {
+  const controls = anchor2.controls;
+  if (!controls || !controls[side]) {
+    return;
+  }
+  if (Math.abs(dx) < EPSILON2 && Math.abs(dy) < EPSILON2) {
+    if (isRelativeAnchor(anchor2)) {
+      controls[side].clear();
+    } else {
+      controls[side].set(anchor2.x, anchor2.y);
+    }
+    return;
+  }
+  if (isRelativeAnchor(anchor2)) {
+    controls[side].set(dx, dy);
+  } else {
+    controls[side].set(anchor2.x + dx, anchor2.y + dy);
+  }
+}
+function clearHandleComponent(anchor2, side) {
+  setHandleComponent(anchor2, side, 0, 0);
+}
+function getHandleOffset(anchor2, side) {
+  const controls = anchor2.controls;
+  if (!controls || !controls[side]) {
+    return { x: 0, y: 0 };
+  }
+  if (isRelativeAnchor(anchor2)) {
+    return { x: controls[side].x, y: controls[side].y };
+  }
+  return {
+    x: controls[side].x - anchor2.x,
+    y: controls[side].y - anchor2.y
+  };
+}
+function hasNonZeroHandle(anchor2, side) {
+  const offset = getHandleOffset(anchor2, side);
+  return Math.abs(offset.x) > EPSILON2 || Math.abs(offset.y) > EPSILON2;
+}
+function updateAnchorCommand(anchor2) {
+  if (anchor2.command === Commands.move || anchor2.command === Commands.close) {
+    return;
+  }
+  anchor2.command = hasNonZeroHandle(anchor2, "left") || hasNonZeroHandle(anchor2, "right") ? Commands.curve : Commands.line;
+}
+function inheritRelative(anchor2, reference) {
+  if (typeof reference.relative === "boolean") {
+    anchor2.relative = reference.relative;
+  }
+}
+function isSegmentCurved(a, b) {
+  return hasNonZeroHandle(b, "right") || hasNonZeroHandle(a, "left") || hasNonZeroHandle(a, "right") || hasNonZeroHandle(b, "left") || a.command === Commands.curve || b.command === Commands.curve;
+}
+function lerpPoint(a, b, t) {
+  return {
+    x: lerp(a.x, b.x, t),
+    y: lerp(a.y, b.y, t)
+  };
+}
+function getAbsoluteHandle(anchor2, side) {
+  const controls = anchor2.controls && anchor2.controls[side];
+  if (!controls) {
+    return { x: anchor2.x, y: anchor2.y };
+  }
+  if (isRelativeAnchor(anchor2)) {
+    return { x: anchor2.x + controls.x, y: anchor2.y + controls.y };
+  }
+  return { x: controls.x, y: controls.y };
+}
+function splitSubdivisionSegment(start, end, t) {
+  const right = start.controls && start.controls.right;
+  const left = end.controls && end.controls.left;
+  const p0 = { x: start.x, y: start.y };
+  const p1 = right ? getAbsoluteHandle(start, "right") : __spreadValues({}, p0);
+  const p3 = { x: end.x, y: end.y };
+  const p2 = left ? getAbsoluteHandle(end, "left") : __spreadValues({}, p3);
+  const q0 = lerpPoint(p0, p1, t);
+  const q1 = lerpPoint(p1, p2, t);
+  const q2 = lerpPoint(p2, p3, t);
+  const r0 = lerpPoint(q0, q1, t);
+  const r1 = lerpPoint(q1, q2, t);
+  const point = lerpPoint(r0, r1, t);
+  const anchor2 = new Anchor(point.x, point.y);
+  inheritRelative(anchor2, start);
+  setHandleComponent(anchor2, "left", r0.x - point.x, r0.y - point.y);
+  setHandleComponent(anchor2, "right", r1.x - point.x, r1.y - point.y);
+  anchor2.command = Commands.curve;
+  return {
+    anchor: anchor2,
+    startOut: q0,
+    endIn: q2
+  };
+}
+function applyGlobalSmooth(vertices, from, to, closed2, loop2, asymmetric) {
+  const length = vertices.length;
+  const amount = to - from + 1;
+  let n = amount - 1;
+  let padding = loop2 ? Math.min(amount, 4) : 1;
+  let paddingLeft = padding;
+  let paddingRight = padding;
+  if (!closed2) {
+    paddingLeft = Math.min(1, from);
+    paddingRight = Math.min(1, length - to - 1);
+  }
+  n += paddingLeft + paddingRight;
+  if (n <= 1) {
+    return;
+  }
+  const knots = new Array(n + 1);
+  for (let i = 0, j = from - paddingLeft; i <= n; i += 1, j += 1) {
+    const index = mod(j, length);
+    knots[i] = vertices[index];
+  }
+  let x = knots[0].x + 2 * knots[1].x;
+  let y = knots[0].y + 2 * knots[1].y;
+  let f = 2;
+  const n1 = n - 1;
+  const rx = [x];
+  const ry = [y];
+  const rf = [f];
+  const px = new Array(n + 1);
+  const py = new Array(n + 1);
+  for (let i = 1; i < n; i += 1) {
+    const internal = i < n1;
+    const a = internal ? 1 : asymmetric ? 1 : 2;
+    const b = internal ? 4 : asymmetric ? 2 : 7;
+    const u = internal ? 4 : asymmetric ? 3 : 8;
+    const v = internal ? 2 : asymmetric ? 0 : 1;
+    const m = a / f;
+    f = rf[i] = b - m;
+    x = rx[i] = u * knots[i].x + v * knots[i + 1].x - m * x;
+    y = ry[i] = u * knots[i].y + v * knots[i + 1].y - m * y;
+  }
+  px[n1] = rx[n1] / rf[n1];
+  py[n1] = ry[n1] / rf[n1];
+  for (let i = n - 2; i >= 0; i -= 1) {
+    px[i] = (rx[i] - px[i + 1]) / rf[i];
+    py[i] = (ry[i] - py[i + 1]) / rf[i];
+  }
+  px[n] = (3 * knots[n].x - px[n1]) / 2;
+  py[n] = (3 * knots[n].y - py[n1]) / 2;
+  const max5 = n - paddingRight;
+  for (let i = paddingLeft, j = from; i <= max5; i += 1, j += 1) {
+    const index = mod(j, length);
+    const anchor2 = vertices[index];
+    const hx = px[i] - anchor2.x;
+    const hy = py[i] - anchor2.y;
+    if (loop2 || i < max5) {
+      setHandleComponent(anchor2, "right", hx, hy);
+    } else {
+      clearHandleComponent(anchor2, "right");
+    }
+    if (loop2 || i > paddingLeft) {
+      setHandleComponent(anchor2, "left", -hx, -hy);
+    } else {
+      clearHandleComponent(anchor2, "left");
+    }
+    updateAnchorCommand(anchor2);
+  }
+}
+function applyCatmullRom(anchor2, prev, next, factor, clampIn, clampOut) {
+  const p0 = prev || anchor2;
+  const p1 = anchor2;
+  const p2 = next || anchor2;
+  const d1 = Vector.distanceBetween(p0, p1);
+  const d2 = Vector.distanceBetween(p1, p2);
+  const a = factor === void 0 ? 0.5 : factor;
+  const d1a = Math.pow(d1, a);
+  const d2a = Math.pow(d2, a);
+  const d1_2a = d1a * d1a;
+  const d2_2a = d2a * d2a;
+  if (!clampIn && prev) {
+    const A = 2 * d2_2a + 3 * d2a * d1a + d1_2a;
+    const N = 3 * d2a * (d2a + d1a);
+    if (N !== 0) {
+      const hx = (d2_2a * p0.x + A * p1.x - d1_2a * p2.x) / N - p1.x;
+      const hy = (d2_2a * p0.y + A * p1.y - d1_2a * p2.y) / N - p1.y;
+      setHandleComponent(anchor2, "left", hx, hy);
+    } else {
+      clearHandleComponent(anchor2, "left");
+    }
+  } else {
+    clearHandleComponent(anchor2, "left");
+  }
+  if (!clampOut && next) {
+    const A = 2 * d1_2a + 3 * d1a * d2a + d2_2a;
+    const N = 3 * d1a * (d1a + d2a);
+    if (N !== 0) {
+      const hx = (d1_2a * p2.x + A * p1.x - d2_2a * p0.x) / N - p1.x;
+      const hy = (d1_2a * p2.y + A * p1.y - d2_2a * p0.y) / N - p1.y;
+      setHandleComponent(anchor2, "right", hx, hy);
+    } else {
+      clearHandleComponent(anchor2, "right");
+    }
+  } else {
+    clearHandleComponent(anchor2, "right");
+  }
+  updateAnchorCommand(anchor2);
+}
+function applyGeometric(anchor2, prev, next, factor, clampIn, clampOut) {
+  if (!(prev && next)) {
+    if (!prev) {
+      clearHandleComponent(anchor2, "left");
+    }
+    if (!next) {
+      clearHandleComponent(anchor2, "right");
+    }
+    updateAnchorCommand(anchor2);
+    return;
+  }
+  const p0 = prev;
+  const p1 = anchor2;
+  const p2 = next;
+  const d1 = Vector.distanceBetween(p0, p1);
+  const d2 = Vector.distanceBetween(p1, p2);
+  const total = d1 + d2;
+  const tension = factor === void 0 ? 0.4 : factor;
+  const vector3 = { x: p0.x - p2.x, y: p0.y - p2.y };
+  if (!clampIn && total !== 0) {
+    const k = tension * d1 / total;
+    setHandleComponent(anchor2, "left", vector3.x * k, vector3.y * k);
+  } else {
+    clearHandleComponent(anchor2, "left");
+  }
+  if (!clampOut && total !== 0) {
+    const k = tension * d1 / total - tension;
+    setHandleComponent(anchor2, "right", vector3.x * k, vector3.y * k);
+  } else {
+    clearHandleComponent(anchor2, "right");
+  }
+  updateAnchorCommand(anchor2);
+}
+function applyLocalSmooth(vertices, from, to, closed2, loop2, options) {
+  const type = options.type || "catmull-rom";
+  const factor = options.factor;
+  const length = vertices.length;
+  for (let i = from; i <= to; i += 1) {
+    const index = mod(i, length);
+    const anchor2 = vertices[index];
+    if (anchor2.command === Commands.move) {
+      clearHandleComponent(anchor2, "left");
+      clearHandleComponent(anchor2, "right");
+      continue;
+    }
+    const prevIndex = i === from && !loop2 ? null : i - 1;
+    const nextIndex = i === to && !loop2 ? null : i + 1;
+    const prev = prevIndex === null ? null : vertices[mod(prevIndex, length)];
+    const next = nextIndex === null ? null : vertices[mod(nextIndex, length)];
+    const clampIn = prevIndex === null;
+    const clampOut = nextIndex === null;
+    if (type === "geometric") {
+      applyGeometric(anchor2, prev, next, factor, clampIn, clampOut);
+    } else {
+      applyCatmullRom(anchor2, prev, next, factor, clampIn, clampOut);
+    }
+  }
 }
 
 // src/path.js
@@ -5053,6 +5325,18 @@ var _Path = class _Path extends Shape {
       height: bottom - top
     };
   }
+  /**
+   * @name Two.Path#contains
+   * @function
+   * @param {Number} x - x coordinate to hit test against
+   * @param {Number} y - y coordinate to hit test against
+   * @param {Object} [options] - Optional options object
+   * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `path.visible = false` shapes
+   * @param {Number} [options.tolerance] - Padding to hit test against in pixels
+   * @returns {Boolean}
+   * @description Check to see if coordinates are within a {@link Two.Path}'s bounding rectangle
+   * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
+   */
   contains(x, y, options) {
     const opts = options || {};
     const ignoreVisibility = opts.ignoreVisibility === true;
@@ -5226,6 +5510,87 @@ var _Path = class _Path extends Shape {
     return this;
   }
   /**
+   * @name Two.Path#smooth
+   * @function
+   * @param {Object} [options] - Configuration for smoothing.
+   * @param {String} [options.type='continuous'] - Type of smoothing algorithm.
+   * @param {Number} [options.from=0] - Index of vertices to start smoothing
+   * @param {Number} [options.to=1] - Index of vertices to terminate smoothing
+   * @description Adjust vertex handles to generate smooth curves without toggling `automatic`.
+   */
+  smooth(options) {
+    const opts = options || {};
+    const type = opts.type || "continuous";
+    const vertices = this._collection;
+    const length = vertices.length;
+    if (length < 2) {
+      return this;
+    }
+    const closed2 = this._closed || length > 0 && vertices[length - 1] && vertices[length - 1].command === Commands.close;
+    const resolveIndex = (value, defaultIndex) => {
+      if (value === void 0 || value === null) {
+        return defaultIndex;
+      }
+      if (typeof value === "number") {
+        if (closed2) {
+          return mod(value, length);
+        }
+        let index = value;
+        if (index < 0) {
+          index += length;
+        }
+        return Math.min(Math.max(index, 0), length - 1);
+      }
+      const idx = vertices.indexOf(value);
+      return idx !== -1 ? idx : defaultIndex;
+    };
+    const loop2 = closed2 && opts.from === void 0 && opts.to === void 0;
+    let from = resolveIndex(opts.from, 0);
+    let to = resolveIndex(opts.to, length - 1);
+    if (from > to) {
+      if (closed2) {
+        from -= length;
+      } else {
+        const temp2 = from;
+        from = to;
+        to = temp2;
+      }
+    }
+    const rangeLength = to - from + 1;
+    for (let i = 0; i < rangeLength; i += 1) {
+      const index = mod(from + i, length);
+      const anchor2 = vertices[index];
+      const isOpenStart = !closed2 && index === 0;
+      if (anchor2.command === Commands.move && !isOpenStart) {
+        anchor2.command = Commands.line;
+      }
+    }
+    if (type === "continuous" || type === "asymmetric") {
+      applyGlobalSmooth(
+        vertices,
+        from,
+        to,
+        closed2,
+        loop2,
+        type === "asymmetric"
+      );
+    } else if (type === "catmull-rom" || type === "geometric") {
+      const range = {
+        type,
+        factor: opts.factor
+      };
+      applyLocalSmooth(vertices, from, to, closed2, loop2, range);
+    } else {
+      throw new Error(
+        `Path.smooth does not support type "${type}". Try 'continuous', 'asymmetric', 'catmull-rom', or 'geometric'.`
+      );
+    }
+    this._automatic = false;
+    this._flagVertices = true;
+    this._flagLength = true;
+    return this;
+  }
+  /**
    * @name Two.Path#subdivide
    * @function
    * @param {Number} limit - How many times to recurse subdivisions.
@@ -5233,54 +5598,85 @@ var _Path = class _Path extends Shape {
    */
   subdivide(limit) {
     this._update();
-    const last = this.vertices.length - 1;
-    const closed2 = this._closed || this.vertices[last]._command === Commands.close;
-    let b = this.vertices[last];
-    let points = [], verts;
-    _.each(
-      this.vertices,
-      function(a, i) {
-        if (i <= 0 && !closed2) {
-          b = a;
-          return;
-        }
-        if (a.command === Commands.move) {
-          points.push(new Anchor(b.x, b.y));
-          if (i > 0) {
-            points[points.length - 1].command = Commands.line;
+    const vertices = this.vertices;
+    const length = vertices.length;
+    if (length < 2) {
+      return this;
+    }
+    const points = [];
+    let prevOriginal = null;
+    let subpathStartOriginal = null;
+    for (let i = 0; i < length; i += 1) {
+      const currentOriginal = vertices[i];
+      if (!prevOriginal || currentOriginal.command === Commands.move) {
+        const clone = currentOriginal.clone();
+        points.push(clone);
+        prevOriginal = currentOriginal;
+        subpathStartOriginal = currentOriginal;
+        continue;
+      }
+      const isCurve = isSegmentCurved(currentOriginal, prevOriginal);
+      if (isCurve) {
+        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+        const steps = subdivided.length;
+        const prevClone = points[points.length - 1];
+        let startSegment = prevClone.clone();
+        let endSegment = currentOriginal.clone();
+        let prevCloneRef = prevClone;
+        let prevT = 0;
+        if (steps <= 1) {
+          const currentClone = currentOriginal.clone();
+          points.push(currentClone);
+        } else {
+          for (let j = 1; j < steps; j += 1) {
+            const globalT = j / steps;
+            const denom = 1 - prevT;
+            const localT = denom <= Number.EPSILON ? globalT : (globalT - prevT) / denom;
+            const split = splitSubdivisionSegment(
+              startSegment,
+              endSegment,
+              localT
+            );
+            setHandleComponent(
+              prevCloneRef,
+              "right",
+              split.startOut.x - prevCloneRef.x,
+              split.startOut.y - prevCloneRef.y
+            );
+            const newAnchor = split.anchor;
+            points.push(newAnchor);
+            prevCloneRef = newAnchor;
+            startSegment = newAnchor.clone();
+            prevT = globalT;
+            setHandleComponent(
+              endSegment,
+              "left",
+              split.endIn.x - endSegment.x,
+              split.endIn.y - endSegment.y
+            );
           }
-          b = a;
-          return;
+          const currentClone = currentOriginal.clone();
+          currentClone.controls.left.copy(endSegment.controls.left);
+          points.push(currentClone);
         }
-        verts = getSubdivisions(a, b, limit);
-        points = points.concat(verts);
-        _.each(verts, function(v, i2) {
-          if (i2 <= 0 && b.command === Commands.move) {
-            v.command = Commands.move;
-          } else {
-            v.command = Commands.line;
-          }
-        });
-        if (i >= last) {
-          if (this._closed && this._automatic) {
-            b = a;
-            verts = getSubdivisions(a, b, limit);
-            points = points.concat(verts);
-            _.each(verts, function(v, i2) {
-              if (i2 <= 0 && b.command === Commands.move) {
-                v.command = Commands.move;
-              } else {
-                v.command = Commands.line;
-              }
-            });
-          }
-          points.push(new Anchor(a.x, a.y));
-          points[points.length - 1].command = closed2 ? Commands.close : Commands.line;
+      } else {
+        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+        for (let j = 1; j < subdivided.length; j += 1) {
+          const anchor2 = subdivided[j];
+          inheritRelative(anchor2, prevOriginal);
+          clearHandleComponent(anchor2, "left");
+          clearHandleComponent(anchor2, "right");
+          anchor2.command = Commands.line;
+          points.push(anchor2);
         }
-        b = a;
-      },
-      this
-    );
+        const currentClone = currentOriginal.clone();
+        points.push(currentClone);
+      }
+      prevOriginal = currentOriginal;
+      if (currentOriginal.command === Commands.close) {
+        prevOriginal = subpathStartOriginal;
+      }
+    }
     this._automatic = false;
     this._curved = false;
     this.vertices = points;
@@ -9590,6 +9986,21 @@ function GenerateTexture(obj) {
 // src/group.js
 var min3 = Math.min;
 var max3 = Math.max;
+var cache = {
+  getShapesAtPoint: {
+    results: [],
+    hitOptions: {},
+    context: {
+      x: 0,
+      y: 0,
+      visibleOnly: true,
+      results: null
+    },
+    single: [],
+    output: [],
+    empty: []
+  }
+};
 var _Group = class _Group extends Shape {
   constructor(children) {
     super();
@@ -9837,6 +10248,78 @@ var _Group = class _Group extends Shape {
       return child;
     }
   }
+  static IsVisible(element, visibleOnly) {
+    if (!visibleOnly) {
+      return true;
+    }
+    let current = element;
+    while (current) {
+      if (typeof current.visible === "boolean" && !current.visible) {
+        return false;
+      }
+      if (typeof current.opacity === "number" && current.opacity <= 0) {
+        return false;
+      }
+      current = current.parent;
+    }
+    return true;
+  }
+  static VisitForHitTest(group, context, includeGroups, filter, hitOptions, tolerance, stopOnFirst) {
+    const children = group && group.children;
+    if (!children) {
+      return false;
+    }
+    const results = context.results;
+    for (let i = children.length - 1; i >= 0; i--) {
+      const child = children[i];
+      if (!child) {
+        continue;
+      }
+      if (!_Group.IsVisible(child, context.visibleOnly)) {
+        continue;
+      }
+      const rect = typeof child.getBoundingClientRect === "function" ? child.getBoundingClientRect() : null;
+      if (rect && !boundsContains(rect, context.x, context.y, tolerance)) {
+        continue;
+      }
+      if (child instanceof _Group) {
+        if (includeGroups && (!filter || filter(child)) && typeof child.contains === "function" && child.contains(context.x, context.y, hitOptions)) {
+          results.push(child);
+          if (stopOnFirst) {
+            return true;
+          }
+        }
+        if (_Group.VisitForHitTest(
+          child,
+          context,
+          includeGroups,
+          filter,
+          hitOptions,
+          tolerance,
+          stopOnFirst
+        )) {
+          return true;
+        }
+        continue;
+      }
+      if (!(child instanceof Shape)) {
+        continue;
+      }
+      if (filter && !filter(child)) {
+        continue;
+      }
+      if (typeof child.contains !== "function") {
+        continue;
+      }
+      if (child.contains(context.x, context.y, hitOptions)) {
+        results.push(child);
+        if (stopOnFirst) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   /**
    * @name Two.Group#copy
    * @function
@@ -9934,6 +10417,80 @@ var _Group = class _Group extends Shape {
       }
     }
     return this;
+  }
+  /**
+   * @name Two.Group#getShapesAtPoint
+   * @function
+   * @param {Number} x - X coordinate in world space.
+   * @param {Number} y - Y coordinate in world space.
+   * @param {Object} [options] - Hit test configuration.
+   * @param {Boolean} [options.visibleOnly=true] - Limit results to visible shapes.
+   * @param {Boolean} [options.includeGroups=false] - Include groups in the hit results.
+   * @param {('all'|'deepest')} [options.mode='all'] - Whether to return all intersecting shapes or only the top-most.
+   * @param {Boolean} [options.deepest] - Alias for `mode: 'deepest'`.
+   * @param {Number} [options.precision] - Segmentation precision for curved geometry.
+   * @param {Number} [options.tolerance=0] - Pixel tolerance applied to hit testing.
+   * @param {Boolean} [options.fill] - Override fill testing behaviour.
+   * @param {Boolean} [options.stroke] - Override stroke testing behaviour.
+   * @param {Function} [options.filter] - Predicate to filter shapes from the result set.
+   * @returns {Shape[]} Ordered list of intersecting shapes, front to back.
+   * @description Traverse the group hierarchy and return shapes that contain the specified point.
+   * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
+   */
+  getShapesAtPoint(x, y, options) {
+    const opts = options || {};
+    const { results, hitOptions, context, single, empty } = cache.getShapesAtPoint;
+    results.length = 0;
+    const mode = opts.mode === "deepest" || opts.deepest ? "deepest" : "all";
+    const visibleOnly = opts.visibleOnly !== false;
+    const includeGroups = !!opts.includeGroups;
+    const filter = typeof opts.filter === "function" ? opts.filter : null;
+    const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0;
+    if (typeof opts.precision === "number") {
+      hitOptions.precision = opts.precision;
+    } else {
+      delete hitOptions.precision;
+    }
+    if (typeof opts.fill !== "undefined") {
+      hitOptions.fill = opts.fill;
+    } else {
+      delete hitOptions.fill;
+    }
+    if (typeof opts.stroke !== "undefined") {
+      hitOptions.stroke = opts.stroke;
+    } else {
+      delete hitOptions.stroke;
+    }
+    hitOptions.tolerance = tolerance;
+    hitOptions.ignoreVisibility = !visibleOnly;
+    const stopOnFirst = mode === "deepest";
+    context.x = x;
+    context.y = y;
+    context.visibleOnly = visibleOnly;
+    context.results = results;
+    _Group.VisitForHitTest(
+      this,
+      context,
+      includeGroups,
+      filter,
+      hitOptions,
+      tolerance,
+      stopOnFirst
+    );
+    if (stopOnFirst) {
+      if (results.length > 0) {
+        const first = results[0];
+        results.length = 0;
+        single[0] = first;
+        single.length = 1;
+        return single;
+      }
+      empty.length = 0;
+      return empty;
+    }
+    const hits = results.slice();
+    results.length = 0;
+    return hits;
   }
   /**
    * @name Two.Group#corner
@@ -15334,100 +15891,13 @@ var _Two = class _Two {
    * @param {Function} [options.filter] - Predicate to filter shapes from the result set.
    * @returns {Two.Shape[]} Ordered list of shapes under the specified point, front to back.
    * @description Returns shapes underneath the provided coordinates. Coordinates are expected in world space (matching the renderer output).
+   * @nota-bene Delegates to {@link Two.Group#getShapesAtPoint} on the root scene.
    */
   getShapesAtPoint(x, y, options) {
-    const opts = options || {};
-    const mode = opts.mode === "deepest" || opts.deepest ? "deepest" : "all";
-    const visibleOnly = opts.visibleOnly !== false;
-    const includeGroups = !!opts.includeGroups;
-    const filter = typeof opts.filter === "function" ? opts.filter : null;
-    const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0;
-    const hitOptions = {};
-    if (typeof opts.precision === "number") {
-      hitOptions.precision = opts.precision;
+    if (this.scene && typeof this.scene.getShapesAtPoint === "function") {
+      return this.scene.getShapesAtPoint(x, y, options);
     }
-    if (typeof opts.fill !== "undefined") {
-      hitOptions.fill = opts.fill;
-    }
-    if (typeof opts.stroke !== "undefined") {
-      hitOptions.stroke = opts.stroke;
-    }
-    hitOptions.tolerance = tolerance;
-    hitOptions.ignoreVisibility = !visibleOnly;
-    const stopOnFirst = mode === "deepest";
-    const results = [];
-    const isVisible = (element) => {
-      if (!visibleOnly) {
-        return true;
-      }
-      let current = element;
-      while (current) {
-        if (typeof current.visible === "boolean" && !current.visible) {
-          return false;
-        }
-        if (typeof current.opacity === "number" && current.opacity <= 0) {
-          return false;
-        }
-        current = current.parent;
-      }
-      return true;
-    };
-    const visit = (group) => {
-      if (!group || !group.children) {
-        return false;
-      }
-      const children = group.children;
-      for (let i = children.length - 1; i >= 0; i--) {
-        const child = children[i];
-        if (!child) {
-          continue;
-        }
-        if (!isVisible(child)) {
-          continue;
-        }
-        const rect = typeof child.getBoundingClientRect === "function" ? child.getBoundingClientRect() : null;
-        if (rect && !boundsContains(rect, x, y, tolerance)) {
-          continue;
-        }
-        if (child instanceof Group) {
-          if (includeGroups && typeof child.contains === "function") {
-            if (!filter || filter(child)) {
-              if (child.contains(x, y, hitOptions)) {
-                results.push(child);
-                if (stopOnFirst) {
-                  return true;
-                }
-              }
-            }
-          }
-          if (visit(child)) {
-            return true;
-          }
-          continue;
-        }
-        if (!(child instanceof Shape)) {
-          continue;
-        }
-        if (filter && !filter(child)) {
-          continue;
-        }
-        if (typeof child.contains !== "function") {
-          continue;
-        }
-        if (child.contains(x, y, hitOptions)) {
-          results.push(child);
-          if (stopOnFirst) {
-            return true;
-          }
-        }
-      }
-      return false;
-    };
-    visit(this.scene);
-    if (stopOnFirst) {
-      return results.length > 0 ? [results[0]] : [];
-    }
-    return results;
+    return [];
   }
   /**
    * @name Two#update
