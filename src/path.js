@@ -32,6 +32,14 @@ import {
   hasVisibleFill,
   hasVisibleStroke,
 } from './utils/hit-test.js';
+import {
+  clearHandleComponent,
+  inheritRelative,
+  isSegmentCurved,
+  setSubdivisionHandles,
+  applyGlobalSmooth,
+  applyLocalSmooth,
+} from './utils/path.js';
 
 // Constants
 
@@ -832,12 +840,15 @@ export class Path extends Shape {
       return false;
     }
 
-    if (!ignoreVisibility && typeof this.opacity === 'number' && this.opacity <= 0) {
+    if (
+      !ignoreVisibility &&
+      typeof this.opacity === 'number' &&
+      this.opacity <= 0
+    ) {
       return false;
     }
 
-    const tolerance =
-      typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+    const tolerance = typeof opts.tolerance === 'number' ? opts.tolerance : 0;
 
     this._update(true);
 
@@ -878,8 +889,7 @@ export class Path extends Shape {
     }
 
     if (strokeTest && segments.length > 0) {
-      const linewidth =
-        typeof this.linewidth === 'number' ? this.linewidth : 0;
+      const linewidth = typeof this.linewidth === 'number' ? this.linewidth : 0;
       if (linewidth > 0) {
         const distance = distanceToSegments(segments, localX, localY);
         if (distance <= linewidth / 2 + tolerance) {
@@ -1053,79 +1063,159 @@ export class Path extends Shape {
   }
 
   /**
+   * @name Two.Path#smooth
+   * @function
+   * @param {Object} [options] - Configuration for smoothing.
+   * @param {String} [options.type='continuous'] - Type of smoothing algorithm.
+   * @param {Number} [options.from=0] - Index of vertices to start smoothing
+   * @param {Number} [options.to=1] - Index of vertices to terminate smoothing
+   * @description Adjust vertex handles to generate smooth curves without toggling `automatic`.
+   */
+  smooth(options) {
+    const opts = options || {};
+    const type = opts.type || 'continuous';
+    const vertices = this._collection;
+    const length = vertices.length;
+
+    if (length < 2) {
+      return this;
+    }
+
+    const closed =
+      this._closed ||
+      (length > 0 &&
+        vertices[length - 1] &&
+        vertices[length - 1].command === Commands.close);
+
+    const resolveIndex = (value, defaultIndex) => {
+      if (value === undefined || value === null) {
+        return defaultIndex;
+      }
+
+      if (typeof value === 'number') {
+        if (closed) {
+          return mod(value, length);
+        }
+        let index = value;
+        if (index < 0) {
+          index += length;
+        }
+        return Math.min(Math.max(index, 0), length - 1);
+      }
+
+      const idx = vertices.indexOf(value);
+      return idx !== -1 ? idx : defaultIndex;
+    };
+
+    const loop = closed && opts.from === undefined && opts.to === undefined;
+    let from = resolveIndex(opts.from, 0);
+    let to = resolveIndex(opts.to, length - 1);
+
+    if (from > to) {
+      if (closed) {
+        from -= length;
+      } else {
+        const temp = from;
+        from = to;
+        to = temp;
+      }
+    }
+
+    const rangeLength = to - from + 1;
+    for (let i = 0; i < rangeLength; i += 1) {
+      const index = mod(from + i, length);
+      const anchor = vertices[index];
+      const isOpenStart = !closed && index === 0;
+      if (anchor.command === Commands.move && !isOpenStart) {
+        anchor.command = Commands.line;
+      }
+    }
+
+    if (type === 'continuous' || type === 'asymmetric') {
+      applyGlobalSmooth(
+        vertices,
+        from,
+        to,
+        closed,
+        loop,
+        type === 'asymmetric'
+      );
+    } else if (type === 'catmull-rom' || type === 'geometric') {
+      const range = {
+        type,
+        factor: opts.factor,
+      };
+      applyLocalSmooth(vertices, from, to, closed, loop, range);
+    } else {
+      throw new Error(
+        `Path.smooth does not support type "${type}". Try 'continuous', 'asymmetric', 'catmull-rom', or 'geometric'.`
+      );
+    }
+
+    this._automatic = false;
+    this._flagVertices = true;
+    this._flagLength = true;
+
+    return this;
+  }
+
+  /**
    * @name Two.Path#subdivide
    * @function
    * @param {Number} limit - How many times to recurse subdivisions.
    * @description Insert a {@link Two.Anchor} at the midpoint between every item in {@link Two.Path#vertices}.
    */
   subdivide(limit) {
-    // TODO: DRYness (function below)
     this._update();
 
-    const last = this.vertices.length - 1;
-    const closed =
-      this._closed || this.vertices[last]._command === Commands.close;
-    let b = this.vertices[last];
-    let points = [],
-      verts;
+    const vertices = this.vertices;
+    const length = vertices.length;
+    if (length < 2) {
+      return this;
+    }
 
-    _.each(
-      this.vertices,
-      function (a, i) {
-        if (i <= 0 && !closed) {
-          b = a;
-          return;
+    const points = [];
+    let prevOriginal = null;
+    let subpathStartOriginal = null;
+
+    for (let i = 0; i < length; i += 1) {
+      const currentOriginal = vertices[i];
+
+      if (!prevOriginal || currentOriginal.command === Commands.move) {
+        const clone = currentOriginal.clone();
+        points.push(clone);
+        prevOriginal = currentOriginal;
+        subpathStartOriginal = currentOriginal;
+        continue;
+      }
+
+      const isCurve = isSegmentCurved(currentOriginal, prevOriginal);
+      const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+      const steps = subdivided.length;
+
+      for (let j = 1; j < steps; j += 1) {
+        const anchor = subdivided[j];
+        inheritRelative(anchor, prevOriginal);
+        if (isCurve) {
+          const t = steps ? j / steps : 0;
+          setSubdivisionHandles(anchor, prevOriginal, currentOriginal, t);
+          anchor.command = Commands.curve;
+        } else {
+          clearHandleComponent(anchor, 'left');
+          clearHandleComponent(anchor, 'right');
+          anchor.command = Commands.line;
         }
+        points.push(anchor);
+      }
 
-        if (a.command === Commands.move) {
-          points.push(new Anchor(b.x, b.y));
-          if (i > 0) {
-            points[points.length - 1].command = Commands.line;
-          }
-          b = a;
-          return;
-        }
+      const currentClone = currentOriginal.clone();
+      points.push(currentClone);
+      prevOriginal = currentOriginal;
 
-        verts = getSubdivisions(a, b, limit);
-        points = points.concat(verts);
-
-        // Assign commands to all the verts
-        _.each(verts, function (v, i) {
-          if (i <= 0 && b.command === Commands.move) {
-            v.command = Commands.move;
-          } else {
-            v.command = Commands.line;
-          }
-        });
-
-        if (i >= last) {
-          // TODO: Add check if the two vectors in question are the same values.
-          if (this._closed && this._automatic) {
-            b = a;
-
-            verts = getSubdivisions(a, b, limit);
-            points = points.concat(verts);
-
-            // Assign commands to all the verts
-            _.each(verts, function (v, i) {
-              if (i <= 0 && b.command === Commands.move) {
-                v.command = Commands.move;
-              } else {
-                v.command = Commands.line;
-              }
-            });
-          }
-
-          points.push(new Anchor(a.x, a.y));
-          points[points.length - 1].command = closed
-            ? Commands.close
-            : Commands.line;
-        }
-
-        b = a;
-      },
-      this
-    );
+      if (currentOriginal.command === Commands.close) {
+        prevOriginal = subpathStartOriginal;
+      }
+    }
 
     this._automatic = false;
     this._curved = false;

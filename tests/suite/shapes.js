@@ -201,6 +201,78 @@ QUnit.test('Two.ArcSegment', function (assert) {
   );
 });
 
+QUnit.test('Two.Path.smooth assigns handles', function (assert) {
+  assert.expect(5);
+
+  var a0 = new Two.Anchor(0, 0);
+  var a1 = new Two.Anchor(50, 100);
+  var a2 = new Two.Anchor(100, 0);
+  var path = new Two.Path([a0, a1, a2]);
+
+  assert.strictEqual(
+    path.automatic,
+    true,
+    'automatic defaults to true before smoothing'
+  );
+
+  path.smooth({ type: 'continuous' });
+
+  assert.strictEqual(
+    path.automatic,
+    false,
+    'smooth disables automatic plotting for manual control'
+  );
+
+  var middle = path.vertices[1];
+  assert.ok(
+    middle.controls.left.length() > 0,
+    'left handle assigned on interior vertex'
+  );
+  assert.ok(
+    middle.controls.right.length() > 0,
+    'right handle assigned on interior vertex'
+  );
+
+  assert.strictEqual(
+    middle.command,
+    Two.Commands.curve,
+    'middle vertex command converted to curve'
+  );
+});
+
+QUnit.test('Two.Path.subdivide recomputes handles', function (assert) {
+  assert.expect(5);
+
+  var start = new Two.Anchor(0, 0);
+  start.controls.right.set(50, 0);
+  var end = new Two.Anchor(100, 0);
+  end.controls.left.set(-50, 0);
+  var path = new Two.Path([start, end]);
+
+  path.subdivide(1);
+
+  assert.strictEqual(path.vertices.length, 3, 'midpoint inserted');
+  assert.ok(
+    path.vertices[0].controls.right.length() > 0,
+    'original start handle preserved after subdivision'
+  );
+  assert.ok(
+    path.vertices[2].controls.left.length() > 0,
+    'original end handle preserved after subdivision'
+  );
+
+  var mid = path.vertices[1];
+  assert.strictEqual(
+    mid.command,
+    Two.Commands.curve,
+    'midpoint inherits curve command'
+  );
+  assert.ok(
+    mid.controls.left.length() > 0 && mid.controls.right.length() > 0,
+    'midpoint handles computed from original curve'
+  );
+});
+
 QUnit.test('Two.ArcSegment Object Conversion', function (assert) {
   assert.expect(11);
 

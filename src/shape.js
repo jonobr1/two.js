@@ -221,7 +221,8 @@ export class Shape extends Element {
    * @param {Object} [options] - Optional options object
    * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `shape.visible = false` shapes
    * @param {Number} [options.tolerance] - Padding to hit test against in pixels
-   * @description Remove self from the scene / parent.
+   * @returns {Boolean}
+   * @description Check to see if coordinates are within a {@link Two.Shape}'s bounding rectangle
    */
   contains(x, y, options) {
     const opts = options || {};

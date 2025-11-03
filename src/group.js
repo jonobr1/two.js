@@ -379,7 +379,7 @@ export class Group extends Shape {
     }
   }
 
-  static IsVisible = function (element, visibleOnly) {
+  static IsVisible(element, visibleOnly) {
     if (!visibleOnly) {
       return true;
     }
@@ -396,9 +396,9 @@ export class Group extends Shape {
     }
 
     return true;
-  };
+  }
 
-  static VisitForHitTest = function (
+  static VisitForHitTest(
     group,
     context,
     includeGroups,
@@ -482,7 +482,7 @@ export class Group extends Shape {
     }
 
     return false;
-  };
+  }
 
   /**
    * @name Two.Group#copy
@@ -609,6 +609,15 @@ export class Group extends Shape {
     return this;
   }
 
+  /**
+   * @name Two.Group#getShapesAtPoint
+   * @function
+   * @param {Number} x - X coordinate in world space.
+   * @param {Number} y - Y coordinate in world space.
+   * @param {SceneHitTestOptions} [options]
+   * @returns {Shape[]} Ordered list of intersecting shapes, front to back.
+   * @description Traverse the group hierarchy and return shapes that contain the specified point.
+   */
   getShapesAtPoint(x, y, options) {
     const opts = options || {};
     const { results, hitOptions, context, single, empty } =

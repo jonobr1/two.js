@@ -1429,7 +1429,7 @@ declare module 'two.js/src/shape' {
      * @param {Object} [options] - Optional options object
      * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `shape.visible = false` shapes
      * @param {Number} [options.tolerance] - Padding to hit test against in pixels
-     * @description Remove self from the scene / parent.
+     * @description Check to see if coordinates are within a {@link Two.Shape}'s bounding rectangle
      */
     contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
@@ -1522,13 +1522,30 @@ declare module 'two.js/src/group' {
   /**
    * @name Two.Group
    * @class
-
-    * @param {Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
-    * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
-    * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
-    */
+   * @param {Shape[]} [children] - A list of objects that inherit {@link Two.Shape}. For instance, the array could be a {@link Two.Path}, {@link Two.Text}, and {@link Two.RoundedRectangle}.
+   * @description This is the primary class for grouping objects that are then drawn in Two.js. In Illustrator this is a group, in After Effects it would be a Null Object. Whichever the case, the `Two.Group` contains a transformation matrix and commands to style its children, but it by itself doesn't render to the screen.
+   * @nota-bene The {@link Two#scene} is an instance of `Two.Group`.
+   */
   export class Group extends Shape {
     static Children: Children;
+    static IsVisible(element: Element, visibleOnly?: boolean): boolean;
+    static VisitForHitTest(
+      group: Group,
+      context: {
+        x: number;
+        y: number;
+        visibleOnly: boolean;
+        results: Element[];
+      },
+      includeGroups: boolean,
+      filter: Function | null,
+      hitOptions: Pick<
+        SceneHitTestOptions,
+        'precision' | 'fill' | 'stroke' | 'tolerance' | 'ignoreVisibility'
+      >,
+      tolerance: number,
+      stopOnFirst: null
+    ): boolean;
     /**
      * @name Two.Group.InsertChildren
      * @function
@@ -2047,14 +2064,6 @@ declare module 'two.js/src/registry' {
      * @description Get a registered value by its `id`.
      */
     get(id: string): any | null;
-    /**
-     * @name Two.Registry#contains
-     * @function
-     * @param {String} id - A unique identifier.
-     * @returns {Boolean}
-     * @description Convenience method to see if a value is registered to an `id` already.
-     */
-    contains(id: string): boolean;
   }
 }
 declare module 'two.js/src/utils/shape' {
@@ -2778,7 +2787,6 @@ declare module 'two.js/src/effects/texture' {
   import { Registry } from 'two.js/src/registry';
 }
 declare module 'two.js/src/path' {
-  import type { ShapeHitTestOptions } from 'two.js/src/shape';
   export type CapProperties = 'butt' | 'round' | 'square';
   export type JoinProperties = 'miter' | 'round' | 'bevel';
   /**
@@ -3188,7 +3196,6 @@ declare module 'two.js/src/path' {
      * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
      */
     getBoundingClientRect(shallow?: boolean): BoundingBox;
-    contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
      * @name Two.Path#getPointAt
      * @function
@@ -3205,6 +3212,16 @@ declare module 'two.js/src/path' {
      * @nota-bene While this method is public it is internally called by {@link Two.Path#_update} when `automatic = true`.
      */
     plot(): Path;
+    /**
+     * @name Two.Path#smooth
+     * @function
+     * @param {Object} [options] - Configuration for smoothing.
+     * @param {String} [options.type='continuous'] - Type of smoothing algorithm.
+     * @param {Number} [options.from=0] - Index of vertices to start smoothing
+     * @param {Number} [options.to=1] - Index of vertices to terminate smoothing
+     * @description Adjust vertex handles to generate smooth curves without toggling `automatic`.
+     */
+    smooth(): Path;
     /**
      * @name Two.Path#subdivide
      * @function
@@ -6078,7 +6095,7 @@ declare module 'two.js' {
   import { Matrix } from 'two.js/src/matrix';
   import { Registry } from 'two.js/src/registry';
   import { Element as TwoElement } from 'two.js/src/element';
-  import { Shape } from 'two.js/src/shape';
+  import { Shape, type ShapeHitTestOptions } from 'two.js/src/shape';
   import { Vector } from 'two.js/src/vector';
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Stop } from 'two.js/src/effects/stop';
