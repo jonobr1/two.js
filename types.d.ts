@@ -1752,6 +1752,20 @@ declare module 'two.js/src/group' {
      */
     dispose(): Group;
     /**
+     * @name Two.Group#getShapesAtPoint
+     * @function
+     * @param {Number} x - X coordinate in world space.
+     * @param {Number} y - Y coordinate in world space.
+     * @param {SceneHitTestOptions} [options]
+     * @returns {Shape[]} Ordered list of intersecting shapes, front to back.
+     * @description Traverse the group hierarchy and return shapes that contain the specified point.
+     */
+    getShapesAtPoint(
+      x: number,
+      y: number,
+      options?: SceneHitTestOptions
+    ): Shape[];
+    /**
      * @name Two.Group#corner
      * @function
      * @description Orient the children of the group to the upper left-hand corner of that group.
@@ -1871,7 +1885,7 @@ declare module 'two.js/src/group' {
   import { Children } from 'two.js/src/children';
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Texture } from 'two.js/src/effects/texture';
-  import { BoundingBox } from 'two.js';
+  import { BoundingBox, SceneHitTestOptions } from 'two.js';
 }
 declare module 'two.js/src/renderers/canvas' {
   /**

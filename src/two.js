@@ -10,7 +10,6 @@ import * as math from './utils/math.js';
 import { Commands } from './utils/path-commands.js';
 import { _ } from './utils/underscore.js';
 import { xhr } from './utils/xhr.js';
-import { boundsContains } from './utils/hit-test.js';
 
 // Core Classes
 
@@ -549,131 +548,16 @@ export default class Two {
    * @param {Function} [options.filter] - Predicate to filter shapes from the result set.
    * @returns {Two.Shape[]} Ordered list of shapes under the specified point, front to back.
    * @description Returns shapes underneath the provided coordinates. Coordinates are expected in world space (matching the renderer output).
+   * @nota-bene Delegates to {@link Two.Group#getShapesAtPoint} on the root scene.
    */
   getShapesAtPoint(x, y, options) {
-    const opts = options || {};
-    const mode =
-      opts.mode === 'deepest' || opts.deepest ? 'deepest' : 'all';
-    const visibleOnly = opts.visibleOnly !== false;
-    const includeGroups = !!opts.includeGroups;
-    const filter =
-      typeof opts.filter === 'function' ? opts.filter : null;
-    const tolerance =
-      typeof opts.tolerance === 'number' ? opts.tolerance : 0;
-    const hitOptions = {};
-
-    if (typeof opts.precision === 'number') {
-      hitOptions.precision = opts.precision;
+    if (
+      this.scene &&
+      typeof this.scene.getShapesAtPoint === 'function'
+    ) {
+      return this.scene.getShapesAtPoint(x, y, options);
     }
-    if (typeof opts.fill !== 'undefined') {
-      hitOptions.fill = opts.fill;
-    }
-    if (typeof opts.stroke !== 'undefined') {
-      hitOptions.stroke = opts.stroke;
-    }
-    hitOptions.tolerance = tolerance;
-    hitOptions.ignoreVisibility = !visibleOnly;
-
-    const stopOnFirst = mode === 'deepest';
-    const results = [];
-
-    const isVisible = (element) => {
-      if (!visibleOnly) {
-        return true;
-      }
-
-      let current = element;
-      while (current) {
-        if (typeof current.visible === 'boolean' && !current.visible) {
-          return false;
-        }
-        if (
-          typeof current.opacity === 'number' &&
-          current.opacity <= 0
-        ) {
-          return false;
-        }
-        current = current.parent;
-      }
-
-      return true;
-    };
-
-    const visit = (group) => {
-      if (!group || !group.children) {
-        return false;
-      }
-
-      const children = group.children;
-      for (let i = children.length - 1; i >= 0; i--) {
-        const child = children[i];
-
-        if (!child) {
-          continue;
-        }
-
-        if (!isVisible(child)) {
-          continue;
-        }
-
-        const rect =
-          typeof child.getBoundingClientRect === 'function'
-            ? child.getBoundingClientRect()
-            : null;
-
-        if (rect && !boundsContains(rect, x, y, tolerance)) {
-          continue;
-        }
-
-        if (child instanceof Group) {
-          if (includeGroups && typeof child.contains === 'function') {
-            if (!filter || filter(child)) {
-              if (child.contains(x, y, hitOptions)) {
-                results.push(child);
-                if (stopOnFirst) {
-                  return true;
-                }
-              }
-            }
-          }
-
-          if (visit(child)) {
-            return true;
-          }
-
-          continue;
-        }
-
-        if (!(child instanceof Shape)) {
-          continue;
-        }
-
-        if (filter && !filter(child)) {
-          continue;
-        }
-
-        if (typeof child.contains !== 'function') {
-          continue;
-        }
-
-        if (child.contains(x, y, hitOptions)) {
-          results.push(child);
-          if (stopOnFirst) {
-            return true;
-          }
-        }
-      }
-
-      return false;
-    };
-
-    visit(this.scene);
-
-    if (stopOnFirst) {
-      return results.length > 0 ? [results[0]] : [];
-    }
-
-    return results;
+    return [];
   }
 
   /**

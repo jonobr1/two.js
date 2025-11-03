@@ -44,7 +44,7 @@ QUnit.test('Shape.contains evaluates fill and stroke geometry', function (assert
 });
 
 QUnit.test('Two#getShapesAtPoint respects options', function (assert) {
-  assert.expect(4);
+  assert.expect(6);
 
   var two = new Two({ width: 400, height: 400, autostart: false });
 
@@ -68,6 +68,12 @@ QUnit.test('Two#getShapesAtPoint respects options', function (assert) {
   var circleHits = two.getShapesAtPoint(100, 100);
   assert.ok(circleHits.indexOf(circle) > -1, 'Circle reported at its center.');
 
+  var sceneHits = two.scene.getShapesAtPoint(100, 100);
+  assert.ok(
+    sceneHits.indexOf(circle) > -1,
+    'Scene group reports circle at its center.'
+  );
+
   var deepest = two.getShapesAtPoint(50, 4, { mode: 'deepest' });
   assert.deepEqual(deepest, [line], 'Deepest mode returns top-most shape only.');
 
@@ -82,5 +88,13 @@ QUnit.test('Two#getShapesAtPoint respects options', function (assert) {
   assert.ok(
     allHits.indexOf(hidden) > -1,
     'Hidden shapes included when visibleOnly is false.'
+  );
+
+  var sceneAll = two.scene.getShapesAtPoint(200, 200, {
+    visibleOnly: false,
+  });
+  assert.ok(
+    sceneAll.indexOf(hidden) > -1,
+    'Scene group honours visibleOnly option.'
   );
 });

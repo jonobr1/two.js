@@ -1,6 +1,7 @@
 import { Events } from './events.js';
 import { _ } from './utils/underscore.js';
 import { getEffectFromObject } from './utils/shape.js';
+import { boundsContains } from './utils/hit-test.js';
 
 import { Shape } from './shape.js';
 import { Children } from './children.js';
@@ -485,6 +486,131 @@ export class Group extends Shape {
     }
 
     return this;
+  }
+
+  getShapesAtPoint(x, y, options) {
+    const opts = options || {};
+    const mode =
+      opts.mode === 'deepest' || opts.deepest ? 'deepest' : 'all';
+    const visibleOnly = opts.visibleOnly !== false;
+    const includeGroups = !!opts.includeGroups;
+    const filter = typeof opts.filter === 'function' ? opts.filter : null;
+    const tolerance =
+      typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+
+    const hitOptions = {};
+
+    if (typeof opts.precision === 'number') {
+      hitOptions.precision = opts.precision;
+    }
+    if (typeof opts.fill !== 'undefined') {
+      hitOptions.fill = opts.fill;
+    }
+    if (typeof opts.stroke !== 'undefined') {
+      hitOptions.stroke = opts.stroke;
+    }
+    hitOptions.tolerance = tolerance;
+    hitOptions.ignoreVisibility = !visibleOnly;
+
+    const stopOnFirst = mode === 'deepest';
+    const results = [];
+
+    const isVisible = (element) => {
+      if (!visibleOnly) {
+        return true;
+      }
+
+      let current = element;
+      while (current) {
+        if (typeof current.visible === 'boolean' && !current.visible) {
+          return false;
+        }
+        if (
+          typeof current.opacity === 'number' &&
+          current.opacity <= 0
+        ) {
+          return false;
+        }
+        current = current.parent;
+      }
+
+      return true;
+    };
+
+    const visit = (group) => {
+      const children = group && group.children;
+      if (!children) {
+        return false;
+      }
+
+      for (let i = children.length - 1; i >= 0; i--) {
+        const child = children[i];
+
+        if (!child) {
+          continue;
+        }
+
+        if (!isVisible(child)) {
+          continue;
+        }
+
+        const rect =
+          typeof child.getBoundingClientRect === 'function'
+            ? child.getBoundingClientRect()
+            : null;
+
+        if (rect && !boundsContains(rect, x, y, tolerance)) {
+          continue;
+        }
+
+        if (child instanceof Group) {
+          if (
+            includeGroups &&
+            (!filter || filter(child)) &&
+            typeof child.contains === 'function' &&
+            child.contains(x, y, hitOptions)
+          ) {
+            results.push(child);
+            if (stopOnFirst) {
+              return true;
+            }
+          }
+          if (visit(child)) {
+            return true;
+          }
+          continue;
+        }
+
+        if (!(child instanceof Shape)) {
+          continue;
+        }
+
+        if (filter && !filter(child)) {
+          continue;
+        }
+
+        if (typeof child.contains !== 'function') {
+          continue;
+        }
+
+        if (child.contains(x, y, hitOptions)) {
+          results.push(child);
+          if (stopOnFirst) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    };
+
+    visit(this);
+
+    if (stopOnFirst) {
+      return results.length > 0 ? [results[0]] : [];
+    }
+
+    return results;
   }
 
   /**
