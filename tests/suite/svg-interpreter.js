@@ -4897,8 +4897,6 @@
 
         two.update();
 
-        console.log(JSON.stringify(shape.toObject()));
-
         assert.ok(
           QUnit.Utils.shapeEquals(answer, shape),
           'Two.subdivide subdivides holes properly.'
