@@ -5,7 +5,7 @@ import { mod, TWO_PI } from './math.js';
 
 const TRANSPARENT_REGEX = /^(?:none|transparent)$/i;
 const DEFAULT_PRECISION = 8;
-const EPSILON = 1e-9;
+const EPSILON = Number.EPSILON;
 
 function createPoint(x, y) {
   return { x, y };
@@ -62,7 +62,7 @@ function sampleArcPoints(prev, anchor, precision) {
   let rxs = rx * rx;
   let rys = ry * ry;
 
-  const cr = x1p * x1p / rxs + y1p * y1p / rys;
+  const cr = (x1p * x1p) / rxs + (y1p * y1p) / rys;
 
   if (cr > 1) {
     const s = Math.sqrt(cr);
@@ -115,10 +115,7 @@ function sampleArcPoints(prev, anchor, precision) {
     return deltaAngle;
   })();
 
-  const steps = Math.max(
-    Constants.Resolution,
-    Math.max(precision * 2, 1)
-  );
+  const steps = Math.max(Constants.Resolution, Math.max(precision * 2, 1));
 
   const points = [];
 
@@ -219,8 +216,7 @@ function buildPathHitParts(path, precision = DEFAULT_PRECISION) {
 
   for (let i = 0; i < vertices.length; i++) {
     const vertex = vertices[i];
-    const command =
-      vertex.command || (i === 0 ? Commands.move : Commands.line);
+    const command = vertex.command || (i === 0 ? Commands.move : Commands.line);
 
     if (command === Commands.move) {
       closePolygon(false);
@@ -288,9 +284,8 @@ function pointInPolygons(polygons, x, y) {
       const v1 = polygon[j];
 
       const intersects =
-        (v1.y > y) !== (v0.y > y) &&
-        x <
-          ((v0.x - v1.x) * (y - v1.y)) / ((v0.y - v1.y) || 1e-12) + v1.x;
+        v1.y > y !== v0.y > y &&
+        x < ((v0.x - v1.x) * (y - v1.y)) / (v0.y - v1.y || 1e-12) + v1.x;
 
       if (intersects) {
         inside = !inside;
@@ -313,8 +308,7 @@ function distanceToSegmentSquared(x, y, a, b) {
     return ddx * ddx + ddy * ddy;
   }
 
-  const t =
-    ((x - a.x) * dx + (y - a.y) * dy) / (dx * dx + dy * dy);
+  const t = ((x - a.x) * dx + (y - a.y) * dy) / (dx * dx + dy * dy);
   const clamped = Math.max(0, Math.min(1, t));
 
   const cx = a.x + clamped * dx;
