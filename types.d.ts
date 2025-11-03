@@ -1421,6 +1421,16 @@ declare module 'two.js/src/shape' {
      * @nota-bene Works in conjunction with {@link Two.Shape.fromObject}
      */
     toObject(): object;
+    /**
+     * @name Two.Shape#contains
+     * @function
+     * @param {Number} x - x coordinate to hit test against
+     * @param {Number} y - y coordinate to hit test against
+     * @param {Object} [options] - Optional options object
+     * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `shape.visible = false` shapes
+     * @param {Number} [options.tolerance] - Padding to hit test against in pixels
+     * @description Remove self from the scene / parent.
+     */
     contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
      * @name Two.Shape#_update
@@ -3160,9 +3170,9 @@ declare module 'two.js/src/path' {
      * @name Two.Path#getBoundingClientRect
      * @function
      * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
-    * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
-    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
-    */
+     * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+     * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
+     */
     getBoundingClientRect(shallow?: boolean): BoundingBox;
     contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
