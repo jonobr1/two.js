@@ -10,6 +10,7 @@ import * as math from './utils/math.js';
 import { Commands } from './utils/path-commands.js';
 import { _ } from './utils/underscore.js';
 import { xhr } from './utils/xhr.js';
+import { boundsContains } from './utils/hit-test.js';
 
 // Core Classes
 
@@ -529,6 +530,150 @@ export default class Two {
     }
 
     return obj;
+  }
+
+  /**
+   * @name Two#getShapesAtPoint
+   * @function
+   * @param {Number} x - X coordinate in world space.
+   * @param {Number} y - Y coordinate in world space.
+   * @param {Object} [options] - Hit test configuration.
+   * @param {Boolean} [options.visibleOnly=true] - Limit results to visible shapes.
+   * @param {Boolean} [options.includeGroups=false] - Include groups in the hit results.
+   * @param {('all'|'deepest')} [options.mode='all'] - Whether to return all intersecting shapes or only the top-most.
+   * @param {Boolean} [options.deepest] - Alias for `mode: 'deepest'`.
+   * @param {Number} [options.precision] - Segmentation precision for curved geometry.
+   * @param {Number} [options.tolerance=0] - Pixel tolerance applied to hit testing.
+   * @param {Boolean} [options.fill] - Override fill testing behaviour.
+   * @param {Boolean} [options.stroke] - Override stroke testing behaviour.
+   * @param {Function} [options.filter] - Predicate to filter shapes from the result set.
+   * @returns {Two.Shape[]} Ordered list of shapes under the specified point, front to back.
+   * @description Returns shapes underneath the provided coordinates. Coordinates are expected in world space (matching the renderer output).
+   */
+  getShapesAtPoint(x, y, options) {
+    const opts = options || {};
+    const mode =
+      opts.mode === 'deepest' || opts.deepest ? 'deepest' : 'all';
+    const visibleOnly = opts.visibleOnly !== false;
+    const includeGroups = !!opts.includeGroups;
+    const filter =
+      typeof opts.filter === 'function' ? opts.filter : null;
+    const tolerance =
+      typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+    const hitOptions = {};
+
+    if (typeof opts.precision === 'number') {
+      hitOptions.precision = opts.precision;
+    }
+    if (typeof opts.fill !== 'undefined') {
+      hitOptions.fill = opts.fill;
+    }
+    if (typeof opts.stroke !== 'undefined') {
+      hitOptions.stroke = opts.stroke;
+    }
+    hitOptions.tolerance = tolerance;
+    hitOptions.ignoreVisibility = !visibleOnly;
+
+    const stopOnFirst = mode === 'deepest';
+    const results = [];
+
+    const isVisible = (element) => {
+      if (!visibleOnly) {
+        return true;
+      }
+
+      let current = element;
+      while (current) {
+        if (typeof current.visible === 'boolean' && !current.visible) {
+          return false;
+        }
+        if (
+          typeof current.opacity === 'number' &&
+          current.opacity <= 0
+        ) {
+          return false;
+        }
+        current = current.parent;
+      }
+
+      return true;
+    };
+
+    const visit = (group) => {
+      if (!group || !group.children) {
+        return false;
+      }
+
+      const children = group.children;
+      for (let i = children.length - 1; i >= 0; i--) {
+        const child = children[i];
+
+        if (!child) {
+          continue;
+        }
+
+        if (!isVisible(child)) {
+          continue;
+        }
+
+        const rect =
+          typeof child.getBoundingClientRect === 'function'
+            ? child.getBoundingClientRect()
+            : null;
+
+        if (rect && !boundsContains(rect, x, y, tolerance)) {
+          continue;
+        }
+
+        if (child instanceof Group) {
+          if (includeGroups && typeof child.contains === 'function') {
+            if (!filter || filter(child)) {
+              if (child.contains(x, y, hitOptions)) {
+                results.push(child);
+                if (stopOnFirst) {
+                  return true;
+                }
+              }
+            }
+          }
+
+          if (visit(child)) {
+            return true;
+          }
+
+          continue;
+        }
+
+        if (!(child instanceof Shape)) {
+          continue;
+        }
+
+        if (filter && !filter(child)) {
+          continue;
+        }
+
+        if (typeof child.contains !== 'function') {
+          continue;
+        }
+
+        if (child.contains(x, y, hitOptions)) {
+          results.push(child);
+          if (stopOnFirst) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    };
+
+    visit(this.scene);
+
+    if (stopOnFirst) {
+      return results.length > 0 ? [results[0]] : [];
+    }
+
+    return results;
   }
 
   /**

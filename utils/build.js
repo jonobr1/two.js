@@ -76,7 +76,7 @@ function template(buffer, isExposed) {
     publishDate: publishDateString,
   });
   if (isExposed) {
-    result = result.replace(/\}\)\(\);/, '})().default;');
+    result = result.replace(/\}\)\(\);\s*$/, '})().default;');
   }
   return result;
 }

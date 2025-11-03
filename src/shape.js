@@ -204,13 +204,53 @@ export class Shape extends Element {
    * @description Remove self from the scene / parent.
    */
   remove() {
-    if (!this.parent) {
-      return this;
+   if (!this.parent) {
+     return this;
+   }
+
+   this.parent.remove(this);
+
+   return this;
+  }
+
+  contains(x, y, options) {
+    const opts = options || {};
+    const ignoreVisibility = opts.ignoreVisibility === true;
+
+    if (!ignoreVisibility && 'visible' in this && this.visible === false) {
+      return false;
     }
 
-    this.parent.remove(this);
+    if (
+      !ignoreVisibility &&
+      'opacity' in this &&
+      typeof this.opacity === 'number' &&
+      this.opacity <= 0
+    ) {
+      return false;
+    }
 
-    return this;
+    if (typeof this.getBoundingClientRect !== 'function') {
+      return false;
+    }
+
+    const tolerance =
+      typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+
+    this._update(true);
+
+    const rect = this.getBoundingClientRect();
+
+    if (!rect) {
+      return false;
+    }
+
+    return (
+      x >= rect.left - tolerance &&
+      x <= rect.right + tolerance &&
+      y >= rect.top - tolerance &&
+      y <= rect.bottom + tolerance
+    );
   }
 
   /**

@@ -19,11 +19,19 @@ import { Shape } from './shape.js';
 import { Events } from './events.js';
 import { Vector } from './vector.js';
 import { Anchor } from './anchor.js';
+import { Matrix } from './matrix.js';
 
 import { Gradient } from './effects/gradient.js';
 import { LinearGradient } from './effects/linear-gradient.js';
 import { RadialGradient } from './effects/radial-gradient.js';
 import { Texture } from './effects/texture.js';
+import {
+  buildPathHitParts,
+  pointInPolygons,
+  distanceToSegments,
+  hasVisibleFill,
+  hasVisibleStroke,
+} from './utils/hit-test.js';
 
 // Constants
 
@@ -33,6 +41,7 @@ const min = Math.min,
   floor = Math.floor;
 
 const vector = new Vector();
+const hitTestMatrix = new Matrix();
 
 /**
  * @name Two.Path
@@ -813,6 +822,81 @@ export class Path extends Shape {
       width: right - left,
       height: bottom - top,
     };
+  }
+
+  contains(x, y, options) {
+    const opts = options || {};
+    const ignoreVisibility = opts.ignoreVisibility === true;
+
+    if (!ignoreVisibility && this.visible === false) {
+      return false;
+    }
+
+    if (!ignoreVisibility && typeof this.opacity === 'number' && this.opacity <= 0) {
+      return false;
+    }
+
+    const tolerance =
+      typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+
+    this._update(true);
+
+    const rect = this.getBoundingClientRect();
+
+    if (
+      !rect ||
+      x < rect.left - tolerance ||
+      x > rect.right + tolerance ||
+      y < rect.top - tolerance ||
+      y > rect.bottom + tolerance
+    ) {
+      return false;
+    }
+
+    const matrix = this.worldMatrix;
+    const inverse = matrix && matrix.inverse(hitTestMatrix);
+
+    if (!inverse) {
+      return super.contains(x, y, opts);
+    }
+
+    const [localX, localY] = inverse.multiply(x, y, 1);
+    const precision =
+      typeof opts.precision === 'number' && !Number.isNaN(opts.precision)
+        ? Math.max(1, Math.floor(opts.precision))
+        : 8;
+
+    const fillTest = hasVisibleFill(this, opts.fill);
+    const strokeTest = hasVisibleStroke(this, opts.stroke);
+
+    const { polygons, segments } = buildPathHitParts(this, precision);
+
+    if (fillTest && polygons.length > 0) {
+      if (pointInPolygons(polygons, localX, localY)) {
+        return true;
+      }
+    }
+
+    if (strokeTest && segments.length > 0) {
+      const linewidth =
+        typeof this.linewidth === 'number' ? this.linewidth : 0;
+      if (linewidth > 0) {
+        const distance = distanceToSegments(segments, localX, localY);
+        if (distance <= linewidth / 2 + tolerance) {
+          return true;
+        }
+      }
+    }
+
+    if (!fillTest && !strokeTest) {
+      return super.contains(x, y, opts);
+    }
+
+    if (fillTest && polygons.length === 0) {
+      return super.contains(x, y, opts);
+    }
+
+    return false;
   }
 
   /**

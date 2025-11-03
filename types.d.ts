@@ -91,7 +91,7 @@ declare module 'two.js/src/utils/math' {
     worldMatrix?: Matrix
   ): number;
   import { Matrix } from 'two.js/src/matrix';
-  import { Shape } from 'two.js/src/shape';
+  import { Shape, ShapeHitTestOptions } from 'two.js/src/shape';
   import { Path } from 'two.js/src/path';
   import { Group } from 'two.js/src/group';
 }
@@ -1227,6 +1227,13 @@ declare module 'two.js/src/matrix' {
   import { Events } from 'two.js/src/events';
 }
 declare module 'two.js/src/shape' {
+  export interface ShapeHitTestOptions {
+    precision?: number;
+    tolerance?: number;
+    fill?: boolean;
+    stroke?: boolean;
+    ignoreVisibility?: boolean;
+  }
   /**
      * @name Two.Shape
      * @class
@@ -1414,6 +1421,7 @@ declare module 'two.js/src/shape' {
      * @nota-bene Works in conjunction with {@link Two.Shape.fromObject}
      */
     toObject(): object;
+    contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
      * @name Two.Shape#_update
      * @function
@@ -2746,6 +2754,7 @@ declare module 'two.js/src/effects/texture' {
   import { Registry } from 'two.js/src/registry';
 }
 declare module 'two.js/src/path' {
+  import type { ShapeHitTestOptions } from 'two.js/src/shape';
   export type CapProperties = 'butt' | 'round' | 'square';
   export type JoinProperties = 'miter' | 'round' | 'bevel';
   /**
@@ -3151,10 +3160,11 @@ declare module 'two.js/src/path' {
      * @name Two.Path#getBoundingClientRect
      * @function
      * @param {Boolean} [shallow=false] - Describes whether to calculate off local matrix or world matrix.
-     * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
-     * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
-     */
+    * @returns {Object} - Returns object with top, left, right, bottom, width, height attributes.
+    * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
+    */
     getBoundingClientRect(shallow?: boolean): BoundingBox;
+    contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
      * @name Two.Path#getPointAt
      * @function
@@ -5564,6 +5574,11 @@ declare module 'two.js' {
      * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
      */
     release<T>(obj?: TwoElement): T;
+    getShapesAtPoint(
+      x: number,
+      y: number,
+      options?: SceneHitTestOptions
+    ): Shape[];
     /**
      * @name Two#update
      * @function
@@ -6059,6 +6074,14 @@ declare module 'two.js' {
     width: number;
     height: number;
   };
+
+  export interface SceneHitTestOptions extends ShapeHitTestOptions {
+    visibleOnly?: boolean;
+    includeGroups?: boolean;
+    mode?: 'all' | 'deepest';
+    deepest?: boolean;
+    filter?: (shape: Shape) => boolean;
+  }
 }
 declare module 'two.js/extras/jsm/zui' {
   /**
