@@ -2,6 +2,7 @@ import { lerp, mod } from './math.js';
 import { Commands } from './path-commands.js';
 
 import { Vector } from '../vector.js';
+import { Anchor } from '../anchor.js';
 
 const EPSILON = Number.EPSILON;
 
@@ -84,50 +85,53 @@ function isSegmentCurved(a, b) {
   );
 }
 
-function setSubdivisionHandles(anchor, start, end, t) {
+function lerpPoint(a, b, t) {
+  return {
+    x: lerp(a.x, b.x, t),
+    y: lerp(a.y, b.y, t),
+  };
+}
+
+function getAbsoluteHandle(anchor, side) {
+  const controls = anchor.controls && anchor.controls[side];
+  if (!controls) {
+    return { x: anchor.x, y: anchor.y };
+  }
+  if (isRelativeAnchor(anchor)) {
+    return { x: anchor.x + controls.x, y: anchor.y + controls.y };
+  }
+  return { x: controls.x, y: controls.y };
+}
+
+function splitSubdivisionSegment(start, end, t) {
   const right = start.controls && start.controls.right;
   const left = end.controls && end.controls.left;
 
-  let x1 = start.x;
-  let y1 = start.y;
-  let x2 = (right || start).x;
-  let y2 = (right || start).y;
-  let x3 = (left || end).x;
-  let y3 = (left || end).y;
-  let x4 = end.x;
-  let y4 = end.y;
+  const p0 = { x: start.x, y: start.y };
+  const p1 = right ? getAbsoluteHandle(start, 'right') : { ...p0 };
+  const p3 = { x: end.x, y: end.y };
+  const p2 = left ? getAbsoluteHandle(end, 'left') : { ...p3 };
 
-  if (right && isRelativeAnchor(start)) {
-    x2 += start.x;
-    y2 += start.y;
-  }
+  const q0 = lerpPoint(p0, p1, t);
+  const q1 = lerpPoint(p1, p2, t);
+  const q2 = lerpPoint(p2, p3, t);
 
-  if (left && isRelativeAnchor(end)) {
-    x3 += end.x;
-    y3 += end.y;
-  }
+  const r0 = lerpPoint(q0, q1, t);
+  const r1 = lerpPoint(q1, q2, t);
 
-  const t1x = lerp(x1, x2, t);
-  const t1y = lerp(y1, y2, t);
-  const t2x = lerp(x2, x3, t);
-  const t2y = lerp(y2, y3, t);
-  const t3x = lerp(x3, x4, t);
-  const t3y = lerp(y3, y4, t);
+  const point = lerpPoint(r0, r1, t);
 
-  const brx = lerp(t1x, t2x, t);
-  const bry = lerp(t1y, t2y, t);
-  const alx = lerp(t2x, t3x, t);
-  const aly = lerp(t2y, t3y, t);
-  const px = lerp(brx, alx, t);
-  const py = lerp(bry, aly, t);
-
-  anchor.x = px;
-  anchor.y = py;
-
+  const anchor = new Anchor(point.x, point.y);
   inheritRelative(anchor, start);
+  setHandleComponent(anchor, 'left', r0.x - point.x, r0.y - point.y);
+  setHandleComponent(anchor, 'right', r1.x - point.x, r1.y - point.y);
+  anchor.command = Commands.curve;
 
-  setHandleComponent(anchor, 'left', brx - px, bry - py);
-  setHandleComponent(anchor, 'right', alx - px, aly - py);
+  return {
+    anchor,
+    startOut: q0,
+    endIn: q2,
+  };
 }
 
 function applyGlobalSmooth(vertices, from, to, closed, loop, asymmetric) {
@@ -332,7 +336,7 @@ export {
   updateAnchorCommand,
   inheritRelative,
   isSegmentCurved,
-  setSubdivisionHandles,
+  splitSubdivisionSegment,
   applyGlobalSmooth,
   applyLocalSmooth,
 };

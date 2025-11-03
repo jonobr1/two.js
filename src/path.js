@@ -34,9 +34,10 @@ import {
 } from './utils/hit-test.js';
 import {
   clearHandleComponent,
+  setHandleComponent,
   inheritRelative,
   isSegmentCurved,
-  setSubdivisionHandles,
+  splitSubdivisionSegment,
   applyGlobalSmooth,
   applyLocalSmooth,
 } from './utils/path.js';
@@ -1202,26 +1203,74 @@ export class Path extends Shape {
       }
 
       const isCurve = isSegmentCurved(currentOriginal, prevOriginal);
-      const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
-      const steps = subdivided.length;
 
-      for (let j = 1; j < steps; j += 1) {
-        const anchor = subdivided[j];
-        inheritRelative(anchor, prevOriginal);
-        if (isCurve) {
-          const t = steps ? j / steps : 0;
-          setSubdivisionHandles(anchor, prevOriginal, currentOriginal, t);
-          anchor.command = Commands.curve;
+      if (isCurve) {
+        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+        const steps = subdivided.length;
+        const prevClone = points[points.length - 1];
+        let startSegment = prevClone.clone();
+        let endSegment = currentOriginal.clone();
+        let prevCloneRef = prevClone;
+        let prevT = 0;
+
+        if (steps <= 1) {
+          const currentClone = currentOriginal.clone();
+          points.push(currentClone);
         } else {
+          for (let j = 1; j < steps; j += 1) {
+            const globalT = j / steps;
+            const denom = 1 - prevT;
+            const localT =
+              denom <= Number.EPSILON ? globalT : (globalT - prevT) / denom;
+
+            const split = splitSubdivisionSegment(
+              startSegment,
+              endSegment,
+              localT
+            );
+
+            setHandleComponent(
+              prevCloneRef,
+              'right',
+              split.startOut.x - prevCloneRef.x,
+              split.startOut.y - prevCloneRef.y
+            );
+
+            const newAnchor = split.anchor;
+            points.push(newAnchor);
+
+            prevCloneRef = newAnchor;
+            startSegment = newAnchor.clone();
+            prevT = globalT;
+
+            setHandleComponent(
+              endSegment,
+              'left',
+              split.endIn.x - endSegment.x,
+              split.endIn.y - endSegment.y
+            );
+          }
+
+          const currentClone = currentOriginal.clone();
+          currentClone.controls.left.copy(endSegment.controls.left);
+          points.push(currentClone);
+        }
+      } else {
+        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+
+        for (let j = 1; j < subdivided.length; j += 1) {
+          const anchor = subdivided[j];
+          inheritRelative(anchor, prevOriginal);
           clearHandleComponent(anchor, 'left');
           clearHandleComponent(anchor, 'right');
           anchor.command = Commands.line;
+          points.push(anchor);
         }
-        points.push(anchor);
+
+        const currentClone = currentOriginal.clone();
+        points.push(currentClone);
       }
 
-      const currentClone = currentOriginal.clone();
-      points.push(currentClone);
       prevOriginal = currentOriginal;
 
       if (currentOriginal.command === Commands.close) {
