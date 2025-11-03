@@ -204,15 +204,25 @@ export class Shape extends Element {
    * @description Remove self from the scene / parent.
    */
   remove() {
-   if (!this.parent) {
-     return this;
-   }
+    if (!this.parent) {
+      return this;
+    }
 
-   this.parent.remove(this);
+    this.parent.remove(this);
 
-   return this;
+    return this;
   }
 
+  /**
+   * @name Two.Shape#contains
+   * @function
+   * @param {Number} x - x coordinate to hit test against
+   * @param {Number} y - y coordinate to hit test against
+   * @param {Object} [options] - Optional options object
+   * @param {Boolean} options.ignoreVisibility - If `true`, hit test against `shape.visible = false` shapes
+   * @param {Number} options.tolerance - Padding to hit test against in pixels
+   * @description Remove self from the scene / parent.
+   */
   contains(x, y, options) {
     const opts = options || {};
     const ignoreVisibility = opts.ignoreVisibility === true;
@@ -234,8 +244,7 @@ export class Shape extends Element {
       return false;
     }
 
-    const tolerance =
-      typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+    const tolerance = typeof opts.tolerance === 'number' ? opts.tolerance : 0;
 
     this._update(true);
 

@@ -679,6 +679,62 @@ Remove self from the scene / parent.
 
 <div class="instance function ">
 
+## contains
+
+<h2 class="longname" aria-hidden="true"><a href="#contains"><span class="prefix">Two.Shape.</span><span class="shortname">contains</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="params">
+
+| Argument | Description |
+| ---- | ----------- |
+|  x  | x coordinate to hit test against |
+|  y  | y coordinate to hit test against |
+|  options  | Optional options object |
+|  options.ignoreVisibility  | If `true`, hit test against `shape.visible = false` shapes |
+|  options.tolerance  | Padding to hit test against in pixels |
+</div>
+
+
+
+
+<div class="description">
+
+Remove self from the scene / parent.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L216">
+    shape.js:216
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="instance function ">
+
 ## copy
 
 <h2 class="longname" aria-hidden="true"><a href="#copy"><span class="prefix">Two.Shape.</span><span class="shortname">copy</span></a></h2>
@@ -716,8 +772,8 @@ Copy the properties of one [Two.Shape](/docs/shape/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L216">
-    shape.js:216
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L265">
+    shape.js:265
   </a>
 
 </div>
@@ -776,8 +832,8 @@ Create a new [Two.Shape](/docs/shape/) with the same values as the current shape
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L256">
-    shape.js:256
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L305">
+    shape.js:305
   </a>
 
 </div>
@@ -821,8 +877,8 @@ Create a JSON compatible object that represents information of the shape.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L283">
-    shape.js:283
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L332">
+    shape.js:332
   </a>
 
 </div>
