@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
+- Added `Two.Shape.contains` method for hit testing
+- Added `Two.getShapesAtPoint` with visibility/filter options
+
 ## October 1, 2025 v0.8.21
 
 <h3 class="visible">Oct 1, 2025</h3><version-link v="v0.8.21" />

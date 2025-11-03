@@ -532,6 +532,35 @@ export default class Two {
   }
 
   /**
+   * @name Two#getShapesAtPoint
+   * @function
+   * @param {Number} x - X coordinate in world space.
+   * @param {Number} y - Y coordinate in world space.
+   * @param {Object} [options] - Hit test configuration.
+   * @param {Boolean} [options.visibleOnly=true] - Limit results to visible shapes.
+   * @param {Boolean} [options.includeGroups=false] - Include groups in the hit results.
+   * @param {('all'|'deepest')} [options.mode='all'] - Whether to return all intersecting shapes or only the top-most.
+   * @param {Boolean} [options.deepest] - Alias for `mode: 'deepest'`.
+   * @param {Number} [options.precision] - Segmentation precision for curved geometry.
+   * @param {Number} [options.tolerance=0] - Pixel tolerance applied to hit testing.
+   * @param {Boolean} [options.fill] - Override fill testing behaviour.
+   * @param {Boolean} [options.stroke] - Override stroke testing behaviour.
+   * @param {Function} [options.filter] - Predicate to filter shapes from the result set.
+   * @returns {Two.Shape[]} Ordered list of shapes under the specified point, front to back.
+   * @description Returns shapes underneath the provided coordinates. Coordinates are expected in world space (matching the renderer output).
+   * @nota-bene Delegates to {@link Two.Group#getShapesAtPoint} on the root scene.
+   */
+  getShapesAtPoint(x, y, options) {
+    if (
+      this.scene &&
+      typeof this.scene.getShapesAtPoint === 'function'
+    ) {
+      return this.scene.getShapesAtPoint(x, y, options);
+    }
+    return [];
+  }
+
+  /**
    * @name Two#update
    * @function
    * @fires update

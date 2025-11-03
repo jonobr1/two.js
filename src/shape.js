@@ -214,6 +214,55 @@ export class Shape extends Element {
   }
 
   /**
+   * @name Two.Shape#contains
+   * @function
+   * @param {Number} x - x coordinate to hit test against
+   * @param {Number} y - y coordinate to hit test against
+   * @param {Object} [options] - Optional options object
+   * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `shape.visible = false` shapes
+   * @param {Number} [options.tolerance] - Padding to hit test against in pixels
+   * @description Remove self from the scene / parent.
+   */
+  contains(x, y, options) {
+    const opts = options || {};
+    const ignoreVisibility = opts.ignoreVisibility === true;
+
+    if (!ignoreVisibility && 'visible' in this && this.visible === false) {
+      return false;
+    }
+
+    if (
+      !ignoreVisibility &&
+      'opacity' in this &&
+      typeof this.opacity === 'number' &&
+      this.opacity <= 0
+    ) {
+      return false;
+    }
+
+    if (typeof this.getBoundingClientRect !== 'function') {
+      return false;
+    }
+
+    const tolerance = typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+
+    this._update(true);
+
+    const rect = this.getBoundingClientRect();
+
+    if (!rect) {
+      return false;
+    }
+
+    return (
+      x >= rect.left - tolerance &&
+      x <= rect.right + tolerance &&
+      y >= rect.top - tolerance &&
+      y <= rect.bottom + tolerance
+    );
+  }
+
+  /**
    * @name Two.Shape#copy
    * @function
    * @param {Two.Shape} shape

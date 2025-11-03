@@ -91,7 +91,7 @@ declare module 'two.js/src/utils/math' {
     worldMatrix?: Matrix
   ): number;
   import { Matrix } from 'two.js/src/matrix';
-  import { Shape } from 'two.js/src/shape';
+  import { Shape, ShapeHitTestOptions } from 'two.js/src/shape';
   import { Path } from 'two.js/src/path';
   import { Group } from 'two.js/src/group';
 }
@@ -1227,6 +1227,13 @@ declare module 'two.js/src/matrix' {
   import { Events } from 'two.js/src/events';
 }
 declare module 'two.js/src/shape' {
+  export interface ShapeHitTestOptions {
+    precision?: number;
+    tolerance?: number;
+    fill?: boolean;
+    stroke?: boolean;
+    ignoreVisibility?: boolean;
+  }
   /**
      * @name Two.Shape
      * @class
@@ -1414,6 +1421,17 @@ declare module 'two.js/src/shape' {
      * @nota-bene Works in conjunction with {@link Two.Shape.fromObject}
      */
     toObject(): object;
+    /**
+     * @name Two.Shape#contains
+     * @function
+     * @param {Number} x - x coordinate to hit test against
+     * @param {Number} y - y coordinate to hit test against
+     * @param {Object} [options] - Optional options object
+     * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `shape.visible = false` shapes
+     * @param {Number} [options.tolerance] - Padding to hit test against in pixels
+     * @description Remove self from the scene / parent.
+     */
+    contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
      * @name Two.Shape#_update
      * @function
@@ -1734,6 +1752,20 @@ declare module 'two.js/src/group' {
      */
     dispose(): Group;
     /**
+     * @name Two.Group#getShapesAtPoint
+     * @function
+     * @param {Number} x - X coordinate in world space.
+     * @param {Number} y - Y coordinate in world space.
+     * @param {SceneHitTestOptions} [options]
+     * @returns {Shape[]} Ordered list of intersecting shapes, front to back.
+     * @description Traverse the group hierarchy and return shapes that contain the specified point.
+     */
+    getShapesAtPoint(
+      x: number,
+      y: number,
+      options?: SceneHitTestOptions
+    ): Shape[];
+    /**
      * @name Two.Group#corner
      * @function
      * @description Orient the children of the group to the upper left-hand corner of that group.
@@ -1853,7 +1885,7 @@ declare module 'two.js/src/group' {
   import { Children } from 'two.js/src/children';
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Texture } from 'two.js/src/effects/texture';
-  import { BoundingBox } from 'two.js';
+  import { BoundingBox, SceneHitTestOptions } from 'two.js';
 }
 declare module 'two.js/src/renderers/canvas' {
   /**
@@ -2746,6 +2778,7 @@ declare module 'two.js/src/effects/texture' {
   import { Registry } from 'two.js/src/registry';
 }
 declare module 'two.js/src/path' {
+  import type { ShapeHitTestOptions } from 'two.js/src/shape';
   export type CapProperties = 'butt' | 'round' | 'square';
   export type JoinProperties = 'miter' | 'round' | 'bevel';
   /**
@@ -3155,6 +3188,7 @@ declare module 'two.js/src/path' {
      * @description Return an object with top, left, right, bottom, width, and height parameters of the path.
      */
     getBoundingClientRect(shallow?: boolean): BoundingBox;
+    contains(x: number, y: number, options?: ShapeHitTestOptions): boolean;
     /**
      * @name Two.Path#getPointAt
      * @function
@@ -5564,6 +5598,11 @@ declare module 'two.js' {
      * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
      */
     release<T>(obj?: TwoElement): T;
+    getShapesAtPoint(
+      x: number,
+      y: number,
+      options?: SceneHitTestOptions
+    ): Shape[];
     /**
      * @name Two#update
      * @function
@@ -6059,6 +6098,14 @@ declare module 'two.js' {
     width: number;
     height: number;
   };
+
+  export interface SceneHitTestOptions extends ShapeHitTestOptions {
+    visibleOnly?: boolean;
+    includeGroups?: boolean;
+    mode?: 'all' | 'deepest';
+    deepest?: boolean;
+    filter?: (shape: Shape) => boolean;
+  }
 }
 declare module 'two.js/extras/jsm/zui' {
   /**
