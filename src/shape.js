@@ -223,6 +223,7 @@ export class Shape extends Element {
    * @param {Number} [options.tolerance] - Padding to hit test against in pixels
    * @returns {Boolean}
    * @description Check to see if coordinates are within a {@link Two.Shape}'s bounding rectangle
+   * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
    */
   contains(x, y, options) {
     const opts = options || {};

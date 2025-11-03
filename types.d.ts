@@ -3249,6 +3249,23 @@ declare module 'two.js/src/path' {
      */
     protected _update(bubbles?: boolean): Path;
     /**
+     * @name Two.Path#contains
+     * @function
+     * @param {Number} x - x coordinate to hit test against
+     * @param {Number} y - y coordinate to hit test against
+     * @param {Object} [options] - Optional options object
+     * @param {Boolean} [options.ignoreVisibility] - If `true`, hit test against `path.visible = false` shapes
+     * @param {Number} [options.tolerance] - Padding to hit test against in pixels
+     * @returns {Boolean}
+     * @description Check to see if coordinates are within a {@link Two.Path}'s bounding rectangle
+     * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
+     */
+    contains(
+      x: number,
+      y: number,
+      options?: { ignoreVisibility: boolean; tolerance: number }
+    ): boolean;
+    /**
      * @name Two.Path#flagReset
      * @function
      * @private
