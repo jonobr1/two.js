@@ -123,6 +123,10 @@ Designed for modern browsers with ES6+ support. Uses feature detection for rende
 - Use JSDoc comments for public API methods
 - Use 2-space indentation for JavaScript files
 - Place new components in appropriate src/ subdirectories
+- Application runs lots of functions on requestAnimationFrame (or per animation frame) so:
+  - Reduce the amount of objects and functions created within methods
+  - Prefer caching variables to the module scope
+  - Do not use function based iterators (prefer native for loops, etc.)
 
 ## Architecture Patterns
 
