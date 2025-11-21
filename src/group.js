@@ -379,7 +379,7 @@ export class Group extends Shape {
     }
   }
 
-  static IsVisible = function (element, visibleOnly) {
+  static IsVisible(element, visibleOnly) {
     if (!visibleOnly) {
       return true;
     }
@@ -396,9 +396,9 @@ export class Group extends Shape {
     }
 
     return true;
-  };
+  }
 
-  static VisitForHitTest = function (
+  static VisitForHitTest(
     group,
     context,
     includeGroups,
@@ -482,7 +482,7 @@ export class Group extends Shape {
     }
 
     return false;
-  };
+  }
 
   /**
    * @name Two.Group#copy
@@ -609,6 +609,25 @@ export class Group extends Shape {
     return this;
   }
 
+  /**
+   * @name Two.Group#getShapesAtPoint
+   * @function
+   * @param {Number} x - X coordinate in world space.
+   * @param {Number} y - Y coordinate in world space.
+   * @param {Object} [options] - Hit test configuration.
+   * @param {Boolean} [options.visibleOnly=true] - Limit results to visible shapes.
+   * @param {Boolean} [options.includeGroups=false] - Include groups in the hit results.
+   * @param {('all'|'deepest')} [options.mode='all'] - Whether to return all intersecting shapes or only the top-most.
+   * @param {Boolean} [options.deepest] - Alias for `mode: 'deepest'`.
+   * @param {Number} [options.precision] - Segmentation precision for curved geometry.
+   * @param {Number} [options.tolerance=0] - Pixel tolerance applied to hit testing.
+   * @param {Boolean} [options.fill] - Override fill testing behaviour.
+   * @param {Boolean} [options.stroke] - Override stroke testing behaviour.
+   * @param {Function} [options.filter] - Predicate to filter shapes from the result set.
+   * @returns {Shape[]} Ordered list of intersecting shapes, front to back.
+   * @description Traverse the group hierarchy and return shapes that contain the specified point.
+   * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
+   */
   getShapesAtPoint(x, y, options) {
     const opts = options || {};
     const { results, hitOptions, context, single, empty } =

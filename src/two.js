@@ -551,10 +551,7 @@ export default class Two {
    * @nota-bene Delegates to {@link Two.Group#getShapesAtPoint} on the root scene.
    */
   getShapesAtPoint(x, y, options) {
-    if (
-      this.scene &&
-      typeof this.scene.getShapesAtPoint === 'function'
-    ) {
+    if (this.scene && typeof this.scene.getShapesAtPoint === 'function') {
       return this.scene.getShapesAtPoint(x, y, options);
     }
     return [];

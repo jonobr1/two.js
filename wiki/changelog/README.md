@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ## Nightly
 
+- Improved `Two.Path.subdivide` to preserve curves
+- Added `Two.Path.smooth` command
 - Added `Two.Shape.contains` method for hit testing
 - Added `Two.getShapesAtPoint` with visibility/filter options
 
