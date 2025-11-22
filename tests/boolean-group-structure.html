@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Two.js BooleanGroup Structure Tests</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/qunit@latest/qunit/qunit.css"
+    />
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <div class="scripts">
+      <script src="https://cdn.jsdelivr.net/npm/qunit@latest"></script>
+      <script src="../build/two.js"></script>
+
+      <script>
+        /**
+         * Tests Two.js BooleanGroup Phase 1 Functionality:
+         * + Creation and operation property verification
+         * + Adding/removing children dynamically
+         * + Dirty flag propagation throughout the scene graph
+         * + Flatten method functionality
+         */
+
+        QUnit.module('BooleanGroup - Phase 1 Structure');
+
+        QUnit.test('BooleanGroup Creation', function (assert) {
+          assert.expect(6);
+
+          const two = new Two({ width: 400, height: 400 });
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+
+          // Test creation with factory method
+          const group1 = two.makeBooleanGroup([circle1, circle2], 'union');
+
+          assert.ok(
+            group1 instanceof Two.BooleanGroup,
+            'makeBooleanGroup returns a BooleanGroup instance'
+          );
+          assert.equal(
+            group1.children.length,
+            2,
+            'BooleanGroup has correct number of children'
+          );
+          assert.equal(
+            group1.operation,
+            'union',
+            'BooleanGroup operation is set correctly'
+          );
+
+          // Test direct constructor creation
+          const circle3 = two.makeCircle(100, 0, 50);
+          const circle4 = two.makeCircle(150, 0, 50);
+          const group2 = new Two.BooleanGroup([circle3, circle4], 'subtract');
+          two.scene.add(group2);
+
+          assert.ok(
+            group2 instanceof Two.BooleanGroup,
+            'BooleanGroup constructor creates instance correctly'
+          );
+          assert.equal(
+            group2.operation,
+            'subtract',
+            'BooleanGroup operation is set via constructor'
+          );
+          assert.equal(
+            group2.children.length,
+            2,
+            'BooleanGroup has children from constructor'
+          );
+        });
+
+        QUnit.test('BooleanGroup Operation Property', function (assert) {
+          assert.expect(9);
+
+          const two = new Two({ width: 400, height: 400 });
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+          const group = two.makeBooleanGroup([circle1, circle2]);
+
+          // Test default operation
+          assert.equal(group.operation, 'union', 'Default operation is union');
+
+          // Test valid operations
+          const validOperations = Object.values(Two.BooleanGroup.Operations);
+          validOperations.forEach(function (op) {
+            group.operation = op;
+            assert.equal(
+              group.operation,
+              op,
+              'Operation ' + op + ' is set correctly'
+            );
+          });
+
+          // Test that _flagOperation is set when operation changes
+          const expectation = group.operation !== 'union';
+          group.operation = 'union';
+          assert.equal(
+            group._flagOperation,
+            expectation,
+            '_flagOperation is false initially after setting same value'
+          );
+
+          group.operation = 'subtract';
+          assert.equal(
+            group._flagOperation,
+            true,
+            '_flagOperation is true after changing operation'
+          );
+
+          // Reset flag for next test
+          group._update();
+          group.flagReset();
+
+          // Test invalid operation (should warn but not change)
+          const originalOp = group.operation;
+          group.operation = 'invalid';
+          assert.equal(
+            group.operation,
+            originalOp,
+            'Invalid operation does not change the current operation'
+          );
+
+          // Test that changing operation triggers dirty flag
+          group._flagOperation = false;
+          group.operation = 'intersect';
+          assert.equal(
+            group._flagOperation,
+            true,
+            'Changing operation sets _flagOperation to true'
+          );
+        });
+
+        QUnit.test('Adding and Removing Children', function (assert) {
+          assert.expect(8);
+
+          const two = new Two({ width: 400, height: 400 });
+          const group = two.makeBooleanGroup([], 'union');
+
+          assert.equal(
+            group.children.length,
+            0,
+            'Empty BooleanGroup has no children'
+          );
+
+          // Add children dynamically
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+
+          group.add(circle1);
+          assert.equal(
+            group.children.length,
+            1,
+            'BooleanGroup has 1 child after adding'
+          );
+          assert.equal(group.children[0], circle1, 'First child is correct');
+
+          group.add(circle2);
+          assert.equal(
+            group.children.length,
+            2,
+            'BooleanGroup has 2 children after adding another'
+          );
+
+          // Test that additions flag is set
+          assert.ok(
+            group._flagAdditions,
+            '_flagAdditions is set when children are added'
+          );
+
+          // Remove children
+          group.remove(circle1);
+          assert.equal(
+            group.children.length,
+            1,
+            'BooleanGroup has 1 child after removing one'
+          );
+          assert.equal(
+            group.children[0],
+            circle2,
+            'Remaining child is correct'
+          );
+
+          // Test that subtractions flag is set
+          assert.ok(
+            group._flagSubtractions,
+            '_flagSubtractions is set when children are removed'
+          );
+        });
+
+        QUnit.test('Dirty Flag Propagation', function (assert) {
+          assert.expect(6);
+
+          const two = new Two({ width: 400, height: 400 });
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+          const group = two.makeBooleanGroup([circle1, circle2], 'union');
+
+          // Test operation change triggers flag
+          group._flagOperation = false;
+          group.operation = 'subtract';
+          assert.equal(
+            group._flagOperation,
+            true,
+            'Changing operation sets _flagOperation'
+          );
+
+          // Test _update method
+          group._update();
+          assert.ok(true, '_update method runs without errors');
+
+          // Test flagReset
+          group.flagReset();
+          assert.equal(
+            group._flagOperation,
+            false,
+            'flagReset clears _flagOperation'
+          );
+
+          // Test adding children sets additions flag
+          const circle3 = two.makeCircle(100, 0, 50);
+          group.add(circle3);
+          assert.ok(
+            group._flagAdditions,
+            'Adding children sets _flagAdditions'
+          );
+
+          // Update to process additions
+          group._update();
+          group.flagReset();
+
+          // Test removing children sets subtractions flag
+          group.remove(circle3);
+          assert.ok(
+            group._flagSubtractions,
+            'Removing children sets _flagSubtractions'
+          );
+
+          // Test that flags are cleared after flagReset
+          group.flagReset();
+          assert.equal(
+            group._flagAdditions && group._flagSubtractions,
+            false,
+            'flagReset clears addition and subtraction flags'
+          );
+        });
+
+        QUnit.test('getResultPath Method', function (assert) {
+          assert.expect(3);
+
+          const two = new Two({ width: 400, height: 400 });
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+          const group = two.makeBooleanGroup([circle1, circle2], 'union');
+
+          // Test that getResultPath exists
+          assert.ok(
+            typeof group.getResultPath === 'function',
+            'getResultPath method exists'
+          );
+
+          // Phase 1: getResultPath returns null (computation not implemented yet)
+          const result = group.getResultPath();
+          assert.equal(result, null, 'getResultPath returns null in Phase 1');
+
+          // Test that calling getResultPath clears the operation flag
+          group._flagOperation = true;
+          group.getResultPath();
+          assert.equal(
+            group._flagOperation,
+            false,
+            'getResultPath clears _flagOperation'
+          );
+        });
+
+        QUnit.test('flatten Method', function (assert) {
+          assert.expect(2);
+
+          const two = new Two({ width: 400, height: 400 });
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+          const group = two.makeBooleanGroup([circle1, circle2], 'union');
+
+          // Test that flatten exists
+          assert.ok(
+            typeof group.flatten === 'function',
+            'flatten method exists'
+          );
+
+          // Phase 1: flatten returns null (computation not implemented yet)
+          const result = group.flatten();
+          assert.equal(result, null, 'flatten returns null in Phase 1');
+        });
+
+        QUnit.test('BooleanGroup Clone', function (assert) {
+          assert.expect(6);
+
+          const two = new Two({ width: 400, height: 400 });
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+          const group = two.makeBooleanGroup([circle1, circle2], 'subtract');
+
+          group.translation.set(100, 100);
+          group.rotation = Math.PI / 4;
+          group.scale = 2;
+
+          const clone = group.clone();
+
+          assert.ok(
+            clone instanceof Two.BooleanGroup,
+            'Cloned object is a BooleanGroup'
+          );
+          assert.equal(
+            clone.operation,
+            group.operation,
+            'Cloned BooleanGroup has same operation'
+          );
+          assert.equal(
+            clone.children.length,
+            group.children.length,
+            'Cloned BooleanGroup has same number of children'
+          );
+          assert.equal(
+            clone.translation.x,
+            group.translation.x,
+            'Cloned BooleanGroup has same translation.x'
+          );
+          assert.equal(
+            clone.rotation,
+            group.rotation,
+            'Cloned BooleanGroup has same rotation'
+          );
+          assert.equal(
+            clone.scale,
+            group.scale,
+            'Cloned BooleanGroup has same scale'
+          );
+        });
+
+        QUnit.test('BooleanGroup toObject', function (assert) {
+          assert.expect(3);
+
+          const two = new Two({ width: 400, height: 400 });
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+          const group = two.makeBooleanGroup([circle1, circle2], 'intersect');
+
+          const obj = group.toObject();
+
+          assert.equal(
+            obj.renderer.type,
+            'boolean-group',
+            'toObject has correct renderer type'
+          );
+          assert.equal(
+            obj.operation,
+            'intersect',
+            'toObject includes operation property'
+          );
+          assert.equal(obj.children.length, 2, 'toObject includes children');
+        });
+
+        QUnit.test('BooleanGroup Factory Method Variants', function (assert) {
+          assert.expect(4);
+
+          const two = new Two({ width: 400, height: 400 });
+
+          // Test with array and operation
+          const circle1 = two.makeCircle(0, 0, 50);
+          const circle2 = two.makeCircle(50, 0, 50);
+          const group1 = two.makeBooleanGroup([circle1, circle2], 'subtract');
+
+          assert.equal(
+            group1.children.length,
+            2,
+            'Factory method with array creates group with children'
+          );
+          assert.equal(
+            group1.operation,
+            'subtract',
+            'Factory method sets operation correctly'
+          );
+
+          // Test with varargs
+          const circle3 = two.makeCircle(100, 0, 50);
+          const circle4 = two.makeCircle(150, 0, 50);
+          const group2 = two.makeBooleanGroup(circle3, circle4, 'union');
+
+          assert.equal(
+            group2.children.length,
+            2,
+            'Factory method with varargs creates group with children'
+          );
+          assert.equal(
+            group2.operation,
+            'union',
+            'Factory method with varargs sets operation correctly'
+          );
+        });
+      </script>
+    </div>
+  </body>
+</html>

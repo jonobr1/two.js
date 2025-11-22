@@ -17,6 +17,7 @@ import { Anchor } from './anchor.js';
 import { Collection } from './collection.js';
 import { Events } from './events.js';
 import { Group } from './group.js';
+import { BooleanGroup } from './boolean-group.js';
 import { Matrix } from './matrix.js';
 import { Path } from './path.js';
 import { Registry } from './registry.js';
@@ -329,6 +330,7 @@ export default class Two {
   static Collection = Collection;
   static Events = Events;
   static Group = Group;
+  static BooleanGroup = BooleanGroup;
   static Matrix = Matrix;
   static Path = Path;
   static Registry = Registry;
@@ -1144,6 +1146,32 @@ export default class Two {
     const group = new Group();
     this.scene.add(group);
     group.add(objects);
+
+    return group;
+  }
+
+  /**
+   * @name Two#makeBooleanGroup
+   * @function
+   * @param {(Two.Shape[]|...Two.Shape)} [objects] - Two.js objects to be added to the boolean group in the form of an array or as individual arguments.
+   * @param {String} [operation='union'] - The boolean operation to apply: 'union', 'subtract', 'intersect', or 'exclude'.
+   * @returns {Two.BooleanGroup}
+   * @description Creates a Two.js boolean group object and adds it to the scene.
+   */
+  makeBooleanGroup(objects, operation) {
+    if (!(objects instanceof Array)) {
+      objects = Array.prototype.slice.call(arguments);
+      // If operation was passed as second argument when using varargs,
+      // check if last argument is a string (operation)
+      const lastArg = objects[objects.length - 1];
+      if (typeof lastArg === 'string') {
+        operation = lastArg;
+        objects = objects.slice(0, -1);
+      }
+    }
+
+    const group = new BooleanGroup(objects, operation);
+    this.scene.add(group);
 
     return group;
   }

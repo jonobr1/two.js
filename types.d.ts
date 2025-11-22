@@ -1895,6 +1895,89 @@ declare module 'two.js/src/group' {
      */
     flagReset(): Group;
   }
+
+  /**
+   * @name Two.BooleanGroup
+   * @class
+   * @extends Two.Group
+   * @param {Shape[]} [children] - A list of {@link Two.Shape} objects for boolean operations.
+   * @param {String} [operation='union'] - The boolean operation to apply: 'union', 'subtract', 'intersect', or 'exclude'.
+   * @description A {@link Two.Group} that applies boolean operations to its children. The result is cached and recomputed only when the operation or children change.
+   */
+  export class BooleanGroup extends Group {
+    /**
+     * @name Two.BooleanGroup.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.BooleanGroup}.
+     */
+    static Properties: ('operation' | string)[];
+    static Operations: {
+      union: 'union';
+      subtract: 'subtract';
+      intersect: 'intersect';
+      exclude: 'exclude';
+    };
+    constructor(
+      children?: Shape[],
+      operation?: 'union' | 'subtract' | 'intersect' | 'exclude'
+    );
+    constructor(...args: Shape[]);
+    /**
+     * @name Two.BooleanGroup#_flagOperation
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.BooleanGroup#operation} needs updating.
+     */
+    private _flagOperation;
+    /**
+     * @name Two.BooleanGroup#_operation
+     * @private
+     * @property {String} - The boolean operation type.
+     * @see {@link Two.BooleanGroup#operation}
+     */
+    private _operation;
+    /**
+     * @name Two.BooleanGroup#_resultPath
+     * @private
+     * @property {Path} - Cached result path from the boolean operation.
+     */
+    private _resultPath;
+    /**
+     * @name Two.BooleanGroup#operation
+     * @property {String} - The boolean operation to apply to children: 'union', 'subtract', 'intersect', or 'exclude'.
+     */
+    operation: 'union' | 'subtract' | 'intersect' | 'exclude';
+    /**
+     * @name Two.BooleanGroup#getResultPath
+     * @function
+     * @returns {Path} - The computed result path of the boolean operation.
+     * @description Returns the cached result path if available, otherwise computes and caches it.
+     * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
+     */
+    getResultPath(): Path | null;
+    /**
+     * @name Two.BooleanGroup#flatten
+     * @function
+     * @returns {Path} - A new permanent path representing the boolean operation result.
+     * @description Converts the boolean group to a permanent path. The returned path is not cached and represents a snapshot of the current operation result.
+     * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
+     */
+    flatten(): Path | null;
+    /**
+     * @name Two.BooleanGroup#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.BooleanGroup}
+     * @description Create a new instance of {@link Two.BooleanGroup} with the same properties of the current group.
+     */
+    clone(parent?: Group): BooleanGroup;
+    /**
+     * @name Two.BooleanGroup#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the boolean group.
+     */
+    toObject(): Object;
+  }
+
   import { Shape } from 'two.js/src/shape';
   import { Path, CapProperties, JoinProperties } from 'two.js/src/path';
   import { Text } from 'two.js/src/text';
@@ -6038,6 +6121,26 @@ declare module 'two.js' {
      */
     makeGroup(...args: Shape[]): Group;
     /**
+     * @name Two#makeBooleanGroup
+     * @function
+     * @param {Shape[]} [objects] - Two.js objects to be added to the boolean group in the form of an array.
+     * @param {String} [operation='union'] - The boolean operation to apply: 'union', 'subtract', 'intersect', or 'exclude'.
+     * @returns {BooleanGroup}
+     * @description Creates a Two.js boolean group object and adds it to the scene.
+     */
+    makeBooleanGroup(
+      objects?: Shape[],
+      operation?: 'union' | 'subtract' | 'intersect' | 'exclude'
+    ): BooleanGroup;
+    /**
+     * @name Two#makeBooleanGroup
+     * @function
+     * @param {...Shape} [args] - Alternatively pass each element as an argument, with optional operation as last string argument
+     * @returns {BooleanGroup}
+     * @description Creates a Two.js boolean group object and adds it to the scene.
+     */
+    makeBooleanGroup(...args: (Shape | string)[]): BooleanGroup;
+    /**
      * @name Two#interpret
      * @function
      * @param {SVGElement} svg - The SVG node to be parsed.
@@ -6106,6 +6209,7 @@ declare module 'two.js' {
   import { ImageSequence } from 'two.js/src/effects/image-sequence';
   import { Texture } from 'two.js/src/effects/texture';
   import { Group } from 'two.js/src/group';
+  import { BooleanGroup } from 'two.js/src/group';
   import { Anchor } from 'two.js/src/anchor';
   import { Collection } from 'two.js/src/collection';
   import { Events } from 'two.js/src/events';
