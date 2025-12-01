@@ -1220,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2025-11-03T22:27:20.095Z",
+    PublishDate: "2025-11-26T06:59:54.712Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -12132,6 +12132,186 @@ var Two = (() => {
     return xhr2;
   }
 
+  // src/boolean-group.js
+  var BooleanGroup = class _BooleanGroup extends Group {
+    /**
+     * @name Two.BooleanGroup#_flagOperation
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.BooleanGroup#operation} needs updating.
+     */
+    _flagOperation = false;
+    /**
+     * @name Two.BooleanGroup#_operation
+     * @private
+     * @property {String} - The boolean operation type.
+     * @see {@link Two.BooleanGroup#operation}
+     */
+    _operation = "union";
+    /**
+     * @name Two.BooleanGroup#_resultPath
+     * @private
+     * @property {Two.Path} - Cached result path from the boolean operation.
+     */
+    _resultPath = null;
+    constructor(children, operation) {
+      super(children);
+      for (let prop in proto24) {
+        Object.defineProperty(this, prop, proto24[prop]);
+      }
+      this._renderer.type = "boolean-group";
+      if (operation) {
+        this.operation = operation;
+      }
+    }
+    /**
+     * @name Two.BooleanGroup.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.BooleanGroup}.
+     */
+    static Properties = ["operation"];
+    /**
+     * @name Two.BooleanGroup.Operations
+     * @property {Object} - Object of possible boolean operations to perform
+     */
+    static Operations = {
+      union: "union",
+      subtract: "subtract",
+      intersect: "intersect",
+      exclude: "exclude"
+    };
+    /**
+     * @name Two.BooleanGroup#getResultPath
+     * @function
+     * @returns {Two.Path} - The computed result path of the boolean operation.
+     * @description Returns the cached result path if available, otherwise computes and caches it.
+     * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
+     */
+    getResultPath() {
+      if (this._flagOperation || !this._resultPath) {
+        this._resultPath = null;
+        this._flagOperation = false;
+      }
+      return this._resultPath;
+    }
+    /**
+     * @name Two.BooleanGroup#flatten
+     * @function
+     * @returns {Two.Path} - A new permanent path representing the boolean operation result.
+     * @description Converts the boolean group to a permanent path. The returned path is not cached and represents a snapshot of the current operation result.
+     * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
+     */
+    flatten() {
+      const resultPath = this.getResultPath();
+      if (!resultPath) {
+        return null;
+      }
+      const permanentPath = resultPath.clone();
+      permanentPath.translation.copy(this.translation);
+      permanentPath.rotation = this.rotation;
+      permanentPath.scale = this.scale;
+      if (this.matrix.manual) {
+        permanentPath.matrix.copy(this.matrix);
+      }
+      return permanentPath;
+    }
+    /**
+     * @name Two.BooleanGroup#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. If the operation changed or children were modified, it triggers recomputation of the result path.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    _update() {
+      if (this._flagOperation || this._flagAdditions || this._flagSubtractions || this._flagOrder) {
+        this._flagOperation = true;
+        const resultPath = this.getResultPath();
+        if (resultPath) {
+          resultPath.fill = this.fill;
+          resultPath.stroke = this.stroke;
+          resultPath.linewidth = this.linewidth;
+          resultPath.opacity = this.opacity;
+          resultPath.visible = this.visible;
+          resultPath.cap = this.cap;
+          resultPath.join = this.join;
+          resultPath.miter = this.miter;
+        }
+      }
+      return super._update.apply(this, arguments);
+    }
+    /**
+     * @name Two.BooleanGroup#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    flagReset() {
+      this._flagOperation = false;
+      super.flagReset.call(this);
+      return this;
+    }
+    /**
+     * @name Two.BooleanGroup#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.BooleanGroup}
+     * @description Create a new instance of {@link Two.BooleanGroup} with the same properties of the current group.
+     */
+    clone(parent) {
+      const children = this.children.map(function(child) {
+        return child.clone();
+      });
+      const clone = new _BooleanGroup(children, this.operation);
+      clone.opacity = this.opacity;
+      if (this.mask) {
+        clone.mask = this.mask;
+      }
+      clone.translation.copy(this.translation);
+      clone.rotation = this.rotation;
+      clone.scale = this.scale;
+      clone.className = this.className;
+      if (this.matrix.manual) {
+        clone.matrix.copy(this.matrix);
+      }
+      if (parent) {
+        parent.add(clone);
+      }
+      return clone._update();
+    }
+    /**
+     * @name Two.BooleanGroup#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the boolean group.
+     */
+    toObject() {
+      const result = super.toObject.call(this);
+      result.renderer.type = "boolean-group";
+      result.operation = this.operation;
+      return result;
+    }
+  };
+  var proto24 = {
+    operation: {
+      enumerable: true,
+      get: function() {
+        return this._operation;
+      },
+      set: function(v) {
+        const validOperations = Object.values(BooleanGroup.Operations);
+        if (validOperations.indexOf(v) === -1) {
+          console.warn(
+            `Two.BooleanGroup: Invalid operation "${v}". Valid operations are: ${validOperations.join(
+              ", "
+            )}`
+          );
+          return;
+        }
+        this._flagOperation = this._operation !== v || this._flagOperation;
+        this._operation = v;
+      }
+    }
+  };
+
   // src/effects/image.js
   var Image2 = class _Image extends Rectangle {
     /**
@@ -12161,8 +12341,8 @@ var Two = (() => {
     constructor(path, ox, oy, width, height, mode) {
       super(ox, oy, width || 1, height || 1);
       this._renderer.type = "image";
-      for (let prop in proto24) {
-        Object.defineProperty(this, prop, proto24[prop]);
+      for (let prop in proto25) {
+        Object.defineProperty(this, prop, proto25[prop]);
       }
       this.noStroke();
       this.noFill();
@@ -12351,7 +12531,7 @@ var Two = (() => {
       return this;
     }
   };
-  var proto24 = {
+  var proto25 = {
     texture: {
       enumerable: true,
       get: function() {
@@ -15766,6 +15946,7 @@ var Two = (() => {
     static Collection = Collection;
     static Events = Events;
     static Group = Group;
+    static BooleanGroup = BooleanGroup;
     static Matrix = Matrix2;
     static Path = Path;
     static Registry = Registry;
@@ -16454,6 +16635,27 @@ var Two = (() => {
       const group = new Group();
       this.scene.add(group);
       group.add(objects);
+      return group;
+    }
+    /**
+     * @name Two#makeBooleanGroup
+     * @function
+     * @param {(Two.Shape[]|...Two.Shape)} [objects] - Two.js objects to be added to the boolean group in the form of an array or as individual arguments.
+     * @param {String} [operation='union'] - The boolean operation to apply: 'union', 'subtract', 'intersect', or 'exclude'.
+     * @returns {Two.BooleanGroup}
+     * @description Creates a Two.js boolean group object and adds it to the scene.
+     */
+    makeBooleanGroup(objects, operation) {
+      if (!(objects instanceof Array)) {
+        objects = Array.prototype.slice.call(arguments);
+        const lastArg = objects[objects.length - 1];
+        if (typeof lastArg === "string") {
+          operation = lastArg;
+          objects = objects.slice(0, -1);
+        }
+      }
+      const group = new BooleanGroup(objects, operation);
+      this.scene.add(group);
       return group;
     }
     /**

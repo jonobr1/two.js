@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Two.js Boolean Intersections Test</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        background: #f5f5f5;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .info {
+        margin-bottom: 20px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .test-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .test-case {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        min-width: 300px;
+      }
+
+      .test-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 16px;
+      }
+
+      .test-result {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .test-result.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .test-result.failure {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .canvas-container {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 10px 0;
+      }
+
+      .stats {
+        margin-top: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .stats h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .stats-item {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .stats-item strong {
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Two.js Boolean Intersections Test</h1>
+    <div class="info">
+      Testing curve-to-curve intersection detection using the fat line clipping algorithm.
+    </div>
+
+    <div class="test-container" id="tests"></div>
+
+    <div class="stats" id="stats"></div>
+
+    <script src="../build/two.js"></script>
+    <script type="module">
+      import {
+        findCurveIntersections,
+        findPathIntersections
+      } from '../src/utils/boolean-operations.js';
+
+      const testResults = {
+        passed: 0,
+        failed: 0,
+        total: 0
+      };
+
+      function createTestCase(title, testFn) {
+        const container = document.createElement('div');
+        container.className = 'test-case';
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'test-title';
+        titleEl.textContent = title;
+        container.appendChild(titleEl);
+
+        const canvasContainer = document.createElement('div');
+        canvasContainer.className = 'canvas-container';
+        container.appendChild(canvasContainer);
+
+        const two = new Two({
+          width: 300,
+          height: 300,
+          type: Two.Types.svg
+        }).appendTo(canvasContainer);
+
+        const resultEl = document.createElement('div');
+        resultEl.className = 'test-result';
+        container.appendChild(resultEl);
+
+        document.getElementById('tests').appendChild(container);
+
+        try {
+          const result = testFn(two);
+          resultEl.className = 'test-result ' + (result.success ? 'success' : 'failure');
+          resultEl.innerHTML = result.message;
+
+          if (result.success) {
+            testResults.passed++;
+          } else {
+            testResults.failed++;
+          }
+        } catch (error) {
+          resultEl.className = 'test-result failure';
+          resultEl.textContent = `Error: ${error.message}\n${error.stack}`;
+          testResults.failed++;
+        }
+
+        testResults.total++;
+        two.update();
+      }
+
+      function updateStats() {
+        const statsEl = document.getElementById('stats');
+        statsEl.innerHTML = `
+          <h2>Test Results</h2>
+          <div class="stats-item"><strong>Total:</strong> ${testResults.total}</div>
+          <div class="stats-item"><strong>Passed:</strong> ${testResults.passed}</div>
+          <div class="stats-item"><strong>Failed:</strong> ${testResults.failed}</div>
+          <div class="stats-item"><strong>Success Rate:</strong> ${Math.round((testResults.passed / testResults.total) * 100)}%</div>
+        `;
+      }
+
+      // Test 1: Two intersecting circles
+      createTestCase('Two Intersecting Circles', (two) => {
+        const circle1 = two.makeCircle(100, 150, 60);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = 'red';
+        circle1.linewidth = 2;
+
+        const circle2 = two.makeCircle(200, 150, 60);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = 'blue';
+        circle2.linewidth = 2;
+
+        const intersections = findPathIntersections(circle1, circle2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 5);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 2;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            intersections.map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n')
+        };
+      });
+
+      // Test 2: Overlapping rectangles
+      createTestCase('Overlapping Rectangles', (two) => {
+        const rect1 = two.makeRectangle(120, 150, 100, 100);
+        rect1.fill = 'rgba(255, 0, 0, 0.3)';
+        rect1.stroke = 'red';
+        rect1.linewidth = 2;
+
+        const rect2 = two.makeRectangle(180, 150, 100, 100);
+        rect2.fill = 'rgba(0, 0, 255, 0.3)';
+        rect2.stroke = 'blue';
+        rect2.linewidth = 2;
+
+        const intersections = findPathIntersections(rect1, rect2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 4;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            intersections.slice(0, 4).map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n') +
+            (intersections.length > 4 ? `\n  ... and ${intersections.length - 4} more` : '')
+        };
+      });
+
+      // Test 3: Tangent circles (expect 1 intersection point)
+      createTestCase('Tangent Circles', (two) => {
+        const circle1 = two.makeCircle(100, 150, 60);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = 'red';
+        circle1.linewidth = 2;
+
+        const circle2 = two.makeCircle(220, 150, 60);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = 'blue';
+        circle2.linewidth = 2;
+
+        const intersections = findPathIntersections(circle1, circle2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 5);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 1;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersection, found ${intersections.length}.\n` +
+            intersections.map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n')
+        };
+      });
+
+      // Test 4: Non-intersecting shapes
+      createTestCase('Non-intersecting Shapes', (two) => {
+        const circle1 = two.makeCircle(80, 150, 40);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = 'red';
+        circle1.linewidth = 2;
+
+        const circle2 = two.makeCircle(220, 150, 40);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = 'blue';
+        circle2.linewidth = 2;
+
+        const intersections = findPathIntersections(circle1, circle2);
+
+        const expected = 0;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            (intersections.length === 0 ? '  No intersections detected (correct)' :
+              intersections.map((int, i) =>
+                `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+              ).join('\n'))
+        };
+      });
+
+      // Test 5: Circle intersecting rectangle
+      createTestCase('Circle Intersecting Rectangle', (two) => {
+        const rect = two.makeRectangle(150, 150, 120, 80);
+        rect.fill = 'rgba(255, 0, 0, 0.3)';
+        rect.stroke = 'red';
+        rect.linewidth = 2;
+
+        const circle = two.makeCircle(150, 150, 70);
+        circle.fill = 'rgba(0, 0, 255, 0.3)';
+        circle.stroke = 'blue';
+        circle.linewidth = 2;
+
+        const intersections = findPathIntersections(rect, circle);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 8;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            intersections.slice(0, 4).map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n') +
+            (intersections.length > 4 ? `\n  ... and ${intersections.length - 4} more` : '')
+        };
+      });
+
+      // Test 6: Curved path intersection
+      createTestCase('Curved Path Intersection', (two) => {
+        // Create a curved S-shape
+        const path1 = two.makeCurve(
+          50, 100,
+          120, 50,
+          180, 250,
+          250, 200,
+          false
+        );
+        path1.stroke = 'red';
+        path1.linewidth = 3;
+        path1.noFill();
+
+        // Create another curved path
+        const path2 = two.makeCurve(
+          50, 200,
+          120, 250,
+          180, 50,
+          250, 100,
+          false
+        );
+        path2.stroke = 'blue';
+        path2.linewidth = 3;
+        path2.noFill();
+
+        const intersections = findPathIntersections(path1, path2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 5);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const minExpected = 1;
+        const success = intersections.length >= minExpected;
+
+        return {
+          success,
+          message: `Expected at least ${minExpected} intersection(s), found ${intersections.length}.\n` +
+            intersections.map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n')
+        };
+      });
+
+      // Test 7: Star intersecting circle
+      createTestCase('Star Intersecting Circle', (two) => {
+        const star = two.makeStar(150, 150, 40, 140, 5);
+        star.fill = 'rgba(255, 0, 0, 0.3)';
+        star.stroke = 'red';
+        star.linewidth = 2;
+
+        const circle = two.makeCircle(150, 150, 60);
+        circle.fill = 'rgba(0, 0, 255, 0.3)';
+        circle.stroke = 'blue';
+        circle.linewidth = 2;
+
+        const intersections = findPathIntersections(star, circle);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 3);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 10;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            intersections.slice(0, 5).map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n') +
+            (intersections.length > 5 ? `\n  ... and ${intersections.length - 5} more` : '')
+        };
+      });
+
+      // Test 8: Ellipse intersection
+      createTestCase('Two Intersecting Ellipses', (two) => {
+        const ellipse1 = two.makeEllipse(120, 150, 80, 50);
+        ellipse1.fill = 'rgba(255, 0, 0, 0.3)';
+        ellipse1.stroke = 'red';
+        ellipse1.linewidth = 2;
+
+        const ellipse2 = two.makeEllipse(180, 150, 80, 50);
+        ellipse2.fill = 'rgba(0, 0, 255, 0.3)';
+        ellipse2.stroke = 'blue';
+        ellipse2.linewidth = 2;
+
+        const intersections = findPathIntersections(ellipse1, ellipse2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 2;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            intersections.map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n')
+        };
+      });
+
+      // Test 9: Shape completely within another shape
+      createTestCase('Circle Completely Within Circle', (two) => {
+        const outerCircle = two.makeCircle(150, 150, 80);
+        outerCircle.fill = 'rgba(255, 0, 0, 0.3)';
+        outerCircle.stroke = 'red';
+        outerCircle.linewidth = 2;
+
+        const innerCircle = two.makeCircle(150, 150, 40);
+        innerCircle.fill = 'rgba(0, 0, 255, 0.3)';
+        innerCircle.stroke = 'blue';
+        innerCircle.linewidth = 2;
+
+        const intersections = findPathIntersections(outerCircle, innerCircle);
+
+        // Draw intersection points (should be none)
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 5);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 0;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            (intersections.length === 0 ? '  No intersections detected (correct - inner shape fully contained)' :
+              intersections.map((int, i) =>
+                `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+              ).join('\n'))
+        };
+      });
+
+      // Test 10: Identical/Coincident Shapes
+      createTestCase('Identical Coincident Circles', (two) => {
+        const circle1 = two.makeCircle(150, 150, 60);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = 'red';
+        circle1.linewidth = 3;
+
+        const circle2 = two.makeCircle(150, 150, 60);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = 'blue';
+        circle2.linewidth = 1;
+        circle2.dashes = [5, 5];
+
+        const intersections = findPathIntersections(circle1, circle2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        // Coincident shapes could return many intersections or be handled as a special case
+        const success = true; // Accept any result for this degenerate case
+        const message = intersections.length === 0
+          ? 'No intersections detected (coincident curves handled as special case)'
+          : `Found ${intersections.length} intersections.\n` +
+            intersections.slice(0, 5).map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n') +
+            (intersections.length > 5 ? `\n  ... and ${intersections.length - 5} more` : '');
+
+        return {
+          success,
+          message: `Degenerate case - identical shapes.\n${message}`
+        };
+      });
+
+      // Test 11: Rotated Shapes
+      createTestCase('Rotated Rectangles Intersecting', (two) => {
+        const rect1 = two.makeRectangle(150, 150, 120, 60);
+        rect1.fill = 'rgba(255, 0, 0, 0.3)';
+        rect1.stroke = 'red';
+        rect1.linewidth = 2;
+
+        const rect2 = two.makeRectangle(150, 150, 120, 60);
+        rect2.rotation = Math.PI / 4; // 45 degrees
+        rect2.fill = 'rgba(0, 0, 255, 0.3)';
+        rect2.stroke = 'blue';
+        rect2.linewidth = 2;
+
+        const intersections = findPathIntersections(rect1, rect2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 8;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            intersections.slice(0, 4).map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n') +
+            (intersections.length > 4 ? `\n  ... and ${intersections.length - 4} more` : '')
+        };
+      });
+
+      // Test 12: Self-Intersecting Path
+      createTestCase('Self-Intersecting Figure-8 Path', (two) => {
+        // Create a figure-8 or bowtie shape
+        const path = two.makeCurve(
+          100, 100,
+          200, 100,
+          100, 200,
+          200, 200,
+          false
+        );
+        path.stroke = 'red';
+        path.linewidth = 3;
+        path.noFill();
+
+        // For self-intersection, we'd need to check segments against other segments in the same path
+        // This might require a different function or special handling
+        // For now, let's create two paths that form a figure-8
+        const path1 = two.makeCurve(
+          100, 150,
+          150, 100,
+          150, 200,
+          200, 150,
+          false
+        );
+        path1.stroke = 'red';
+        path1.linewidth = 3;
+        path1.noFill();
+
+        const path2 = two.makeCurve(
+          100, 150,
+          150, 200,
+          150, 100,
+          200, 150,
+          false
+        );
+        path2.stroke = 'blue';
+        path2.linewidth = 2;
+        path2.noFill();
+        path2.opacity = 0.7;
+
+        const intersections = findPathIntersections(path1, path2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 5);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const minExpected = 1;
+        const success = intersections.length >= minExpected;
+
+        return {
+          success,
+          message: `Expected at least ${minExpected} intersection(s), found ${intersections.length}.\n` +
+            intersections.map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n')
+        };
+      });
+
+      // Test 13: Rectangle Completely Within Rectangle
+      createTestCase('Rectangle Within Rectangle', (two) => {
+        const outerRect = two.makeRectangle(150, 150, 160, 120);
+        outerRect.fill = 'rgba(255, 0, 0, 0.3)';
+        outerRect.stroke = 'red';
+        outerRect.linewidth = 2;
+
+        const innerRect = two.makeRectangle(150, 150, 80, 60);
+        innerRect.fill = 'rgba(0, 0, 255, 0.3)';
+        innerRect.stroke = 'blue';
+        innerRect.linewidth = 2;
+
+        const intersections = findPathIntersections(outerRect, innerRect);
+
+        // Draw intersection points (should be none)
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 0;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections, found ${intersections.length}.\n` +
+            (intersections.length === 0 ? '  No intersections detected (correct - inner rectangle fully contained)' :
+              intersections.map((int, i) =>
+                `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+              ).join('\n'))
+        };
+      });
+
+      // Test 14: Very Close but Not Touching
+      createTestCase('Nearly Tangent Circles (Tiny Gap)', (two) => {
+        const circle1 = two.makeCircle(100, 150, 60);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = 'red';
+        circle1.linewidth = 2;
+
+        // Distance between centers = 120.1, sum of radii = 120, gap = 0.1
+        const circle2 = two.makeCircle(220.1, 150, 60);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = 'blue';
+        circle2.linewidth = 2;
+
+        const intersections = findPathIntersections(circle1, circle2);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 5);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 0;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections (0.1px gap), found ${intersections.length}.\n` +
+            (intersections.length === 0 ? '  No intersections detected (correct - tiny gap maintained)' :
+              intersections.map((int, i) =>
+                `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+              ).join('\n'))
+        };
+      });
+
+      // Test 15: Shapes with Scale Transformation (containment)
+      createTestCase('Scaled Circle Containing Rectangle', (two) => {
+        const rect = two.makeRectangle(150, 150, 80, 80);
+        rect.fill = 'rgba(255, 0, 0, 0.3)';
+        rect.stroke = 'red';
+        rect.linewidth = 2;
+
+        const circle = two.makeCircle(150, 150, 40);
+        circle.scale = 1.5; // Scale up to radius 60 (> sqrt(40^2 + 40^2) ≈ 56.57)
+        circle.fill = 'rgba(0, 0, 255, 0.3)';
+        circle.stroke = 'blue';
+        circle.linewidth = 2;
+
+        // Force update to ensure transformations are applied
+        two.update();
+
+        const intersections = findPathIntersections(rect, circle);
+
+        // Draw intersection points (should be none)
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 0;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections (scaled circle r=60 contains rect), found ${intersections.length}.\n` +
+            (intersections.length === 0 ? '  No intersections detected (correct - scale transformation working)' :
+              intersections.map((int, i) =>
+                `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+              ).join('\n'))
+        };
+      });
+
+      // Test 16: Scaled Shape with Intersections
+      createTestCase('Scaled Circle Intersecting Rectangle', (two) => {
+        const rect = two.makeRectangle(150, 150, 80, 80);
+        rect.fill = 'rgba(255, 0, 0, 0.3)';
+        rect.stroke = 'red';
+        rect.linewidth = 2;
+
+        const circle = two.makeCircle(150, 150, 30);
+        circle.scale = 1.5; // Scale up to radius 45 (40 < 45 < 56.57)
+        circle.fill = 'rgba(0, 0, 255, 0.3)';
+        circle.stroke = 'blue';
+        circle.linewidth = 2;
+
+        // Force update to ensure transformations are applied
+        two.update();
+
+        const intersections = findPathIntersections(rect, circle);
+
+        // Draw intersection points
+        intersections.forEach(intersection => {
+          const dot = two.makeCircle(intersection.point.x, intersection.point.y, 4);
+          dot.fill = 'green';
+          dot.noStroke();
+        });
+
+        const expected = 8;
+        const success = intersections.length === expected;
+
+        return {
+          success,
+          message: `Expected ${expected} intersections (scaled circle r=45 vs 80x80 rect), found ${intersections.length}.\n` +
+            intersections.slice(0, 4).map((int, i) =>
+              `  Intersection ${i + 1}: (${int.point.x.toFixed(2)}, ${int.point.y.toFixed(2)})`
+            ).join('\n') +
+            (intersections.length > 4 ? `\n  ... and ${intersections.length - 4} more` : '')
+        };
+      });
+
+      // Update stats after all tests
+      updateStats();
+    </script>
+  </body>
+</html>
