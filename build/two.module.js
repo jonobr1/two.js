@@ -1228,7 +1228,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2025-11-26T06:59:54.712Z",
+  PublishDate: "2025-12-01T22:57:49.092Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -12165,6 +12165,332 @@ function xhr(path, callback) {
   return xhr2;
 }
 
+// src/utils/boolean-operations.js
+var EPSILON3 = 1e-12;
+function anchorToSegment(anchor2) {
+  const segment = {
+    point: { x: anchor2.x, y: anchor2.y },
+    handleIn: { x: 0, y: 0 },
+    handleOut: { x: 0, y: 0 }
+  };
+  if (anchor2.controls) {
+    if (anchor2.relative) {
+      segment.handleIn.x = anchor2.controls.left.x;
+      segment.handleIn.y = anchor2.controls.left.y;
+      segment.handleOut.x = anchor2.controls.right.x;
+      segment.handleOut.y = anchor2.controls.right.y;
+    } else {
+      segment.handleIn.x = anchor2.controls.left.x - anchor2.x;
+      segment.handleIn.y = anchor2.controls.left.y - anchor2.y;
+      segment.handleOut.x = anchor2.controls.right.x - anchor2.x;
+      segment.handleOut.y = anchor2.controls.right.y - anchor2.y;
+    }
+  }
+  return segment;
+}
+function subdivideCurve(v0, v1, v2, v3, t) {
+  const u = 1 - t;
+  const v01 = { x: u * v0.x + t * v1.x, y: u * v0.y + t * v1.y };
+  const v12 = { x: u * v1.x + t * v2.x, y: u * v1.y + t * v2.y };
+  const v23 = { x: u * v2.x + t * v3.x, y: u * v2.y + t * v3.y };
+  const v012 = { x: u * v01.x + t * v12.x, y: u * v01.y + t * v12.y };
+  const v123 = { x: u * v12.x + t * v23.x, y: u * v12.y + t * v23.y };
+  const v0123 = { x: u * v012.x + t * v123.x, y: u * v012.y + t * v123.y };
+  return {
+    left: [v0, v01, v012, v0123],
+    right: [v0123, v123, v23, v3]
+  };
+}
+function signedDistance(point, lineStart, lineEnd) {
+  const dx = lineEnd.x - lineStart.x;
+  const dy = lineEnd.y - lineStart.y;
+  const lineLengthSq = dx * dx + dy * dy;
+  if (lineLengthSq < EPSILON3) {
+    const px = point.x - lineStart.x;
+    const py = point.y - lineStart.y;
+    return Math.sqrt(px * px + py * py);
+  }
+  const nx = dy;
+  const ny = -dx;
+  const lineLength = Math.sqrt(lineLengthSq);
+  return ((point.x - lineStart.x) * nx + (point.y - lineStart.y) * ny) / lineLength;
+}
+function clipCurve(v1, v2, t1Min, t1Max, t2Min, t2Max, depth, intersections) {
+  const MAX_DEPTH = 32;
+  const FLATNESS_TOLERANCE = 0.5;
+  if (depth > MAX_DEPTH) {
+    return intersections;
+  }
+  const bbox1 = {
+    minX: Math.min(v1[0].x, v1[1].x, v1[2].x, v1[3].x),
+    maxX: Math.max(v1[0].x, v1[1].x, v1[2].x, v1[3].x),
+    minY: Math.min(v1[0].y, v1[1].y, v1[2].y, v1[3].y),
+    maxY: Math.max(v1[0].y, v1[1].y, v1[2].y, v1[3].y)
+  };
+  const bbox2 = {
+    minX: Math.min(v2[0].x, v2[1].x, v2[2].x, v2[3].x),
+    maxX: Math.max(v2[0].x, v2[1].x, v2[2].x, v2[3].x),
+    minY: Math.min(v2[0].y, v2[1].y, v2[2].y, v2[3].y),
+    maxY: Math.max(v2[0].y, v2[1].y, v2[2].y, v2[3].y)
+  };
+  if (bbox1.maxX < bbox2.minX || bbox2.maxX < bbox1.minX || bbox1.maxY < bbox2.minY || bbox2.maxY < bbox1.minY) {
+    return intersections;
+  }
+  const flatness1 = Math.max(
+    Math.abs(signedDistance(v1[1], v1[0], v1[3])),
+    Math.abs(signedDistance(v1[2], v1[0], v1[3]))
+  );
+  const flatness2 = Math.max(
+    Math.abs(signedDistance(v2[1], v2[0], v2[3])),
+    Math.abs(signedDistance(v2[2], v2[0], v2[3]))
+  );
+  if (flatness1 < FLATNESS_TOLERANCE && flatness2 < FLATNESS_TOLERANCE) {
+    const intersection = lineIntersection(v1[0], v1[3], v2[0], v2[3]);
+    if (intersection) {
+      const t1 = t1Min + intersection.t1 * (t1Max - t1Min);
+      const t2 = t2Min + intersection.t2 * (t2Max - t2Min);
+      let isDuplicate = false;
+      const DUPLICATE_TOLERANCE = 0.01;
+      for (let i = 0; i < intersections.length; i++) {
+        const dx = intersections[i].point.x - intersection.point.x;
+        const dy = intersections[i].point.y - intersection.point.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < DUPLICATE_TOLERANCE * DUPLICATE_TOLERANCE) {
+          isDuplicate = true;
+          break;
+        }
+      }
+      if (!isDuplicate) {
+        intersections.push({
+          point: intersection.point,
+          t1,
+          t2
+        });
+      }
+    }
+    return intersections;
+  }
+  if (flatness1 > flatness2) {
+    const split = subdivideCurve(v1[0], v1[1], v1[2], v1[3], 0.5);
+    const mid = (t1Min + t1Max) / 2;
+    clipCurve(split.left, v2, t1Min, mid, t2Min, t2Max, depth + 1, intersections);
+    clipCurve(split.right, v2, mid, t1Max, t2Min, t2Max, depth + 1, intersections);
+  } else {
+    const split = subdivideCurve(v2[0], v2[1], v2[2], v2[3], 0.5);
+    const mid = (t2Min + t2Max) / 2;
+    clipCurve(v1, split.left, t1Min, t1Max, t2Min, mid, depth + 1, intersections);
+    clipCurve(v1, split.right, t1Min, t1Max, mid, t2Max, depth + 1, intersections);
+  }
+  return intersections;
+}
+function lineIntersection(p1, p2, p3, p4) {
+  const x1 = p1.x, y1 = p1.y;
+  const x2 = p2.x, y2 = p2.y;
+  const x3 = p3.x, y3 = p3.y;
+  const x4 = p4.x, y4 = p4.y;
+  const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+  if (Math.abs(denom) < EPSILON3) {
+    return null;
+  }
+  const t1 = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
+  const t2 = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denom;
+  if (t1 >= -EPSILON3 && t1 <= 1 + EPSILON3 && t2 >= -EPSILON3 && t2 <= 1 + EPSILON3) {
+    return {
+      point: {
+        x: x1 + t1 * (x2 - x1),
+        y: y1 + t1 * (y2 - y1)
+      },
+      t1: Math.max(0, Math.min(1, t1)),
+      t2: Math.max(0, Math.min(1, t2))
+    };
+  }
+  return null;
+}
+function findCurveIntersections(a1, a2, b1, b2, matrix1, matrix2) {
+  const seg1Start = anchorToSegment(a1);
+  const seg1End = anchorToSegment(a2);
+  const seg2Start = anchorToSegment(b1);
+  const seg2End = anchorToSegment(b2);
+  let curve1 = [
+    seg1Start.point,
+    { x: seg1Start.point.x + seg1Start.handleOut.x, y: seg1Start.point.y + seg1Start.handleOut.y },
+    { x: seg1End.point.x + seg1End.handleIn.x, y: seg1End.point.y + seg1End.handleIn.y },
+    seg1End.point
+  ];
+  let curve2 = [
+    seg2Start.point,
+    { x: seg2Start.point.x + seg2Start.handleOut.x, y: seg2Start.point.y + seg2Start.handleOut.y },
+    { x: seg2End.point.x + seg2End.handleIn.x, y: seg2End.point.y + seg2End.handleIn.y },
+    seg2End.point
+  ];
+  if (matrix1) {
+    curve1 = curve1.map((p) => {
+      const [x, y] = matrix1.multiply(p.x, p.y);
+      return { x, y };
+    });
+  }
+  if (matrix2) {
+    curve2 = curve2.map((p) => {
+      const [x, y] = matrix2.multiply(p.x, p.y);
+      return { x, y };
+    });
+  }
+  const intersections = [];
+  clipCurve(curve1, curve2, 0, 1, 0, 1, 0, intersections);
+  return intersections;
+}
+function findPathIntersections(path1, path2) {
+  const intersections = [];
+  if (path1._update) {
+    path1._update();
+  }
+  if (path2._update) {
+    path2._update();
+  }
+  const vertices1 = path1.vertices;
+  const vertices2 = path2.vertices;
+  if (!vertices1 || !vertices2 || vertices1.length < 2 || vertices2.length < 2) {
+    return intersections;
+  }
+  const matrix1 = path1.worldMatrix || path1._matrix;
+  const matrix2 = path2.worldMatrix || path2._matrix;
+  for (let i = 0; i < vertices1.length - 1; i++) {
+    const a1 = vertices1[i];
+    const a2 = vertices1[i + 1];
+    if (i > 0 && a2.command === Commands.move) {
+      continue;
+    }
+    for (let j = 0; j < vertices2.length - 1; j++) {
+      const b1 = vertices2[j];
+      const b2 = vertices2[j + 1];
+      if (j > 0 && b2.command === Commands.move) {
+        continue;
+      }
+      const curveIntersections = findCurveIntersections(a1, a2, b1, b2, matrix1, matrix2);
+      for (const intersection of curveIntersections) {
+        const DUPLICATE_TOLERANCE = 0.1;
+        let isDuplicate = false;
+        for (let k = 0; k < intersections.length; k++) {
+          const dx = intersections[k].point.x - intersection.point.x;
+          const dy = intersections[k].point.y - intersection.point.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < DUPLICATE_TOLERANCE * DUPLICATE_TOLERANCE) {
+            isDuplicate = true;
+            break;
+          }
+        }
+        if (!isDuplicate) {
+          intersections.push({
+            point: intersection.point,
+            t1: intersection.t1,
+            t2: intersection.t2,
+            index1: i,
+            index2: j
+          });
+        }
+      }
+    }
+  }
+  if (path1.closed && vertices1.length > 2) {
+    const a1 = vertices1[vertices1.length - 1];
+    const a2 = vertices1[0];
+    for (let j = 0; j < vertices2.length - 1; j++) {
+      const b1 = vertices2[j];
+      const b2 = vertices2[j + 1];
+      if (j > 0 && b2.command === Commands.move) {
+        continue;
+      }
+      const curveIntersections = findCurveIntersections(a1, a2, b1, b2, matrix1, matrix2);
+      for (const intersection of curveIntersections) {
+        const DUPLICATE_TOLERANCE = 0.1;
+        let isDuplicate = false;
+        for (let k = 0; k < intersections.length; k++) {
+          const dx = intersections[k].point.x - intersection.point.x;
+          const dy = intersections[k].point.y - intersection.point.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < DUPLICATE_TOLERANCE * DUPLICATE_TOLERANCE) {
+            isDuplicate = true;
+            break;
+          }
+        }
+        if (!isDuplicate) {
+          intersections.push({
+            point: intersection.point,
+            t1: intersection.t1,
+            t2: intersection.t2,
+            index1: vertices1.length - 1,
+            index2: j
+          });
+        }
+      }
+    }
+  }
+  if (path2.closed && vertices2.length > 2) {
+    const b1 = vertices2[vertices2.length - 1];
+    const b2 = vertices2[0];
+    for (let i = 0; i < vertices1.length - 1; i++) {
+      const a1 = vertices1[i];
+      const a2 = vertices1[i + 1];
+      if (i > 0 && a2.command === Commands.move) {
+        continue;
+      }
+      const curveIntersections = findCurveIntersections(a1, a2, b1, b2, matrix1, matrix2);
+      for (const intersection of curveIntersections) {
+        const DUPLICATE_TOLERANCE = 0.1;
+        let isDuplicate = false;
+        for (let k = 0; k < intersections.length; k++) {
+          const dx = intersections[k].point.x - intersection.point.x;
+          const dy = intersections[k].point.y - intersection.point.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < DUPLICATE_TOLERANCE * DUPLICATE_TOLERANCE) {
+            isDuplicate = true;
+            break;
+          }
+        }
+        if (!isDuplicate) {
+          intersections.push({
+            point: intersection.point,
+            t1: intersection.t1,
+            t2: intersection.t2,
+            index1: i,
+            index2: vertices2.length - 1
+          });
+        }
+      }
+    }
+  }
+  if (path1.closed && vertices1.length > 2 && path2.closed && vertices2.length > 2) {
+    const a1 = vertices1[vertices1.length - 1];
+    const a2 = vertices1[0];
+    const b1 = vertices2[vertices2.length - 1];
+    const b2 = vertices2[0];
+    const curveIntersections = findCurveIntersections(a1, a2, b1, b2, matrix1, matrix2);
+    for (const intersection of curveIntersections) {
+      const DUPLICATE_TOLERANCE = 0.1;
+      let isDuplicate = false;
+      for (let k = 0; k < intersections.length; k++) {
+        const dx = intersections[k].point.x - intersection.point.x;
+        const dy = intersections[k].point.y - intersection.point.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < DUPLICATE_TOLERANCE * DUPLICATE_TOLERANCE) {
+          isDuplicate = true;
+          break;
+        }
+      }
+      if (!isDuplicate) {
+        intersections.push({
+          point: intersection.point,
+          t1: intersection.t1,
+          t2: intersection.t2,
+          index1: vertices1.length - 1,
+          index2: vertices2.length - 1
+        });
+      }
+    }
+  }
+  return intersections;
+}
+
 // src/boolean-group.js
 var _BooleanGroup = class _BooleanGroup extends Group {
   constructor(children, operation) {
@@ -15772,7 +16098,9 @@ var Utils = _.extend(
     Error: TwoError,
     getRatio,
     read,
-    xhr
+    xhr,
+    findPathIntersections,
+    findCurveIntersections
   },
   _,
   CanvasPolyfill,
