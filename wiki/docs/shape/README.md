@@ -686,6 +686,14 @@ Remove self from the scene / parent.
 
 
 
+<div class="returns">
+
+__Returns__: Boolean
+
+
+
+</div>
+
 
 
 
@@ -710,7 +718,7 @@ Remove self from the scene / parent.
 
 <div class="description">
 
-Remove self from the scene / parent.
+Check to see if coordinates are within a [Two.Shape](/docs/shape/)'s bounding rectangle
 
 </div>
 
@@ -727,6 +735,16 @@ Remove self from the scene / parent.
 </div>
 
 
+
+<div class="tags">
+
+
+::: tip nota-bene
+Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
+:::
+
+
+</div>
 
 
 </div>
@@ -772,8 +790,8 @@ Copy the properties of one [Two.Shape](/docs/shape/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L265">
-    shape.js:265
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L267">
+    shape.js:267
   </a>
 
 </div>
@@ -832,8 +850,8 @@ Create a new [Two.Shape](/docs/shape/) with the same values as the current shape
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L305">
-    shape.js:305
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L307">
+    shape.js:307
   </a>
 
 </div>
@@ -877,8 +895,8 @@ Create a JSON compatible object that represents information of the shape.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L332">
-    shape.js:332
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L334">
+    shape.js:334
   </a>
 
 </div>

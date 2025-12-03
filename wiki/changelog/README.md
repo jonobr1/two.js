@@ -17,8 +17,8 @@ All notable changes to this project will be documented in this file. The format 
 
 - Improved `Two.Path.subdivide` to preserve curves (by filling out `Two.Anchor.controls` property)
 - Added `Two.Path.smooth` command
-- Added `Two.Shape.contains` method for hit testing
-- Added `Two.getShapesAtPoint` with visibility/filter options
+- Added `Two.Path.contains`, `Two.Group.contains`, and `Two.Shape.contains` method for hit testing
+- Added `Two.getShapesAtPoint` and `Two.Group.getShapesAtPoint` with visibility/filter options
 
 ## October 1, 2025 v0.8.21
 
