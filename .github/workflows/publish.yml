@@ -1,0 +1,30 @@
+name: Publish Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout@v5
+      - uses: jonobr1/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      # setup-node@v6
+      - uses: jonobr1/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build --if-present
+      # - run: npm test
+      - run: npm publish
