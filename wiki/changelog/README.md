@@ -11,9 +11,11 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## December 3, 2025 v0.8.22
 
-- Improved `Two.Path.subdivide` to preserve curves
+<h3 class="visible">Dec 3, 2025</h3><version-link v="v0.8.22" />
+
+- Improved `Two.Path.subdivide` to preserve curves (by filling out `Two.Anchor.controls` property)
 - Added `Two.Path.smooth` command
 - Added `Two.Shape.contains` method for hit testing
 - Added `Two.getShapesAtPoint` with visibility/filter options
