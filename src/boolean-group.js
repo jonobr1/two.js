@@ -1,4 +1,7 @@
 import { Group } from './group.js';
+import { Path } from './path.js';
+import { findPathIntersections } from './utils/boolean-operations.js';
+import { constructBooleanResult } from './utils/boolean-result.js';
 
 /**
  * @name Two.BooleanGroup
@@ -71,13 +74,58 @@ export class BooleanGroup extends Group {
    * @function
    * @returns {Two.Path} - The computed result path of the boolean operation.
    * @description Returns the cached result path if available, otherwise computes and caches it.
-   * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
    */
   getResultPath() {
     if (this._flagOperation || !this._resultPath) {
-      // Phase 1: Return null - computation will be implemented in later phases
-      // The infrastructure is in place to cache and recompute as needed
-      this._resultPath = null;
+      // Filter children to get only Path objects
+      const paths = this.children.filter(child => child instanceof Path);
+
+      // Handle edge cases
+      if (paths.length === 0) {
+        console.warn('Two.BooleanGroup: No path children to perform boolean operation on');
+        this._resultPath = null;
+        this._flagOperation = false;
+        return null;
+      }
+
+      if (paths.length === 1) {
+        // Single path - just clone it
+        this._resultPath = paths[0].clone();
+        this._flagOperation = false;
+        return this._resultPath;
+      }
+
+      // Check for open paths (strict mode)
+      const hasOpenPaths = paths.some(p => !p.closed);
+      if (hasOpenPaths) {
+        console.warn('Two.BooleanGroup: Boolean operations require closed paths');
+        this._resultPath = null;
+        this._flagOperation = false;
+        return null;
+      }
+
+      // Find all pairwise intersections
+      const allIntersections = [];
+      for (let i = 0; i < paths.length; i++) {
+        for (let j = i + 1; j < paths.length; j++) {
+          const intersections = findPathIntersections(paths[i], paths[j]);
+          intersections.forEach(inter => {
+            allIntersections.push({
+              ...inter,
+              path1Index: i,
+              path2Index: j
+            });
+          });
+        }
+      }
+
+      // Construct boolean result
+      this._resultPath = constructBooleanResult(
+        paths,
+        this._operation,
+        allIntersections
+      );
+
       this._flagOperation = false;
     }
 
@@ -89,13 +137,11 @@ export class BooleanGroup extends Group {
    * @function
    * @returns {Two.Path} - A new permanent path representing the boolean operation result.
    * @description Converts the boolean group to a permanent path. The returned path is not cached and represents a snapshot of the current operation result.
-   * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
    */
   flatten() {
     const resultPath = this.getResultPath();
 
     if (!resultPath) {
-      // Phase 1: Return null - computation will be implemented in later phases
       return null;
     }
 

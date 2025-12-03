@@ -1220,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2025-12-01T22:57:49.092Z",
+    PublishDate: "2025-12-03T06:59:15.426Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -12458,6 +12458,401 @@ var Two = (() => {
     return intersections;
   }
 
+  // src/utils/boolean-result.js
+  var T_EPSILON = 1e-6;
+  function pointInPath(path, x, y, precision = 8) {
+    if (!path || !path.vertices || path.vertices.length < 3) {
+      return false;
+    }
+    const { polygons } = buildPathHitParts(path, precision);
+    if (!polygons || polygons.length === 0) {
+      return false;
+    }
+    return pointInPolygons(polygons, x, y);
+  }
+  function pointInAnyPath(paths, x, y, excludeIndex, precision = 8) {
+    for (let i = 0; i < paths.length; i++) {
+      if (i === excludeIndex) {
+        continue;
+      }
+      const path = paths[i];
+      if (path.worldMatrix) {
+        const inverse = path.worldMatrix.inverse();
+        const transformed = inverse.multiply(x, y, 1);
+        const localX = transformed[0];
+        const localY = transformed[1];
+        if (pointInPath(path, localX, localY, precision)) {
+          return true;
+        }
+      } else {
+        if (pointInPath(path, x, y, precision)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  function evaluateCubicBezier(p0, p1, p2, p3, t) {
+    const u = 1 - t;
+    const u2 = u * u;
+    const u3 = u2 * u;
+    const t2 = t * t;
+    const t3 = t2 * t;
+    return {
+      x: u3 * p0.x + 3 * u2 * t * p1.x + 3 * u * t2 * p2.x + t3 * p3.x,
+      y: u3 * p0.y + 3 * u2 * t * p1.y + 3 * u * t2 * p2.y + t3 * p3.y
+    };
+  }
+  function getSegmentMidpoint(a1, a2) {
+    const hasControls = a1.controls && (a1.controls.right.x !== 0 || a1.controls.right.y !== 0) || a2.controls && (a2.controls.left.x !== 0 || a2.controls.left.y !== 0);
+    if (!hasControls || a2.command !== Commands.curve) {
+      return {
+        x: (a1.x + a2.x) / 2,
+        y: (a1.y + a2.y) / 2
+      };
+    }
+    const p0 = { x: a1.x, y: a1.y };
+    const p3 = { x: a2.x, y: a2.y };
+    let p1, p2;
+    if (a1.relative) {
+      p1 = { x: a1.x + a1.controls.right.x, y: a1.y + a1.controls.right.y };
+    } else {
+      p1 = { x: a1.controls.right.x, y: a1.controls.right.y };
+    }
+    if (a2.relative) {
+      p2 = { x: a2.x + a2.controls.left.x, y: a2.y + a2.controls.left.y };
+    } else {
+      p2 = { x: a2.controls.left.x, y: a2.controls.left.y };
+    }
+    return evaluateCubicBezier(p0, p1, p2, p3, 0.5);
+  }
+  function insertAnchorAtIntersection(path, segmentIndex, t, point) {
+    if (t < T_EPSILON) {
+      return segmentIndex;
+    }
+    if (t > 1 - T_EPSILON) {
+      return segmentIndex + 1;
+    }
+    const vertices = path.vertices;
+    if (segmentIndex < 0 || segmentIndex >= vertices.length) {
+      return segmentIndex;
+    }
+    const a1 = vertices[segmentIndex];
+    let nextIndex = segmentIndex + 1;
+    if (nextIndex >= vertices.length) {
+      if (path.closed) {
+        nextIndex = 0;
+      } else {
+        return segmentIndex;
+      }
+    }
+    const a2 = vertices[nextIndex];
+    if (!a1 || !a2) {
+      return segmentIndex;
+    }
+    const isCurved = a1.controls && (a1.controls.right.x !== 0 || a1.controls.right.y !== 0) || a2.controls && (a2.controls.left.x !== 0 || a2.controls.left.y !== 0);
+    if (!isCurved || !a2.command || a2.command !== Commands.curve) {
+      const newAnchor2 = new Anchor(point.x, point.y, 0, 0, 0, 0, Commands.line);
+      vertices.splice(segmentIndex + 1, 0, newAnchor2);
+      return segmentIndex + 1;
+    }
+    const p0 = { x: a1.x, y: a1.y };
+    const p3 = { x: a2.x, y: a2.y };
+    let p1, p2;
+    if (a1.relative) {
+      p1 = { x: a1.x + a1.controls.right.x, y: a1.y + a1.controls.right.y };
+    } else {
+      p1 = { x: a1.controls.right.x, y: a1.controls.right.y };
+    }
+    if (a2.relative) {
+      p2 = { x: a2.x + a2.controls.left.x, y: a2.y + a2.controls.left.y };
+    } else {
+      p2 = { x: a2.controls.left.x, y: a2.controls.left.y };
+    }
+    const subdivided = subdivideCurve(p0, p1, p2, p3, t);
+    const left = subdivided.left;
+    const right = subdivided.right;
+    a1.controls.right.x = left[1].x - a1.x;
+    a1.controls.right.y = left[1].y - a1.y;
+    a1.relative = true;
+    const newAnchor = new Anchor(
+      point.x,
+      // Use exact intersection point
+      point.y,
+      left[2].x - point.x,
+      // Left control (relative)
+      left[2].y - point.y,
+      right[1].x - point.x,
+      // Right control (relative)
+      right[1].y - point.y,
+      Commands.curve
+    );
+    newAnchor.relative = true;
+    a2.controls.left.x = right[2].x - a2.x;
+    a2.controls.left.y = right[2].y - a2.y;
+    a2.relative = true;
+    vertices.splice(segmentIndex + 1, 0, newAnchor);
+    return segmentIndex + 1;
+  }
+  function splitPathsAtIntersections(paths, intersections) {
+    const clonedPaths = paths.map((p) => {
+      const clone = p.clone();
+      clone.translation.copy(p.translation);
+      clone.rotation = p.rotation;
+      clone.scale = typeof p.scale === "number" ? p.scale : p.scale.clone();
+      if (p.matrix && p.matrix.manual) {
+        clone.matrix.copy(p.matrix);
+      }
+      return clone;
+    });
+    if (!intersections || intersections.length === 0) {
+      return { paths: clonedPaths, intersections: [] };
+    }
+    const intersectionsByPath = /* @__PURE__ */ new Map();
+    for (let i = 0; i < clonedPaths.length; i++) {
+      intersectionsByPath.set(i, []);
+    }
+    intersections.forEach((inter) => {
+      if (inter.path1Index !== void 0 && inter.path2Index !== void 0) {
+        intersectionsByPath.get(inter.path1Index).push({
+          ...inter,
+          isPath1: true,
+          segmentIndex: inter.index1,
+          t: inter.t1
+        });
+        intersectionsByPath.get(inter.path2Index).push({
+          ...inter,
+          isPath1: false,
+          segmentIndex: inter.index2,
+          t: inter.t2
+        });
+      }
+    });
+    intersectionsByPath.forEach((inters, pathIndex) => {
+      inters.sort((a, b) => {
+        if (a.segmentIndex !== b.segmentIndex) {
+          return a.segmentIndex - b.segmentIndex;
+        }
+        return a.t - b.t;
+      });
+    });
+    intersectionsByPath.forEach((inters, pathIndex) => {
+      const path = clonedPaths[pathIndex];
+      for (let i = inters.length - 1; i >= 0; i--) {
+        const inter = inters[i];
+        insertAnchorAtIntersection(path, inter.segmentIndex, inter.t, inter.point);
+      }
+    });
+    return { paths: clonedPaths, intersections };
+  }
+  function shouldKeepSegment(isInsideOther, pathIndex, operation) {
+    switch (operation) {
+      case "union":
+        return !isInsideOther;
+      case "subtract":
+        if (pathIndex === 0) {
+          return !isInsideOther;
+        } else {
+          return false;
+        }
+      case "intersect":
+        return isInsideOther;
+      case "exclude":
+        return !isInsideOther;
+      default:
+        console.warn(`Two.BooleanGroup: Unknown operation '${operation}'`);
+        return false;
+    }
+  }
+  function classifySegments(segments, paths, operation, precision = 8) {
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
+      const pathIndex = segment.pathIndex;
+      const midpoint = getSegmentMidpoint(segment.startAnchor, segment.endAnchor);
+      const path = paths[pathIndex];
+      let worldX = midpoint.x;
+      let worldY = midpoint.y;
+      if (path.worldMatrix) {
+        const transformed = path.worldMatrix.multiply(midpoint.x, midpoint.y, 1);
+        worldX = transformed[0];
+        worldY = transformed[1];
+      }
+      const isInsideOther = pointInAnyPath(paths, worldX, worldY, pathIndex, precision);
+      segment.keep = shouldKeepSegment(isInsideOther, pathIndex, operation);
+      segment.midpoint = midpoint;
+      segment.isInsideOther = isInsideOther;
+    }
+    return segments;
+  }
+  function anchorKey(anchor2) {
+    const x = Math.round(anchor2.x * 1e3) / 1e3;
+    const y = Math.round(anchor2.y * 1e3) / 1e3;
+    return `${x},${y}`;
+  }
+  function anchorsEqual(a1, a2) {
+    const tolerance = 0.01;
+    return Math.abs(a1.x - a2.x) < tolerance && Math.abs(a1.y - a2.y) < tolerance;
+  }
+  function buildAdjacencyMap(segments) {
+    const adjacencyMap = /* @__PURE__ */ new Map();
+    for (const segment of segments) {
+      if (!segment.keep) {
+        continue;
+      }
+      const key = anchorKey(segment.startAnchor);
+      if (!adjacencyMap.has(key)) {
+        adjacencyMap.set(key, []);
+      }
+      adjacencyMap.get(key).push(segment);
+    }
+    return adjacencyMap;
+  }
+  function findNextSegment(adjacencyMap, anchor2, usedSegments) {
+    const key = anchorKey(anchor2);
+    const candidates = adjacencyMap.get(key);
+    if (!candidates || candidates.length === 0) {
+      return null;
+    }
+    for (const segment of candidates) {
+      if (!usedSegments.has(segment)) {
+        return segment;
+      }
+    }
+    return null;
+  }
+  function traceContours(segments, operation) {
+    const contours = [];
+    const usedSegments = /* @__PURE__ */ new Set();
+    const adjacencyMap = buildAdjacencyMap(segments);
+    for (const startSegment of segments) {
+      if (!startSegment.keep || usedSegments.has(startSegment)) {
+        continue;
+      }
+      const contour = [];
+      let currentSegment = startSegment;
+      const startAnchor = { x: currentSegment.startAnchor.x, y: currentSegment.startAnchor.y };
+      let isClosedLoop = false;
+      while (currentSegment) {
+        contour.push(currentSegment);
+        usedSegments.add(currentSegment);
+        const currentEnd = currentSegment.endAnchor;
+        if (anchorsEqual(currentEnd, startAnchor)) {
+          isClosedLoop = true;
+          break;
+        }
+        const nextSegment = findNextSegment(adjacencyMap, currentEnd, usedSegments);
+        if (!nextSegment) {
+          break;
+        }
+        currentSegment = nextSegment;
+      }
+      if (contour.length > 0) {
+        contours.push({
+          segments: contour,
+          closed: isClosedLoop
+        });
+      }
+    }
+    return contours;
+  }
+  function buildResultPath(contours) {
+    if (!contours || contours.length === 0) {
+      return null;
+    }
+    const allVertices = [];
+    for (let c = 0; c < contours.length; c++) {
+      const contour = contours[c];
+      const segments = contour.segments;
+      if (segments.length === 0) {
+        continue;
+      }
+      const firstSegment = segments[0];
+      const firstAnchor = firstSegment.startAnchor.clone();
+      if (allVertices.length === 0) {
+        firstAnchor.command = Commands.move;
+      } else {
+        firstAnchor.command = Commands.move;
+      }
+      allVertices.push(firstAnchor);
+      for (let s = 0; s < segments.length; s++) {
+        const segment = segments[s];
+        const endAnchor = segment.endAnchor.clone();
+        endAnchor.command = segment.endAnchor.command || Commands.line;
+        allVertices.push(endAnchor);
+      }
+      if (contour.closed && segments.length > 0) {
+      }
+    }
+    if (allVertices.length === 0) {
+      return null;
+    }
+    const resultPath = new Path(allVertices);
+    resultPath.closed = true;
+    resultPath.automatic = false;
+    return resultPath;
+  }
+  function constructBooleanResult(paths, operation, allIntersections) {
+    if (!paths || paths.length === 0) {
+      return null;
+    }
+    if (!allIntersections || allIntersections.length === 0) {
+      if (operation === "union" || operation === "exclude") {
+        const allVertices = [];
+        for (let i = 0; i < paths.length; i++) {
+          const path = paths[i];
+          for (let j = 0; j < path.vertices.length; j++) {
+            const v = path.vertices[j].clone();
+            if (i > 0 && j === 0) {
+              v.command = Commands.move;
+            }
+            allVertices.push(v);
+          }
+        }
+        if (allVertices.length > 0) {
+          const result = new Path(allVertices);
+          result.closed = true;
+          result.automatic = false;
+          return result;
+        }
+      } else if (operation === "subtract") {
+        return paths[0].clone();
+      } else if (operation === "intersect") {
+        return null;
+      }
+    }
+    const { paths: splitPaths } = splitPathsAtIntersections(paths, allIntersections);
+    const segments = [];
+    for (let pathIndex = 0; pathIndex < splitPaths.length; pathIndex++) {
+      const path = splitPaths[pathIndex];
+      const vertices = path.vertices;
+      for (let i = 0; i < vertices.length - 1; i++) {
+        segments.push({
+          startIndex: i,
+          endIndex: i + 1,
+          startAnchor: vertices[i],
+          endAnchor: vertices[i + 1],
+          pathIndex,
+          keep: false
+          // Will be determined by classifySegments
+        });
+      }
+      if (path.closed && vertices.length > 2) {
+        segments.push({
+          startIndex: vertices.length - 1,
+          endIndex: 0,
+          startAnchor: vertices[vertices.length - 1],
+          endAnchor: vertices[0],
+          pathIndex,
+          keep: false
+        });
+      }
+    }
+    classifySegments(segments, paths, operation);
+    const contours = traceContours(segments, operation);
+    const resultPath = buildResultPath(contours);
+    return resultPath;
+  }
+
   // src/boolean-group.js
   var BooleanGroup = class _BooleanGroup extends Group {
     /**
@@ -12509,11 +12904,46 @@ var Two = (() => {
      * @function
      * @returns {Two.Path} - The computed result path of the boolean operation.
      * @description Returns the cached result path if available, otherwise computes and caches it.
-     * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
      */
     getResultPath() {
       if (this._flagOperation || !this._resultPath) {
-        this._resultPath = null;
+        const paths = this.children.filter((child) => child instanceof Path);
+        if (paths.length === 0) {
+          console.warn("Two.BooleanGroup: No path children to perform boolean operation on");
+          this._resultPath = null;
+          this._flagOperation = false;
+          return null;
+        }
+        if (paths.length === 1) {
+          this._resultPath = paths[0].clone();
+          this._flagOperation = false;
+          return this._resultPath;
+        }
+        const hasOpenPaths = paths.some((p) => !p.closed);
+        if (hasOpenPaths) {
+          console.warn("Two.BooleanGroup: Boolean operations require closed paths");
+          this._resultPath = null;
+          this._flagOperation = false;
+          return null;
+        }
+        const allIntersections = [];
+        for (let i = 0; i < paths.length; i++) {
+          for (let j = i + 1; j < paths.length; j++) {
+            const intersections = findPathIntersections(paths[i], paths[j]);
+            intersections.forEach((inter) => {
+              allIntersections.push({
+                ...inter,
+                path1Index: i,
+                path2Index: j
+              });
+            });
+          }
+        }
+        this._resultPath = constructBooleanResult(
+          paths,
+          this._operation,
+          allIntersections
+        );
         this._flagOperation = false;
       }
       return this._resultPath;
@@ -12523,7 +12953,6 @@ var Two = (() => {
      * @function
      * @returns {Two.Path} - A new permanent path representing the boolean operation result.
      * @description Converts the boolean group to a permanent path. The returned path is not cached and represents a snapshot of the current operation result.
-     * @nota-bene In Phase 1, this returns null as the computation algorithm will be implemented in later phases.
      */
     flatten() {
       const resultPath = this.getResultPath();
@@ -16065,7 +16494,8 @@ var Two = (() => {
       read,
       xhr,
       findPathIntersections,
-      findCurveIntersections
+      findCurveIntersections,
+      constructBooleanResult
     },
     _,
     CanvasPolyfill,

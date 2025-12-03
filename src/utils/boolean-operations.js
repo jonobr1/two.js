@@ -520,4 +520,4 @@ export function findPathIntersections(path1, path2) {
   return intersections;
 }
 
-export { anchorToSegment, segmentToAnchor };
+export { anchorToSegment, segmentToAnchor, subdivideCurve };

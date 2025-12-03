@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Two.js Boolean Operations Tests</title>
+  <script src="../build/two.js"></script>
+  <style>
+    body {
+      margin: 20px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .description {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .test-case {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-case h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 16px;
+    }
+    .test-case .canvas-container {
+      border: 1px solid #eee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+  </style>
+</head>
+<body>
+  <h1>Two.js Boolean Operations Visual Tests</h1>
+  <p class="description">
+    Testing union, subtract, intersect, and exclude operations on paths.
+  </p>
+
+  <div class="test-grid">
+    <div class="test-case">
+      <h3>Union: Two Circles</h3>
+      <div id="test-union-circles" class="canvas-container"></div>
+      <div id="status-union-circles" class="status info">Testing...</div>
+    </div>
+
+    <div class="test-case">
+      <h3>Subtract: Circle from Circle</h3>
+      <div id="test-subtract-circles" class="canvas-container"></div>
+      <div id="status-subtract-circles" class="status info">Testing...</div>
+    </div>
+
+    <div class="test-case">
+      <h3>Intersect: Two Circles</h3>
+      <div id="test-intersect-circles" class="canvas-container"></div>
+      <div id="status-intersect-circles" class="status info">Testing...</div>
+    </div>
+
+    <div class="test-case">
+      <h3>Exclude: Two Circles (XOR)</h3>
+      <div id="test-exclude-circles" class="canvas-container"></div>
+      <div id="status-exclude-circles" class="status info">Testing...</div>
+    </div>
+
+    <div class="test-case">
+      <h3>Union: Circle + Rectangle</h3>
+      <div id="test-union-mixed" class="canvas-container"></div>
+      <div id="status-union-mixed" class="status info">Testing...</div>
+    </div>
+
+    <div class="test-case">
+      <h3>Subtract: Rectangle - Circle</h3>
+      <div id="test-subtract-mixed" class="canvas-container"></div>
+      <div id="status-subtract-mixed" class="status info">Testing...</div>
+    </div>
+  </div>
+
+  <script>
+    function setStatus(id, message, type) {
+      const statusEl = document.getElementById('status-' + id);
+      statusEl.textContent = message;
+      statusEl.className = 'status ' + type;
+    }
+
+    function testUnionCircles() {
+      try {
+        const two = new Two({
+          width: 350,
+          height: 250
+        }).appendTo(document.getElementById('test-union-circles'));
+
+        // Create two overlapping circles
+        const circle1 = two.makeCircle(120, 125, 60);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = '#ccc';
+        circle1.linewidth = 1;
+
+        const circle2 = two.makeCircle(200, 125, 60);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = '#ccc';
+        circle2.linewidth = 1;
+
+        // Create boolean group
+        const boolGroup = two.makeBooleanGroup([circle1, circle2], 'union');
+        const result = boolGroup.getResultPath();
+
+        console.log('Union result:', result);
+        if (result) {
+          console.log('Result vertices:', result.vertices.length);
+          result.stroke = '#00aa00';
+          result.linewidth = 3;
+          result.fill = 'rgba(0, 255, 0, 0.2)';
+          two.add(result);
+          setStatus('union-circles', `Success: ${result.vertices.length} vertices`, 'success');
+        } else {
+          setStatus('union-circles', 'Error: No result path', 'error');
+        }
+
+        two.update();
+      } catch (e) {
+        setStatus('union-circles', 'Error: ' + e.message, 'error');
+        console.error('Union circles test error:', e);
+      }
+    }
+
+    function testSubtractCircles() {
+      try {
+        const two = new Two({
+          width: 350,
+          height: 250
+        }).appendTo(document.getElementById('test-subtract-circles'));
+
+        const circle1 = two.makeCircle(175, 125, 70);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = '#ccc';
+        circle1.linewidth = 1;
+
+        const circle2 = two.makeCircle(175, 125, 40);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = '#ccc';
+        circle2.linewidth = 1;
+
+        const boolGroup = two.makeBooleanGroup([circle1, circle2], 'subtract');
+        const result = boolGroup.getResultPath();
+
+        if (result) {
+          result.stroke = '#00aa00';
+          result.linewidth = 3;
+          result.fill = 'rgba(0, 255, 0, 0.2)';
+          two.add(result);
+          setStatus('subtract-circles', 'Success: Donut shape created', 'success');
+        } else {
+          setStatus('subtract-circles', 'Error: No result path', 'error');
+        }
+
+        two.update();
+      } catch (e) {
+        setStatus('subtract-circles', 'Error: ' + e.message, 'error');
+        console.error('Subtract circles test error:', e);
+      }
+    }
+
+    function testIntersectCircles() {
+      try {
+        const two = new Two({
+          width: 350,
+          height: 250
+        }).appendTo(document.getElementById('test-intersect-circles'));
+
+        const circle1 = two.makeCircle(120, 125, 60);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = '#ccc';
+        circle1.linewidth = 1;
+
+        const circle2 = two.makeCircle(200, 125, 60);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = '#ccc';
+        circle2.linewidth = 1;
+
+        const boolGroup = two.makeBooleanGroup([circle1, circle2], 'intersect');
+        const result = boolGroup.getResultPath();
+
+        if (result) {
+          result.stroke = '#00aa00';
+          result.linewidth = 3;
+          result.fill = 'rgba(0, 255, 0, 0.2)';
+          two.add(result);
+          setStatus('intersect-circles', 'Success: Lens shape created', 'success');
+        } else {
+          setStatus('intersect-circles', 'Info: No intersection (expected)', 'info');
+        }
+
+        two.update();
+      } catch (e) {
+        setStatus('intersect-circles', 'Error: ' + e.message, 'error');
+        console.error('Intersect circles test error:', e);
+      }
+    }
+
+    function testExcludeCircles() {
+      try {
+        const two = new Two({
+          width: 350,
+          height: 250
+        }).appendTo(document.getElementById('test-exclude-circles'));
+
+        const circle1 = two.makeCircle(120, 125, 60);
+        circle1.fill = 'rgba(255, 0, 0, 0.3)';
+        circle1.stroke = '#ccc';
+        circle1.linewidth = 1;
+
+        const circle2 = two.makeCircle(200, 125, 60);
+        circle2.fill = 'rgba(0, 0, 255, 0.3)';
+        circle2.stroke = '#ccc';
+        circle2.linewidth = 1;
+
+        const boolGroup = two.makeBooleanGroup([circle1, circle2], 'exclude');
+        const result = boolGroup.getResultPath();
+
+        if (result) {
+          result.stroke = '#00aa00';
+          result.linewidth = 3;
+          result.fill = 'rgba(0, 255, 0, 0.2)';
+          two.add(result);
+          setStatus('exclude-circles', 'Success: XOR result created', 'success');
+        } else {
+          setStatus('exclude-circles', 'Error: No result path', 'error');
+        }
+
+        two.update();
+      } catch (e) {
+        setStatus('exclude-circles', 'Error: ' + e.message, 'error');
+        console.error('Exclude circles test error:', e);
+      }
+    }
+
+    function testUnionMixed() {
+      try {
+        const two = new Two({
+          width: 350,
+          height: 250
+        }).appendTo(document.getElementById('test-union-mixed'));
+
+        const rect = two.makeRectangle(140, 125, 80, 80);
+        rect.fill = 'rgba(255, 0, 0, 0.3)';
+        rect.stroke = '#ccc';
+        rect.linewidth = 1;
+
+        const circle = two.makeCircle(200, 125, 50);
+        circle.fill = 'rgba(0, 0, 255, 0.3)';
+        circle.stroke = '#ccc';
+        circle.linewidth = 1;
+
+        const boolGroup = two.makeBooleanGroup([rect, circle], 'union');
+        const result = boolGroup.getResultPath();
+
+        if (result) {
+          result.stroke = '#00aa00';
+          result.linewidth = 3;
+          result.fill = 'rgba(0, 255, 0, 0.2)';
+          two.add(result);
+          setStatus('union-mixed', 'Success: Combined shape created', 'success');
+        } else {
+          setStatus('union-mixed', 'Error: No result path', 'error');
+        }
+
+        two.update();
+      } catch (e) {
+        setStatus('union-mixed', 'Error: ' + e.message, 'error');
+        console.error('Union mixed test error:', e);
+      }
+    }
+
+    function testSubtractMixed() {
+      try {
+        const two = new Two({
+          width: 350,
+          height: 250
+        }).appendTo(document.getElementById('test-subtract-mixed'));
+
+        const rect = two.makeRectangle(175, 125, 120, 100);
+        rect.fill = 'rgba(255, 0, 0, 0.3)';
+        rect.stroke = '#ccc';
+        rect.linewidth = 1;
+
+        const circle = two.makeCircle(200, 125, 40);
+        circle.fill = 'rgba(0, 0, 255, 0.3)';
+        circle.stroke = '#ccc';
+        circle.linewidth = 1;
+
+        const boolGroup = two.makeBooleanGroup([rect, circle], 'subtract');
+        const result = boolGroup.getResultPath();
+
+        if (result) {
+          result.stroke = '#00aa00';
+          result.linewidth = 3;
+          result.fill = 'rgba(0, 255, 0, 0.2)';
+          two.add(result);
+          setStatus('subtract-mixed', 'Success: Hole created in rectangle', 'success');
+        } else {
+          setStatus('subtract-mixed', 'Error: No result path', 'error');
+        }
+
+        two.update();
+      } catch (e) {
+        setStatus('subtract-mixed', 'Error: ' + e.message, 'error');
+        console.error('Subtract mixed test error:', e);
+      }
+    }
+
+    // Run all tests
+    document.addEventListener('DOMContentLoaded', function() {
+      testUnionCircles();
+      testSubtractCircles();
+      testIntersectCircles();
+      testExcludeCircles();
+      testUnionMixed();
+      testSubtractMixed();
+    });
+  </script>
+</body>
+</html>

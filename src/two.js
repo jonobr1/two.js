@@ -11,6 +11,7 @@ import { Commands } from './utils/path-commands.js';
 import { _ } from './utils/underscore.js';
 import { xhr } from './utils/xhr.js';
 import { findPathIntersections, findCurveIntersections } from './utils/boolean-operations.js';
+import { constructBooleanResult } from './utils/boolean-result.js';
 
 // Core Classes
 
@@ -66,6 +67,7 @@ const Utils = _.extend(
     xhr,
     findPathIntersections,
     findCurveIntersections,
+    constructBooleanResult,
   },
   _,
   CanvasPolyfill,
