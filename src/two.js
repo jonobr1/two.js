@@ -1056,7 +1056,7 @@ export default class Two {
   /**
    * @name Two#makeSprite
    * @function
-   * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+   * @param {(String|Two.Texture)} src - The URL path to an image or an already created {@link Two.Texture}.
    * @param {Number} x
    * @param {Number} y
    * @param {Number} [columns=1]
@@ -1066,8 +1066,8 @@ export default class Two {
    * @returns {Two.Sprite}
    * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
    */
-  makeSprite(pathOrTexture, x, y, columns, rows, frameRate, autostart) {
-    const sprite = new Sprite(pathOrTexture, x, y, columns, rows, frameRate);
+  makeSprite(src, x, y, columns, rows, frameRate, autostart) {
+    const sprite = new Sprite(src, x, y, columns, rows, frameRate);
     if (autostart) {
       sprite.play();
     }
@@ -1079,7 +1079,7 @@ export default class Two {
   /**
    * @name Two#makeImage
    * @function
-   * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+   * @param {(String|Two.Texture)} src - The URL path to an image or an already created {@link Two.Texture}.
    * @param {Number} x
    * @param {Number} y
    * @param {Number} width
@@ -1088,8 +1088,8 @@ export default class Two {
    * @returns {Two.Image}
    * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
    */
-  makeImage(pathOrTexture, x, y, width, height, mode) {
-    const image = new Image(pathOrTexture, x, y, width, height, mode);
+  makeImage(src, x, y, width, height, mode) {
+    const image = new Image(src, x, y, width, height, mode);
     this.add(image);
 
     return image;
@@ -1098,7 +1098,7 @@ export default class Two {
   /**
    * @name Two#makeImageSequence
    * @function
-   * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
+   * @param {(String[]|Two.Texture[])} src - An array of paths or of {@link Two.Textures}.
    * @param {Number} x
    * @param {Number} y
    * @param {Number} [frameRate=0]
@@ -1106,8 +1106,8 @@ export default class Two {
    * @returns {Two.ImageSequence}
    * @description Creates a Two.js image sequence object and adds it to the scene.
    */
-  makeImageSequence(pathsOrTextures, x, y, frameRate, autostart) {
-    const imageSequence = new ImageSequence(pathsOrTextures, x, y, frameRate);
+  makeImageSequence(src, x, y, frameRate, autostart) {
+    const imageSequence = new ImageSequence(src, x, y, frameRate);
     if (autostart) {
       imageSequence.play();
     }
@@ -1119,13 +1119,13 @@ export default class Two {
   /**
    * @name Two#makeTexture
    * @function
-   * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+   * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [src] - The URL path to an image or a DOM image-like element.
    * @param {Function} [callback] - Function to be invoked when the image is loaded.
    * @returns {Two.Texture}
    * @description Creates a Two.js texture object.
    */
-  makeTexture(pathOrSource, callback) {
-    const texture = new Texture(pathOrSource, callback);
+  makeTexture(src, callback) {
+    const texture = new Texture(src, callback);
     return texture;
   }
 

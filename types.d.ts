@@ -3423,7 +3423,7 @@ declare module 'two.js/src/effects/image' {
    * @name Two.Image
    * @class
    * @extends Two.Rectangle
-   * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the image.
+   * @param {String|Two.Texture} [src] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the image.
    * @param {Number} [ox=0] - The initial `x` position of the Two.Image.
    * @param {Number} [oy=0] - The initial `y` position of the Two.Image.
    * @param {Number} [width=1] - The width to display the image at.
@@ -3468,7 +3468,7 @@ declare module 'two.js/src/effects/image' {
       }
     ): Image;
     constructor(
-      path?: string | Texture,
+      src?: string | Texture,
       ox?: number,
       oy?: number,
       width?: number,
@@ -3523,7 +3523,7 @@ declare module 'two.js/src/effects/sprite' {
      * @name Two.Sprite
      * @class
 
-     * @param {String|Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
+     * @param {String|Texture} [src] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
      * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
      * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
      * @param {Number} [cols=1] - The number of columns the sprite contains.
@@ -3568,7 +3568,7 @@ declare module 'two.js/src/effects/sprite' {
       }
     ): Sprite;
     constructor(
-      path?: string | Texture,
+      src?: string | Texture,
       ox?: number,
       oy?: number,
       cols?: number,
@@ -4417,7 +4417,7 @@ declare module 'two.js/src/effects/image-sequence' {
      * @name Two.ImageSequence
      * @class
 
-     * @param {String|String[]|Texture|Texture[]} [paths] - A list of URLs or {@link Two.Texture}s.
+     * @param {String|String[]|Texture|Texture[]} [src] - A list of URLs or {@link Two.Texture}s.
      * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
      * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
      * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
@@ -4462,7 +4462,7 @@ declare module 'two.js/src/effects/image-sequence' {
     ): ImageSequence;
 
     constructor(
-      paths?: string | string[] | Texture | Texture[],
+      src?: string | string[] | Texture | Texture[],
       ox?: number,
       oy?: number,
       frameRate?: number
@@ -5955,7 +5955,7 @@ declare module 'two.js' {
     /**
      * @name Two#makeSprite
      * @function
-     * @param {(String|Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+     * @param {(String|Texture)} src - The URL path to an image or an already created {@link Two.Texture}.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} [columns=1]
@@ -5966,7 +5966,7 @@ declare module 'two.js' {
      * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
      */
     makeSprite(
-      pathOrTexture: any,
+      src: any,
       x: number,
       y: number,
       columns?: number,
@@ -5977,7 +5977,7 @@ declare module 'two.js' {
     /**
      * @name Two#makeImage
      * @function
-     * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+     * @param {(String|Two.Texture)} src - The URL path to an image or an already created {@link Two.Texture}.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} [width]
@@ -5987,7 +5987,7 @@ declare module 'two.js' {
      * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
      */
     makeImage(
-      pathOrTexture: any,
+      src: any,
       x: number,
       y: number,
       width?: number,
@@ -5997,7 +5997,7 @@ declare module 'two.js' {
     /**
      * @name Two#makeImageSequence
      * @function
-     * @param {(String[]|Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
+     * @param {(String[]|Texture[])} src - An array of paths or of {@link Two.Textures}.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} [frameRate=0]
@@ -6006,7 +6006,7 @@ declare module 'two.js' {
      * @description Creates a Two.js image sequence object and adds it to the scene.
      */
     makeImageSequence(
-      pathsOrTextures: string[] | Texture[] | string | Texture,
+      src: string[] | Texture[] | string | Texture,
       x: number,
       y: number,
       frameRate?: number,
@@ -6015,12 +6015,12 @@ declare module 'two.js' {
     /**
      * @name Two#makeTexture
      * @function
-     * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+     * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [src] - The URL path to an image or a DOM image-like element.
      * @param {Function} [callback] - Function to be invoked when the image is loaded.
      * @returns {Texture}
      * @description Creates a Two.js texture object.
      */
-    makeTexture(pathOrSource: any, callback?: () => void): Texture;
+    makeTexture(src: any, callback?: () => void): Texture;
     /**
      * @name Two#makeGroup
      * @function

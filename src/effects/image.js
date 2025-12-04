@@ -6,7 +6,7 @@ import { Texture } from './texture.js';
  * @name Two.Image
  * @class
  * @extends Two.Rectangle
- * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the image.
+ * @param {String|Two.Texture} [src] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the image.
  * @param {Number} [ox=0] - The initial `x` position of the Two.Image.
  * @param {Number} [oy=0] - The initial `y` position of the Two.Image.
  * @param {Number} [width=1] - The width to display the image at.
@@ -44,7 +44,7 @@ export class Image extends Rectangle {
    */
   _mode = 'fill';
 
-  constructor(path, ox, oy, width, height, mode) {
+  constructor(src, ox, oy, width, height, mode) {
     super(ox, oy, width || 1, height || 1);
 
     this._renderer.type = 'image';
@@ -60,10 +60,10 @@ export class Image extends Rectangle {
      * @name Two.Image#texture
      * @property {Two.Texture} - The texture to be used as bitmap data to display image in the scene.
      */
-    if (path instanceof Texture) {
-      this.texture = path;
-    } else if (typeof path === 'string') {
-      this.texture = new Texture(path);
+    if (src instanceof Texture) {
+      this.texture = src;
+    } else if (typeof src === 'string') {
+      this.texture = new Texture(src);
     }
 
     if (typeof mode === 'string') {

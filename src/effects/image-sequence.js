@@ -11,7 +11,7 @@ import { Texture } from './texture.js';
  * @name Two.ImageSequence
  * @class
  * @extends Two.Rectangle
- * @param {String|String[]|Two.Texture|Two.Texture[]} [paths] - A list of URLs or {@link Two.Texture}s.
+ * @param {String|String[]|Two.Texture|Two.Texture[]} [src] - A list of URLs or {@link Two.Texture}s.
  * @param {Number} [ox=0] - The initial `x` position of the Two.ImageSequence.
  * @param {Number} [oy=0] - The initial `y` position of the Two.ImageSequence.
  * @param {Number} [frameRate=30] - The frame rate at which the images should playback at.
@@ -120,7 +120,7 @@ export class ImageSequence extends Rectangle {
    */
   _origin = null;
 
-  constructor(paths, ox, oy, frameRate) {
+  constructor(src, ox, oy, frameRate) {
     super(ox, oy, 0, 0);
 
     this._renderer.type = 'image-sequence';
@@ -140,11 +140,11 @@ export class ImageSequence extends Rectangle {
      * @name Two.ImageSequence#textures
      * @property {Two.Texture[]} - A list of textures to be used as frames for animating the {@link Two.ImageSequence}.
      */
-    if (Array.isArray(paths)) {
-      this.textures = paths.map(GenerateTexture.bind(this));
-    } else if (typeof paths === 'string') {
-      // If just a single path convert into a single Two.Texture
-      this.textures = [GenerateTexture(paths)];
+    if (Array.isArray(src)) {
+      this.textures = src.map(GenerateTexture.bind(this));
+    } else if (typeof src === 'string') {
+      // If just a single src convert into a single Two.Texture
+      this.textures = [GenerateTexture(src)];
     }
 
     this.origin = new Vector();

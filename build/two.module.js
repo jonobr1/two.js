@@ -1223,12 +1223,12 @@ var Constants = {
    * @name Two.Version
    * @property {String} - The current working version of the library.
    */
-  Version: "v0.8.22",
+  Version: "v0.8.23",
   /**
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2025-11-03T22:27:20.095Z",
+  PublishDate: "2025-12-04T21:10:51.711Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -6335,7 +6335,7 @@ var proto11 = {
 
 // src/effects/sprite.js
 var _Sprite = class _Sprite extends Rectangle {
-  constructor(path, ox, oy, cols, rows, frameRate) {
+  constructor(src, ox, oy, cols, rows, frameRate) {
     super(ox, oy, 0, 0);
     /**
      * @name Two.Sprite#_flagTexture
@@ -6453,10 +6453,10 @@ var _Sprite = class _Sprite extends Rectangle {
     }
     this.noStroke();
     this.noFill();
-    if (path instanceof Texture) {
-      this.texture = path;
-    } else if (typeof path === "string") {
-      this.texture = new Texture(path);
+    if (src instanceof Texture) {
+      this.texture = src;
+    } else if (typeof src === "string") {
+      this.texture = new Texture(src);
     }
     this.origin = new Vector();
     this._update();
@@ -9527,7 +9527,7 @@ function FlagStroke2() {
 
 // src/effects/image-sequence.js
 var _ImageSequence = class _ImageSequence extends Rectangle {
-  constructor(paths, ox, oy, frameRate) {
+  constructor(src, ox, oy, frameRate) {
     super(ox, oy, 0, 0);
     /**
      * @name Two.ImageSequence#_flagTextures
@@ -9624,10 +9624,10 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
     this._renderer.unbindTextures = UnbindTextures.bind(this);
     this.noStroke();
     this.noFill();
-    if (Array.isArray(paths)) {
-      this.textures = paths.map(GenerateTexture.bind(this));
-    } else if (typeof paths === "string") {
-      this.textures = [GenerateTexture(paths)];
+    if (Array.isArray(src)) {
+      this.textures = src.map(GenerateTexture.bind(this));
+    } else if (typeof src === "string") {
+      this.textures = [GenerateTexture(src)];
     }
     this.origin = new Vector();
     this._update();
@@ -12167,7 +12167,7 @@ function xhr(path, callback) {
 
 // src/effects/image.js
 var _Image = class _Image extends Rectangle {
-  constructor(path, ox, oy, width, height, mode) {
+  constructor(src, ox, oy, width, height, mode) {
     super(ox, oy, width || 1, height || 1);
     /**
      * @name Two.Image#_flagTexture
@@ -12199,10 +12199,10 @@ var _Image = class _Image extends Rectangle {
     }
     this.noStroke();
     this.noFill();
-    if (path instanceof Texture) {
-      this.texture = path;
-    } else if (typeof path === "string") {
-      this.texture = new Texture(path);
+    if (src instanceof Texture) {
+      this.texture = src;
+    } else if (typeof src === "string") {
+      this.texture = new Texture(src);
     }
     if (typeof mode === "string") {
       this.mode = mode;
@@ -16321,7 +16321,7 @@ var _Two = class _Two {
   /**
    * @name Two#makeSprite
    * @function
-   * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+   * @param {(String|Two.Texture)} src - The URL path to an image or an already created {@link Two.Texture}.
    * @param {Number} x
    * @param {Number} y
    * @param {Number} [columns=1]
@@ -16331,8 +16331,8 @@ var _Two = class _Two {
    * @returns {Two.Sprite}
    * @description Creates a Two.js sprite object and adds it to the scene. Sprites can be used for still images as well as animations.
    */
-  makeSprite(pathOrTexture, x, y, columns, rows, frameRate, autostart) {
-    const sprite = new Sprite(pathOrTexture, x, y, columns, rows, frameRate);
+  makeSprite(src, x, y, columns, rows, frameRate, autostart) {
+    const sprite = new Sprite(src, x, y, columns, rows, frameRate);
     if (autostart) {
       sprite.play();
     }
@@ -16342,7 +16342,7 @@ var _Two = class _Two {
   /**
    * @name Two#makeImage
    * @function
-   * @param {(String|Two.Texture)} pathOrTexture - The URL path to an image or an already created {@link Two.Texture}.
+   * @param {(String|Two.Texture)} src - The URL path to an image or an already created {@link Two.Texture}.
    * @param {Number} x
    * @param {Number} y
    * @param {Number} width
@@ -16351,15 +16351,15 @@ var _Two = class _Two {
    * @returns {Two.Image}
    * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
    */
-  makeImage(pathOrTexture, x, y, width, height, mode) {
-    const image = new Image2(pathOrTexture, x, y, width, height, mode);
+  makeImage(src, x, y, width, height, mode) {
+    const image = new Image2(src, x, y, width, height, mode);
     this.add(image);
     return image;
   }
   /**
    * @name Two#makeImageSequence
    * @function
-   * @param {(String[]|Two.Texture[])} pathsOrTextures - An array of paths or of {@link Two.Textures}.
+   * @param {(String[]|Two.Texture[])} src - An array of paths or of {@link Two.Textures}.
    * @param {Number} x
    * @param {Number} y
    * @param {Number} [frameRate=0]
@@ -16367,8 +16367,8 @@ var _Two = class _Two {
    * @returns {Two.ImageSequence}
    * @description Creates a Two.js image sequence object and adds it to the scene.
    */
-  makeImageSequence(pathsOrTextures, x, y, frameRate, autostart) {
-    const imageSequence = new ImageSequence(pathsOrTextures, x, y, frameRate);
+  makeImageSequence(src, x, y, frameRate, autostart) {
+    const imageSequence = new ImageSequence(src, x, y, frameRate);
     if (autostart) {
       imageSequence.play();
     }
@@ -16378,13 +16378,13 @@ var _Two = class _Two {
   /**
    * @name Two#makeTexture
    * @function
-   * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [pathOrSource] - The URL path to an image or a DOM image-like element.
+   * @param {(String|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement)} [src] - The URL path to an image or a DOM image-like element.
    * @param {Function} [callback] - Function to be invoked when the image is loaded.
    * @returns {Two.Texture}
    * @description Creates a Two.js texture object.
    */
-  makeTexture(pathOrSource, callback) {
-    const texture = new Texture(pathOrSource, callback);
+  makeTexture(src, callback) {
+    const texture = new Texture(src, callback);
     return texture;
   }
   /**

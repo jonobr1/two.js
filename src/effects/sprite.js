@@ -9,7 +9,7 @@ import { Texture } from './texture.js';
  * @name Two.Sprite
  * @class
  * @extends Two.Rectangle
- * @param {String|Two.Texture} [path] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
+ * @param {String|Two.Texture} [src] - The URL path or {@link Two.Texture} to be used as the bitmap data displayed on the sprite.
  * @param {Number} [ox=0] - The initial `x` position of the Two.Sprite.
  * @param {Number} [oy=0] - The initial `y` position of the Two.Sprite.
  * @param {Number} [cols=1] - The number of columns the sprite contains.
@@ -148,7 +148,7 @@ export class Sprite extends Rectangle {
    */
   _origin = null;
 
-  constructor(path, ox, oy, cols, rows, frameRate) {
+  constructor(src, ox, oy, cols, rows, frameRate) {
     super(ox, oy, 0, 0);
 
     this._renderer.type = 'sprite';
@@ -164,10 +164,10 @@ export class Sprite extends Rectangle {
      * @name Two.Sprite#texture
      * @property {Two.Texture} - The texture to be used as bitmap data to display image in the scene.
      */
-    if (path instanceof Texture) {
-      this.texture = path;
-    } else if (typeof path === 'string') {
-      this.texture = new Texture(path);
+    if (src instanceof Texture) {
+      this.texture = src;
+    } else if (typeof src === 'string') {
+      this.texture = new Texture(src);
     }
 
     this.origin = new Vector();
