@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
+- Added `Two.Shape.dispose`
+- Added test suite for `dispose` methods
+
 ## December 3, 2025 v0.8.22
 
 <h3 class="visible">Dec 3, 2025</h3><version-link v="v0.8.22" />
