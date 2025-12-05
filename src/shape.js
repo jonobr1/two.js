@@ -352,6 +352,30 @@ export class Shape extends Element {
   }
 
   /**
+   * @name Two.Shape#dispose
+   * @function
+   * @description Release the element's renderer object and detach any events.
+   * This cleans up renderer-specific resources and unbinds all event listeners.
+   */
+  dispose() {
+    // Call parent dispose to preserve renderer type and unbind events
+    super.dispose();
+
+    if (
+      typeof this.translation === 'object' &&
+      typeof this.translation.unbind === 'function'
+    ) {
+      this.translation.unbind();
+    }
+    if (
+      typeof this.scale === 'object' &&
+      typeof this.scale.unbind === 'function'
+    ) {
+      this.scale.unbind();
+    }
+  }
+
+  /**
    * @name Two.Shape#_update
    * @function
    * @private

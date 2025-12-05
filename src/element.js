@@ -113,16 +113,52 @@ export class Element extends Events {
    * This cleans up renderer-specific resources and unbinds all event listeners.
    */
   dispose() {
+    // Unbind all events
+    if (typeof this.unbind === 'function') {
+      this.unbind();
+    }
+
+    // Clean up renderer-specific resources
+    if (this._renderer) {
+      // SVG DOM element cleanup
+      if (this._renderer.elem && this._renderer.elem.parentNode) {
+        this._renderer.elem.parentNode.removeChild(this._renderer.elem);
+        delete this._renderer.elem;
+      }
+
+      // WebGL resource cleanup
+      if (this.type === 'WebGLRenderer' && this.renderer.ctx) {
+        const gl = this.renderer.ctx;
+
+        // Clean up textures
+        if (this._renderer.texture) {
+          gl.deleteTexture(this._renderer.texture);
+          delete this._renderer.texture;
+        }
+
+        // Clean up buffers
+        if (this._renderer.positionBuffer) {
+          gl.deleteBuffer(this._renderer.positionBuffer);
+          delete this._renderer.positionBuffer;
+        }
+
+        // Clean up any other WebGL effects
+        if (this._renderer.effect) {
+          this._renderer.effect = null;
+        }
+      }
+
+      // Canvas renderer cleanup - clear cached contexts and data
+      if (this.type === 'CanvasRenderer' && this._renderer.context) {
+        delete this._renderer.context;
+      }
+    }
+
     // Preserve the renderer type for potential re-attachment
     const rendererType = this._renderer.type;
 
     // Clear renderer object but preserve type
     this._renderer = { type: rendererType };
-
-    // Unbind all events
-    if (typeof this.unbind === 'function') {
-      this.unbind();
-    }
 
     return this;
   }

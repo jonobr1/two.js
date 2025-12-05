@@ -614,12 +614,14 @@ export class Path extends Shape {
     }
 
     // Dispose fill effect (more thorough than unbind)
-    if (typeof this.fill === 'object' && this.fill && 'dispose' in this.fill) {
+    if (
+      typeof this.fill === 'object' &&
+      typeof this.fill.dispose === 'function'
+    ) {
       this.fill.dispose();
     } else if (
       typeof this.fill === 'object' &&
-      this.fill &&
-      'unbind' in this.fill
+      typeof this.fill.unbind === 'function'
     ) {
       this.fill.unbind();
     }
@@ -627,14 +629,12 @@ export class Path extends Shape {
     // Dispose stroke effect (more thorough than unbind)
     if (
       typeof this.stroke === 'object' &&
-      this.stroke &&
-      'dispose' in this.stroke
+      typeof this.stroke.dispose === 'function'
     ) {
       this.stroke.dispose();
     } else if (
       typeof this.stroke === 'object' &&
-      this.stroke &&
-      'unbind' in this.stroke
+      typeof this.stroke.unbind === 'function'
     ) {
       this.stroke.unbind();
     }
@@ -1205,7 +1205,11 @@ export class Path extends Shape {
       const isCurve = isSegmentCurved(currentOriginal, prevOriginal);
 
       if (isCurve) {
-        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+        const subdivided = getSubdivisions(
+          currentOriginal,
+          prevOriginal,
+          limit
+        );
         const steps = subdivided.length;
         const prevClone = points[points.length - 1];
         let startSegment = prevClone.clone();
@@ -1256,7 +1260,11 @@ export class Path extends Shape {
           points.push(currentClone);
         }
       } else {
-        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+        const subdivided = getSubdivisions(
+          currentOriginal,
+          prevOriginal,
+          limit
+        );
 
         for (let j = 1; j < subdivided.length; j += 1) {
           const anchor = subdivided[j];

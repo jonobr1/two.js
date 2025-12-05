@@ -498,12 +498,14 @@ export class Text extends Shape {
     super.dispose();
 
     // Dispose fill effect (more thorough than unbind)
-    if (typeof this.fill === 'object' && this.fill && 'dispose' in this.fill) {
+    if (
+      typeof this.fill === 'object' &&
+      typeof this.fill.dispose === 'function'
+    ) {
       this.fill.dispose();
     } else if (
       typeof this.fill === 'object' &&
-      this.fill &&
-      'unbind' in this.fill
+      typeof this.fill.unbind === 'function'
     ) {
       this.fill.unbind();
     }
@@ -511,14 +513,12 @@ export class Text extends Shape {
     // Dispose stroke effect (more thorough than unbind)
     if (
       typeof this.stroke === 'object' &&
-      this.stroke &&
-      'dispose' in this.stroke
+      typeof this.stroke.dispose === 'function'
     ) {
       this.stroke.dispose();
     } else if (
       typeof this.stroke === 'object' &&
-      this.stroke &&
-      'unbind' in this.stroke
+      typeof this.stroke.unbind === 'function'
     ) {
       this.stroke.unbind();
     }

@@ -442,10 +442,13 @@ export default class Two {
     }
 
     // Unbind effects applied to an object
-    if (typeof obj.fill === 'object' && 'unbind' in obj.fill) {
+    if (typeof obj.fill === 'object' && typeof obj.fill.unbind === 'function') {
       obj.fill.unbind();
     }
-    if (typeof obj.stroke === 'object' && 'unbind' in obj.stroke) {
+    if (
+      typeof obj.stroke === 'object' &&
+      typeof obj.stroke.unbind === 'function'
+    ) {
       obj.stroke.unbind();
     }
 

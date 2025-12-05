@@ -1228,7 +1228,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2025-12-04T21:10:51.711Z",
+  PublishDate: "2025-12-05T06:10:07.715Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1987,11 +1987,34 @@ var _Element = class _Element extends Events {
    * This cleans up renderer-specific resources and unbinds all event listeners.
    */
   dispose() {
-    const rendererType = this._renderer.type;
-    this._renderer = { type: rendererType };
     if (typeof this.unbind === "function") {
       this.unbind();
     }
+    if (this._renderer) {
+      if (this._renderer.elem && this._renderer.elem.parentNode) {
+        this._renderer.elem.parentNode.removeChild(this._renderer.elem);
+        delete this._renderer.elem;
+      }
+      if (this.type === "WebGLRenderer" && this.renderer.ctx) {
+        const gl = this.renderer.ctx;
+        if (this._renderer.texture) {
+          gl.deleteTexture(this._renderer.texture);
+          delete this._renderer.texture;
+        }
+        if (this._renderer.positionBuffer) {
+          gl.deleteBuffer(this._renderer.positionBuffer);
+          delete this._renderer.positionBuffer;
+        }
+        if (this._renderer.effect) {
+          this._renderer.effect = null;
+        }
+      }
+      if (this.type === "CanvasRenderer" && this._renderer.context) {
+        delete this._renderer.context;
+      }
+    }
+    const rendererType = this._renderer.type;
+    this._renderer = { type: rendererType };
     return this;
   }
 };
@@ -4122,6 +4145,21 @@ var _Shape = class _Shape extends Element {
     return result;
   }
   /**
+   * @name Two.Shape#dispose
+   * @function
+   * @description Release the element's renderer object and detach any events.
+   * This cleans up renderer-specific resources and unbinds all event listeners.
+   */
+  dispose() {
+    super.dispose();
+    if (typeof this.translation === "object" && typeof this.translation.unbind === "function") {
+      this.translation.unbind();
+    }
+    if (typeof this.scale === "object" && typeof this.scale.unbind === "function") {
+      this.scale.unbind();
+    }
+  }
+  /**
    * @name Two.Shape#_update
    * @function
    * @private
@@ -5164,14 +5202,14 @@ var _Path = class _Path extends Shape {
         }
       }
     }
-    if (typeof this.fill === "object" && this.fill && "dispose" in this.fill) {
+    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
       this.fill.dispose();
-    } else if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
       this.fill.unbind();
     }
-    if (typeof this.stroke === "object" && this.stroke && "dispose" in this.stroke) {
+    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
       this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
       this.stroke.unbind();
     }
     return this;
@@ -5617,7 +5655,11 @@ var _Path = class _Path extends Shape {
       }
       const isCurve = isSegmentCurved(currentOriginal, prevOriginal);
       if (isCurve) {
-        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+        const subdivided = getSubdivisions(
+          currentOriginal,
+          prevOriginal,
+          limit
+        );
         const steps = subdivided.length;
         const prevClone = points[points.length - 1];
         let startSegment = prevClone.clone();
@@ -5660,7 +5702,11 @@ var _Path = class _Path extends Shape {
           points.push(currentClone);
         }
       } else {
-        const subdivided = getSubdivisions(currentOriginal, prevOriginal, limit);
+        const subdivided = getSubdivisions(
+          currentOriginal,
+          prevOriginal,
+          limit
+        );
         for (let j = 1; j < subdivided.length; j += 1) {
           const anchor2 = subdivided[j];
           inheritRelative(anchor2, prevOriginal);
@@ -7780,14 +7826,14 @@ var _Points = class _Points extends Shape {
         }
       }
     }
-    if (typeof this.fill === "object" && this.fill && "dispose" in this.fill) {
+    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
       this.fill.dispose();
-    } else if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
       this.fill.unbind();
     }
-    if (typeof this.stroke === "object" && this.stroke && "dispose" in this.stroke) {
+    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
       this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
       this.stroke.unbind();
     }
     return this;
@@ -9175,14 +9221,14 @@ var _Text = class _Text extends Shape {
    */
   dispose() {
     super.dispose();
-    if (typeof this.fill === "object" && this.fill && "dispose" in this.fill) {
+    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
       this.fill.dispose();
-    } else if (typeof this.fill === "object" && this.fill && "unbind" in this.fill) {
+    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
       this.fill.unbind();
     }
-    if (typeof this.stroke === "object" && this.stroke && "dispose" in this.stroke) {
+    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
       this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && this.stroke && "unbind" in this.stroke) {
+    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
       this.stroke.unbind();
     }
     return this;
@@ -15809,10 +15855,10 @@ var _Two = class _Two {
     if (typeof obj.unbind === "function") {
       obj.unbind();
     }
-    if (typeof obj.fill === "object" && "unbind" in obj.fill) {
+    if (typeof obj.fill === "object" && typeof obj.fill.unbind === "function") {
       obj.fill.unbind();
     }
-    if (typeof obj.stroke === "object" && "unbind" in obj.stroke) {
+    if (typeof obj.stroke === "object" && typeof obj.stroke.unbind === "function") {
       obj.stroke.unbind();
     }
     if (obj.vertices) {
