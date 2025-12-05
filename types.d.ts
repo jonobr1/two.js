@@ -1422,6 +1422,12 @@ declare module 'two.js/src/shape' {
      */
     toObject(): object;
     /**
+     * @name Two.Shape#dispose
+     * @function
+     * @description Release the shape's bound objects by unbinding relevant events.
+     */
+    dispose(): Shape;
+    /**
      * @name Two.Shape#contains
      * @function
      * @param {Number} x - x coordinate to hit test against

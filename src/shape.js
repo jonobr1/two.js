@@ -354,8 +354,7 @@ export class Shape extends Element {
   /**
    * @name Two.Shape#dispose
    * @function
-   * @description Release the element's renderer object and detach any events.
-   * This cleans up renderer-specific resources and unbinds all event listeners.
+   * @description Release the shape's bound objects by unbinding relevant events.
    */
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
