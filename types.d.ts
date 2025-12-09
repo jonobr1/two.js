@@ -1724,7 +1724,7 @@ declare module 'two.js/src/group' {
      * @name Two.Group#mask
      * @property {Shape} - The Two.js object to clip from a group's rendering.
      */
-    mask: Shape | undefined;
+    mask: Shape | null | undefined;
     /**
      * @name Two.Group#strokeAttenuation
      * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space for all child shapes.
@@ -4296,7 +4296,7 @@ declare module 'two.js/src/text' {
      * @property {Shape} - The shape whose alpha property becomes a clipping area for the text.
      * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
      */
-    mask: any;
+    mask: Shape | null | undefined;
     /**
      * @name Two.Text#clip
      * @property {Shape} - Object to define clipping area.
