@@ -1228,7 +1228,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2025-12-05T06:10:07.715Z",
+  PublishDate: "2025-12-22T19:56:52.386Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1804,34 +1804,44 @@ var Collection = class extends Array {
     __privateGet(this, _events)._bound = v;
   }
   addEventListener() {
-    return __privateGet(this, _events).addEventListener.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).addEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   on() {
-    return __privateGet(this, _events).on.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).on) == null ? void 0 : _a.apply(this, arguments);
   }
   bind() {
-    return __privateGet(this, _events).bind.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).bind) == null ? void 0 : _a.apply(this, arguments);
   }
   removeEventListener() {
-    return __privateGet(this, _events).removeEventListener.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).removeEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   off() {
-    return __privateGet(this, _events).off.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).off) == null ? void 0 : _a.apply(this, arguments);
   }
   unbind() {
-    return __privateGet(this, _events).unbind.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).unbind) == null ? void 0 : _a.apply(this, arguments);
   }
   dispatchEvent() {
-    return __privateGet(this, _events).dispatchEvent.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).dispatchEvent) == null ? void 0 : _a.apply(this, arguments);
   }
   trigger() {
-    return __privateGet(this, _events).trigger.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).trigger) == null ? void 0 : _a.apply(this, arguments);
   }
   listen() {
-    return __privateGet(this, _events).listen.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).listen) == null ? void 0 : _a.apply(this, arguments);
   }
   ignore() {
-    return __privateGet(this, _events).ignore.apply(this, arguments);
+    var _a;
+    return (_a = __privateGet(this, _events).ignore) == null ? void 0 : _a.apply(this, arguments);
   }
   pop() {
     const popped = super.pop.apply(this, arguments);
@@ -4147,8 +4157,7 @@ var _Shape = class _Shape extends Element {
   /**
    * @name Two.Shape#dispose
    * @function
-   * @description Release the element's renderer object and detach any events.
-   * This cleans up renderer-specific resources and unbinds all event listeners.
+   * @description Release the shape's bound objects by unbinding relevant events.
    */
   dispose() {
     super.dispose();
@@ -15769,34 +15778,44 @@ var _Two = class _Two {
     this._events._bound = v;
   }
   addEventListener() {
-    return this._events.addEventListener.apply(this, arguments);
+    var _a;
+    return (_a = this._events.addEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   on() {
-    return this._events.addEventListener.apply(this, arguments);
+    var _a;
+    return (_a = this._events.addEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   bind() {
-    return this._events.addEventListener.apply(this, arguments);
+    var _a;
+    return (_a = this._events.addEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   removeEventListener() {
-    return this._events.removeEventListener.apply(this, arguments);
+    var _a;
+    return (_a = this._events.removeEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   off() {
-    return this._events.removeEventListener.apply(this, arguments);
+    var _a;
+    return (_a = this._events.removeEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   unbind() {
-    return this._events.removeEventListener.apply(this, arguments);
+    var _a;
+    return (_a = this._events.removeEventListener) == null ? void 0 : _a.apply(this, arguments);
   }
   dispatchEvent() {
-    return this._events.dispatchEvent.apply(this, arguments);
+    var _a;
+    return (_a = this._events.dispatchEvent) == null ? void 0 : _a.apply(this, arguments);
   }
   trigger() {
-    return this._events.dispatchEvent.apply(this, arguments);
+    var _a;
+    return (_a = this._events.dispatchEvent) == null ? void 0 : _a.apply(this, arguments);
   }
   listen() {
-    return this._events.listen.apply(this, arguments);
+    var _a;
+    return (_a = this._events.listen) == null ? void 0 : _a.apply(this, arguments);
   }
   ignore() {
-    return this._events.ignore.apply(this, arguments);
+    var _a;
+    return (_a = this._events.ignore) == null ? void 0 : _a.apply(this, arguments);
   }
   /**
    * @name Two#appendTo

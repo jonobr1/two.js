@@ -30,7 +30,7 @@ A convenient package to display still or animated images through a tiled image s
 
 | Argument | Description |
 | ---- | ----------- |
-|  path  | The URL path or [Two.Texture](/docs/effects/texture/) to be used as the bitmap data displayed on the sprite. |
+|  src  | The URL path or [Two.Texture](/docs/effects/texture/) to be used as the bitmap data displayed on the sprite. |
 |  ox  | The initial `x` position of the Two.Sprite. |
 |  oy  | The initial `y` position of the Two.Sprite. |
 |  cols  | The number of columns the sprite contains. |

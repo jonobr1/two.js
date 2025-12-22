@@ -30,7 +30,7 @@ A convenient package to display still or animated images organized as a series o
 
 | Argument | Description |
 | ---- | ----------- |
-|  paths  | A list of URLs or [Two.Texture](/docs/effects/texture/)s. |
+|  src  | A list of URLs or [Two.Texture](/docs/effects/texture/)s. |
 |  ox  | The initial `x` position of the Two.ImageSequence. |
 |  oy  | The initial `y` position of the Two.ImageSequence. |
 |  frameRate  | The frame rate at which the images should playback at. |

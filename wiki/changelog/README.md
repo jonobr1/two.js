@@ -11,8 +11,11 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## December 22, 2025 v0.8.23
 
+<h3 class="visible">Dec 22, 2025</h3><version-link v="v0.8.23" />
+
+- Made `Two.Event` private getter more relaxed
 - Added `Two.Shape.dispose`
 - Added test suite for `dispose` methods
 

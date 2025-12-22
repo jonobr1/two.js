@@ -30,7 +30,7 @@ A convenient package to display images scaled to fit specific dimensions. Unlike
 
 | Argument | Description |
 | ---- | ----------- |
-|  path  | The URL path or [Two.Texture](/docs/effects/texture/) to be used as the bitmap data displayed on the image. |
+|  src  | The URL path or [Two.Texture](/docs/effects/texture/) to be used as the bitmap data displayed on the image. |
 |  ox  | The initial `x` position of the Two.Image. |
 |  oy  | The initial `y` position of the Two.Image. |
 |  width  | The width to display the image at. |

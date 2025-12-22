@@ -917,3 +917,48 @@ Works in conjunction with [Two.Shape.fromObject](/docs/shape/#fromobject)
 </div>
 
 
+
+<div class="instance function ">
+
+## dispose
+
+<h2 class="longname" aria-hidden="true"><a href="#dispose"><span class="prefix">Two.Shape.</span><span class="shortname">dispose</span></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="description">
+
+Release the shape's bound objects by unbinding relevant events.
+
+</div>
+
+
+
+
+
+<div class="meta">
+
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/shape.js#L354">
+    shape.js:354
+  </a>
+
+</div>
+
+
+
+
+</div>
+
+

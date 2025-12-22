@@ -1220,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2025-12-05T06:10:07.715Z",
+    PublishDate: "2025-12-22T19:56:52.386Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1785,34 +1785,34 @@ var Two = (() => {
       this.#events._bound = v;
     }
     addEventListener() {
-      return this.#events.addEventListener.apply(this, arguments);
+      return this.#events.addEventListener?.apply(this, arguments);
     }
     on() {
-      return this.#events.on.apply(this, arguments);
+      return this.#events.on?.apply(this, arguments);
     }
     bind() {
-      return this.#events.bind.apply(this, arguments);
+      return this.#events.bind?.apply(this, arguments);
     }
     removeEventListener() {
-      return this.#events.removeEventListener.apply(this, arguments);
+      return this.#events.removeEventListener?.apply(this, arguments);
     }
     off() {
-      return this.#events.off.apply(this, arguments);
+      return this.#events.off?.apply(this, arguments);
     }
     unbind() {
-      return this.#events.unbind.apply(this, arguments);
+      return this.#events.unbind?.apply(this, arguments);
     }
     dispatchEvent() {
-      return this.#events.dispatchEvent.apply(this, arguments);
+      return this.#events.dispatchEvent?.apply(this, arguments);
     }
     trigger() {
-      return this.#events.trigger.apply(this, arguments);
+      return this.#events.trigger?.apply(this, arguments);
     }
     listen() {
-      return this.#events.listen.apply(this, arguments);
+      return this.#events.listen?.apply(this, arguments);
     }
     ignore() {
-      return this.#events.ignore.apply(this, arguments);
+      return this.#events.ignore?.apply(this, arguments);
     }
     constructor() {
       super();
@@ -4139,8 +4139,7 @@ var Two = (() => {
     /**
      * @name Two.Shape#dispose
      * @function
-     * @description Release the element's renderer object and detach any events.
-     * This cleans up renderer-specific resources and unbinds all event listeners.
+     * @description Release the shape's bound objects by unbinding relevant events.
      */
     dispose() {
       super.dispose();
@@ -15624,34 +15623,34 @@ var Two = (() => {
       this._events._bound = v;
     }
     addEventListener() {
-      return this._events.addEventListener.apply(this, arguments);
+      return this._events.addEventListener?.apply(this, arguments);
     }
     on() {
-      return this._events.addEventListener.apply(this, arguments);
+      return this._events.addEventListener?.apply(this, arguments);
     }
     bind() {
-      return this._events.addEventListener.apply(this, arguments);
+      return this._events.addEventListener?.apply(this, arguments);
     }
     removeEventListener() {
-      return this._events.removeEventListener.apply(this, arguments);
+      return this._events.removeEventListener?.apply(this, arguments);
     }
     off() {
-      return this._events.removeEventListener.apply(this, arguments);
+      return this._events.removeEventListener?.apply(this, arguments);
     }
     unbind() {
-      return this._events.removeEventListener.apply(this, arguments);
+      return this._events.removeEventListener?.apply(this, arguments);
     }
     dispatchEvent() {
-      return this._events.dispatchEvent.apply(this, arguments);
+      return this._events.dispatchEvent?.apply(this, arguments);
     }
     trigger() {
-      return this._events.dispatchEvent.apply(this, arguments);
+      return this._events.dispatchEvent?.apply(this, arguments);
     }
     listen() {
-      return this._events.listen.apply(this, arguments);
+      return this._events.listen?.apply(this, arguments);
     }
     ignore() {
-      return this._events.ignore.apply(this, arguments);
+      return this._events.ignore?.apply(this, arguments);
     }
     /**
      * @name Two#type
