@@ -100,34 +100,34 @@ export default class Two {
   }
 
   addEventListener() {
-    return this._events.addEventListener.apply(this, arguments);
+    return this._events.addEventListener?.apply(this, arguments);
   }
   on() {
-    return this._events.addEventListener.apply(this, arguments);
+    return this._events.addEventListener?.apply(this, arguments);
   }
   bind() {
-    return this._events.addEventListener.apply(this, arguments);
+    return this._events.addEventListener?.apply(this, arguments);
   }
   removeEventListener() {
-    return this._events.removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener?.apply(this, arguments);
   }
   off() {
-    return this._events.removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener?.apply(this, arguments);
   }
   unbind() {
-    return this._events.removeEventListener.apply(this, arguments);
+    return this._events.removeEventListener?.apply(this, arguments);
   }
   dispatchEvent() {
-    return this._events.dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent?.apply(this, arguments);
   }
   trigger() {
-    return this._events.dispatchEvent.apply(this, arguments);
+    return this._events.dispatchEvent?.apply(this, arguments);
   }
   listen() {
-    return this._events.listen.apply(this, arguments);
+    return this._events.listen?.apply(this, arguments);
   }
   ignore() {
-    return this._events.ignore.apply(this, arguments);
+    return this._events.ignore?.apply(this, arguments);
   }
 
   /**

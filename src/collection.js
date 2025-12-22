@@ -30,34 +30,34 @@ export class Collection extends Array {
   }
 
   addEventListener() {
-    return this.#events.addEventListener.apply(this, arguments);
+    return this.#events.addEventListener?.apply(this, arguments);
   }
   on() {
-    return this.#events.on.apply(this, arguments);
+    return this.#events.on?.apply(this, arguments);
   }
   bind() {
-    return this.#events.bind.apply(this, arguments);
+    return this.#events.bind?.apply(this, arguments);
   }
   removeEventListener() {
-    return this.#events.removeEventListener.apply(this, arguments);
+    return this.#events.removeEventListener?.apply(this, arguments);
   }
   off() {
-    return this.#events.off.apply(this, arguments);
+    return this.#events.off?.apply(this, arguments);
   }
   unbind() {
-    return this.#events.unbind.apply(this, arguments);
+    return this.#events.unbind?.apply(this, arguments);
   }
   dispatchEvent() {
-    return this.#events.dispatchEvent.apply(this, arguments);
+    return this.#events.dispatchEvent?.apply(this, arguments);
   }
   trigger() {
-    return this.#events.trigger.apply(this, arguments);
+    return this.#events.trigger?.apply(this, arguments);
   }
   listen() {
-    return this.#events.listen.apply(this, arguments);
+    return this.#events.listen?.apply(this, arguments);
   }
   ignore() {
-    return this.#events.ignore.apply(this, arguments);
+    return this.#events.ignore?.apply(this, arguments);
   }
 
   constructor() {
