@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
+## Nightly
+
+- Separated type signatures into their own respective files
+
 ## December 22, 2025 v0.8.23
 
 <h3 class="visible">Dec 22, 2025</h3><version-link v="v0.8.23" />

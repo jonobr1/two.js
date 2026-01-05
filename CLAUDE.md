@@ -87,7 +87,7 @@ The Two class provides factory methods for creating and adding objects to the sc
 
 ### Running Tests
 - Manual browser testing via HTML files: `tests/index.html` and `tests/noWebGL.html`
-- TypeScript compilation testing: `cd tests/typescript && npx tsc index.ts` to verify types work correctly
+- TypeScript compilation testing: `npx tsc --noEmit --skipLibCheck tests/typescript/index.ts` to verify types work correctly
 
 ## Key Files to Understand
 
@@ -95,7 +95,8 @@ The Two class provides factory methods for creating and adding objects to the sc
 - `src/constants.js` - Global constants, types, and configuration
 - `src/utils/interpret-svg.js` - SVG parsing and import functionality
 - `utils/build.js` - Build system configuration
-- `types.d.ts` - TypeScript definitions for the entire library
+- `src/**/*.d.ts` - TypeScript definitions collocated with source files (e.g., `src/vector.d.ts` alongside `src/vector.js`)
+- `src/two.d.ts` - Main TypeScript entry point that aggregates all type exports
 
 ## Dependencies
 
@@ -151,7 +152,7 @@ Designed for modern browsers with ES6+ support. Uses feature detection for rende
 - Open `tests/index.html` in browser for manual testing
 - Test new features across Canvas, SVG, and WebGL renderers
 - Check `tests/noWebGL.html` for fallback scenarios
-- TypeScript compilation tests: Run `cd tests/typescript && npx tsc index.ts` to verify TypeScript definitions work correctly
+- TypeScript compilation tests: Run `npx tsc --noEmit --skipLibCheck tests/typescript/index.ts` to verify TypeScript definitions work correctly
 - Manual browser testing required - no automated test runner
 
 ## File Organization Rules
@@ -160,7 +161,10 @@ Designed for modern browsers with ES6+ support. Uses feature detection for rende
 - Effects belong in `src/effects/`
 - Utilities in `src/utils/` should be pure functions
 - Export new classes in `src/two.js` main file
-- Add TypeScript definitions to `types.d.ts`
+- **TypeScript definitions**: Create a `.d.ts` file alongside each source file (e.g., `src/vector.d.ts` next to `src/vector.js`)
+  - Each `.d.ts` file contains a `declare module 'two.js/src/...'` block matching the module path
+  - Import statements go at the END of the module declaration
+  - Main type exports are aggregated in `src/two.d.ts`
 - Renderers are in `src/renderers/` - modify with caution
 
 ## Performance Guidelines
