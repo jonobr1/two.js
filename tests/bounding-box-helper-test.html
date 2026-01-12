@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BoundingBoxHelper Test - Two.js</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+    #draw {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .info {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .info h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Two.js BoundingBoxHelper Test</h1>
+  <div id="draw"></div>
+  <div class="info">
+    <h2>BoundingBoxHelper Features:</h2>
+    <ul>
+      <li>Displays oriented bounding boxes around shapes or groups</li>
+      <li>Shows 8 resize handles (4 corners + 4 edges)</li>
+      <li>Shows rotation handle at the top</li>
+      <li>Supports single or multiple target objects</li>
+      <li>Automatically updates with target transformations</li>
+    </ul>
+    <p><strong>This test demonstrates:</strong> Multiple shapes with BoundingBoxHelpers attached to them.</p>
+  </div>
+
+  <script src="../build/two.js"></script>
+  <script>
+    // Create Two.js instance
+    const two = new Two({
+      width: 800,
+      height: 600,
+      type: Two.Types.svg
+    }).appendTo(document.getElementById('draw'));
+
+    // Create some test shapes
+    const circle = two.makeCircle(200, 150, 60);
+    circle.fill = '#FF6B6B';
+    circle.stroke = '#C92A2A';
+    circle.linewidth = 3;
+
+    const rect = two.makeRectangle(450, 200, 120, 80);
+    rect.fill = '#4ECDC4';
+    rect.stroke = '#0D9488';
+    rect.linewidth = 3;
+    rect.rotation = Math.PI / 6; // 30 degrees
+
+    const star = two.makeStar(600, 400, 30, 60, 5);
+    star.fill = '#FFD93D';
+    star.stroke = '#F59E0B';
+    star.linewidth = 3;
+
+    // Create BoundingBoxHelpers for each shape
+    const circleHelper = new Two.BoundingBoxHelper(circle, {
+      color: '#FF6B6B',
+      handleFill: '#FF6B6B',
+      showHandles: true,
+      showRotationHandle: true
+    });
+    two.scene.add(circleHelper);
+
+    const rectHelper = new Two.BoundingBoxHelper(rect, {
+      color: '#4ECDC4',
+      handleFill: '#4ECDC4',
+      showHandles: true,
+      showRotationHandle: true
+    });
+    two.scene.add(rectHelper);
+
+    const starHelper = new Two.BoundingBoxHelper(star, {
+      color: '#FFD93D',
+      handleFill: '#FFD93D',
+      showHandles: true,
+      showRotationHandle: true
+    });
+    two.scene.add(starHelper);
+
+    // Test multi-target helper
+    const multiCircle = two.makeCircle(150, 450, 30);
+    multiCircle.fill = '#9B59B6';
+    multiCircle.noStroke();
+
+    const multiRect = two.makeRectangle(220, 480, 50, 40);
+    multiRect.fill = '#9B59B6';
+    multiRect.noStroke();
+
+    const multiHelper = new Two.BoundingBoxHelper([multiCircle, multiRect], {
+      color: '#9B59B6',
+      handleFill: '#9B59B6',
+      showHandles: true,
+      showRotationHandle: false // Multi-target uses axis-aligned box
+    });
+    two.scene.add(multiHelper);
+
+    // Animation loop
+    two.bind('update', function(frameCount) {
+      // Animate circle
+      circle.translation.x = 200 + Math.sin(frameCount * 0.02) * 50;
+
+      // Animate rectangle rotation
+      rect.rotation += 0.01;
+
+      // Animate star scale
+      star.scale = 1 + Math.sin(frameCount * 0.03) * 0.2;
+
+      // Animate multi-target group
+      multiCircle.translation.x = 150 + Math.cos(frameCount * 0.03) * 30;
+      multiRect.translation.y = 480 + Math.sin(frameCount * 0.03) * 20;
+
+      // Update all helpers
+      circleHelper.update();
+      rectHelper.update();
+      starHelper.update();
+      multiHelper.update();
+
+      // Log bounding info for first shape (every 60 frames)
+      if (frameCount % 60 === 0) {
+        const info = circleHelper.getBoundingInfo();
+        console.log('Circle Bounding Info:', {
+          center: `(${info.centerX.toFixed(1)}, ${info.centerY.toFixed(1)})`,
+          size: `${info.width.toFixed(1)} x ${info.height.toFixed(1)}`,
+          rotation: `${(info.rotation * 180 / Math.PI).toFixed(1)}°`,
+          scale: `(${info.scaleX.toFixed(2)}, ${info.scaleY.toFixed(2)})`
+        });
+      }
+    });
+
+    two.play();
+
+    console.log('BoundingBoxHelper test initialized!');
+    console.log('Two.BoundingBoxHelper is available:', typeof Two.BoundingBoxHelper !== 'undefined');
+  </script>
+</body>
+</html>

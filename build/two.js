@@ -1220,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2026-01-05T18:28:31.207Z",
+    PublishDate: "2026-01-11T21:48:53.295Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -12419,6 +12419,252 @@ var Two = (() => {
     }
   };
 
+  // src/helpers/bounding-box-helper.js
+  var BoundingBoxHelper = class extends Group {
+    /**
+     * @name Two.BoundingBoxHelper#_targets
+     * @private
+     * @property {Array<Two.Shape|Two.Group>} - The target object(s) being visualized.
+     */
+    _targets = [];
+    /**
+     * @name Two.BoundingBoxHelper#_options
+     * @private
+     * @property {Object} - Configuration options.
+     */
+    _options = {};
+    constructor(target, options = {}) {
+      super();
+      this._options = {
+        color: options.color !== void 0 ? options.color : "#00AEFF",
+        linewidth: options.linewidth !== void 0 ? options.linewidth : 1,
+        showHandles: options.showHandles !== void 0 ? options.showHandles : true,
+        handleSize: options.handleSize !== void 0 ? options.handleSize : 8,
+        handleFill: options.handleFill !== void 0 ? options.handleFill : "#00AEFF",
+        showRotationHandle: options.showRotationHandle !== void 0 ? options.showRotationHandle : true,
+        rotationHandleOffset: options.rotationHandleOffset !== void 0 ? options.rotationHandleOffset : 20
+      };
+      this.box = new Rectangle(0, 0, 0, 0);
+      this.box.stroke = this._options.color;
+      this.box.linewidth = this._options.linewidth;
+      this.box.noFill();
+      const handleVerts = [
+        new Vector(),
+        // NW
+        new Vector(),
+        // N (top center)
+        new Vector(),
+        // NE
+        new Vector(),
+        // E (right center)
+        new Vector(),
+        // SE
+        new Vector(),
+        // S (bottom center)
+        new Vector(),
+        // SW
+        new Vector()
+        // W (left center)
+      ];
+      this.handles = new Points(handleVerts);
+      this.handles.size = this._options.handleSize;
+      this.handles.fill = this._options.handleFill;
+      this.handles.noStroke();
+      this.handles.visible = this._options.showHandles;
+      this.rotationHandle = new Group();
+      const rotLine = new Line(0, 0, 0, -this._options.rotationHandleOffset);
+      rotLine.stroke = this._options.color;
+      rotLine.linewidth = this._options.linewidth;
+      const rotCircle = new Circle(0, -this._options.rotationHandleOffset, 5);
+      rotCircle.fill = this._options.handleFill;
+      rotCircle.noStroke();
+      this.rotationHandle.add(rotLine, rotCircle);
+      this.rotationHandle.visible = this._options.showRotationHandle;
+      this.add(this.box, this.handles, this.rotationHandle);
+      if (target) {
+        this.setTarget(target);
+      }
+    }
+    /**
+     * @name Two.BoundingBoxHelper#setTarget
+     * @function
+     * @param {Two.Shape|Two.Group|Array<Two.Shape|Two.Group>} target - The target object(s) for the bounding box.
+     * @returns {Two.BoundingBoxHelper} - Returns the instance for chaining.
+     * @description Set the target object(s) for the bounding box visualization.
+     */
+    setTarget(target) {
+      this._targets = Array.isArray(target) ? target : [target];
+      this.update();
+      return this;
+    }
+    /**
+     * @name Two.BoundingBoxHelper#targets
+     * @property {Array<Two.Shape|Two.Group>} - Get current targets.
+     */
+    get targets() {
+      return this._targets;
+    }
+    /**
+     * @name Two.BoundingBoxHelper#update
+     * @function
+     * @returns {Two.BoundingBoxHelper} - Returns the instance for chaining.
+     * @description Update the bounding box visualization.
+     * Call this in your animation loop or when targets change.
+     */
+    update() {
+      if (this._targets.length === 0) {
+        this.visible = false;
+        return this;
+      }
+      this.visible = true;
+      const info = this.getBoundingInfo();
+      this.box.width = info.width;
+      this.box.height = info.height;
+      this.position.set(info.centerX, info.centerY);
+      this.rotation = info.rotation;
+      const hw = info.width / 2;
+      const hh = info.height / 2;
+      const verts = this.handles.vertices;
+      verts[0].set(-hw, -hh);
+      verts[1].set(0, -hh);
+      verts[2].set(hw, -hh);
+      verts[3].set(hw, 0);
+      verts[4].set(hw, hh);
+      verts[5].set(0, hh);
+      verts[6].set(-hw, hh);
+      verts[7].set(-hw, 0);
+      this.rotationHandle.position.set(0, -hh);
+      return this;
+    }
+    /**
+     * @name Two.BoundingBoxHelper#getBoundingInfo
+     * @function
+     * @returns {Object} - Comprehensive bounding information.
+     * @property {Number} centerX - Center X in world space.
+     * @property {Number} centerY - Center Y in world space.
+     * @property {Number} width - Width of bounds (before rotation).
+     * @property {Number} height - Height of bounds (before rotation).
+     * @property {Number} rotation - Rotation in radians.
+     * @property {Number} scaleX - Scale X.
+     * @property {Number} scaleY - Scale Y.
+     * @property {Array<Object>} corners - Corner positions in world space [nw, ne, se, sw].
+     * @description Get comprehensive bounding information for the target(s).
+     */
+    getBoundingInfo() {
+      if (this._targets.length === 0) {
+        return {
+          centerX: 0,
+          centerY: 0,
+          width: 0,
+          height: 0,
+          rotation: 0,
+          scaleX: 1,
+          scaleY: 1,
+          corners: []
+        };
+      }
+      if (this._targets.length === 1) {
+        return this._getSingleTargetInfo(this._targets[0]);
+      }
+      return this._getMultiTargetInfo(this._targets);
+    }
+    /**
+     * @name Two.BoundingBoxHelper#_getSingleTargetInfo
+     * @private
+     * @function
+     * @param {Two.Shape|Two.Group} target - The target object.
+     * @returns {Object} - Bounding information for a single target.
+     */
+    _getSingleTargetInfo(target) {
+      const rect = target.getBoundingClientRect(true);
+      const position = target.translation || { x: 0, y: 0 };
+      const rotation = typeof target.rotation === "number" ? target.rotation : 0;
+      const scale = target.scale;
+      const scaleX = typeof scale === "number" ? scale : scale && scale.x !== void 0 ? scale.x : 1;
+      const scaleY = typeof scale === "number" ? scale : scale && scale.y !== void 0 ? scale.y : 1;
+      const width = rect.width;
+      const height = rect.height;
+      const hw = width / 2;
+      const hh = height / 2;
+      const cos7 = Math.cos(rotation);
+      const sin7 = Math.sin(rotation);
+      const corners = [
+        { x: -hw, y: -hh },
+        // NW
+        { x: hw, y: -hh },
+        // NE
+        { x: hw, y: hh },
+        // SE
+        { x: -hw, y: hh }
+        // SW
+      ].map(({ x, y }) => ({
+        x: position.x + (x * cos7 - y * sin7),
+        y: position.y + (x * sin7 + y * cos7)
+      }));
+      return {
+        centerX: position.x,
+        centerY: position.y,
+        width,
+        height,
+        rotation,
+        scaleX,
+        scaleY,
+        corners
+      };
+    }
+    /**
+     * @name Two.BoundingBoxHelper#_getMultiTargetInfo
+     * @private
+     * @function
+     * @param {Array<Two.Shape|Two.Group>} targets - The target objects.
+     * @returns {Object} - Bounding information for multiple targets.
+     */
+    _getMultiTargetInfo(targets) {
+      let minX = Infinity, minY = Infinity;
+      let maxX = -Infinity, maxY = -Infinity;
+      for (const target of targets) {
+        const rect = target.getBoundingClientRect(false);
+        minX = Math.min(minX, rect.left);
+        minY = Math.min(minY, rect.top);
+        maxX = Math.max(maxX, rect.right);
+        maxY = Math.max(maxY, rect.bottom);
+      }
+      const width = maxX - minX;
+      const height = maxY - minY;
+      const centerX = minX + width / 2;
+      const centerY = minY + height / 2;
+      return {
+        centerX,
+        centerY,
+        width,
+        height,
+        rotation: 0,
+        // Multi-select uses axis-aligned box
+        scaleX: 1,
+        scaleY: 1,
+        corners: [
+          { x: minX, y: minY },
+          { x: maxX, y: minY },
+          { x: maxX, y: maxY },
+          { x: minX, y: maxY }
+        ]
+      };
+    }
+    /**
+     * @name Two.BoundingBoxHelper#dispose
+     * @function
+     * @returns {Two.BoundingBoxHelper} - Returns the instance for chaining.
+     * @description Dispose of the helper. Clears targets and removes from parent.
+     */
+    dispose() {
+      this._targets = [];
+      if (this.parent) {
+        this.parent.remove(this);
+      }
+      return this;
+    }
+  };
+
   // src/renderers/canvas.js
   var emptyArray = [];
   var max4 = Math.max;
@@ -15835,6 +16081,7 @@ var Two = (() => {
     static Rectangle = Rectangle;
     static RoundedRectangle = RoundedRectangle;
     static Star = Star;
+    static BoundingBoxHelper = BoundingBoxHelper;
     static CanvasRenderer = Renderer;
     static SVGRenderer = Renderer2;
     static WebGLRenderer = Renderer3;

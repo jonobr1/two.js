@@ -90,6 +90,7 @@ declare module 'two.js' {
     static Rectangle: typeof Rectangle;
     static RoundedRectangle: typeof RoundedRectangle;
     static Star: typeof Star;
+    static BoundingBoxHelper: typeof BoundingBoxHelper;
     static CanvasRenderer: typeof CanvasRenderer;
     static SVGRenderer: typeof SVGRenderer;
     static WebGLRenderer: typeof WebGLRenderer;
@@ -690,6 +691,7 @@ declare module 'two.js' {
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Stop } from 'two.js/src/effects/stop';
   import { RoundedRectangle } from 'two.js/src/shapes/rounded-rectangle';
+  import { BoundingBoxHelper } from 'two.js/src/helpers/bounding-box-helper';
   import { Renderer as CanvasRenderer } from 'two.js/src/renderers/canvas';
   import { Renderer as SVGRenderer } from 'two.js/src/renderers/svg';
   import { Renderer as WebGLRenderer } from 'two.js/src/renderers/webgl';
