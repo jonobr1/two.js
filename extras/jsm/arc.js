@@ -1,8 +1,4 @@
-import { TWO_PI } from '../../src/utils/math.js';
-import { Constants } from '../../src/constants.js';
-
-import { Anchor } from '../../src/anchor.js';
-import { Path } from '../../src/path.js';
+import Two from 'two.js';
 
 const cos = Math.cos,
   sin = Math.sin;
@@ -19,7 +15,7 @@ const cos = Math.cos,
  * @param {Number} [endAngle=6.283] - The ending angle of the arc in radians.
  * @param {Number} [resolution=4] - The number of vertices used to construct the circle.
  */
-export class Arc extends Path {
+export class Arc extends Two.Path {
   _flagWidth = false;
   _flagHeight = false;
   _flagStartAngle = false;
@@ -28,16 +24,16 @@ export class Arc extends Path {
   _width = 0;
   _height = 0;
   _startAngle = 0;
-  _endAngle = TWO_PI;
+  _endAngle = Math.PI * 2;
 
   constructor(x, y, width, height, startAngle, endAngle, resolution) {
     if (typeof resolution !== 'number') {
-      resolution = Constants.Resolution;
+      resolution = Two.Resolution;
     }
 
     const points = [];
     for (let i = 0; i < resolution; i++) {
-      points.push(new Anchor());
+      points.push(new Two.Anchor());
     }
 
     super(points);
@@ -158,7 +154,7 @@ export class Arc extends Path {
    * @returns {Two.ArcSegment}
    * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
    */
-  clone() {
+  clone(parent) {
     const { width, height, startAngle, endAngle } = this;
     const resolution = this.vertices.length;
 
@@ -182,8 +178,8 @@ export class Arc extends Path {
       clone.matrix.copy(this.matrix);
     }
 
-    for (let i = 0; i < Path.Properties.length; i++) {
-      const k = Path.Properties[i];
+    for (let i = 0; i < Two.Path.Properties.length; i++) {
+      const k = Two.Path.Properties[i];
       clone[k] = this[k];
     }
 

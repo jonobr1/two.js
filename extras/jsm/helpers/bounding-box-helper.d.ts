@@ -1,4 +1,4 @@
-declare module 'two.js/src/helpers/bounding-box-helper' {
+declare module 'two.js/extras/jsm/helpers/bounding-box-helper' {
   /**
    * Options for configuring the BoundingBoxHelper appearance
    */

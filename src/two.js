@@ -48,10 +48,6 @@ import { Rectangle } from './shapes/rectangle.js';
 import { RoundedRectangle } from './shapes/rounded-rectangle.js';
 import { Star } from './shapes/star.js';
 
-// Helpers
-
-import { BoundingBoxHelper } from './helpers/bounding-box-helper.js';
-
 // Renderers
 
 import { Renderer as CanvasRenderer } from './renderers/canvas.js';
@@ -359,8 +355,6 @@ export default class Two {
   static Rectangle = Rectangle;
   static RoundedRectangle = RoundedRectangle;
   static Star = Star;
-
-  static BoundingBoxHelper = BoundingBoxHelper;
 
   static CanvasRenderer = CanvasRenderer;
   static SVGRenderer = SVGRenderer;

@@ -27,7 +27,7 @@
                                   │
                                   ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                    TWO.JS (src/helpers/)                                │
+│                    TWO.JS (extras/jsm/helpers/)                                │
 │  ┌─────────────────────────────────────────────────────────────────┐   │
 │  │  TransformHelper        │  VertexHelper       │  BoundingBoxHelper  │
 │  │  - Extends Group        │  - Extends Group    │  - Extends Group │   │
@@ -45,7 +45,7 @@
 ### Phase 1: Two.js BoundingBoxHelper
 
 ```bash
-# File: two.js/src/helpers/BoundingBoxHelper.ts
+# File: two.js/extras/jsm/helpers/BoundingBoxHelper.ts
 ```
 
 - [ ] **Task 1.1**: Create `BoundingBoxHelper` class extending `Group`
@@ -72,11 +72,17 @@
   - Clear targets
   - Remove from parent
 
-- [ ] **Task 1.6**: Add exports to `two.js/src/two.js`
+- [ ] **Task 1.6**: Export as extras module
+
+BoundingBoxHelper is now an optional extra, not part of the core Two.js API.
 
 ```javascript
-// Add to Two class static properties
-Two.BoundingBoxHelper = BoundingBoxHelper;
+// ESM import:
+import { BoundingBoxHelper } from 'two.js/extras/jsm/helpers/bounding-box-helper.js';
+
+// UMD usage (after including script):
+// <script src="two.js/extras/js/helpers/bounding-box-helper.js"></script>
+const helper = new Two.Helpers.BoundingBoxHelper(shape);
 ```
 
 ---
@@ -84,7 +90,7 @@ Two.BoundingBoxHelper = BoundingBoxHelper;
 ### Phase 2: Two.js TransformHelper
 
 ```bash
-# File: two.js/src/helpers/TransformHelper.ts
+# File: two.js/extras/jsm/helpers/TransformHelper.ts
 ```
 
 - [ ] **Task 2.1**: Create `TransformHelper` extending `BoundingBoxHelper`
@@ -119,7 +125,7 @@ Two.BoundingBoxHelper = BoundingBoxHelper;
 ### Phase 3: Two.js VertexHelper
 
 ```bash
-# File: two.js/src/helpers/VertexHelper.ts
+# File: two.js/extras/jsm/helpers/VertexHelper.ts
 ```
 
 - [ ] **Task 3.1**: Create `VertexHelper` class extending `Group`

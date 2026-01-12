@@ -1,9 +1,4 @@
-import { Group } from '../group.js';
-import { Rectangle } from '../shapes/rectangle.js';
-import { Circle } from '../shapes/circle.js';
-import { Line } from '../shapes/line.js';
-import { Points } from '../shapes/points.js';
-import { Vector } from '../vector.js';
+import Two from 'two.js';
 
 /**
  * @name Two.BoundingBoxHelper
@@ -22,7 +17,7 @@ import { Vector } from '../vector.js';
  * This helper automatically calculates and displays bounding boxes around shapes or groups.
  * Call the `update()` method in your animation loop to keep the helper synchronized with target transforms.
  */
-export class BoundingBoxHelper extends Group {
+export class BoundingBoxHelper extends Two.Group {
   /**
    * @name Two.BoundingBoxHelper#_targets
    * @private
@@ -43,43 +38,51 @@ export class BoundingBoxHelper extends Group {
     this._options = {
       color: options.color !== undefined ? options.color : '#00AEFF',
       linewidth: options.linewidth !== undefined ? options.linewidth : 1,
-      showHandles: options.showHandles !== undefined ? options.showHandles : true,
+      showHandles:
+        options.showHandles !== undefined ? options.showHandles : true,
       handleSize: options.handleSize !== undefined ? options.handleSize : 8,
-      handleFill: options.handleFill !== undefined ? options.handleFill : '#00AEFF',
-      showRotationHandle: options.showRotationHandle !== undefined ? options.showRotationHandle : true,
-      rotationHandleOffset: options.rotationHandleOffset !== undefined ? options.rotationHandleOffset : 20,
+      handleFill:
+        options.handleFill !== undefined ? options.handleFill : '#00AEFF',
+      showRotationHandle:
+        options.showRotationHandle !== undefined
+          ? options.showRotationHandle
+          : true,
+      rotationHandleOffset:
+        options.rotationHandleOffset !== undefined
+          ? options.rotationHandleOffset
+          : 20,
     };
 
     // Create bounding box rectangle
-    this.box = new Rectangle(0, 0, 0, 0);
+    this.box = new Two.Rectangle(0, 0, 0, 0);
     this.box.stroke = this._options.color;
     this.box.linewidth = this._options.linewidth;
     this.box.noFill();
 
     // Create corner handles (8 points: 4 corners + 4 edge midpoints)
     const handleVerts = [
-      new Vector(), // NW
-      new Vector(), // N (top center)
-      new Vector(), // NE
-      new Vector(), // E (right center)
-      new Vector(), // SE
-      new Vector(), // S (bottom center)
-      new Vector(), // SW
-      new Vector(), // W (left center)
+      new Two.Vector(), // NW
+      new Two.Vector(), // N (top center)
+      new Two.Vector(), // NE
+      new Two.Vector(), // E (right center)
+      new Two.Vector(), // SE
+      new Two.Vector(), // S (bottom center)
+      new Two.Vector(), // SW
+      new Two.Vector(), // W (left center)
     ];
-    this.handles = new Points(handleVerts);
+    this.handles = new Two.Points(handleVerts);
     this.handles.size = this._options.handleSize;
     this.handles.fill = this._options.handleFill;
     this.handles.noStroke();
     this.handles.visible = this._options.showHandles;
 
     // Create rotation handle
-    this.rotationHandle = new Group();
-    const rotLine = new Line(0, 0, 0, -this._options.rotationHandleOffset);
+    this.rotationHandle = new Two.Group();
+    const rotLine = new Two.Line(0, 0, 0, -this._options.rotationHandleOffset);
     rotLine.stroke = this._options.color;
     rotLine.linewidth = this._options.linewidth;
 
-    const rotCircle = new Circle(0, -this._options.rotationHandleOffset, 5);
+    const rotCircle = new Two.Circle(0, -this._options.rotationHandleOffset, 5);
     rotCircle.fill = this._options.handleFill;
     rotCircle.noStroke();
 
@@ -145,13 +148,13 @@ export class BoundingBoxHelper extends Group {
 
     const verts = this.handles.vertices;
     verts[0].set(-hw, -hh); // NW
-    verts[1].set(0, -hh);    // N
-    verts[2].set(hw, -hh);   // NE
-    verts[3].set(hw, 0);     // E
-    verts[4].set(hw, hh);    // SE
-    verts[5].set(0, hh);     // S
-    verts[6].set(-hw, hh);   // SW
-    verts[7].set(-hw, 0);    // W
+    verts[1].set(0, -hh); // N
+    verts[2].set(hw, -hh); // NE
+    verts[3].set(hw, 0); // E
+    verts[4].set(hw, hh); // SE
+    verts[5].set(0, hh); // S
+    verts[6].set(-hw, hh); // SW
+    verts[7].set(-hw, 0); // W
 
     // Update rotation handle position
     this.rotationHandle.position.set(0, -hh);
@@ -176,10 +179,13 @@ export class BoundingBoxHelper extends Group {
   getBoundingInfo() {
     if (this._targets.length === 0) {
       return {
-        centerX: 0, centerY: 0,
-        width: 0, height: 0,
+        centerX: 0,
+        centerY: 0,
+        width: 0,
+        height: 0,
         rotation: 0,
-        scaleX: 1, scaleY: 1,
+        scaleX: 1,
+        scaleY: 1,
         corners: [],
       };
     }
@@ -207,8 +213,18 @@ export class BoundingBoxHelper extends Group {
     const position = target.translation || { x: 0, y: 0 };
     const rotation = typeof target.rotation === 'number' ? target.rotation : 0;
     const scale = target.scale;
-    const scaleX = typeof scale === 'number' ? scale : (scale && scale.x !== undefined ? scale.x : 1);
-    const scaleY = typeof scale === 'number' ? scale : (scale && scale.y !== undefined ? scale.y : 1);
+    const scaleX =
+      typeof scale === 'number'
+        ? scale
+        : scale && scale.x !== undefined
+        ? scale.x
+        : 1;
+    const scaleY =
+      typeof scale === 'number'
+        ? scale
+        : scale && scale.y !== undefined
+        ? scale.y
+        : 1;
 
     const width = rect.width;
     const height = rect.height;
@@ -221,9 +237,9 @@ export class BoundingBoxHelper extends Group {
 
     const corners = [
       { x: -hw, y: -hh }, // NW
-      { x: hw, y: -hh },  // NE
-      { x: hw, y: hh },   // SE
-      { x: -hw, y: hh },  // SW
+      { x: hw, y: -hh }, // NE
+      { x: hw, y: hh }, // SE
+      { x: -hw, y: hh }, // SW
     ].map(({ x, y }) => ({
       x: position.x + (x * cos - y * sin),
       y: position.y + (x * sin + y * cos),
@@ -250,8 +266,10 @@ export class BoundingBoxHelper extends Group {
    */
   _getMultiTargetInfo(targets) {
     // Get world-space AABB of all targets
-    let minX = Infinity, minY = Infinity;
-    let maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity;
+    let maxX = -Infinity,
+      maxY = -Infinity;
 
     for (const target of targets) {
       const rect = target.getBoundingClientRect(false); // world space

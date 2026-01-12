@@ -54,7 +54,7 @@ We'll follow the same pattern:
 A pure visualization helper that shows the oriented bounding box of target object(s).
 
 ```typescript
-// two.js/src/helpers/BoundingBoxHelper.ts
+// two.js/extras/jsm/helpers/BoundingBoxHelper.ts
 
 import Two from 'two.js';
 import { Group } from 'two.js/src/group';
@@ -349,7 +349,7 @@ export class BoundingBoxHelper extends Group {
 Extends BoundingBoxHelper with hit detection and cursor information for building interactive controls.
 
 ```typescript
-// two.js/src/helpers/TransformHelper.ts
+// two.js/extras/jsm/helpers/TransformHelper.ts
 
 import { BoundingBoxHelper, BoundingBoxHelperOptions } from './BoundingBoxHelper';
 import { Shape } from 'two.js/src/shape';
@@ -593,7 +593,7 @@ export class TransformHelper extends BoundingBoxHelper {
 Visualizes path vertices and their bezier control handles.
 
 ```typescript
-// two.js/src/helpers/VertexHelper.ts
+// two.js/extras/jsm/helpers/VertexHelper.ts
 
 import Two from 'two.js';
 import { Group } from 'two.js/src/group';
@@ -1616,12 +1616,20 @@ VertexEditor.displayName = 'VertexEditor';
 
 ```
 two.js/
-└── src/
-    └── helpers/
-        ├── index.ts                 # Export all helpers
-        ├── BoundingBoxHelper.ts     # Pure visual bounding box
-        ├── TransformHelper.ts       # Hit detection + cursor info
-        └── VertexHelper.ts          # Path vertex visualization
+└── extras/
+    ├── js/                          # UMD versions (browser globals)
+    │   └── helpers/
+    │       ├── bounding-box-helper.js    # UMD wrapper
+    │       ├── transform-helper.js       # Phase 2
+    │       └── vertex-helper.js          # Phase 3
+    └── jsm/                         # ESM versions (modern imports)
+        └── helpers/
+            ├── bounding-box-helper.js    # Pure ESM
+            ├── bounding-box-helper.d.ts  # TypeScript definitions
+            ├── transform-helper.js       # Phase 2
+            ├── transform-helper.d.ts     # Phase 2 types
+            ├── vertex-helper.js          # Phase 3
+            └── vertex-helper.d.ts        # Phase 3 types
 
 react-two.js/
 └── lib/

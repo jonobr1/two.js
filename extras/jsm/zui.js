@@ -1,4 +1,4 @@
-import { Matrix } from '../../src/matrix.js';
+import Two from 'two.js';
 
 class Surface {
   constructor(object) {
@@ -41,14 +41,15 @@ export class ZUI {
       y: ZUI.Limit.clone(),
     };
 
-    this.viewport = domElement || document.body;
+    this.viewport =
+      domElement || (document !== 'undefined' ? document.body : null);
     this.viewportOffset = {
       top: 0,
       left: 0,
-      matrix: new Matrix(),
+      matrix: new Two.Matrix(),
     };
 
-    this.surfaceMatrix = new Matrix();
+    this.surfaceMatrix = new Two.Matrix();
 
     this.surfaces = [];
     this.reset();
@@ -260,8 +261,8 @@ export class ZUI {
   updateOffset() {
     const rect = this.viewport.getBoundingClientRect();
 
-    this.viewportOffset.left = rect.left - document.body.scrollLeft;
-    this.viewportOffset.top = rect.top - document.body.scrollTop;
+    this.viewportOffset.left = rect.left - (this.viewport.scrollLeft || 0);
+    this.viewportOffset.top = rect.top - (this.viewport.scrollTop || 0);
 
     this.viewportOffset.matrix
       .identity()

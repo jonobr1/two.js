@@ -43,6 +43,7 @@
   </div>
 
   <script src="../build/two.js"></script>
+  <script src="../extras/js/helpers/bounding-box-helper.js"></script>
   <script>
     // Create Two.js instance
     const two = new Two({
@@ -69,7 +70,7 @@
     star.linewidth = 3;
 
     // Create BoundingBoxHelpers for each shape
-    const circleHelper = new Two.BoundingBoxHelper(circle, {
+    const circleHelper = new Two.Helpers.BoundingBoxHelper(circle, {
       color: '#FF6B6B',
       handleFill: '#FF6B6B',
       showHandles: true,
@@ -77,7 +78,7 @@
     });
     two.scene.add(circleHelper);
 
-    const rectHelper = new Two.BoundingBoxHelper(rect, {
+    const rectHelper = new Two.Helpers.BoundingBoxHelper(rect, {
       color: '#4ECDC4',
       handleFill: '#4ECDC4',
       showHandles: true,
@@ -85,7 +86,7 @@
     });
     two.scene.add(rectHelper);
 
-    const starHelper = new Two.BoundingBoxHelper(star, {
+    const starHelper = new Two.Helpers.BoundingBoxHelper(star, {
       color: '#FFD93D',
       handleFill: '#FFD93D',
       showHandles: true,
@@ -102,7 +103,7 @@
     multiRect.fill = '#9B59B6';
     multiRect.noStroke();
 
-    const multiHelper = new Two.BoundingBoxHelper([multiCircle, multiRect], {
+    const multiHelper = new Two.Helpers.BoundingBoxHelper([multiCircle, multiRect], {
       color: '#9B59B6',
       handleFill: '#9B59B6',
       showHandles: true,
@@ -146,7 +147,7 @@
     two.play();
 
     console.log('BoundingBoxHelper test initialized!');
-    console.log('Two.BoundingBoxHelper is available:', typeof Two.BoundingBoxHelper !== 'undefined');
+    console.log('Two.Helpers.BoundingBoxHelper is available:', typeof Two.Helpers.BoundingBoxHelper !== 'undefined');
   </script>
 </body>
 </html>

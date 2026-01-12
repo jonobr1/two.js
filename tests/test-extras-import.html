@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Extras Import - Two.js</title>
+</head>
+<body>
+  <h1>Testing BoundingBoxHelper ESM Import</h1>
+  <div id="result"></div>
+
+  <script type="module">
+    import Two from '../build/two.module.js';
+    import { BoundingBoxHelper } from '../extras/jsm/helpers/bounding-box-helper.js';
+
+    const resultDiv = document.getElementById('result');
+
+    // Test that imports work
+    const twoWorks = typeof Two === 'function';
+    const helperWorks = typeof BoundingBoxHelper === 'function';
+
+    console.log('Two import works:', twoWorks);
+    console.log('BoundingBoxHelper import works:', helperWorks);
+
+    if (twoWorks && helperWorks) {
+      resultDiv.innerHTML = `
+        <h2 style="color: green;">✓ Success!</h2>
+        <p>ESM import works correctly:</p>
+        <ul>
+          <li>Two.js imported: ${twoWorks}</li>
+          <li>BoundingBoxHelper imported: ${helperWorks}</li>
+        </ul>
+        <p>Creating a test instance...</p>
+      `;
+
+      // Try to create an instance
+      try {
+        const two = new Two({ width: 400, height: 300 });
+        const circle = two.makeCircle(200, 150, 50);
+        const helper = new BoundingBoxHelper(circle);
+
+        resultDiv.innerHTML += `<p style="color: green;">✓ Instance created successfully!</p>`;
+        console.log('Helper instance:', helper);
+      } catch (error) {
+        resultDiv.innerHTML += `<p style="color: red;">✗ Error creating instance: ${error.message}</p>`;
+        console.error('Error:', error);
+      }
+    } else {
+      resultDiv.innerHTML = `
+        <h2 style="color: red;">✗ Import Failed</h2>
+        <p>One or more imports failed:</p>
+        <ul>
+          <li>Two.js: ${twoWorks ? '✓' : '✗'}</li>
+          <li>BoundingBoxHelper: ${helperWorks ? '✓' : '✗'}</li>
+        </ul>
+      `;
+    }
+  </script>
+</body>
+</html>
