@@ -13,18 +13,28 @@ import { TwoError } from './error';
  */
 export function xhr(path, callback) {
   // Validate URL protocol for security
+  // Note: Allow file: protocol for local testing/development
   try {
     const url = new URL(path, window.location.href);
-    // Only allow http:, https:, and data: protocols
-    if (!['http:', 'https:', 'data:'].includes(url.protocol)) {
+    // Block only dangerous protocols (javascript:, vbscript:, etc.)
+    // Allow http:, https:, data:, file:, and relative URLs
+    const blockedProtocols = ['javascript:', 'vbscript:'];
+    if (blockedProtocols.some((blocked) => url.protocol === blocked)) {
       const error = new TwoError(
-        `Unsupported URL protocol: ${url.protocol}. Only http:, https:, and data: are allowed.`,
+        `Blocked dangerous URL protocol: ${url.protocol}`,
       );
+      console.error('XHR blocked:', error);
       throw error;
     }
   } catch (error) {
-    console.error('Invalid URL:', error);
-    throw error;
+    // If URL parsing fails, it might be a relative URL - allow it
+    if (error instanceof TypeError) {
+      // Relative URLs can't be parsed without a base, but they're safe
+      // The browser will handle relative URL resolution
+    } else {
+      console.error('Invalid URL:', error);
+      throw error;
+    }
   }
 
   const xhr = new XMLHttpRequest();
