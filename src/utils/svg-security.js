@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-redeclare
-/* global DOMParser, XMLSerializer */
+/* global DOMParser */
 
 /**
  * @name Two.Utils.SVGSecurity
@@ -10,14 +10,13 @@
  */
 
 // Dangerous SVG elements that can execute scripts or load external content
+// Note: <a> and <use> are allowed but their attributes are validated
 const DANGEROUS_ELEMENTS = [
   'script',
   'object',
   'embed',
   'iframe',
   'foreignObject',
-  'use',
-  'a',
   'animate',
   'animateMotion',
   'animateTransform',
@@ -229,8 +228,8 @@ function sanitizeNode(node, options) {
  * @param {Boolean} options.allowDangerousElements - Allow script, foreignObject, etc. (default: false)
  * @param {Array} options.customAllowedAttrs - Additional attributes to whitelist
  * @param {Function} options.onViolation - Callback for security violations: (type, value, element) => {}
- * @returns {String} Sanitized SVG string
- * @description Main sanitization function that parses, sanitizes, and serializes SVG content
+ * @returns {Document|String} Sanitized SVG document (or original string if unsafe mode)
+ * @description Main sanitization function that parses and sanitizes SVG content
  */
 export function sanitizeSVG(svgString, options = {}) {
   const {
@@ -264,7 +263,6 @@ export function sanitizeSVG(svgString, options = {}) {
   };
   sanitizeNode(doc.documentElement, sanitizeOptions);
 
-  // Serialize back to string
-  const serializer = new XMLSerializer();
-  return serializer.serializeToString(doc);
+  // Return the sanitized DOM document (not serialized string)
+  return doc;
 }
