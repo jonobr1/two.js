@@ -1,7 +1,13 @@
 import { Commands } from '../utils/path-commands.js';
 
 import { root } from '../utils/root.js';
-import { getPoT, mod, NumArray, TWO_PI, getEffectiveStrokeWidth } from '../utils/math.js';
+import {
+  getPoT,
+  mod,
+  NumArray,
+  TWO_PI,
+  getEffectiveStrokeWidth,
+} from '../utils/math.js';
 import { shaders } from '../utils/shaders.js';
 import { Events } from '../events.js';
 import { TwoError } from '../utils/error.js';
@@ -98,7 +104,7 @@ const webgl = {
         multiplyMatrix(
           transformation,
           parent._renderer.matrix,
-          this._renderer.matrix
+          this._renderer.matrix,
         );
 
         if (!(this._renderer.scale instanceof Vector)) {
@@ -134,7 +140,7 @@ const webgl = {
         gl.colorMask(false, false, false, false);
 
         const prop = CanvasRenderer.Utils.getRendererType(
-          this._mask._renderer.type
+          this._mask._renderer.type,
         );
         webgl[prop].render.call(this._mask, gl, programs, this);
 
@@ -200,11 +206,11 @@ const webgl = {
 
       canvas.width = Math.max(
         Math.ceil(elem._renderer.rect.width * scale.x),
-        1
+        1,
       );
       canvas.height = Math.max(
         Math.ceil(elem._renderer.rect.height * scale.y),
-        1
+        1,
       );
 
       const centroid = elem._renderer.rect.centroid;
@@ -218,7 +224,7 @@ const webgl = {
           ctx.fillStyle = fill;
         } else {
           const prop = CanvasRenderer.Utils.getRendererType(
-            fill._renderer.type
+            fill._renderer.type,
           );
           webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
@@ -229,7 +235,7 @@ const webgl = {
           ctx.strokeStyle = stroke;
         } else {
           const prop = CanvasRenderer.Utils.getRendererType(
-            stroke._renderer.type
+            stroke._renderer.type,
           );
           webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
@@ -297,7 +303,7 @@ const webgl = {
               sweepFlag,
               xAxisRotation,
               x,
-              y
+              y,
             );
             break;
 
@@ -558,7 +564,7 @@ const webgl = {
         multiplyMatrix(
           transformation,
           parent._renderer.matrix,
-          this._renderer.matrix
+          this._renderer.matrix,
         );
 
         if (!(this._renderer.scale instanceof Vector)) {
@@ -591,7 +597,7 @@ const webgl = {
         gl.colorMask(false, false, false, false);
 
         const prop = CanvasRenderer.Utils.getRendererType(
-          this._mask._renderer.type
+          this._mask._renderer.type,
         );
         webgl[prop].render.call(this._mask, gl, programs, this);
 
@@ -610,7 +616,7 @@ const webgl = {
         webgl.path.getBoundingClientRect(
           this._renderer.vertices,
           this._linewidth,
-          this._renderer.rect
+          this._renderer.rect,
         );
 
         webgl.updateTexture.call(webgl, gl, this);
@@ -641,7 +647,7 @@ const webgl = {
           gl.uniform2f(
             gl.getUniformLocation(program, 'u_resolution'),
             programs.resolution.width,
-            programs.resolution.height
+            programs.resolution.height,
           );
         }
 
@@ -652,7 +658,7 @@ const webgl = {
         gl.uniform2f(
           gl.getUniformLocation(program, 'u_resolution'),
           programs.resolution.width,
-          programs.resolution.height
+          programs.resolution.height,
         );
       }
 
@@ -693,6 +699,7 @@ const webgl = {
       const opacity = elem._renderer.opacity || elem._opacity;
       const dashes = elem.dashes;
       const size = elem._size * ratio;
+      const closed = elem._closed;
       let dimension = size;
 
       if (!webgl.isHidden.test(stroke)) {
@@ -714,7 +721,7 @@ const webgl = {
           ctx.fillStyle = fill;
         } else {
           const prop = CanvasRenderer.Utils.getRendererType(
-            fill._renderer.type
+            fill._renderer.type,
           );
           webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
@@ -725,7 +732,7 @@ const webgl = {
           ctx.strokeStyle = stroke;
         } else {
           const prop = CanvasRenderer.Utils.getRendererType(
-            stroke._renderer.type
+            stroke._renderer.type,
           );
           webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
@@ -866,7 +873,7 @@ const webgl = {
         multiplyMatrix(
           transformation,
           parent._renderer.matrix,
-          this._renderer.matrix
+          this._renderer.matrix,
         );
 
         if (!(this._renderer.scale instanceof Vector)) {
@@ -935,7 +942,7 @@ const webgl = {
           gl.uniform2f(
             gl.getUniformLocation(program, 'u_resolution'),
             programs.resolution.width,
-            programs.resolution.height
+            programs.resolution.height,
           );
         }
         programs.current = program;
@@ -945,7 +952,7 @@ const webgl = {
         gl.uniform2f(
           gl.getUniformLocation(program, 'u_resolution'),
           programs.resolution.width,
-          programs.resolution.height
+          programs.resolution.height,
         );
       }
 
@@ -983,11 +990,11 @@ const webgl = {
 
       canvas.width = Math.max(
         Math.ceil(elem._renderer.rect.width * scale.x),
-        1
+        1,
       );
       canvas.height = Math.max(
         Math.ceil(elem._renderer.rect.height * scale.y),
-        1
+        1,
       );
 
       const centroid = elem._renderer.rect.centroid;
@@ -1022,7 +1029,7 @@ const webgl = {
           ctx.fillStyle = fill;
         } else {
           const prop = CanvasRenderer.Utils.getRendererType(
-            fill._renderer.type
+            fill._renderer.type,
           );
           webgl[prop].render.call(fill, ctx, elem);
           ctx.fillStyle = fill._renderer.effect;
@@ -1033,7 +1040,7 @@ const webgl = {
           ctx.strokeStyle = stroke;
         } else {
           const prop = CanvasRenderer.Utils.getRendererType(
-            stroke._renderer.type
+            stroke._renderer.type,
           );
           webgl[prop].render.call(stroke, ctx, elem);
           ctx.strokeStyle = stroke._renderer.effect;
@@ -1314,7 +1321,7 @@ const webgl = {
         multiplyMatrix(
           transformation,
           parent._renderer.matrix,
-          this._renderer.matrix
+          this._renderer.matrix,
         );
 
         if (!(this._renderer.scale instanceof Vector)) {
@@ -1347,7 +1354,7 @@ const webgl = {
         gl.colorMask(false, false, false, false);
 
         const prop = CanvasRenderer.Utils.getRendererType(
-          this._mask._renderer.type
+          this._mask._renderer.type,
         );
         webgl[prop].render.call(this._mask, gl, programs, this);
 
@@ -1393,7 +1400,7 @@ const webgl = {
           gl.uniform2f(
             gl.getUniformLocation(program, 'u_resolution'),
             programs.resolution.width,
-            programs.resolution.height
+            programs.resolution.height,
           );
         }
 
@@ -1404,7 +1411,7 @@ const webgl = {
         gl.uniform2f(
           gl.getUniformLocation(program, 'u_resolution'),
           programs.resolution.width,
-          programs.resolution.height
+          programs.resolution.height,
         );
       }
 
@@ -1521,7 +1528,7 @@ const webgl = {
           0,
           fx,
           fy,
-          radius
+          radius,
         );
 
         for (let i = 0; i < this.stops.length; i++) {
@@ -1636,7 +1643,7 @@ const webgl = {
       gl.RGBA,
       gl.RGBA,
       gl.UNSIGNED_BYTE,
-      this.canvas
+      this.canvas,
     );
 
     // Set the parameters so we can render any size image.
@@ -1772,7 +1779,7 @@ export class Renderer extends Events {
 
     if (!this.ctx) {
       throw new TwoError(
-        'unable to create a webgl context. Try using another renderer.'
+        'unable to create a webgl context. Try using another renderer.',
       );
     }
 
