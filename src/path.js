@@ -1821,8 +1821,8 @@ function BindVertices(items) {
   // when importing a large SVG
   let i = items.length;
   while (i > 0) {
-    items[i].bind(Events.Types.change, this._renderer.flagVertices);
     i--;
+    items[i].bind(Events.Types.change, this._renderer.flagVertices);
   }
 
   this._renderer.flagVertices();
@@ -1837,8 +1837,8 @@ function BindVertices(items) {
 function UnbindVertices(items) {
   let i = items.length;
   while (i > 0) {
-    items[i].unbind(Events.Types.change, this._renderer.flagVertices);
     i--;
+    items[i].unbind(Events.Types.change, this._renderer.flagVertices);
   }
 
   this._renderer.flagVertices();

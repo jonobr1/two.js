@@ -283,9 +283,9 @@ function BindStops(items) {
   // when importing a large SVG
   let i = items.length;
   while (i > 0) {
+    i--;
     items[i].bind(Events.Types.change, this._renderer.flagStops);
     items[i].parent = this;
-    i--;
   }
 
   this._renderer.flagStops();
@@ -300,9 +300,9 @@ function BindStops(items) {
 function UnbindStops(items) {
   let i = items.length;
   while (i > 0) {
+    i--;
     items[i].unbind(Events.Types.change, this._renderer.flagStops);
     delete items[i].parent;
-    i--;
   }
 
   this._renderer.flagStops();
