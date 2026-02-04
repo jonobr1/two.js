@@ -1,3 +1,4 @@
+import { root } from '../utils/root';
 import { Commands } from '../utils/path-commands.js';
 import {
   decomposeMatrix,
@@ -89,7 +90,7 @@ const canvas = {
             matrix[1],
             matrix[4],
             matrix[2],
-            matrix[5]
+            matrix[5],
           );
         }
       }
@@ -206,7 +207,7 @@ const canvas = {
           matrix[1],
           matrix[4],
           matrix[2],
-          matrix[5]
+          matrix[5],
         );
       }
 
@@ -296,7 +297,7 @@ const canvas = {
               sweepFlag,
               xAxisRotation,
               x,
-              y
+              y,
             );
             break;
 
@@ -392,7 +393,7 @@ const canvas = {
             ctx.save();
             ctx.translate(
               -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
+              -stroke._renderer.offset.y,
             );
             ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
             ctx.lineWidth = linewidth / stroke._renderer.scale.x;
@@ -547,7 +548,7 @@ const canvas = {
             ctx.save();
             ctx.translate(
               -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
+              -stroke._renderer.offset.y,
             );
             ctx.scale(stroke._renderer.scale.x, stroke._renderer.scale.y);
             ctx.lineWidth = linewidth / stroke._renderer.scale.x;
@@ -625,7 +626,7 @@ const canvas = {
           matrix[1],
           matrix[4],
           matrix[2],
-          matrix[5]
+          matrix[5],
         );
       }
 
@@ -718,7 +719,7 @@ const canvas = {
             ctx.save();
             ctx.translate(
               -stroke._renderer.offset.x,
-              -stroke._renderer.offset.y
+              -stroke._renderer.offset.y,
             );
             ctx.scale(sx, sy);
 
@@ -823,7 +824,7 @@ const canvas = {
   'linear-gradient': {
     render: function (ctx, parent) {
       if (!parent) {
-        return;
+        return this;
       }
 
       if (_.isFunction(this._renderer.onBeforeRender)) {
@@ -872,7 +873,7 @@ const canvas = {
   'radial-gradient': {
     render: function (ctx, parent) {
       if (!parent) {
-        return;
+        return this;
       }
 
       if (_.isFunction(this._renderer.onBeforeRender)) {
@@ -912,7 +913,7 @@ const canvas = {
           0,
           fx,
           fy,
-          radius
+          radius,
         );
 
         for (let i = 0; i < this.stops.length; i++) {
@@ -1002,7 +1003,7 @@ const canvas = {
     sweepFlag,
     xAxisRotation,
     x,
-    y
+    y,
   ) {
     xAxisRotation = (xAxisRotation * Math.PI) / 180;
 
@@ -1056,7 +1057,7 @@ const canvas = {
         (x1p - cxp) / rx,
         (y1p - cyp) / ry,
         (-x1p - cxp) / rx,
-        (-y1p - cyp) / ry
+        (-y1p - cyp) / ry,
       ) % TWO_PI;
 
     const endAngle = startAngle + delta;
@@ -1072,7 +1073,7 @@ const canvas = {
       startAngle,
       endAngle,
       clockwise,
-      xAxisRotation
+      xAxisRotation,
     );
   },
 };
@@ -1098,7 +1099,8 @@ export class Renderer extends Events {
      * @name Two.CanvasRenderer#domElement
      * @property {Element} - The `<canvas />` associated with the Two.js scene.
      */
-    this.domElement = params.domElement || document.createElement('canvas');
+    this.domElement =
+      params.domElement || root.document.createElement('canvas');
 
     /**
      * @name Two.CanvasRenderer#ctx
@@ -1195,7 +1197,7 @@ function renderArcEstimate(
   startAngle,
   endAngle,
   clockwise,
-  xAxisRotation
+  xAxisRotation,
 ) {
   const delta = endAngle - startAngle;
   const epsilon = Curve.Tolerance.epsilon;

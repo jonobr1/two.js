@@ -52,3 +52,27 @@ path.scale = new Two.Vector(1, 1);
 group.add(path);
 
 two.appendTo(document.body);
+
+// Test SVG security API
+two.setSVGSecurityOptions({
+  mode: 'permissive',
+  allowDangerousElements: false,
+  customAllowedAttrs: ['data-custom', 'data-id'],
+  onViolation: (type: string, value: string, element: Element) => {
+    console.log('Security violation:', type, value);
+  }
+});
+
+// Test SVG loading with security
+const svgString = '<svg><circle cx="50" cy="50" r="40" fill="blue"/></svg>';
+const loadedGroup = two.load(svgString, (group, svg, error) => {
+  if (error) {
+    console.error('Load error:', error);
+  } else {
+    console.log('SVG loaded successfully');
+  }
+});
+
+// Test different security modes
+two.setSVGSecurityOptions({ mode: 'strict' });
+two.setSVGSecurityOptions({ mode: 'unsafe' });

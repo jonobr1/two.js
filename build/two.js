@@ -46,6 +46,16 @@ var Two = (() => {
     default: () => Two
   });
 
+  // src/utils/root.js
+  var root;
+  if (typeof window !== "undefined") {
+    root = window;
+  } else if (typeof global !== "undefined") {
+    root = global;
+  } else if (typeof self !== "undefined") {
+    root = self;
+  }
+
   // src/utils/canvas-polyfill.js
   var CanvasPolyfill = {
     /**
@@ -83,10 +93,10 @@ var Two = (() => {
      * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
      * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
      */
-    polyfill: function(canvas3, Image3) {
+    polyfill: function(canvas3, Image2) {
       CanvasPolyfill.shim(canvas3);
-      if (typeof Image3 !== "undefined") {
-        CanvasPolyfill.Image = Image3;
+      if (typeof Image2 !== "undefined") {
+        CanvasPolyfill.Image = Image2;
       }
       CanvasPolyfill.isHeadless = true;
       return canvas3;
@@ -123,18 +133,6 @@ var Two = (() => {
     setMatrix: () => setMatrix,
     toFixed: () => toFixed
   });
-
-  // src/utils/root.js
-  var root;
-  if (typeof window !== "undefined") {
-    root = window;
-  } else if (typeof global !== "undefined") {
-    root = global;
-  } else if (typeof self !== "undefined") {
-    root = self;
-  }
-
-  // src/utils/math.js
   var Matrix;
   var TWO_PI = Math.PI * 2;
   var HALF_PI = Math.PI * 0.5;
@@ -639,7 +637,7 @@ var Two = (() => {
      * @function
      * @description Alias for {@link Two.Vector.add}.
      */
-    addSelf(v) {
+    addSelf() {
       return this.add.apply(this, arguments);
     }
     /**
@@ -694,7 +692,7 @@ var Two = (() => {
      * @function
      * @description Alias for {@link Two.Vector.sub}.
      */
-    subSelf(v) {
+    subSelf() {
       return this.sub.apply(this, arguments);
     }
     /**
@@ -702,7 +700,7 @@ var Two = (() => {
      * @function
      * @description Alias for {@link Two.Vector.sub}.
      */
-    subtractSelf(v) {
+    subtractSelf() {
       return this.sub.apply(this, arguments);
     }
     /**
@@ -749,7 +747,7 @@ var Two = (() => {
      * @function
      * @description Alias for {@link Two.Vector.multiply}.
      */
-    multiplySelf(v) {
+    multiplySelf() {
       return this.multiply.apply(this, arguments);
     }
     /**
@@ -811,7 +809,7 @@ var Two = (() => {
      * @function
      * @description Alias for {@link Two.Vector.divide}.
      */
-    divideSelf(v) {
+    divideSelf() {
       return this.divide.apply(this, arguments);
     }
     /**
@@ -1220,7 +1218,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2026-01-05T18:28:31.207Z",
+    PublishDate: "2026-02-04T00:50:10.791Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1511,12 +1509,12 @@ var Two = (() => {
     }
     return A * sum;
   }
-  function getCurveFromPoints(points, closed2) {
+  function getCurveFromPoints(points, closed) {
     const l = points.length, last = l - 1;
     for (let i = 0; i < l; i++) {
       const point = points[i];
-      const prev = closed2 ? mod(i - 1, l) : Math.max(i - 1, 0);
-      const next = closed2 ? mod(i + 1, l) : Math.min(i + 1, last);
+      const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+      const next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
       const a = points[prev];
       const b = point;
       const c = points[next];
@@ -1580,6 +1578,68 @@ var Two = (() => {
     }
   }
 
+  // src/utils/dom.js
+  var dom = {
+    hasEventListeners: typeof root.addEventListener === "function",
+    bind: function(elem, event, func, bool) {
+      if (this.hasEventListeners) {
+        elem.addEventListener(event, func, !!bool);
+      } else {
+        elem.attachEvent("on" + event, func);
+      }
+      return dom;
+    },
+    unbind: function(elem, event, func, bool) {
+      if (dom.hasEventListeners) {
+        elem.removeEventListeners(event, func, !!bool);
+      } else {
+        elem.detachEvent("on" + event, func);
+      }
+      return dom;
+    },
+    getRequestAnimationFrame: function() {
+      const vendors = ["ms", "moz", "webkit", "o"];
+      let lastTime = 0;
+      let request = root.requestAnimationFrame;
+      if (!request) {
+        for (let i = 0; i < vendors.length; i++) {
+          request = root[vendors[i] + "RequestAnimationFrame"] || request;
+        }
+        request = request || fallbackRequest;
+      }
+      function fallbackRequest(callback) {
+        const currTime = (/* @__PURE__ */ new Date()).getTime();
+        const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        const id = root.setTimeout(nextRequest, timeToCall);
+        lastTime = currTime + timeToCall;
+        function nextRequest() {
+          callback(currTime + timeToCall);
+        }
+        return id;
+      }
+      return request;
+    }
+  };
+
+  // src/utils/error.js
+  var TwoError = class extends Error {
+    name = "Two.js";
+    message;
+    constructor(message) {
+      super();
+      this.message = message;
+    }
+  };
+
+  // src/utils/device-pixel-ratio.js
+  var devicePixelRatio = root.devicePixelRatio || 1;
+  function getBackingStoreRatio(ctx) {
+    return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
+  }
+  function getRatio(ctx) {
+    return devicePixelRatio / getBackingStoreRatio(ctx);
+  }
+
   // src/utils/underscore.js
   var slice = Array.prototype.slice;
   function isArrayLike(collection) {
@@ -1641,80 +1701,6 @@ var Two = (() => {
     performance: root.performance && root.performance.now ? root.performance : Date
   };
 
-  // src/utils/dom.js
-  var dom = {
-    hasEventListeners: typeof root.addEventListener === "function",
-    bind: function(elem, event, func, bool) {
-      if (this.hasEventListeners) {
-        elem.addEventListener(event, func, !!bool);
-      } else {
-        elem.attachEvent("on" + event, func);
-      }
-      return dom;
-    },
-    unbind: function(elem, event, func, bool) {
-      if (dom.hasEventListeners) {
-        elem.removeEventListeners(event, func, !!bool);
-      } else {
-        elem.detachEvent("on" + event, func);
-      }
-      return dom;
-    },
-    getRequestAnimationFrame: function() {
-      const vendors = ["ms", "moz", "webkit", "o"];
-      let lastTime = 0;
-      let request = root.requestAnimationFrame;
-      if (!request) {
-        for (let i = 0; i < vendors.length; i++) {
-          request = root[vendors[i] + "RequestAnimationFrame"] || request;
-        }
-        request = request || fallbackRequest;
-      }
-      function fallbackRequest(callback, element) {
-        const currTime = (/* @__PURE__ */ new Date()).getTime();
-        const timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        const id = root.setTimeout(nextRequest, timeToCall);
-        lastTime = currTime + timeToCall;
-        function nextRequest() {
-          callback(currTime + timeToCall);
-        }
-        return id;
-      }
-      return request;
-    }
-  };
-  var temp = root.document ? root.document.createElement("div") : {};
-  temp.id = "help-two-load";
-  Object.defineProperty(dom, "temp", {
-    enumerable: true,
-    get: function() {
-      if (_.isElement(temp) && !root.document.head.contains(temp)) {
-        temp.style.display = "none";
-        root.document.head.appendChild(temp);
-      }
-      return temp;
-    }
-  });
-
-  // src/utils/error.js
-  var TwoError = class extends Error {
-    name = "Two.js";
-    message;
-    constructor(message) {
-      super();
-      this.message = message;
-    }
-  };
-
-  // src/utils/device-pixel-ratio.js
-  var devicePixelRatio = root.devicePixelRatio || 1;
-  function getBackingStoreRatio(ctx) {
-    return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
-  }
-  function getRatio(ctx) {
-    return devicePixelRatio / getBackingStoreRatio(ctx);
-  }
-
   // src/registry.js
   var Registry = class {
     map = {};
@@ -1762,6 +1748,184 @@ var Two = (() => {
       return id in this.map;
     }
   };
+
+  // src/utils/svg-security.js
+  var DANGEROUS_ELEMENTS = [
+    "script",
+    "object",
+    "embed",
+    "iframe",
+    "foreignObject",
+    "use",
+    "a",
+    "animate",
+    "animateMotion",
+    "animateTransform",
+    "set"
+  ];
+  var SAFE_SVG_ATTRIBUTES = [
+    // Geometry attributes
+    "x",
+    "y",
+    "width",
+    "height",
+    "cx",
+    "cy",
+    "r",
+    "rx",
+    "ry",
+    "d",
+    "points",
+    "x1",
+    "y1",
+    "x2",
+    "y2",
+    // Presentation attributes
+    "fill",
+    "stroke",
+    "stroke-width",
+    "stroke-linecap",
+    "stroke-linejoin",
+    "stroke-dasharray",
+    "stroke-dashoffset",
+    "stroke-miterlimit",
+    "opacity",
+    "fill-opacity",
+    "stroke-opacity",
+    "transform",
+    "transform-origin",
+    // Text attributes
+    "font-family",
+    "font-size",
+    "font-weight",
+    "font-style",
+    "text-anchor",
+    "dominant-baseline",
+    "text-decoration",
+    "alignment-baseline",
+    "baseline-shift",
+    // Filter and effect attributes
+    "filter",
+    "mask",
+    "clip-path",
+    "clip-rule",
+    // Gradient attributes
+    "offset",
+    "stop-color",
+    "stop-opacity",
+    "gradientUnits",
+    "gradientTransform",
+    "spreadMethod",
+    // Pattern attributes
+    "patternUnits",
+    "patternTransform",
+    "patternContentUnits",
+    // General attributes
+    "id",
+    "class",
+    "style",
+    "viewBox",
+    "preserveAspectRatio",
+    "visibility",
+    "display",
+    "overflow",
+    // Link attributes (will be value-validated separately)
+    "href",
+    "xlink:href",
+    // Namespace attributes
+    "xmlns",
+    "xmlns:xlink",
+    "version"
+  ];
+  function isUnsafeAttributeValue(attrName, value) {
+    if (typeof value !== "string") {
+      return false;
+    }
+    if (/^\s*javascript:/i.test(value)) {
+      return true;
+    }
+    if (/^\s*data:.*script/i.test(value)) {
+      return true;
+    }
+    if (/^\s*vbscript:/i.test(value)) {
+      return true;
+    }
+    return false;
+  }
+  function sanitizeAttributes(element, options) {
+    const allowedAttrs = [
+      ...SAFE_SVG_ATTRIBUTES,
+      ...options.customAllowedAttrs || []
+    ];
+    const attrs = Array.from(element.attributes);
+    for (let i = 0; i < attrs.length; i++) {
+      const attr = attrs[i];
+      const attrName = attr.name.toLowerCase();
+      if (attrName.startsWith("on")) {
+        if (options.onViolation) {
+          options.onViolation("attribute", attrName, element);
+        }
+        element.removeAttribute(attr.name);
+        continue;
+      }
+      if (options.mode === "strict" && !allowedAttrs.includes(attrName)) {
+        if (options.onViolation) {
+          options.onViolation("attribute", attrName, element);
+        }
+        element.removeAttribute(attr.name);
+        continue;
+      }
+      if (isUnsafeAttributeValue(attrName, attr.value)) {
+        if (options.onViolation) {
+          options.onViolation("value", `${attrName}="${attr.value}"`, element);
+        }
+        element.removeAttribute(attr.name);
+      }
+    }
+  }
+  function sanitizeNode(node, options) {
+    if (node.nodeType === 1) {
+      const tagName = node.tagName.toLowerCase();
+      if (DANGEROUS_ELEMENTS.includes(tagName) && !options.allowDangerousElements) {
+        if (options.onViolation) {
+          options.onViolation("element", tagName, node);
+        }
+        node.remove();
+        return;
+      }
+      sanitizeAttributes(node, options);
+    }
+    const children = Array.from(node.childNodes);
+    for (let i = 0; i < children.length; i++) {
+      sanitizeNode(children[i], options);
+    }
+  }
+  function sanitizeSVG(svgString, options = {}) {
+    const {
+      mode = "permissive",
+      allowDangerousElements = false,
+      customAllowedAttrs = [],
+      onViolation = null
+    } = options;
+    if (mode === "unsafe") {
+      return svgString;
+    }
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgString, "image/svg+xml");
+    const parserError = doc.querySelector("parsererror");
+    if (parserError) {
+      throw new Error("Invalid SVG: " + parserError.textContent);
+    }
+    const sanitizeOptions = {
+      mode,
+      allowDangerousElements,
+      customAllowedAttrs,
+      onViolation
+    };
+    sanitizeNode(doc.documentElement, sanitizeOptions);
+    const serializer = new XMLSerializer();
+    return serializer.serializeToString(doc);
+  }
 
   // src/collection.js
   var Collection = class extends Array {
@@ -2057,7 +2221,7 @@ var Two = (() => {
     effect: /texture|gradient/i
   };
   if (root.document) {
-    anchor = document.createElement("a");
+    anchor = root.document.createElement("a");
   }
   var Texture = class _Texture extends Element {
     /**
@@ -2250,9 +2414,9 @@ var Two = (() => {
         CanvasPolyfill.shim(image, "img");
       } else if (root.document) {
         if (regex.video.test(absoluteSrc)) {
-          image = document.createElement("video");
+          image = root.document.createElement("video");
         } else {
-          image = document.createElement("img");
+          image = root.document.createElement("img");
         }
       } else {
         console.warn("Two.js: no prototypical image defined for Two.Texture");
@@ -2276,7 +2440,7 @@ var Two = (() => {
       },
       img: function(texture, callback) {
         const image = texture.image;
-        const loaded = function(e) {
+        const loaded = function() {
           if (!CanvasPolyfill.isHeadless && image.removeEventListener && typeof image.removeEventListener === "function") {
             image.removeEventListener("load", loaded, false);
             image.removeEventListener("error", error, false);
@@ -2285,7 +2449,7 @@ var Two = (() => {
             callback();
           }
         };
-        const error = function(e) {
+        const error = function() {
           if (!CanvasPolyfill.isHeadless && typeof image.removeEventListener === "function") {
             image.removeEventListener("load", loaded, false);
             image.removeEventListener("error", error, false);
@@ -2318,7 +2482,7 @@ var Two = (() => {
             "video textures are not implemented in headless environments."
           );
         }
-        const loaded = function(e) {
+        const loaded = function() {
           texture.image.removeEventListener("canplaythrough", loaded, false);
           texture.image.removeEventListener("error", error, false);
           texture.image.width = texture.image.videoWidth;
@@ -2327,7 +2491,7 @@ var Two = (() => {
             callback();
           }
         };
-        const error = function(e) {
+        const error = function() {
           texture.image.removeEventListener("canplaythrough", loaded, false);
           texture.image.removeEventListener("error", error, false);
           throw new TwoError("unable to load " + texture.src);
@@ -2940,17 +3104,19 @@ var Two = (() => {
   }
   function BindStops(items) {
     let i = items.length;
-    while (i--) {
+    while (i > 0) {
       items[i].bind(Events.Types.change, this._renderer.flagStops);
       items[i].parent = this;
+      i--;
     }
     this._renderer.flagStops();
   }
   function UnbindStops(items) {
     let i = items.length;
-    while (i--) {
+    while (i > 0) {
       items[i].unbind(Events.Types.change, this._renderer.flagStops);
       delete items[i].parent;
+      i--;
     }
     this._renderer.flagStops();
   }
@@ -4658,14 +4824,14 @@ var Two = (() => {
       endIn: q2
     };
   }
-  function applyGlobalSmooth(vertices, from, to, closed2, loop2, asymmetric) {
+  function applyGlobalSmooth(vertices, from, to, closed, loop2, asymmetric) {
     const length = vertices.length;
     const amount = to - from + 1;
     let n = amount - 1;
     let padding = loop2 ? Math.min(amount, 4) : 1;
     let paddingLeft = padding;
     let paddingRight = padding;
-    if (!closed2) {
+    if (!closed) {
       paddingLeft = Math.min(1, from);
       paddingRight = Math.min(1, length - to - 1);
     }
@@ -4797,7 +4963,7 @@ var Two = (() => {
     }
     updateAnchorCommand(anchor2);
   }
-  function applyLocalSmooth(vertices, from, to, closed2, loop2, options) {
+  function applyLocalSmooth(vertices, from, to, closed, loop2, options) {
     const type = options.type || "catmull-rom";
     const factor = options.factor;
     const length = vertices.length;
@@ -5018,7 +5184,7 @@ var Two = (() => {
      * @see {@link Two.Path#strokeAttenuation}
      */
     _strokeAttenuation = true;
-    constructor(vertices, closed2, curved, manual) {
+    constructor(vertices, closed, curved, manual) {
       super();
       for (let prop in proto10) {
         Object.defineProperty(this, prop, proto10[prop]);
@@ -5031,7 +5197,7 @@ var Two = (() => {
       this._renderer.flagStroke = FlagStroke.bind(this);
       this._renderer.vertices = [];
       this._renderer.collection = [];
-      this.closed = !!closed2;
+      this.closed = !!closed;
       this.curved = !!curved;
       this.beginning = 0;
       this.ending = 1;
@@ -5569,13 +5735,13 @@ var Two = (() => {
       if (length < 2) {
         return this;
       }
-      const closed2 = this._closed || length > 0 && vertices[length - 1] && vertices[length - 1].command === Commands.close;
+      const closed = this._closed || length > 0 && vertices[length - 1] && vertices[length - 1].command === Commands.close;
       const resolveIndex = (value, defaultIndex) => {
         if (value === void 0 || value === null) {
           return defaultIndex;
         }
         if (typeof value === "number") {
-          if (closed2) {
+          if (closed) {
             return mod(value, length);
           }
           let index = value;
@@ -5587,23 +5753,23 @@ var Two = (() => {
         const idx = vertices.indexOf(value);
         return idx !== -1 ? idx : defaultIndex;
       };
-      const loop2 = closed2 && opts.from === void 0 && opts.to === void 0;
+      const loop2 = closed && opts.from === void 0 && opts.to === void 0;
       let from = resolveIndex(opts.from, 0);
       let to = resolveIndex(opts.to, length - 1);
       if (from > to) {
-        if (closed2) {
+        if (closed) {
           from -= length;
         } else {
-          const temp2 = from;
+          const temp = from;
           from = to;
-          to = temp2;
+          to = temp;
         }
       }
       const rangeLength = to - from + 1;
       for (let i = 0; i < rangeLength; i += 1) {
         const index = mod(from + i, length);
         const anchor2 = vertices[index];
-        const isOpenStart = !closed2 && index === 0;
+        const isOpenStart = !closed && index === 0;
         if (anchor2.command === Commands.move && !isOpenStart) {
           anchor2.command = Commands.line;
         }
@@ -5613,7 +5779,7 @@ var Two = (() => {
           vertices,
           from,
           to,
-          closed2,
+          closed,
           loop2,
           type === "asymmetric"
         );
@@ -5622,7 +5788,7 @@ var Two = (() => {
           type,
           factor: opts.factor
         };
-        applyLocalSmooth(vertices, from, to, closed2, loop2, range);
+        applyLocalSmooth(vertices, from, to, closed, loop2, range);
       } else {
         throw new Error(
           `Path.smooth does not support type "${type}". Try 'continuous', 'asymmetric', 'catmull-rom', or 'geometric'.`
@@ -5747,7 +5913,7 @@ var Two = (() => {
       }
       const length = this.vertices.length;
       const last = length - 1;
-      const closed2 = false;
+      const closed = false;
       let b = this.vertices[last];
       let sum = 0;
       if (typeof this._lengths === "undefined") {
@@ -5756,7 +5922,7 @@ var Two = (() => {
       _.each(
         this.vertices,
         function(a, i) {
-          if (i <= 0 && !closed2 || a.command === Commands.move) {
+          if (i <= 0 && !closed || a.command === Commands.move) {
             b = a;
             this._lengths[i] = 0;
             return;
@@ -5788,7 +5954,7 @@ var Two = (() => {
           this._updateLength(void 0, true);
         }
         const l = this._collection.length;
-        const closed2 = this._closed;
+        const closed = this._closed;
         const beginning = Math.min(this._beginning, this._ending);
         const ending = Math.max(this._beginning, this._ending);
         const bid = getIdByLength(this, beginning * this._length);
@@ -5825,7 +5991,7 @@ var Two = (() => {
             this._renderer.vertices.push(v);
             if (i === high && contains(this, ending)) {
               right = v;
-              if (!closed2 && right.controls) {
+              if (!closed && right.controls) {
                 if (right.relative) {
                   right.controls.right.clear();
                 } else {
@@ -5835,7 +6001,7 @@ var Two = (() => {
             } else if (i === low && contains(this, beginning)) {
               left = v;
               left.command = Commands.move;
-              if (!closed2 && left.controls) {
+              if (!closed && left.controls) {
                 if (left.relative) {
                   left.controls.left.clear();
                 } else {
@@ -6129,15 +6295,17 @@ var Two = (() => {
   }
   function BindVertices(items) {
     let i = items.length;
-    while (i--) {
+    while (i > 0) {
       items[i].bind(Events.Types.change, this._renderer.flagVertices);
+      i--;
     }
     this._renderer.flagVertices();
   }
   function UnbindVertices(items) {
     let i = items.length;
-    while (i--) {
+    while (i > 0) {
       items[i].unbind(Events.Types.change, this._renderer.flagVertices);
+      i--;
     }
     this._renderer.flagVertices();
   }
@@ -8829,7 +8997,7 @@ var Two = (() => {
   var min2 = Math.min;
   var max2 = Math.max;
   if (root.document) {
-    canvas = document.createElement("canvas");
+    canvas = root.document.createElement("canvas");
   }
   var Text = class _Text extends Shape {
     /**
@@ -9996,6 +10164,248 @@ var Two = (() => {
     }
   }
 
+  // src/effects/image.js
+  var Image = class _Image extends Rectangle {
+    /**
+     * @name Two.Image#_flagTexture
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Image#texture} needs updating.
+     */
+    _flagTexture = false;
+    /**
+     * @name Two.Image#_flagMode
+     * @private
+     * @property {Boolean} - Determines whether the {@link Two.Image#mode} needs updating.
+     */
+    _flagMode = false;
+    /**
+     * @name Two.Image#_texture
+     * @private
+     * @see {@link Two.Image#texture}
+     */
+    _texture = null;
+    /**
+     * @name Two.Image#_mode
+     * @private
+     * @see {@link Two.Image#mode}
+     */
+    _mode = "fill";
+    constructor(src, ox, oy, width, height, mode) {
+      super(ox, oy, width || 1, height || 1);
+      this._renderer.type = "image";
+      for (let prop in proto22) {
+        Object.defineProperty(this, prop, proto22[prop]);
+      }
+      this.noStroke();
+      this.noFill();
+      if (src instanceof Texture) {
+        this.texture = src;
+      } else if (typeof src === "string") {
+        this.texture = new Texture(src);
+      }
+      if (typeof mode === "string") {
+        this.mode = mode;
+      }
+      this._update();
+    }
+    /**
+     * @name Two.Image.Modes
+     * @property {Object} Modes - Different mode types to render an image inspired by Figma.
+     * @property {String} Modes.fill - Scale image to fill the bounds while preserving aspect ratio.
+     * @property {String} Modes.fit - Scale image to fit within bounds while preserving aspect ratio.
+     * @property {String} Modes.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
+     * @property {String} Modes.tile - Repeat image at original size to fill the bounds.
+     * @property {String} Modes.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
+     */
+    static Modes = {
+      fill: "fill",
+      fit: "fit",
+      crop: "crop",
+      tile: "tile",
+      stretch: "stretch"
+    };
+    /**
+     * @name Two.Image.Properties
+     * @property {String[]} - A list of properties that are on every {@link Two.Image}.
+     */
+    static Properties = ["texture", "mode"];
+    /**
+     * @name Two.Image.fromObject
+     * @function
+     * @param {Object} obj - Object notation of a {@link Two.Image} to create a new instance
+     * @returns {Two.Image}
+     * @description Create a new {@link Two.Image} from an object notation of a {@link Two.Image}.
+     * @nota-bene Works in conjunction with {@link Two.Image#toObject}
+     */
+    static fromObject(obj) {
+      const image = new _Image().copy(obj);
+      if ("id" in obj) {
+        image.id = obj.id;
+      }
+      return image;
+    }
+    /**
+     * @name Two.Image#copy
+     * @function
+     * @param {Two.Image} image - The reference {@link Two.Image}
+     * @description Copy the properties of one {@link Two.Image} onto another.
+     */
+    copy(image) {
+      super.copy.call(this, image);
+      for (let i = 0; i < _Image.Properties.length; i++) {
+        const k = _Image.Properties[i];
+        if (k in image) {
+          this[k] = image[k];
+        }
+      }
+      return this;
+    }
+    /**
+     * @name Two.Image#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Image}
+     * @description Create a new instance of {@link Two.Image} with the same properties of the current image.
+     */
+    clone(parent) {
+      const clone = new _Image(
+        this.texture,
+        this.translation.x,
+        this.translation.y,
+        this.width,
+        this.height
+      );
+      if (parent) {
+        parent.add(clone);
+      }
+      return clone;
+    }
+    /**
+     * @name Two.Image#toObject
+     * @function
+     * @returns {Object}
+     * @description Return a JSON compatible plain object that represents the image.
+     */
+    toObject() {
+      const object = super.toObject.call(this);
+      object.renderer.type = "image";
+      object.texture = this.texture.toObject();
+      object.mode = this.mode;
+      return object;
+    }
+    /**
+     * @name Two.Image#dispose
+     * @function
+     * @returns {Two.Image}
+     * @description Release the image's renderer resources and detach all events.
+     * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+     * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
+     * for potential re-attachment.
+     */
+    dispose() {
+      super.dispose();
+      if (this._texture && typeof this._texture.dispose === "function") {
+        this._texture.dispose();
+      } else if (this._texture && typeof this._texture.unbind === "function") {
+        this._texture.unbind();
+      }
+      return this;
+    }
+    /**
+     * @name Two.Image#_update
+     * @function
+     * @private
+     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
+     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
+     * @nota-bene Try not to call this method more than once a frame.
+     */
+    _update() {
+      const effect = this._texture;
+      if (effect) {
+        if (this._flagTexture) {
+          this.fill = effect;
+        }
+        if (effect.loaded) {
+          const iw = effect.image.width;
+          const ih = effect.image.height;
+          const rw = this.width;
+          const rh = this.height;
+          const scaleX = rw / iw;
+          const scaleY = rh / ih;
+          switch (this._mode) {
+            case _Image.Modes.fill: {
+              const scale = Math.max(scaleX, scaleY);
+              effect.scale = scale;
+              effect.offset.x = 0;
+              effect.offset.y = 0;
+              effect.repeat = "repeat";
+              break;
+            }
+            case _Image.Modes.fit: {
+              const scale = Math.min(scaleX, scaleY);
+              effect.scale = scale;
+              effect.offset.x = 0;
+              effect.offset.y = 0;
+              effect.repeat = "no-repeat";
+              break;
+            }
+            case _Image.Modes.crop: {
+              break;
+            }
+            case _Image.Modes.tile: {
+              effect.offset.x = (iw - rw) / 2;
+              effect.offset.y = (ih - rh) / 2;
+              effect.repeat = "repeat";
+              break;
+            }
+            case _Image.Modes.stretch:
+            default: {
+              effect.scale = new Vector(scaleX, scaleY);
+              effect.offset.x = 0;
+              effect.offset.y = 0;
+              effect.repeat = "repeat";
+            }
+          }
+        }
+      }
+      super._update.call(this);
+      return this;
+    }
+    /**
+     * @name Two.Image#flagReset
+     * @function
+     * @private
+     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
+     */
+    flagReset() {
+      super.flagReset.call(this);
+      this._flagTexture = this._flagMode = false;
+      return this;
+    }
+  };
+  var proto22 = {
+    texture: {
+      enumerable: true,
+      get: function() {
+        return this._texture;
+      },
+      set: function(v) {
+        this._texture = v;
+        this._flagTexture = true;
+      }
+    },
+    mode: {
+      enumerable: true,
+      get: function() {
+        return this._mode;
+      },
+      set: function(v) {
+        this._mode = v;
+        this._flagMode = true;
+      }
+    }
+  };
+
   // src/group.js
   var min3 = Math.min;
   var max3 = Math.max;
@@ -10163,8 +10573,8 @@ var Two = (() => {
     _strokeAttenuation = true;
     constructor(children) {
       super();
-      for (let prop in proto22) {
-        Object.defineProperty(this, prop, proto22[prop]);
+      for (let prop in proto23) {
+        Object.defineProperty(this, prop, proto23[prop]);
       }
       this._renderer.type = "group";
       this.additions = [];
@@ -10199,7 +10609,7 @@ var Two = (() => {
      * @function
      * @description Cached method to let renderers know order has been updated on a {@link Two.Group}.
      */
-    static OrderChildren(children) {
+    static OrderChildren() {
       this._flagOrder = true;
     }
     /**
@@ -10831,7 +11241,7 @@ var Two = (() => {
       return this;
     }
   };
-  var proto22 = {
+  var proto23 = {
     visible: {
       enumerable: true,
       get: function() {
@@ -11122,8 +11532,8 @@ var Two = (() => {
     constructor(x1, y1, x2, y2) {
       const points = [new Anchor(x1, y1), new Anchor(x2, y2)];
       super(points);
-      for (let prop in proto23) {
-        Object.defineProperty(this, prop, proto23[prop]);
+      for (let prop in proto24) {
+        Object.defineProperty(this, prop, proto24[prop]);
       }
       this.vertices[0].command = Commands.move;
       this.vertices[1].command = Commands.line;
@@ -11131,7 +11541,7 @@ var Two = (() => {
     }
     static Properties = ["left", "right"];
   };
-  var proto23 = {
+  var proto24 = {
     left: {
       enumerable: true,
       get: function() {
@@ -11599,10 +12009,18 @@ var Two = (() => {
       const fullNode = template.cloneNode(true);
       for (let i = 0; i < node.attributes.length; i++) {
         const attr = node.attributes[i];
-        const ca = overwriteAttrs.includes(attr.nodeName);
-        const cb = !fullNode.hasAttribute(attr.nodeName);
+        const attrName = attr.nodeName;
+        const attrValue = attr.value;
+        if (attrName.toLowerCase().startsWith("on")) {
+          continue;
+        }
+        if (isUnsafeAttributeValue(attrName, attrValue)) {
+          continue;
+        }
+        const ca = overwriteAttrs.includes(attrName);
+        const cb = !fullNode.hasAttribute(attrName);
         if (ca || cb) {
-          fullNode.setAttribute(attr.nodeName, attr.value);
+          fullNode.setAttribute(attrName, attrValue);
         }
       }
       const tagName = getTagName(fullNode.nodeName);
@@ -11661,7 +12079,7 @@ var Two = (() => {
         path = node.getAttribute("d");
       }
       let points = [];
-      let closed2 = false, relative = false;
+      let closed = false, relative = false;
       if (path) {
         let coord = new Anchor();
         let control, coords;
@@ -11740,7 +12158,7 @@ var Two = (() => {
           switch (lower) {
             case "z":
               if (i >= last) {
-                closed2 = true;
+                closed = true;
               } else {
                 x = coord.x;
                 y = coord.y;
@@ -11927,7 +12345,7 @@ var Two = (() => {
           }
         });
       }
-      path = new Path(points, closed2, void 0, true);
+      path = new Path(points, closed, void 0, true);
       path.stroke = "none";
       path.fill = "black";
       const rect = path.getBoundingClientRect(true);
@@ -12166,258 +12584,34 @@ var Two = (() => {
 
   // src/utils/xhr.js
   function xhr(path, callback) {
+    try {
+      const url = new URL(path, window.location.href);
+      if (!["http:", "https:", "data:"].includes(url.protocol)) {
+        const error = new TwoError(
+          `Unsupported URL protocol: ${url.protocol}. Only http:, https:, and data: are allowed.`
+        );
+        throw error;
+      }
+    } catch (error) {
+      console.error("Invalid URL:", error);
+      throw error;
+    }
     const xhr2 = new XMLHttpRequest();
     xhr2.open("GET", path);
     xhr2.onreadystatechange = function() {
-      if (xhr2.readyState === 4 && xhr2.status === 200) {
-        callback(xhr2.responseText);
+      if (xhr2.readyState === 4) {
+        if (xhr2.status === 200) {
+          callback(xhr2.responseText);
+        } else {
+          console.error(
+            `Failed to load resource: ${xhr2.status} ${xhr2.statusText}`
+          );
+        }
       }
     };
     xhr2.send();
     return xhr2;
   }
-
-  // src/effects/image.js
-  var Image2 = class _Image extends Rectangle {
-    /**
-     * @name Two.Image#_flagTexture
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Image#texture} needs updating.
-     */
-    _flagTexture = false;
-    /**
-     * @name Two.Image#_flagMode
-     * @private
-     * @property {Boolean} - Determines whether the {@link Two.Image#mode} needs updating.
-     */
-    _flagMode = false;
-    /**
-     * @name Two.Image#_texture
-     * @private
-     * @see {@link Two.Image#texture}
-     */
-    _texture = null;
-    /**
-     * @name Two.Image#_mode
-     * @private
-     * @see {@link Two.Image#mode}
-     */
-    _mode = "fill";
-    constructor(src, ox, oy, width, height, mode) {
-      super(ox, oy, width || 1, height || 1);
-      this._renderer.type = "image";
-      for (let prop in proto24) {
-        Object.defineProperty(this, prop, proto24[prop]);
-      }
-      this.noStroke();
-      this.noFill();
-      if (src instanceof Texture) {
-        this.texture = src;
-      } else if (typeof src === "string") {
-        this.texture = new Texture(src);
-      }
-      if (typeof mode === "string") {
-        this.mode = mode;
-      }
-      this._update();
-    }
-    /**
-     * @name Two.Image.Modes
-     * @property {Object} Modes - Different mode types to render an image inspired by Figma.
-     * @property {String} Modes.fill - Scale image to fill the bounds while preserving aspect ratio.
-     * @property {String} Modes.fit - Scale image to fit within bounds while preserving aspect ratio.
-     * @property {String} Modes.crop - Scale image to fill bounds while preserving aspect ratio, cropping excess.
-     * @property {String} Modes.tile - Repeat image at original size to fill the bounds.
-     * @property {String} Modes.stretch - Stretch image to fill dimensions, ignoring aspect ratio.
-     */
-    static Modes = {
-      fill: "fill",
-      fit: "fit",
-      crop: "crop",
-      tile: "tile",
-      stretch: "stretch"
-    };
-    /**
-     * @name Two.Image.Properties
-     * @property {String[]} - A list of properties that are on every {@link Two.Image}.
-     */
-    static Properties = ["texture", "mode"];
-    /**
-     * @name Two.Image.fromObject
-     * @function
-     * @param {Object} obj - Object notation of a {@link Two.Image} to create a new instance
-     * @returns {Two.Image}
-     * @description Create a new {@link Two.Image} from an object notation of a {@link Two.Image}.
-     * @nota-bene Works in conjunction with {@link Two.Image#toObject}
-     */
-    static fromObject(obj) {
-      const image = new _Image().copy(obj);
-      if ("id" in obj) {
-        image.id = obj.id;
-      }
-      return image;
-    }
-    /**
-     * @name Two.Image#copy
-     * @function
-     * @param {Two.Image} image - The reference {@link Two.Image}
-     * @description Copy the properties of one {@link Two.Image} onto another.
-     */
-    copy(image) {
-      super.copy.call(this, image);
-      for (let i = 0; i < _Image.Properties.length; i++) {
-        const k = _Image.Properties[i];
-        if (k in image) {
-          this[k] = image[k];
-        }
-      }
-      return this;
-    }
-    /**
-     * @name Two.Image#clone
-     * @function
-     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-     * @returns {Two.Image}
-     * @description Create a new instance of {@link Two.Image} with the same properties of the current image.
-     */
-    clone(parent) {
-      const clone = new _Image(
-        this.texture,
-        this.translation.x,
-        this.translation.y,
-        this.width,
-        this.height
-      );
-      if (parent) {
-        parent.add(clone);
-      }
-      return clone;
-    }
-    /**
-     * @name Two.Image#toObject
-     * @function
-     * @returns {Object}
-     * @description Return a JSON compatible plain object that represents the image.
-     */
-    toObject() {
-      const object = super.toObject.call(this);
-      object.renderer.type = "image";
-      object.texture = this.texture.toObject();
-      object.mode = this.mode;
-      return object;
-    }
-    /**
-     * @name Two.Image#dispose
-     * @function
-     * @returns {Two.Image}
-     * @description Release the image's renderer resources and detach all events.
-     * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
-     * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
-     * for potential re-attachment.
-     */
-    dispose() {
-      super.dispose();
-      if (this._texture && typeof this._texture.dispose === "function") {
-        this._texture.dispose();
-      } else if (this._texture && typeof this._texture.unbind === "function") {
-        this._texture.unbind();
-      }
-      return this;
-    }
-    /**
-     * @name Two.Image#_update
-     * @function
-     * @private
-     * @param {Boolean} [bubbles=false] - Force the parent to `_update` as well.
-     * @description This is called before rendering happens by the renderer. This applies all changes necessary so that rendering is up-to-date but not updated more than it needs to be.
-     * @nota-bene Try not to call this method more than once a frame.
-     */
-    _update() {
-      const effect = this._texture;
-      if (effect) {
-        if (this._flagTexture) {
-          this.fill = effect;
-        }
-        if (effect.loaded) {
-          const iw = effect.image.width;
-          const ih = effect.image.height;
-          const rw = this.width;
-          const rh = this.height;
-          const scaleX = rw / iw;
-          const scaleY = rh / ih;
-          switch (this._mode) {
-            case _Image.Modes.fill: {
-              const scale = Math.max(scaleX, scaleY);
-              effect.scale = scale;
-              effect.offset.x = 0;
-              effect.offset.y = 0;
-              effect.repeat = "repeat";
-              break;
-            }
-            case _Image.Modes.fit: {
-              const scale = Math.min(scaleX, scaleY);
-              effect.scale = scale;
-              effect.offset.x = 0;
-              effect.offset.y = 0;
-              effect.repeat = "no-repeat";
-              break;
-            }
-            case _Image.Modes.crop: {
-              break;
-            }
-            case _Image.Modes.tile: {
-              effect.offset.x = (iw - rw) / 2;
-              effect.offset.y = (ih - rh) / 2;
-              effect.repeat = "repeat";
-              break;
-            }
-            case _Image.Modes.stretch:
-            default: {
-              effect.scale = new Vector(scaleX, scaleY);
-              effect.offset.x = 0;
-              effect.offset.y = 0;
-              effect.repeat = "repeat";
-            }
-          }
-        }
-      }
-      super._update.call(this);
-      return this;
-    }
-    /**
-     * @name Two.Image#flagReset
-     * @function
-     * @private
-     * @description Called internally to reset all flags. Ensures that only properties that change are updated before being sent to the renderer.
-     */
-    flagReset() {
-      super.flagReset.call(this);
-      this._flagTexture = this._flagMode = false;
-      return this;
-    }
-  };
-  var proto24 = {
-    texture: {
-      enumerable: true,
-      get: function() {
-        return this._texture;
-      },
-      set: function(v) {
-        this._texture = v;
-        this._flagTexture = true;
-      }
-    },
-    mode: {
-      enumerable: true,
-      get: function() {
-        return this._mode;
-      },
-      set: function(v) {
-        this._mode = v;
-        this._flagMode = true;
-      }
-    }
-  };
 
   // src/renderers/canvas.js
   var emptyArray = [];
@@ -12502,7 +12696,7 @@ var Two = (() => {
     },
     path: {
       render: function(ctx, forced, parentClipped) {
-        let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+        let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
         po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
         mask = this._mask;
         clip = this._clip;
@@ -12522,7 +12716,7 @@ var Two = (() => {
         cap = this._cap;
         join = this._join;
         miter = this._miter;
-        closed2 = this._closed;
+        closed = this._closed;
         commands = this._renderer.vertices;
         length = commands.length;
         last = length - 1;
@@ -12569,7 +12763,7 @@ var Two = (() => {
           if (join) {
             ctx.lineJoin = join;
           }
-          if (!closed2 && cap) {
+          if (!closed && cap) {
             ctx.lineCap = cap;
           }
         }
@@ -12596,7 +12790,7 @@ var Two = (() => {
               xAxisRotation = b.xAxisRotation;
               largeArcFlag = b.largeArcFlag;
               sweepFlag = b.sweepFlag;
-              prev = closed2 ? mod(i - 1, length) : max4(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : max4(i - 1, 0);
               a = commands[prev];
               ax = a.x;
               ay = a.y;
@@ -12614,7 +12808,7 @@ var Two = (() => {
               );
               break;
             case Commands.curve:
-              prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
               ar = a.controls && a.controls.right || Vector.zero;
               bl = b.controls && b.controls.left || Vector.zero;
@@ -12633,7 +12827,7 @@ var Two = (() => {
                 uy = bl.y;
               }
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-              if (i >= last && closed2) {
+              if (i >= last && closed) {
                 c = d;
                 br = b.controls && b.controls.right || Vector.zero;
                 cl = c.controls && c.controls.left || Vector.zero;
@@ -12665,7 +12859,7 @@ var Two = (() => {
               break;
           }
         }
-        if (closed2) {
+        if (closed) {
           ctx.closePath();
         }
         if (!clip && !parentClipped) {
@@ -13023,7 +13217,7 @@ var Two = (() => {
     "linear-gradient": {
       render: function(ctx, parent) {
         if (!parent) {
-          return;
+          return this;
         }
         if (_.isFunction(this._renderer.onBeforeRender)) {
           this._renderer.onBeforeRender();
@@ -13057,7 +13251,7 @@ var Two = (() => {
     "radial-gradient": {
       render: function(ctx, parent) {
         if (!parent) {
-          return;
+          return this;
         }
         if (_.isFunction(this._renderer.onBeforeRender)) {
           this._renderer.onBeforeRender();
@@ -13195,7 +13389,7 @@ var Two = (() => {
     constructor(params) {
       super();
       const smoothing = params.smoothing !== false;
-      this.domElement = params.domElement || document.createElement("canvas");
+      this.domElement = params.domElement || root.document.createElement("canvas");
       this.ctx = this.domElement.getContext("2d");
       this.overdraw = params.overdraw || false;
       if (typeof this.ctx.imageSmoothingEnabled !== "undefined") {
@@ -13335,10 +13529,18 @@ var Two = (() => {
     setAttributes: function(elem, attrs) {
       const keys = Object.keys(attrs);
       for (let i = 0; i < keys.length; i++) {
-        if (/href/.test(keys[i])) {
-          elem.setAttributeNS(svg.xlink, keys[i], attrs[keys[i]]);
+        const key = keys[i];
+        const value = attrs[key];
+        if (key.toLowerCase().startsWith("on")) {
+          continue;
+        }
+        if (isUnsafeAttributeValue(key, value)) {
+          continue;
+        }
+        if (/href/.test(key)) {
+          elem.setAttributeNS(svg.xlink, key, value);
         } else {
-          elem.setAttribute(keys[i], attrs[keys[i]]);
+          elem.setAttribute(key, value);
         }
       }
       return this;
@@ -13354,11 +13556,11 @@ var Two = (() => {
     // element. It is imperative that the string collation is as fast as
     // possible, because this call will be happening multiple times a
     // second.
-    toString: function(points, closed2) {
+    toString: function(points, closed) {
       let l = points.length, last = l - 1, d, string = "";
       for (let i = 0; i < l; i++) {
         const b = points[i];
-        const prev = closed2 ? mod(i - 1, l) : Math.max(i - 1, 0);
+        const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
         const a = points[prev];
         let command, c;
         let vx, vy, ux, uy, ar, bl, br, cl;
@@ -13403,7 +13605,7 @@ var Two = (() => {
           default:
             command = b.command + " " + x + " " + y;
         }
-        if (i >= last && closed2) {
+        if (i >= last && closed) {
           if (b.command === Commands.curve) {
             c = d;
             br = b.controls && b.controls.right || b;
@@ -14324,7 +14526,7 @@ var Two = (() => {
        */
       render: function(gl, programs) {
         if (!this._visible) {
-          return;
+          return this;
         }
         if (_.isFunction(this._renderer.onBeforeRender)) {
           this._renderer.onBeforeRender();
@@ -14413,7 +14615,7 @@ var Two = (() => {
         const cap = elem._cap;
         const join = elem._join;
         const miter = elem._miter;
-        const closed2 = elem._closed;
+        const closed = elem._closed;
         const dashes = elem.dashes;
         const length = commands.length;
         const last = length - 1;
@@ -14459,7 +14661,7 @@ var Two = (() => {
           if (join) {
             ctx.lineJoin = join;
           }
-          if (!closed2 && cap) {
+          if (!closed && cap) {
             ctx.lineCap = cap;
           }
         }
@@ -14489,7 +14691,7 @@ var Two = (() => {
               xAxisRotation = b.xAxisRotation;
               largeArcFlag = b.largeArcFlag;
               sweepFlag = b.sweepFlag;
-              prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
               ax = a.x;
               ay = a.y;
@@ -14507,7 +14709,7 @@ var Two = (() => {
               );
               break;
             case Commands.curve:
-              prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
               ar = a.controls && a.controls.right || Vector.zero;
               bl = b.controls && b.controls.left || Vector.zero;
@@ -14526,7 +14728,7 @@ var Two = (() => {
                 uy = bl.y;
               }
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-              if (i >= last && closed2) {
+              if (i >= last && closed) {
                 c = d;
                 br = b.controls && b.controls.right || Vector.zero;
                 cl = c.controls && c.controls.left || Vector.zero;
@@ -14558,7 +14760,7 @@ var Two = (() => {
               break;
           }
         }
-        if (closed2) {
+        if (closed) {
           ctx.closePath();
         }
         if (!webgl.isHidden.test(fill)) {
@@ -14814,7 +15016,7 @@ var Two = (() => {
         ctx.beginPath();
         ctx.arc(0, 0, size / aspect * 0.5, 0, TWO_PI);
         ctx.restore();
-        if (closed) {
+        if (elem.closed) {
           ctx.closePath();
         }
         if (!webgl.isHidden.test(fill)) {
@@ -15276,7 +15478,7 @@ var Two = (() => {
     "linear-gradient": {
       render: function(ctx, parent) {
         if (!ctx.canvas.getContext("2d") || !parent) {
-          return;
+          return this;
         }
         if (_.isFunction(this._renderer.onBeforeRender)) {
           this._renderer.onBeforeRender();
@@ -15310,7 +15512,7 @@ var Two = (() => {
     "radial-gradient": {
       render: function(ctx, parent) {
         if (!ctx.canvas.getContext("2d") || !parent) {
-          return;
+          return this;
         }
         if (_.isFunction(this._renderer.onBeforeRender)) {
           this._renderer.onBeforeRender();
@@ -15351,9 +15553,9 @@ var Two = (() => {
       }
     },
     texture: {
-      render: function(ctx, elem) {
+      render: function(ctx) {
         if (!ctx.canvas.getContext("2d")) {
-          return;
+          return this;
         }
         if (_.isFunction(this._renderer.onBeforeRender)) {
           this._renderer.onBeforeRender();
@@ -15474,7 +15676,7 @@ var Two = (() => {
     constructor(params) {
       super();
       let gl, program, vs, fs;
-      this.domElement = params.domElement || document.createElement("canvas");
+      this.domElement = params.domElement || root.document.createElement("canvas");
       if (typeof params.offscreenElement !== "undefined") {
         webgl.canvas = params.offscreenElement;
         webgl.ctx = webgl.canvas.getContext("2d");
@@ -15724,18 +15926,20 @@ var Two = (() => {
       this.frameCount = 0;
       if (params.fullscreen) {
         this.fit = fitToWindow.bind(this);
-        this.fit.domElement = window;
+        this.fit.domElement = root;
         this.fit.attached = true;
-        _.extend(document.body.style, {
-          overflow: "hidden",
-          margin: 0,
-          padding: 0,
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          position: "fixed"
-        });
+        if (root.document) {
+          _.extend(root.document.body.style, {
+            overflow: "hidden",
+            margin: 0,
+            padding: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            position: "fixed"
+          });
+        }
         _.extend(this.renderer.domElement.style, {
           display: "block",
           top: 0,
@@ -15819,7 +16023,7 @@ var Two = (() => {
     static Text = Text;
     static Vector = Vector;
     static Gradient = Gradient;
-    static Image = Image2;
+    static Image = Image;
     static ImageSequence = ImageSequence;
     static LinearGradient = LinearGradient;
     static RadialGradient = RadialGradient;
@@ -15859,7 +16063,7 @@ var Two = (() => {
     appendTo(elem) {
       elem.appendChild(this.renderer.domElement);
       if (this.fit) {
-        if (this.fit.domElement !== window) {
+        if (this.fit.domElement !== root) {
           this.fit.domElement = elem;
           this.fit.attached = false;
         }
@@ -16450,7 +16654,7 @@ var Two = (() => {
      * @description Creates a Two.js image object and adds it to the scene. Images are scaled to fit the provided width and height.
      */
     makeImage(src, x, y, width, height, mode) {
-      const image = new Image2(src, x, y, width, height, mode);
+      const image = new Image(src, x, y, width, height, mode);
       this.add(image);
       return image;
     }
@@ -16528,24 +16732,57 @@ var Two = (() => {
      * @name Two#load
      * @function
      * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
-     * @param {Function} [callback] - Function to call once loading has completed.
+     * @param {Function} [callback] - Function to call once loading has completed. Receives (group, svg, error) parameters.
      * @returns {Two.Group}
      * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
+     *
+     * **Security**: By default, Two.js sanitizes SVG content in permissive mode to prevent XSS attacks.
+     * This blocks dangerous patterns (event handlers, javascript: URLs) while allowing valid SVG features.
+     * Use {@link Two#setSVGSecurityOptions} to configure security levels:
+     * - `permissive` (default): Blocks dangerous patterns while allowing flexibility
+     * - `strict`: Full sanitization with attribute whitelisting
+     * - `unsafe`: No sanitization (use only with trusted content)
      */
     load(pathOrSVGContent, callback) {
       const group = new Group();
       let elem, i, child;
       const attach = function(data) {
-        dom.temp.innerHTML = data;
-        for (i = 0; i < dom.temp.children.length; i++) {
-          elem = dom.temp.children[i];
+        const securityOptions = this._svgSecurityOptions || {
+          mode: "permissive"
+        };
+        let sanitizedData;
+        try {
+          sanitizedData = sanitizeSVG(data, securityOptions);
+        } catch (error) {
+          console.error("SVG parsing error:", error);
+          if (typeof callback === "function") {
+            callback(group, null, error);
+          }
+          return;
+        }
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(sanitizedData, "image/svg+xml");
+        const parserError = svgDoc.querySelector("parsererror");
+        if (parserError) {
+          const error = new TwoError(
+            "SVG parsing error: " + parserError.textContent
+          );
+          console.error(error);
+          if (typeof callback === "function") {
+            callback(group, null, error);
+          }
+          return;
+        }
+        const children = svgDoc.documentElement.children;
+        for (i = 0; i < children.length; i++) {
+          elem = children[i];
           child = this.interpret(elem, false, false);
           if (child !== null) {
             group.add(child);
           }
         }
         if (typeof callback === "function") {
-          const svg2 = dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children;
+          const svg2 = children.length <= 1 ? children[0] : children;
           callback(group, svg2);
         }
       }.bind(this);
@@ -16556,9 +16793,24 @@ var Two = (() => {
       attach(pathOrSVGContent);
       return group;
     }
+    /**
+     * @name Two#setSVGSecurityOptions
+     * @function
+     * @param {Object} options - Security configuration
+     * @param {String} [options.mode='permissive'] - Security mode: 'strict' (full sanitization), 'permissive' (attribute validation only), or 'unsafe' (no sanitization - use only with trusted content)
+     * @param {Boolean} [options.allowDangerousElements=false] - Allow potentially dangerous elements like script, foreignObject, etc. (only effective in permissive mode)
+     * @param {Array<String>} [options.customAllowedAttrs=[]] - Additional attributes to whitelist (only used in strict mode)
+     * @param {Function} [options.onViolation] - Optional callback for monitoring security violations: (type, value, element) => {}
+     * @returns {Two} The Two instance for method chaining
+     * @description Configure SVG security options for the {@link Two#load} method. By default, Two.js uses permissive mode which blocks dangerous attribute patterns while allowing developer flexibility. Use strict mode for untrusted content or unsafe mode only with content you control.
+     */
+    setSVGSecurityOptions(options) {
+      this._svgSecurityOptions = options;
+      return this;
+    }
   };
   function fitToWindow() {
-    const wr = document.body.getBoundingClientRect();
+    const wr = root.document.body.getBoundingClientRect();
     const width = this.width = wr.width;
     const height = this.height = wr.height;
     this.renderer.setSize(width, height, this.ratio);

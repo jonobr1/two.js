@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-redeclare
+/* global console */
+
 import { Commands } from '../utils/path-commands.js';
 import { TwoError } from '../utils/error.js';
 import { _ } from '../utils/underscore.js';

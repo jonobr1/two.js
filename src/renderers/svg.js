@@ -2,6 +2,7 @@ import { Commands } from '../utils/path-commands.js';
 import { decomposeMatrix, mod, toFixed, getEffectiveStrokeWidth } from '../utils/math.js';
 import { Events } from '../events.js';
 import { _ } from '../utils/underscore.js';
+import { isUnsafeAttributeValue } from '../utils/svg-security.js';
 
 import { Group } from '../group.js';
 import { Vector } from '../vector.js';
@@ -44,10 +45,23 @@ const svg = {
   setAttributes: function (elem, attrs) {
     const keys = Object.keys(attrs);
     for (let i = 0; i < keys.length; i++) {
-      if (/href/.test(keys[i])) {
-        elem.setAttributeNS(svg.xlink, keys[i], attrs[keys[i]]);
+      const key = keys[i];
+      const value = attrs[key];
+
+      // Skip event handler attributes (silent removal)
+      if (key.toLowerCase().startsWith('on')) {
+        continue;
+      }
+
+      // Validate attribute value (silent removal)
+      if (isUnsafeAttributeValue(key, value)) {
+        continue;
+      }
+
+      if (/href/.test(key)) {
+        elem.setAttributeNS(svg.xlink, key, value);
       } else {
-        elem.setAttribute(keys[i], attrs[keys[i]]);
+        elem.setAttribute(key, value);
       }
     }
     return this;

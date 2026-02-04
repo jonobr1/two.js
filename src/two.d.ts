@@ -1,5 +1,29 @@
 declare module 'two.js' {
   /**
+   * @name SVGSecurityOptions
+   * @interface
+   * @description Configuration options for SVG security and sanitization
+   */
+  export interface SVGSecurityOptions {
+    /**
+     * Security mode: 'strict' (full sanitization), 'permissive' (default - attribute validation), or 'unsafe' (no sanitization)
+     */
+    mode?: 'strict' | 'permissive' | 'unsafe';
+    /**
+     * Allow potentially dangerous elements like script, foreignObject, etc. (only in permissive mode)
+     */
+    allowDangerousElements?: boolean;
+    /**
+     * Additional attributes to whitelist (only used in strict mode)
+     */
+    customAllowedAttrs?: string[];
+    /**
+     * Optional callback for monitoring security violations
+     */
+    onViolation?: (type: string, value: string, element: Element) => void;
+  }
+
+  /**
      * @name Two
      * @class
      * @global
@@ -659,8 +683,18 @@ declare module 'two.js' {
               | SVGClipPathElement
               | SVGStopElement
             )[]
+          | null,
+        error?: Error
       ) => void
     ): Group;
+    /**
+     * @name Two#setSVGSecurityOptions
+     * @function
+     * @param {SVGSecurityOptions} options - Security configuration options
+     * @returns {Two} The Two instance for method chaining
+     * @description Configure SVG security options for the load method. By default, Two.js uses permissive mode which blocks dangerous attribute patterns while allowing developer flexibility.
+     */
+    setSVGSecurityOptions(options: SVGSecurityOptions): this;
   }
   import { Line } from 'two.js/src/shapes/line';
   import { Path } from 'two.js/src/path';

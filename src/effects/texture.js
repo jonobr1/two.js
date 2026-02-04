@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-redeclare
+/* global console */
+
 import { root } from '../utils/root.js';
 import { Events } from '../events.js';
 import { Element } from '../element.js';
@@ -15,7 +18,7 @@ const regex = {
 };
 
 if (root.document) {
-  anchor = document.createElement('a');
+  anchor = root.document.createElement('a');
 }
 
 /**
@@ -284,9 +287,9 @@ export class Texture extends Element {
       CanvasPolyfill.shim(image, 'img');
     } else if (root.document) {
       if (regex.video.test(absoluteSrc)) {
-        image = document.createElement('video');
+        image = root.document.createElement('video');
       } else {
-        image = document.createElement('img');
+        image = root.document.createElement('img');
       }
     } else {
       console.warn('Two.js: no prototypical image defined for Two.Texture');
@@ -314,7 +317,7 @@ export class Texture extends Element {
     img: function (texture, callback) {
       const image = texture.image;
 
-      const loaded = function (e) {
+      const loaded = function () {
         if (
           !CanvasPolyfill.isHeadless &&
           image.removeEventListener &&
@@ -327,7 +330,7 @@ export class Texture extends Element {
           callback();
         }
       };
-      const error = function (e) {
+      const error = function () {
         if (
           !CanvasPolyfill.isHeadless &&
           typeof image.removeEventListener === 'function'
@@ -378,11 +381,11 @@ export class Texture extends Element {
     video: function (texture, callback) {
       if (CanvasPolyfill.isHeadless) {
         throw new TwoError(
-          'video textures are not implemented in headless environments.'
+          'video textures are not implemented in headless environments.',
         );
       }
 
-      const loaded = function (e) {
+      const loaded = function () {
         texture.image.removeEventListener('canplaythrough', loaded, false);
         texture.image.removeEventListener('error', error, false);
         texture.image.width = texture.image.videoWidth;
@@ -391,7 +394,7 @@ export class Texture extends Element {
           callback();
         }
       };
-      const error = function (e) {
+      const error = function () {
         texture.image.removeEventListener('canplaythrough', loaded, false);
         texture.image.removeEventListener('error', error, false);
         throw new TwoError('unable to load ' + texture.src);
@@ -518,7 +521,7 @@ export class Texture extends Element {
           function () {
             this.loaded = true;
             this.trigger(Events.Types.change).trigger(Events.Types.load);
-          }.bind(this)
+          }.bind(this),
         );
       }
     }

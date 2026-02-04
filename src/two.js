@@ -1,5 +1,9 @@
+// eslint-disable-next-line no-redeclare
+/* global console, DOMParser */
+
 // Utils
 
+import { root } from './utils/root';
 import { CanvasPolyfill } from './utils/canvas-polyfill.js';
 import * as Curves from './utils/curves.js';
 import { dom } from './utils/dom.js';
@@ -10,6 +14,7 @@ import * as math from './utils/math.js';
 import { Commands } from './utils/path-commands.js';
 import { _ } from './utils/underscore.js';
 import { xhr } from './utils/xhr.js';
+import { sanitizeSVG } from './utils/svg-security.js';
 
 // Core Classes
 
@@ -66,7 +71,7 @@ const Utils = _.extend(
   _,
   CanvasPolyfill,
   Curves,
-  math
+  math,
 );
 
 /**
@@ -198,7 +203,7 @@ export default class Two {
         }
         this[k] = v;
       },
-      this
+      this,
     );
 
     // Specified domElement overrides type declaration only if the element does not support declared renderer type.
@@ -207,7 +212,7 @@ export default class Two {
       // TODO: Reconsider this if statement's logic.
       if (
         !/^(CanvasRenderer-canvas|WebGLRenderer-canvas|SVGRenderer-svg)$/.test(
-          this.type + '-' + tagName
+          this.type + '-' + tagName,
         )
       ) {
         this.type = Two.Types[tagName];
@@ -225,18 +230,20 @@ export default class Two {
      */
     if (params.fullscreen) {
       this.fit = fitToWindow.bind(this);
-      this.fit.domElement = window;
+      this.fit.domElement = root;
       this.fit.attached = true;
-      _.extend(document.body.style, {
-        overflow: 'hidden',
-        margin: 0,
-        padding: 0,
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        position: 'fixed',
-      });
+      if (root.document) {
+        _.extend(root.document.body.style, {
+          overflow: 'hidden',
+          margin: 0,
+          padding: 0,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          position: 'fixed',
+        });
+      }
       _.extend(this.renderer.domElement.style, {
         display: 'block',
         top: 0,
@@ -384,7 +391,7 @@ export default class Two {
     elem.appendChild(this.renderer.domElement);
 
     if (this.fit) {
-      if (this.fit.domElement !== window) {
+      if (this.fit.domElement !== root) {
         this.fit.domElement = elem;
         this.fit.attached = false;
       }
@@ -690,7 +697,7 @@ export default class Two {
         undefined,
         undefined,
         undefined,
-        Commands.move
+        Commands.move,
       ),
       new Anchor(
         x2,
@@ -699,7 +706,7 @@ export default class Two {
         undefined,
         undefined,
         undefined,
-        Commands.line
+        Commands.line,
       ),
       new Anchor(
         x2 - headlen * Math.cos(angle - Math.PI / 4),
@@ -708,7 +715,7 @@ export default class Two {
         undefined,
         undefined,
         undefined,
-        Commands.line
+        Commands.line,
       ),
 
       new Anchor(
@@ -718,7 +725,7 @@ export default class Two {
         undefined,
         undefined,
         undefined,
-        Commands.move
+        Commands.move,
       ),
       new Anchor(
         x2 - headlen * Math.cos(angle + Math.PI / 4),
@@ -727,7 +734,7 @@ export default class Two {
         undefined,
         undefined,
         undefined,
-        Commands.line
+        Commands.line,
       ),
     ];
 
@@ -857,7 +864,7 @@ export default class Two {
     const curve = new Path(
       points,
       !(typeof last === 'boolean' ? last : undefined),
-      true
+      true,
     );
     const rect = curve.getBoundingClientRect();
     curve
@@ -905,7 +912,7 @@ export default class Two {
     outerRadius,
     startAngle,
     endAngle,
-    resolution
+    resolution,
   ) {
     const arcSegment = new ArcSegment(
       x,
@@ -914,7 +921,7 @@ export default class Two {
       outerRadius,
       startAngle,
       endAngle,
-      resolution
+      resolution,
     );
     this.scene.add(arcSegment);
     return arcSegment;
@@ -979,7 +986,7 @@ export default class Two {
     const last = arguments[l - 1];
     const path = new Path(
       points,
-      !(typeof last === 'boolean' ? last : undefined)
+      !(typeof last === 'boolean' ? last : undefined),
     );
     const rect = path.getBoundingClientRect();
     if (
@@ -992,7 +999,7 @@ export default class Two {
         .center()
         .translation.set(
           rect.left + rect.width / 2,
-          rect.top + rect.height / 2
+          rect.top + rect.height / 2,
         );
     }
 
@@ -1186,19 +1193,60 @@ export default class Two {
    * @name Two#load
    * @function
    * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
-   * @param {Function} [callback] - Function to call once loading has completed.
+   * @param {Function} [callback] - Function to call once loading has completed. Receives (group, svg, error) parameters.
    * @returns {Two.Group}
    * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
+   *
+   * **Security**: By default, Two.js sanitizes SVG content in permissive mode to prevent XSS attacks.
+   * This blocks dangerous patterns (event handlers, javascript: URLs) while allowing valid SVG features.
+   * Use {@link Two#setSVGSecurityOptions} to configure security levels:
+   * - `permissive` (default): Blocks dangerous patterns while allowing flexibility
+   * - `strict`: Full sanitization with attribute whitelisting
+   * - `unsafe`: No sanitization (use only with trusted content)
    */
   load(pathOrSVGContent, callback) {
     const group = new Group();
     let elem, i, child;
 
     const attach = function (data) {
-      dom.temp.innerHTML = data;
+      // Get security options from Two instance (defaults to permissive mode)
+      const securityOptions = this._svgSecurityOptions || {
+        mode: 'permissive',
+      };
 
-      for (i = 0; i < dom.temp.children.length; i++) {
-        elem = dom.temp.children[i];
+      // Sanitize SVG content
+      let sanitizedData;
+      try {
+        sanitizedData = sanitizeSVG(data, securityOptions);
+      } catch (error) {
+        console.error('SVG parsing error:', error);
+        if (typeof callback === 'function') {
+          callback(group, null, error);
+        }
+        return;
+      }
+
+      // Use DOMParser instead of innerHTML
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(sanitizedData, 'image/svg+xml');
+
+      // Check for parsing errors
+      const parserError = svgDoc.querySelector('parsererror');
+      if (parserError) {
+        const error = new TwoError(
+          'SVG parsing error: ' + parserError.textContent,
+        );
+        console.error(error);
+        if (typeof callback === 'function') {
+          callback(group, null, error);
+        }
+        return;
+      }
+
+      // Process SVG elements
+      const children = svgDoc.documentElement.children;
+      for (i = 0; i < children.length; i++) {
+        elem = children[i];
         child = this.interpret(elem, false, false);
         if (child !== null) {
           group.add(child);
@@ -1206,10 +1254,7 @@ export default class Two {
       }
 
       if (typeof callback === 'function') {
-        const svg =
-          dom.temp.children.length <= 1
-            ? dom.temp.children[0]
-            : dom.temp.children;
+        const svg = children.length <= 1 ? children[0] : children;
         callback(group, svg);
       }
     }.bind(this);
@@ -1224,10 +1269,26 @@ export default class Two {
 
     return group;
   }
+
+  /**
+   * @name Two#setSVGSecurityOptions
+   * @function
+   * @param {Object} options - Security configuration
+   * @param {String} [options.mode='permissive'] - Security mode: 'strict' (full sanitization), 'permissive' (attribute validation only), or 'unsafe' (no sanitization - use only with trusted content)
+   * @param {Boolean} [options.allowDangerousElements=false] - Allow potentially dangerous elements like script, foreignObject, etc. (only effective in permissive mode)
+   * @param {Array<String>} [options.customAllowedAttrs=[]] - Additional attributes to whitelist (only used in strict mode)
+   * @param {Function} [options.onViolation] - Optional callback for monitoring security violations: (type, value, element) => {}
+   * @returns {Two} The Two instance for method chaining
+   * @description Configure SVG security options for the {@link Two#load} method. By default, Two.js uses permissive mode which blocks dangerous attribute patterns while allowing developer flexibility. Use strict mode for untrusted content or unsafe mode only with content you control.
+   */
+  setSVGSecurityOptions(options) {
+    this._svgSecurityOptions = options;
+    return this;
+  }
 }
 
 function fitToWindow() {
-  const wr = document.body.getBoundingClientRect();
+  const wr = root.document.body.getBoundingClientRect();
 
   const width = (this.width = wr.width);
   const height = (this.height = wr.height);

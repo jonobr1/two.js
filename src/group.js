@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-redeclare
+/* global console */
+
 import { Events } from './events.js';
 import { _ } from './utils/underscore.js';
 import { getEffectFromObject } from './utils/shape.js';
@@ -17,6 +20,7 @@ import { Star } from './shapes/star.js';
 import { Text } from './text.js';
 import { Element } from './element.js';
 import { ImageSequence } from './effects/image-sequence.js';
+import { Image } from './effects/image';
 import { Sprite } from './effects/sprite.js';
 
 // Constants
@@ -288,7 +292,7 @@ export class Group extends Shape {
    * @function
    * @description Cached method to let renderers know order has been updated on a {@link Two.Group}.
    */
-  static OrderChildren(children) {
+  static OrderChildren() {
     this._flagOrder = true;
   }
 
@@ -405,7 +409,7 @@ export class Group extends Shape {
     filter,
     hitOptions,
     tolerance,
-    stopOnFirst
+    stopOnFirst,
   ) {
     const children = group && group.children;
     if (!children) {
@@ -453,7 +457,7 @@ export class Group extends Shape {
             filter,
             hitOptions,
             tolerance,
-            stopOnFirst
+            stopOnFirst,
           )
         ) {
           return true;
@@ -494,7 +498,7 @@ export class Group extends Shape {
   copy(group) {
     super.copy.call(this, group);
     console.warn(
-      'Two.js: attempting to copy group. Two.Group.children copying not supported.'
+      'Two.js: attempting to copy group. Two.Group.children copying not supported.',
     );
     for (let i = 0; i < Group.Properties.length; i++) {
       const k = Group.Properties[i];
@@ -568,7 +572,7 @@ export class Group extends Shape {
       (child, i) => {
         result.children[i] = child.toObject();
       },
-      this
+      this,
     );
 
     return result;
@@ -672,7 +676,7 @@ export class Group extends Shape {
       filter,
       hitOptions,
       tolerance,
-      stopOnFirst
+      stopOnFirst,
     );
 
     if (stopOnFirst) {

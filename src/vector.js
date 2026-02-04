@@ -293,7 +293,7 @@ export class Vector extends Events {
    * @function
    * @description Alias for {@link Two.Vector.add}.
    */
-  addSelf(v) {
+  addSelf() {
     return this.add.apply(this, arguments);
   }
 
@@ -353,7 +353,7 @@ export class Vector extends Events {
    * @function
    * @description Alias for {@link Two.Vector.sub}.
    */
-  subSelf(v) {
+  subSelf() {
     return this.sub.apply(this, arguments);
   }
 
@@ -362,7 +362,7 @@ export class Vector extends Events {
    * @function
    * @description Alias for {@link Two.Vector.sub}.
    */
-  subtractSelf(v) {
+  subtractSelf() {
     return this.sub.apply(this, arguments);
   }
 
@@ -413,7 +413,7 @@ export class Vector extends Events {
    * @function
    * @description Alias for {@link Two.Vector.multiply}.
    */
-  multiplySelf(v) {
+  multiplySelf() {
     return this.multiply.apply(this, arguments);
   }
 
@@ -480,7 +480,7 @@ export class Vector extends Events {
    * @function
    * @description Alias for {@link Two.Vector.divide}.
    */
-  divideSelf(v) {
+  divideSelf() {
     return this.divide.apply(this, arguments);
   }
 

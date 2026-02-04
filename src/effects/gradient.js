@@ -107,7 +107,7 @@ export class Gradient extends Element {
       (k) => {
         clone[k] = this[k];
       },
-      this
+      this,
     );
 
     if (parent) {
@@ -154,7 +154,7 @@ export class Gradient extends Element {
       (k) => {
         result[k] = this[k];
       },
-      this
+      this,
     );
 
     return result;
@@ -282,9 +282,10 @@ function BindStops(items) {
   // This function is called a lot
   // when importing a large SVG
   let i = items.length;
-  while (i--) {
+  while (i > 0) {
     items[i].bind(Events.Types.change, this._renderer.flagStops);
     items[i].parent = this;
+    i--;
   }
 
   this._renderer.flagStops();
@@ -298,9 +299,10 @@ function BindStops(items) {
  */
 function UnbindStops(items) {
   let i = items.length;
-  while (i--) {
+  while (i > 0) {
     items[i].unbind(Events.Types.change, this._renderer.flagStops);
     delete items[i].parent;
+    i--;
   }
 
   this._renderer.flagStops();

@@ -5,6 +5,7 @@ import { getReflection } from './curves.js';
 import { _ } from './underscore.js';
 import { TwoError } from './error.js';
 import { Registry } from '../registry.js';
+import { isUnsafeAttributeValue } from './svg-security.js';
 
 import { Anchor } from '../anchor.js';
 import { Vector } from '../vector.js';
@@ -638,10 +639,23 @@ export const read = {
 
     for (let i = 0; i < node.attributes.length; i++) {
       const attr = node.attributes[i];
-      const ca = overwriteAttrs.includes(attr.nodeName);
-      const cb = !fullNode.hasAttribute(attr.nodeName);
+      const attrName = attr.nodeName;
+      const attrValue = attr.value;
+
+      // Skip event handler attributes (security)
+      if (attrName.toLowerCase().startsWith('on')) {
+        continue;
+      }
+
+      // Validate attribute value (security)
+      if (isUnsafeAttributeValue(attrName, attrValue)) {
+        continue;
+      }
+
+      const ca = overwriteAttrs.includes(attrName);
+      const cb = !fullNode.hasAttribute(attrName);
       if (ca || cb) {
-        fullNode.setAttribute(attr.nodeName, attr.value);
+        fullNode.setAttribute(attrName, attrValue);
       }
     }
 

@@ -563,7 +563,7 @@ export class Path extends Shape {
           }
         }
       },
-      this
+      this,
     );
 
     return result;
@@ -752,7 +752,7 @@ export class Path extends Shape {
           matrix.elements[1],
           matrix.elements[4],
           matrix.elements[2],
-          matrix.elements[5]
+          matrix.elements[5],
         );
         if (typeof scaleX === 'number' && typeof scaleY === 'number') {
           border = (Math.max(scaleX, scaleY) * (this.linewidth || 0)) / 2;
@@ -1048,7 +1048,7 @@ export class Path extends Shape {
       bry - y,
       alx - x,
       aly - y,
-      this._curved ? Commands.curve : Commands.line
+      this._curved ? Commands.curve : Commands.line,
     );
 
     result.t = t;
@@ -1151,7 +1151,7 @@ export class Path extends Shape {
         to,
         closed,
         loop,
-        type === 'asymmetric'
+        type === 'asymmetric',
       );
     } else if (type === 'catmull-rom' || type === 'geometric') {
       const range = {
@@ -1161,7 +1161,7 @@ export class Path extends Shape {
       applyLocalSmooth(vertices, from, to, closed, loop, range);
     } else {
       throw new Error(
-        `Path.smooth does not support type "${type}". Try 'continuous', 'asymmetric', 'catmull-rom', or 'geometric'.`
+        `Path.smooth does not support type "${type}". Try 'continuous', 'asymmetric', 'catmull-rom', or 'geometric'.`,
       );
     }
 
@@ -1208,7 +1208,7 @@ export class Path extends Shape {
         const subdivided = getSubdivisions(
           currentOriginal,
           prevOriginal,
-          limit
+          limit,
         );
         const steps = subdivided.length;
         const prevClone = points[points.length - 1];
@@ -1230,14 +1230,14 @@ export class Path extends Shape {
             const split = splitSubdivisionSegment(
               startSegment,
               endSegment,
-              localT
+              localT,
             );
 
             setHandleComponent(
               prevCloneRef,
               'right',
               split.startOut.x - prevCloneRef.x,
-              split.startOut.y - prevCloneRef.y
+              split.startOut.y - prevCloneRef.y,
             );
 
             const newAnchor = split.anchor;
@@ -1251,7 +1251,7 @@ export class Path extends Shape {
               endSegment,
               'left',
               split.endIn.x - endSegment.x,
-              split.endIn.y - endSegment.y
+              split.endIn.y - endSegment.y,
             );
           }
 
@@ -1263,7 +1263,7 @@ export class Path extends Shape {
         const subdivided = getSubdivisions(
           currentOriginal,
           prevOriginal,
-          limit
+          limit,
         );
 
         for (let j = 1; j < subdivided.length; j += 1) {
@@ -1332,7 +1332,7 @@ export class Path extends Shape {
 
         b = a;
       },
-      this
+      this,
     );
 
     this._length = sum;
@@ -1820,8 +1820,9 @@ function BindVertices(items) {
   // This function is called a lot
   // when importing a large SVG
   let i = items.length;
-  while (i--) {
+  while (i > 0) {
     items[i].bind(Events.Types.change, this._renderer.flagVertices);
+    i--;
   }
 
   this._renderer.flagVertices();
@@ -1835,8 +1836,9 @@ function BindVertices(items) {
  */
 function UnbindVertices(items) {
   let i = items.length;
-  while (i--) {
+  while (i > 0) {
     items[i].unbind(Events.Types.change, this._renderer.flagVertices);
+    i--;
   }
 
   this._renderer.flagVertices();
