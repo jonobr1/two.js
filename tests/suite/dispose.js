@@ -1143,7 +1143,7 @@
     assert.expect(3);
 
     // eslint-disable-next-line no-unused-vars
-    var two = new Two({
+    new Two({
       type: Two.Types.svg,
       width: 400,
       height: 400,
