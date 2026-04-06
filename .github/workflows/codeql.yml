@@ -1,5 +1,7 @@
 name: "CodeQL"
 
+permissions: read-all
+
 on:
   push:
     branches: [ "dev" ]
@@ -13,7 +15,6 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
-      actions: write
       contents: read
       security-events: write
 
