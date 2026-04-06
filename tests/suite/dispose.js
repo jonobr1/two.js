@@ -1107,13 +1107,6 @@
   QUnit.test('Texture.dispose - Parent Dispose Called', function (assert) {
     assert.expect(3);
 
-    // eslint-disable-next-line no-unused-vars
-    var two = new Two({
-      type: Two.Types.svg,
-      width: 400,
-      height: 400,
-    }).appendTo(document.body);
-
     var texture = new Two.Texture('./images/canvas/line@2x.png');
 
     // Bind event to texture
