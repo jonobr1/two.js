@@ -1,0 +1,35 @@
+name: "Copilot Setup Steps"
+
+# Automatically run the setup steps when they are changed to allow for easy
+# validation, and allow manual testing through the repository's "Actions" tab.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        # checkout@v5
+        uses: jonobr1/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Set up Node.js
+        # setup-node@v5
+        uses: jonobr1/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
