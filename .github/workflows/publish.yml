@@ -5,13 +5,14 @@ on:
     tags:
       - 'v*'
 
-permissions:
-  id-token: write  # Required for OIDC
-  contents: read
+permissions: read-all
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: read
     steps:
       # checkout@v6
       - uses: jonobr1/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8

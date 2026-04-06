@@ -1,5 +1,9 @@
 name: Lint
+
 on: [push, pull_request]
+
+permissions: read-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
