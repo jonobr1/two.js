@@ -1142,7 +1142,6 @@
   QUnit.test('Texture.dispose - Event Unbinding', function (assert) {
     assert.expect(3);
 
-    // eslint-disable-next-line no-unused-vars
     new Two({
       type: Two.Types.svg,
       width: 400,
