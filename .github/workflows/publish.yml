@@ -19,7 +19,7 @@ jobs:
       # setup-node@v6
       - uses: jonobr1/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
         with:
-          node-version: '20'
+          node-version: '24.14.1'
           registry-url: 'https://registry.npmjs.org'
 
       # Ensure npm 11.5.1 or later is installed

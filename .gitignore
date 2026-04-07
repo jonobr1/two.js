@@ -7,6 +7,8 @@ dist
 .idea
 .codacy
 tests/typescript/package-lock.json
+wiki/.vuepress/.cache/
+wiki/.vuepress/.temp/
 
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md

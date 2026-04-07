@@ -1,114 +1,115 @@
+<template>
+  <div class="carbon-ads"></div>
+</template>
+
 <script>
-  export default {
-    name: 'carbon-ads',
-    watch: {
-      '$route' (to, from) {
-        if (
-          to.path !== from.path
-          // Only reload if the ad has been loaded
-          // otherwise it's possible that the script is appended but
-          // the ads are not loaded yet. This would result in duplicated ads.
-          && this.$el.querySelector('#carbonads')
-        ) {
-          this.$el.innerHTML = ''
-          this.load()
-        }
+export default {
+  name: 'CarbonAds',
+  watch: {
+    $route(to, from) {
+      if (
+        to &&
+        from &&
+        to.path !== from.path &&
+        this.$el &&
+        this.$el.querySelector('#carbonads')
+      ) {
+        this.$el.innerHTML = '';
+        this.load();
       }
     },
-    mounted () {
-      this.load()
-    },
-    methods: {
-      load () {
-        const s = document.createElement('script')
-        s.id = '_carbonads_js'
-        s.src = `//cdn.carbonads.com/carbon.js?serve=CESI52JY&placement=twojsorg`
-        this.$el.appendChild(s)
+  },
+  mounted() {
+    this.load();
+  },
+  methods: {
+    load() {
+      if (typeof document === 'undefined' || !this.$el) {
+        return;
       }
+
+      const script = document.createElement('script');
+      script.id = '_carbonads_js';
+      script.async = true;
+      script.src =
+        'https://cdn.carbonads.com/carbon.js?serve=CESI52JY&placement=twojsorg';
+      this.$el.appendChild(script);
     },
-    render (h) {
-      return h('div', { class: 'carbon-ads' })
-    }
-  }
+  },
+};
 </script>
 
-<style lang="stylus">
+<style scoped>
+#carbonads * {
+  margin: initial;
+  padding: initial;
+}
 
-  #carbonads * {
-    margin: initial;
-    padding: initial;
-  }
+#carbonads {
+  background-color: hsl(0deg 0% 98%);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  max-width: 330px;
+  overflow: hidden;
+  z-index: 100;
+}
 
-  #carbonads {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial,
-      sans-serif;
-  }
+#carbonads a {
+  border: 0;
+  color: inherit;
+  font-weight: 400;
+  text-decoration: none;
+}
 
-  #carbonads {
-    display: flex;
-    max-width: 330px;
-    background-color: hsl(0, 0%, 98%);
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    z-index: 100;
-    overflow: hidden;
-  }
+#carbonads a:hover {
+  color: inherit;
+}
 
-  #carbonads a {
-    color: inherit;
-    text-decoration: none;
-    border: none;
-    font-weight: normal;
-  }
+#carbonads span {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
 
-  #carbonads a:hover {
-    color: inherit;
-  }
+#carbonads .carbon-wrap {
+  display: flex;
+}
 
-  #carbonads span {
-    position: relative;
-    display: block;
-    overflow: hidden;
-  }
+#carbonads .carbon-img {
+  display: block;
+  line-height: 1;
+  margin: 0;
+}
 
-  #carbonads .carbon-wrap {
-    display: flex;
-  }
+#carbonads .carbon-img img {
+  display: block;
+}
 
-  #carbonads .carbon-img {
-    display: block;
-    margin: 0;
-    line-height: 1;
-  }
+#carbonads .carbon-text {
+  font-size: 10px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  padding: 10px;
+  text-align: left;
+}
 
-  #carbonads .carbon-img img {
-    display: block;
-
-  }
-
-  #carbonads .carbon-text {
-    font-size: 10px;
-    padding: 10px;
-    margin-bottom: 16px;
-    line-height: 1.5;
-    text-align: left;
-  }
-
-  #carbonads .carbon-poweredby {
-    display: block;
-    padding: 6px 8px;
-    background: #f1f1f2;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    font-size: 8px;
-    line-height: 1;
-    border-top-left-radius: 3px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-
+#carbonads .carbon-poweredby {
+  background: #f1f1f2;
+  border-top-left-radius: 3px;
+  bottom: 0;
+  display: block;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  padding: 6px 8px;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
 </style>

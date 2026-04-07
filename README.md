@@ -172,7 +172,7 @@ npm run docs:dev        // Creates a local server to generate all documentation
 npm run docs:build      // Builds out static site and associated files to wiki/.vuepress/dist
 ```
 
-N.B: Vuepress is a legacy library and as such these commands rely on an older version of Node. Run `nvm use` if you get errors. If you don't use [Node Version Manager](https://github.com/nvm-sh/nvm) then see `.nvmrc` to install the correct version of node on your local machine.
+These commands are validated against Node `24.14.1`. Run `nvm use` before working on the docs site, or install the version listed in [.nvmrc](./.nvmrc) if you do not use [Node Version Manager](https://github.com/nvm-sh/nvm).
 
 ## Change Log
 Two.js has been in operation since 2012. For a full list of changes from its first alpha version built with [Three.js](http://threejs.org/) to the most up-to-date tweaks. Check out the wiki [here](./wiki/changelog).

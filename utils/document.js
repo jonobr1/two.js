@@ -27,17 +27,26 @@ pkg.template = function (str) {
   return str;
 };
 
-preprocess();
+main().catch(function (error) {
+  console.error(error);
+  process.exit(1);
+});
 
-function preprocess() {
-  _.each(sourceFiles, function (file) {
+async function main() {
+  await preprocess();
+  await generateDocs();
+}
+
+async function preprocess() {
+  for (var i = 0; i < sourceFiles.length; i++) {
+    var file = sourceFiles[i];
     var sourceFile = path.resolve(__dirname, '../', file);
     var pivotDir = [
       '/docs/',
       file.replace('jsm/', '').replace('src/', '').replace('.js', '/'),
     ].join('');
 
-    var citations = compiler.explainSync({
+    var citations = await compiler.explain({
       files: sourceFile,
       cache: false,
     });
@@ -45,13 +54,12 @@ function preprocess() {
     var root = getRoot(citations);
 
     directory.push({ name: root.longname, dir: pivotDir });
-  });
-
-  process();
+  }
 }
 
-function process() {
-  _.each(sourceFiles, function (file) {
+async function generateDocs() {
+  for (var i = 0; i < sourceFiles.length; i++) {
+    var file = sourceFiles[i];
     var sourceFile = path.resolve(__dirname, '../', file);
     var pivotDir = [
       '/docs/',
@@ -61,7 +69,7 @@ function process() {
     var outputDir = path.resolve(__dirname, '../wiki' + pivotDir);
     var outputFile = path.join(outputDir, '/README.md');
 
-    var citations = compiler.explainSync({
+    var citations = await compiler.explain({
       files: sourceFile,
       cache: false,
     });
@@ -155,7 +163,7 @@ function process() {
     );
 
     console.log('Generated', outputFile);
-  });
+  }
 }
 
 function getHref(name) {

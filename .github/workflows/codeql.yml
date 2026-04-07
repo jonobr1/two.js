@@ -30,7 +30,7 @@ jobs:
       - name: Set up Node.js
         uses: jonobr1/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
-          node-version: '20' # Use latest LTS
+          node-version: '24.14.1'
 
       # cache@v4
       - name: Cache node modules

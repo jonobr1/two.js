@@ -4,127 +4,158 @@
     <span ref="label" class="label">
       {{ text }}
     </span>
-    <span ref="size" class="size">
-      {{ size }}
+    <span v-if="displaySize" ref="size" class="size">
+      {{ displaySize }}
     </span>
   </a>
 </template>
 
 <script>
-  module.exports = {
-    name: 'custom-button',
-    props: {
-      type: {
-        type: String,
-        default: 'download'
-      },
-      text: String,
-      size: String,
-      href: String
+import fileSizes from '@two-file-sizes';
+
+export default {
+  name: 'CustomButton',
+  props: {
+    type: {
+      type: String,
+      default: 'download',
     },
-  };
+    text: {
+      type: String,
+      default: '',
+    },
+    size: {
+      type: String,
+      default: '',
+    },
+    sizeKey: {
+      type: String,
+      default: '',
+    },
+    href: {
+      type: String,
+      default: '',
+    },
+  },
+  computed: {
+    displaySize() {
+      if (this.size) {
+        return this.size;
+      }
+
+      if (this.sizeKey && fileSizes[this.sizeKey]) {
+        return fileSizes[this.sizeKey];
+      }
+
+      return '';
+    },
+  },
+};
 </script>
 
-<style lang="stylus" scoped>
-  a.button {
-    display: inline-block
-    background: tint($green, 95);
-    color: $green;
-    border: 2px solid $green;
-    border-radius: 9999px;
-    padding: .5rem 1rem .5rem 2.75rem;
-    margin: 0 1rem .5rem 0;
-    position: relative;
+<style scoped>
+a.button {
+  background: rgb(232 251 247);
+  border: 2px solid var(--two-green);
+  border-radius: 9999px;
+  color: var(--two-green);
+  display: inline-block;
+  margin: 0 1rem 0.5rem 0;
+  padding: 0.5rem 1rem 0.5rem 2.75rem;
+  position: relative;
+}
 
-    span {
-      display: inline-block;
-    }
+a.button:hover {
+  background: rgb(255 245 235);
+  border-color: var(--two-orange);
+  color: var(--two-orange);
+  text-decoration: none;
+}
 
-    &.source {
-      position: fixed;
-      top: 6rem;
-      right: 1rem;
-      left: auto;
-      bottom: auto;
-      z-index: 10;
-    }
+a.button:hover .icon {
+  background-color: var(--two-orange);
+}
 
-    &:hover {
-      background: tint($orange, 92);
-      color: $orange;
-      border: 2px solid $orange;
-      text-decoration: none;
+a.button.source {
+  bottom: auto;
+  left: auto;
+  position: fixed;
+  right: 1rem;
+  top: 6rem;
+  z-index: 10;
+}
 
-      .icon {
-        background-color: $orange;
-      }
-    }
+a.button span {
+  display: inline-block;
+}
 
-    .icon {
-      width: 1.5em;
-      height: 1.5em;
-      background-color: $green;
-      background-position: center;
-      background-size: 100%;
-      background-repeat: no-repeat;
-      position: absolute;
-      top: .475rem;
-      left: .8rem;
+.icon {
+  background-color: var(--two-green);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  height: 1.5em;
+  left: 0.8rem;
+  position: absolute;
+  top: 0.475rem;
+  width: 1.5em;
+}
 
-      &.download {
-        mask-image: url(/images/download.svg);
-        -webkit-mask-image: url(/images/download.svg);
-      }
-      &.sponsor {
-        mask-image: url(/images/sponsor.svg);
-        -webkit-mask-image: url(/images/sponsor.svg);
-      }
-      &.github {
-        mask-image: url(/images/github.svg);
-        -webkit-mask-image: url(/images/github.svg);
-      }
-      &.source {
-        mask-image: url(/images/source.svg);
-        -webkit-mask-image: url(/images/source.svg);
-      }
-      &.npm {
-        mask-image: url(/images/npm.svg);
-        -webkit-mask-image: url(/images/npm.svg);
-      }
-      &.gpt {
-        mask-image: url(/images/gpt.svg);
-        -webkit-mask-image: url(/images/gpt.svg);
-      }
-    }
+.icon.download {
+  mask-image: url(/images/download.svg);
+  -webkit-mask-image: url(/images/download.svg);
+}
 
-    .label {
-      font-weight: 600;
-    }
+.icon.sponsor {
+  mask-image: url(/images/sponsor.svg);
+  -webkit-mask-image: url(/images/sponsor.svg);
+}
 
-    .size {
-      font-weight: 200;
-    }
+.icon.github {
+  mask-image: url(/images/github.svg);
+  -webkit-mask-image: url(/images/github.svg);
+}
+
+.icon.source {
+  mask-image: url(/images/source.svg);
+  -webkit-mask-image: url(/images/source.svg);
+}
+
+.icon.npm {
+  mask-image: url(/images/npm.svg);
+  -webkit-mask-image: url(/images/npm.svg);
+}
+
+.icon.gpt {
+  mask-image: url(/images/gpt.svg);
+  -webkit-mask-image: url(/images/gpt.svg);
+}
+
+.label {
+  font-weight: 600;
+}
+
+.size {
+  font-weight: 200;
+}
+
+@media (max-width: 719px) {
+  a.button.source {
+    bottom: 1rem;
+    padding: 0.5rem 1.25rem;
+    right: 0.5rem;
+    top: auto;
+    width: 0;
   }
 
-  @media (max-width: $MQMobile) {
-
-    a.button.source {
-      bottom: 1rem;
-      right: 0.5rem;
-      top: auto;
-      left: auto;
-      width: 0;
-      padding: 0.5rem 1.25rem;
-      span.icon.source {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      span.label {
-        display: none;
-      }
-    }
-
+  a.button.source .icon.source {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
+  a.button.source .label {
+    display: none;
+  }
+}
 </style>
