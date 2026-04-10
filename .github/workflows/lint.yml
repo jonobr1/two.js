@@ -8,8 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # checkout@v5
-    - uses: jonobr1/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5
     - name: Install modules
       run: npm install
     - name: Run ESLint
