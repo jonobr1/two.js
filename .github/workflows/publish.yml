@@ -43,6 +43,15 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: cp "$BUNDLE_PATH" "two.js-${TAG}.intoto.jsonl"
 
+      - name: Upload provenance bundle as artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: provenance-bundle-${{ github.ref_name }}
+          path: two.js-${{ github.ref_name }}.intoto.jsonl
+
+      - name: Publish to npm with provenance
+        run: npm publish --provenance
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,6 +64,3 @@ jobs:
             build/two.module.js \
             build/two.min.js \
             "two.js-${TAG}.intoto.jsonl"
-
-      - name: Publish to npm with provenance
-        run: npm publish --provenance
