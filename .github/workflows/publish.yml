@@ -11,8 +11,10 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Required for OIDC
-      contents: read
+      id-token: write      # Required for OIDC (npm provenance + GitHub attestation)
+      contents: write      # Required to create GitHub releases and upload assets
+      attestations: write  # Required for actions/attest-build-provenance
+
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6
@@ -24,6 +26,41 @@ jobs:
       - name: Update npm
         run: npm install -g npm@11.5.1
       - run: npm ci
-      - run: npm run build --if-present
-      # - run: npm test
-      - run: npm publish
+      - run: npm run build
+
+      - name: Generate SLSA provenance attestation
+        id: attest
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32  # v4.1.0
+        with:
+          subject-path: |
+            build/two.js
+            build/two.module.js
+            build/two.min.js
+
+      - name: Stage provenance bundle for release
+        env:
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+          TAG: ${{ github.ref_name }}
+        run: cp "$BUNDLE_PATH" "two.js-${TAG}.intoto.jsonl"
+
+      - name: Upload provenance bundle as artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: provenance-bundle-${{ github.ref_name }}
+          path: two.js-${{ github.ref_name }}.intoto.jsonl
+
+      - name: Publish to npm with provenance
+        run: npm publish --provenance
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "Official Stable Release of $TAG" \
+            --generate-notes \
+            build/two.js \
+            build/two.module.js \
+            build/two.min.js \
+            "two.js-${TAG}.intoto.jsonl"
