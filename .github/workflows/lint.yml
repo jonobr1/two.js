@@ -13,3 +13,32 @@ jobs:
       run: npm ci
     - name: Run ESLint
       run: npm run lint
+
+  check-dependency-files:
+    name: Check dependency manifest/lockfile pairs
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5
+    - name: Verify each Dependabot-managed npm directory has package.json and package-lock.json
+      shell: bash
+      run: |
+        dirs=("." "tests/types" "tests/typescript")
+        ok=true
+        for dir in "${dirs[@]}"; do
+          if [ ! -f "$dir/package.json" ]; then
+            echo "ERROR: $dir/package.json is missing"
+            ok=false
+          fi
+          if [ ! -f "$dir/package-lock.json" ]; then
+            echo "ERROR: $dir/package-lock.json is missing"
+            ok=false
+          fi
+        done
+        if [ "$ok" != "true" ]; then
+          echo ""
+          echo "Every npm directory managed by Dependabot must contain both"
+          echo "package.json and package-lock.json. Run 'npm install' in the"
+          echo "affected directory and commit the result."
+          exit 1
+        fi
+        echo "All dependency file pairs are present."
