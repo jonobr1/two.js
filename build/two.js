@@ -1220,7 +1220,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2026-01-05T18:28:31.207Z",
+    PublishDate: "2026-04-23T05:35:40.785Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1511,12 +1511,12 @@ var Two = (() => {
     }
     return A * sum;
   }
-  function getCurveFromPoints(points, closed2) {
+  function getCurveFromPoints(points, closed) {
     const l = points.length, last = l - 1;
     for (let i = 0; i < l; i++) {
       const point = points[i];
-      const prev = closed2 ? mod(i - 1, l) : Math.max(i - 1, 0);
-      const next = closed2 ? mod(i + 1, l) : Math.min(i + 1, last);
+      const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
+      const next = closed ? mod(i + 1, l) : Math.min(i + 1, last);
       const a = points[prev];
       const b = point;
       const c = points[next];
@@ -4658,14 +4658,14 @@ var Two = (() => {
       endIn: q2
     };
   }
-  function applyGlobalSmooth(vertices, from, to, closed2, loop2, asymmetric) {
+  function applyGlobalSmooth(vertices, from, to, closed, loop2, asymmetric) {
     const length = vertices.length;
     const amount = to - from + 1;
     let n = amount - 1;
     let padding = loop2 ? Math.min(amount, 4) : 1;
     let paddingLeft = padding;
     let paddingRight = padding;
-    if (!closed2) {
+    if (!closed) {
       paddingLeft = Math.min(1, from);
       paddingRight = Math.min(1, length - to - 1);
     }
@@ -4797,7 +4797,7 @@ var Two = (() => {
     }
     updateAnchorCommand(anchor2);
   }
-  function applyLocalSmooth(vertices, from, to, closed2, loop2, options) {
+  function applyLocalSmooth(vertices, from, to, closed, loop2, options) {
     const type = options.type || "catmull-rom";
     const factor = options.factor;
     const length = vertices.length;
@@ -5018,7 +5018,7 @@ var Two = (() => {
      * @see {@link Two.Path#strokeAttenuation}
      */
     _strokeAttenuation = true;
-    constructor(vertices, closed2, curved, manual) {
+    constructor(vertices, closed, curved, manual) {
       super();
       for (let prop in proto10) {
         Object.defineProperty(this, prop, proto10[prop]);
@@ -5031,7 +5031,7 @@ var Two = (() => {
       this._renderer.flagStroke = FlagStroke.bind(this);
       this._renderer.vertices = [];
       this._renderer.collection = [];
-      this.closed = !!closed2;
+      this.closed = !!closed;
       this.curved = !!curved;
       this.beginning = 0;
       this.ending = 1;
@@ -5569,13 +5569,13 @@ var Two = (() => {
       if (length < 2) {
         return this;
       }
-      const closed2 = this._closed || length > 0 && vertices[length - 1] && vertices[length - 1].command === Commands.close;
+      const closed = this._closed || length > 0 && vertices[length - 1] && vertices[length - 1].command === Commands.close;
       const resolveIndex = (value, defaultIndex) => {
         if (value === void 0 || value === null) {
           return defaultIndex;
         }
         if (typeof value === "number") {
-          if (closed2) {
+          if (closed) {
             return mod(value, length);
           }
           let index = value;
@@ -5587,11 +5587,11 @@ var Two = (() => {
         const idx = vertices.indexOf(value);
         return idx !== -1 ? idx : defaultIndex;
       };
-      const loop2 = closed2 && opts.from === void 0 && opts.to === void 0;
+      const loop2 = closed && opts.from === void 0 && opts.to === void 0;
       let from = resolveIndex(opts.from, 0);
       let to = resolveIndex(opts.to, length - 1);
       if (from > to) {
-        if (closed2) {
+        if (closed) {
           from -= length;
         } else {
           const temp2 = from;
@@ -5603,7 +5603,7 @@ var Two = (() => {
       for (let i = 0; i < rangeLength; i += 1) {
         const index = mod(from + i, length);
         const anchor2 = vertices[index];
-        const isOpenStart = !closed2 && index === 0;
+        const isOpenStart = !closed && index === 0;
         if (anchor2.command === Commands.move && !isOpenStart) {
           anchor2.command = Commands.line;
         }
@@ -5613,7 +5613,7 @@ var Two = (() => {
           vertices,
           from,
           to,
-          closed2,
+          closed,
           loop2,
           type === "asymmetric"
         );
@@ -5622,7 +5622,7 @@ var Two = (() => {
           type,
           factor: opts.factor
         };
-        applyLocalSmooth(vertices, from, to, closed2, loop2, range);
+        applyLocalSmooth(vertices, from, to, closed, loop2, range);
       } else {
         throw new Error(
           `Path.smooth does not support type "${type}". Try 'continuous', 'asymmetric', 'catmull-rom', or 'geometric'.`
@@ -5747,7 +5747,7 @@ var Two = (() => {
       }
       const length = this.vertices.length;
       const last = length - 1;
-      const closed2 = false;
+      const closed = false;
       let b = this.vertices[last];
       let sum = 0;
       if (typeof this._lengths === "undefined") {
@@ -5756,7 +5756,7 @@ var Two = (() => {
       _.each(
         this.vertices,
         function(a, i) {
-          if (i <= 0 && !closed2 || a.command === Commands.move) {
+          if (i <= 0 && !closed || a.command === Commands.move) {
             b = a;
             this._lengths[i] = 0;
             return;
@@ -5788,7 +5788,7 @@ var Two = (() => {
           this._updateLength(void 0, true);
         }
         const l = this._collection.length;
-        const closed2 = this._closed;
+        const closed = this._closed;
         const beginning = Math.min(this._beginning, this._ending);
         const ending = Math.max(this._beginning, this._ending);
         const bid = getIdByLength(this, beginning * this._length);
@@ -5825,7 +5825,7 @@ var Two = (() => {
             this._renderer.vertices.push(v);
             if (i === high && contains(this, ending)) {
               right = v;
-              if (!closed2 && right.controls) {
+              if (!closed && right.controls) {
                 if (right.relative) {
                   right.controls.right.clear();
                 } else {
@@ -5835,7 +5835,7 @@ var Two = (() => {
             } else if (i === low && contains(this, beginning)) {
               left = v;
               left.command = Commands.move;
-              if (!closed2 && left.controls) {
+              if (!closed && left.controls) {
                 if (left.relative) {
                   left.controls.left.clear();
                 } else {
@@ -11661,7 +11661,7 @@ var Two = (() => {
         path = node.getAttribute("d");
       }
       let points = [];
-      let closed2 = false, relative = false;
+      let closed = false, relative = false;
       if (path) {
         let coord = new Anchor();
         let control, coords;
@@ -11740,7 +11740,7 @@ var Two = (() => {
           switch (lower) {
             case "z":
               if (i >= last) {
-                closed2 = true;
+                closed = true;
               } else {
                 x = coord.x;
                 y = coord.y;
@@ -11927,7 +11927,7 @@ var Two = (() => {
           }
         });
       }
-      path = new Path(points, closed2, void 0, true);
+      path = new Path(points, closed, void 0, true);
       path.stroke = "none";
       path.fill = "black";
       const rect = path.getBoundingClientRect(true);
@@ -12502,7 +12502,7 @@ var Two = (() => {
     },
     path: {
       render: function(ctx, forced, parentClipped) {
-        let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed2, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
+        let matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter, closed, commands, length, last, prev, a, b, c, d, ux, uy, vx, vy, ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes, po;
         po = this.parent && this.parent._renderer ? this.parent._renderer.opacity : 1;
         mask = this._mask;
         clip = this._clip;
@@ -12522,7 +12522,7 @@ var Two = (() => {
         cap = this._cap;
         join = this._join;
         miter = this._miter;
-        closed2 = this._closed;
+        closed = this._closed;
         commands = this._renderer.vertices;
         length = commands.length;
         last = length - 1;
@@ -12569,7 +12569,7 @@ var Two = (() => {
           if (join) {
             ctx.lineJoin = join;
           }
-          if (!closed2 && cap) {
+          if (!closed && cap) {
             ctx.lineCap = cap;
           }
         }
@@ -12596,7 +12596,7 @@ var Two = (() => {
               xAxisRotation = b.xAxisRotation;
               largeArcFlag = b.largeArcFlag;
               sweepFlag = b.sweepFlag;
-              prev = closed2 ? mod(i - 1, length) : max4(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : max4(i - 1, 0);
               a = commands[prev];
               ax = a.x;
               ay = a.y;
@@ -12614,7 +12614,7 @@ var Two = (() => {
               );
               break;
             case Commands.curve:
-              prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
               ar = a.controls && a.controls.right || Vector.zero;
               bl = b.controls && b.controls.left || Vector.zero;
@@ -12633,7 +12633,7 @@ var Two = (() => {
                 uy = bl.y;
               }
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-              if (i >= last && closed2) {
+              if (i >= last && closed) {
                 c = d;
                 br = b.controls && b.controls.right || Vector.zero;
                 cl = c.controls && c.controls.left || Vector.zero;
@@ -12665,7 +12665,7 @@ var Two = (() => {
               break;
           }
         }
-        if (closed2) {
+        if (closed) {
           ctx.closePath();
         }
         if (!clip && !parentClipped) {
@@ -13354,11 +13354,11 @@ var Two = (() => {
     // element. It is imperative that the string collation is as fast as
     // possible, because this call will be happening multiple times a
     // second.
-    toString: function(points, closed2) {
+    toString: function(points, closed) {
       let l = points.length, last = l - 1, d, string = "";
       for (let i = 0; i < l; i++) {
         const b = points[i];
-        const prev = closed2 ? mod(i - 1, l) : Math.max(i - 1, 0);
+        const prev = closed ? mod(i - 1, l) : Math.max(i - 1, 0);
         const a = points[prev];
         let command, c;
         let vx, vy, ux, uy, ar, bl, br, cl;
@@ -13403,7 +13403,7 @@ var Two = (() => {
           default:
             command = b.command + " " + x + " " + y;
         }
-        if (i >= last && closed2) {
+        if (i >= last && closed) {
           if (b.command === Commands.curve) {
             c = d;
             br = b.controls && b.controls.right || b;
@@ -14413,7 +14413,7 @@ var Two = (() => {
         const cap = elem._cap;
         const join = elem._join;
         const miter = elem._miter;
-        const closed2 = elem._closed;
+        const closed = elem._closed;
         const dashes = elem.dashes;
         const length = commands.length;
         const last = length - 1;
@@ -14459,7 +14459,7 @@ var Two = (() => {
           if (join) {
             ctx.lineJoin = join;
           }
-          if (!closed2 && cap) {
+          if (!closed && cap) {
             ctx.lineCap = cap;
           }
         }
@@ -14489,7 +14489,7 @@ var Two = (() => {
               xAxisRotation = b.xAxisRotation;
               largeArcFlag = b.largeArcFlag;
               sweepFlag = b.sweepFlag;
-              prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
               ax = a.x;
               ay = a.y;
@@ -14507,7 +14507,7 @@ var Two = (() => {
               );
               break;
             case Commands.curve:
-              prev = closed2 ? mod(i - 1, length) : Math.max(i - 1, 0);
+              prev = closed ? mod(i - 1, length) : Math.max(i - 1, 0);
               a = commands[prev];
               ar = a.controls && a.controls.right || Vector.zero;
               bl = b.controls && b.controls.left || Vector.zero;
@@ -14526,7 +14526,7 @@ var Two = (() => {
                 uy = bl.y;
               }
               ctx.bezierCurveTo(vx, vy, ux, uy, x, y);
-              if (i >= last && closed2) {
+              if (i >= last && closed) {
                 c = d;
                 br = b.controls && b.controls.right || Vector.zero;
                 cl = c.controls && c.controls.left || Vector.zero;
@@ -14558,7 +14558,7 @@ var Two = (() => {
               break;
           }
         }
-        if (closed2) {
+        if (closed) {
           ctx.closePath();
         }
         if (!webgl.isHidden.test(fill)) {
@@ -14766,6 +14766,7 @@ var Two = (() => {
         const opacity = elem._renderer.opacity || elem._opacity;
         const dashes = elem.dashes;
         const size = elem._size * ratio;
+        const closed = elem._closed;
         let dimension = size;
         if (!webgl.isHidden.test(stroke)) {
           dimension += linewidth;
