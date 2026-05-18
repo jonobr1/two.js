@@ -1,0 +1,14 @@
+{
+  "name": "two-js-types-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Type-checking test suite for two.js TypeScript definitions",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "ts-jest": "^29.4.9",
+    "two.js": "file:../..",
+    "typescript": "^5.0.0"
+  }
+}
