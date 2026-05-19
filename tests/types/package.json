@@ -5,9 +5,9 @@
   "description": "Type-checking test suite for two.js TypeScript definitions",
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "jest": "^30.3.0",
-    "jest-environment-jsdom": "^30.3.0",
-    "ts-jest": "^29.4.9",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "ts-jest": "^29.4.10",
     "two.js": "file:../..",
     "typescript": "^5.0.0"
   }
