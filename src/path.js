@@ -1309,7 +1309,9 @@ export class Path extends Shape {
 
     const length = this.vertices.length;
     const last = length - 1;
-    const closed = false; //this._closed || this.vertices[last]._command === Commands.close;
+    const closed =
+      length > 0 &&
+      (this._closed || this.vertices[last].command === Commands.close);
 
     let b = this.vertices[last];
     let sum = 0;
@@ -1321,7 +1323,10 @@ export class Path extends Shape {
     _.each(
       this.vertices,
       function (a, i) {
-        if ((i <= 0 && !closed) || a.command === Commands.move) {
+        if (
+          (i <= 0 && !closed) ||
+          (a.command === Commands.move && !(i === 0 && closed))
+        ) {
           b = a;
           this._lengths[i] = 0;
           return;

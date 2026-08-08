@@ -1362,3 +1362,42 @@ QUnit.test('Two.Text strokeAttenuation', function (assert) {
     'Can get property strokeAttenuation false correctly.'
   );
 });
+
+QUnit.test('Two.Path closed length / getPointAt', function (assert) {
+  assert.expect(4);
+
+  // Closed 100x100 square: perimeter should include the closing edge.
+  var square = new Two.Rectangle(0, 0, 100, 100);
+  square._update();
+  square._updateLength();
+
+  assert.equal(
+    square.length,
+    400,
+    'Closed path length includes the closing segment (perimeter, not open length).'
+  );
+
+  var closingMidpoint = square.getPointAt(0.75);
+  assert.ok(
+    Math.abs(closingMidpoint.x - 50) < 0.001 &&
+      Math.abs(closingMidpoint.y - 50) < 0.001,
+    'getPointAt maps t=0.75 onto the closing edge of a closed path, not a repeat of an earlier vertex.'
+  );
+
+  // Control: an open path (Line) must be unaffected by the closed-path fix.
+  var line = new Two.Line(0, 0, 100, 0);
+  line._update();
+  line._updateLength();
+
+  assert.equal(
+    line.length,
+    100,
+    'Open path length is unaffected by the closed-path fix.'
+  );
+
+  var lineEnd = line.getPointAt(1);
+  assert.ok(
+    Math.abs(lineEnd.x - 100) < 0.001 && Math.abs(lineEnd.y - 0) < 0.001,
+    'Open path getPointAt(1) still resolves to its last vertex.'
+  );
+});
