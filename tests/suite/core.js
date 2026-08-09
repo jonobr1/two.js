@@ -1364,9 +1364,11 @@ QUnit.test('Two.Text strokeAttenuation', function (assert) {
 });
 
 QUnit.test('Two.Path closed length / getPointAt', function (assert) {
-  assert.expect(4);
+  assert.expect(19);
 
-  // Closed 100x100 square: perimeter should include the closing edge.
+  // Closed 100x100 square (Two.Rectangle centers on origin: corners at
+  // (-50,-50), (50,-50), (50,50), (-50,50)). Perimeter includes the
+  // closing edge (last vertex -> first vertex).
   var square = new Two.Rectangle(0, 0, 100, 100);
   square._update();
   square._updateLength();
@@ -1377,11 +1379,56 @@ QUnit.test('Two.Path closed length / getPointAt', function (assert) {
     'Closed path length includes the closing segment (perimeter, not open length).'
   );
 
-  var closingMidpoint = square.getPointAt(0.75);
+  // getPointAt(0) === getPointAt(1): a closed path is a loop.
+  var atZero = square.getPointAt(0);
+  var atOne = square.getPointAt(1);
   assert.ok(
-    Math.abs(closingMidpoint.x - 50) < 0.001 &&
-      Math.abs(closingMidpoint.y - 50) < 0.001,
-    'getPointAt maps t=0.75 onto the closing edge of a closed path, not a repeat of an earlier vertex.'
+    Math.abs(atZero.x - atOne.x) < 0.001 && Math.abs(atZero.y - atOne.y) < 0.001,
+    'getPointAt(0) === getPointAt(1) for a closed path.'
+  );
+
+  // Quarter-boundary samples walk the perimeter in drawing order:
+  // (-50,-50) -> (50,-50) -> (50,50) -> (-50,50) -> back to (-50,-50).
+  var quarterExpected = [
+    [0, -50, -50],
+    [0.25, 50, -50],
+    [0.5, 50, 50],
+    [0.75, -50, 50],
+    [1, -50, -50],
+  ];
+  quarterExpected.forEach(function (entry) {
+    var t = entry[0],
+      ex = entry[1],
+      ey = entry[2];
+    var p = square.getPointAt(t);
+    assert.ok(
+      Math.abs(p.x - ex) < 0.001 && Math.abs(p.y - ey) < 0.001,
+      'getPointAt(' + t + ') lands at (' + ex + ',' + ey + '), not a repeat/wrong-order vertex.'
+    );
+  });
+
+  // Exact segment boundaries do not jump when sampled at boundary +/- epsilon.
+  var eps = 1e-6;
+  var before = square.getPointAt(0.25 - eps);
+  var at = square.getPointAt(0.25);
+  var after = square.getPointAt(0.25 + eps);
+  assert.ok(
+    Math.abs(before.x - at.x) < 0.01 &&
+      Math.abs(before.y - at.y) < 0.01 &&
+      Math.abs(after.x - at.x) < 0.01 &&
+      Math.abs(after.y - at.y) < 0.01,
+    'getPointAt is continuous across a segment boundary (no jump at t=0.25).'
+  );
+
+  // Closed curved shape (Two.Ellipse): getPointAt(0) === getPointAt(1) too.
+  var ellipse = new Two.Ellipse(0, 0, 50, 30);
+  ellipse._update();
+  ellipse._updateLength();
+  var ep0 = ellipse.getPointAt(0);
+  var ep1 = ellipse.getPointAt(1);
+  assert.ok(
+    Math.abs(ep0.x - ep1.x) < 0.001 && Math.abs(ep0.y - ep1.y) < 0.001,
+    'getPointAt(0) === getPointAt(1) for a closed curved shape (Ellipse).'
   );
 
   // Control: an open path (Line) must be unaffected by the closed-path fix.
@@ -1399,5 +1446,94 @@ QUnit.test('Two.Path closed length / getPointAt', function (assert) {
   assert.ok(
     Math.abs(lineEnd.x - 100) < 0.001 && Math.abs(lineEnd.y - 0) < 0.001,
     'Open path getPointAt(1) still resolves to its last vertex.'
+  );
+
+  // Changing `closed` after `length` has already been read invalidates
+  // the cache (maintainer feedback item 7).
+  var toggled = new Two.Path(
+    [
+      new Two.Anchor(0, 0, 0, 0, 0, 0, Two.Commands.move),
+      new Two.Anchor(100, 0, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(100, 100, 0, 0, 0, 0, Two.Commands.line),
+    ],
+    false,
+    false,
+    true
+  );
+  toggled._update();
+  var openLength = toggled.length;
+  toggled.closed = true;
+  var closedLength = toggled.length;
+  assert.equal(openLength, 200, 'Open triangle-leg length before toggling closed.');
+  assert.ok(
+    Math.abs(closedLength - (200 + Math.sqrt(2) * 100)) < 0.001,
+    'Toggling `closed` to true re-invalidates the length cache and includes the new closing edge.'
+  );
+
+  // Empty and single-vertex paths must not crash (Two.Points reuses
+  // `_updateLength`, which can see zero vertices).
+  var single = new Two.Path(
+    [new Two.Anchor(5, 5, 0, 0, 0, 0, Two.Commands.move)],
+    true,
+    false,
+    true
+  );
+  single._update();
+  assert.equal(single.length, 0, 'Single-vertex closed path has zero length and does not crash.');
+
+  var empty = new Two.Points([]);
+  empty._update();
+  assert.equal(empty.length, 0, 'Empty Two.Points does not crash _updateLength.');
+
+  // Compound path (multiple M's): only the FINAL subpath is implicitly
+  // closed via the `closed` boolean; an earlier subpath's own explicit
+  // Commands.close vertex (from `interpret(svg)`) closes to ITS OWN `M`,
+  // not global vertex 0.
+  var compound = new Two.Path(
+    [
+      new Two.Anchor(0, 0, 0, 0, 0, 0, Two.Commands.move),
+      new Two.Anchor(10, 0, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(10, 10, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(0, 10, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(0, 0, 0, 0, 0, 0, Two.Commands.close),
+      new Two.Anchor(100, 100, 0, 0, 0, 0, Two.Commands.move),
+      new Two.Anchor(110, 100, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(110, 110, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(100, 110, 0, 0, 0, 0, Two.Commands.line),
+    ],
+    true,
+    false,
+    true
+  );
+  compound._update();
+  compound._updateLength();
+  assert.equal(
+    compound.length,
+    80,
+    'Compound path: explicit-closed subpath 1 (perimeter 40) + implicit-closed subpath 2 (perimeter 40) = 80.'
+  );
+
+  var compoundMid = compound.getPointAt(0.5);
+  assert.ok(
+    Math.abs(compoundMid.x - 0) < 0.001 && Math.abs(compoundMid.y - 0) < 0.001,
+    'getPointAt(0.5) on a compound path lands at the end of subpath 1, not bleeding into subpath 2.'
+  );
+
+  // Trimming (`ending`) a closed path must not implicitly close the
+  // partial render with a straight chord back to the start (maintainer
+  // feedback item 6).
+  var trimmed = new Two.Rectangle(0, 0, 100, 100);
+  trimmed.ending = 0.5;
+  trimmed._update();
+  assert.notOk(
+    trimmed._renderer.closed,
+    'A trimmed (ending < 1) closed path reports renderer.closed = false, so renderers skip the implicit close.'
+  );
+
+  trimmed.ending = 1;
+  trimmed._update();
+  assert.ok(
+    trimmed._renderer.closed,
+    'A fully-drawn (ending = 1) closed path reports renderer.closed = true.'
   );
 });

@@ -937,18 +937,23 @@ export class Path extends Shape {
     const length = this.vertices.length;
     const last = length - 1;
 
+    // If `_lengths` carries one extra entry beyond the real vertices, it's
+    // the appended implicit closing edge (see `_updateLength`, which
+    // `this.length` above already triggered if stale).
+    const closingEdgeSubpathStart =
+      this._lengths.length === length + 1 ? this._closingSubpathStart : -1;
+
     let a = null;
     let b = null;
 
     for (let i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
       if (sum + this._lengths[i] >= target) {
-        if (this._closed) {
-          ia = mod(i, length);
-          ib = mod(i - 1, length);
-          if (i === 0) {
-            ia = ib;
-            ib = i;
-          }
+        if (i === length) {
+          // The appended closing edge: travels from the last vertex
+          // (departure, t=0) to the subpath's start (arrival, t=1),
+          // matching real drawing order.
+          ia = closingEdgeSubpathStart;
+          ib = last;
         } else {
           ia = i;
           ib = Math.min(Math.max(i - 1, 0), last);
@@ -1309,9 +1314,36 @@ export class Path extends Shape {
 
     const length = this.vertices.length;
     const last = length - 1;
-    const closed =
-      length > 0 &&
-      (this._closed || this.vertices[last].command === Commands.close);
+
+    // A path can be "closed" two different ways: the `closed` property
+    // (implicit -- most primitives, e.g. Two.Rectangle) or a trailing
+    // Commands.close vertex from SVG `Z` (explicit -- the vertex itself
+    // already carries the closing edge's endpoint, so it's a normal
+    // segment like any other and needs no extra handling here).
+    const hasCloseVertex =
+      length > 0 && this.vertices[last].command === Commands.close;
+    const needsImplicitClose = length > 1 && this._closed && !hasCloseVertex;
+
+    // Closure targets the start of the LAST subpath (most recent
+    // Commands.move), not necessarily global vertex 0 -- a compound
+    // path (multiple M's, e.g. from `interpret(svg)`) only implicitly
+    // closes its final subpath; earlier subpaths get their own explicit
+    // Commands.close vertex from the SVG parser and are unaffected.
+    let subpathStart = 0;
+    if (needsImplicitClose) {
+      for (let i = last; i >= 0; i--) {
+        if (this.vertices[i].command === Commands.move) {
+          subpathStart = i;
+          break;
+        }
+      }
+    }
+
+    // Cached for `_update()`'s render-trim loop, which needs to know
+    // whether `_lengths` carries the appended virtual closing-edge entry
+    // and, if so, which vertex it arrives at.
+    this._needsImplicitClose = needsImplicitClose;
+    this._closingSubpathStart = subpathStart;
 
     let b = this.vertices[last];
     let sum = 0;
@@ -1319,14 +1351,14 @@ export class Path extends Shape {
     if (typeof this._lengths === 'undefined') {
       this._lengths = [];
     }
+    // Truncate any stale implicit-closing-edge slot from a previous
+    // update (e.g. `closed` was toggled true -> false since).
+    this._lengths.length = length;
 
     _.each(
       this.vertices,
       function (a, i) {
-        if (
-          (i <= 0 && !closed) ||
-          (a.command === Commands.move && !(i === 0 && closed))
-        ) {
+        if (i <= 0 || a.command === Commands.move) {
           b = a;
           this._lengths[i] = 0;
           return;
@@ -1339,6 +1371,20 @@ export class Path extends Shape {
       },
       this
     );
+
+    if (needsImplicitClose) {
+      // Append the closing edge (last real vertex -> start of the
+      // current subpath) as one final entry, so it is scanned AFTER
+      // every real segment -- matching true drawing order -- instead
+      // of overwriting index 0, which would make it scanned first and
+      // corrupt getPointAt's traversal order (see #835 discussion).
+      this._lengths[length] = getCurveLength(
+        this.vertices[subpathStart],
+        this.vertices[last],
+        limit
+      );
+      sum += this._lengths[length];
+    }
 
     this._length = sum;
     this._flagLength = false;
@@ -1441,6 +1487,18 @@ export class Path extends Shape {
         }
       }
 
+      // The main loop above only ever visits real vertex indices
+      // [0, l), so a trim `ending` that lands inside the *appended*
+      // implicit closing edge (past the last real vertex, see
+      // `_updateLength`) is otherwise silently dropped -- `high` floors
+      // to `last` without ever satisfying `i > high` for a real index.
+      if (!right && ending < 1 && this._needsImplicitClose && high === l - 1) {
+        v = new Anchor();
+        this.getPointAt(ending, v);
+        v.command = Commands.line;
+        this._renderer.vertices.push(v);
+        right = v;
+      }
       // Prepend the trimmed point if necessary.
       if (low > 0 && !left) {
         i = low - 1;
@@ -1469,6 +1527,14 @@ export class Path extends Shape {
           }
         }
       }
+
+      // A trimmed closed path renders an OPEN sub-arc: `this._closed`
+      // still describes the shape's logical topology (used by
+      // `_updateLength`/`getPointAt` above), but the renderers must not
+      // implicitly close (`ctx.closePath()` / SVG ` Z`) a partial
+      // stroke with a straight chord back to its first point when
+      // `beginning`/`ending` have cut it short (see #835 follow-up).
+      this._renderer.closed = closed && beginning === 0 && ending === 1;
     }
 
     Shape.prototype._update.apply(this, arguments);
@@ -1644,6 +1710,7 @@ const proto = {
     set: function (v) {
       this._closed = !!v;
       this._flagVertices = true;
+      this._flagLength = true;
     },
   },
 
