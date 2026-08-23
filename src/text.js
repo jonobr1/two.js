@@ -190,7 +190,7 @@ export class Text extends Shape {
 
   /**
    * @name Two.Text#baseline
-   * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+   * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'middle'`.
    * @nota-bene In headless environments where the canvas is based on {@link https://github.com/Automattic/node-canvas}, `baseline` seems to be the only valid property.
    */
   _baseline = 'middle';
@@ -384,7 +384,7 @@ export class Text extends Shape {
       const width = this.value.length * this.size * Text.Ratio;
       const height = this.leading;
       console.warn(
-        'Two.Text: unable to accurately measure text, so using an approximation.'
+        'Two.Text: unable to accurately measure text, so using an approximation.',
       );
       return {
         width,

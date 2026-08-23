@@ -60,7 +60,7 @@ declare module 'two.js/src/text' {
         dashes?: number[] & {
           offset?: number;
         };
-      }
+      },
     ): Text;
 
     constructor(
@@ -84,7 +84,7 @@ declare module 'two.js/src/text' {
         fill?: string | Gradient | Texture;
         stroke?: string | Gradient | Texture;
         dashes?: number[] & { offset?: number };
-      }
+      },
     );
     /**
      * @name Two.Text#_flagValue
@@ -231,7 +231,7 @@ declare module 'two.js/src/text' {
     alignment: AlignmentProperties;
     /**
      * @name Two.Text#baseline
-     * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+     * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'middle'`.
      */
     baseline: BaselineProperties;
     /**

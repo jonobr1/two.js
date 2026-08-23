@@ -765,12 +765,12 @@ export default class Two {
    * @param {Number} y
    * @param {Number} width
    * @param {Number} height
-   * @param {Number} sides
+   * @param {(Number|Two.Vector)} radius
    * @returns {Two.RoundedRectangle}
    * @description Creates a Two.js rounded rectangle and adds it to the scene.
    */
-  makeRoundedRectangle(x, y, width, height, sides) {
-    const rect = new RoundedRectangle(x, y, width, height, sides);
+  makeRoundedRectangle(x, y, width, height, radius) {
+    const rect = new RoundedRectangle(x, y, width, height, radius);
     this.scene.add(rect);
 
     return rect;
@@ -816,14 +816,14 @@ export default class Two {
    * @function
    * @param {Number} x
    * @param {Number} y
-   * @param {Number} outerRadius
    * @param {Number} innerRadius
+   * @param {Number} outerRadius
    * @param {Number} sides
    * @returns {Two.Star}
    * @description Creates a Two.js star and adds it to the scene.
    */
-  makeStar(x, y, outerRadius, innerRadius, sides) {
-    const star = new Star(x, y, outerRadius, innerRadius, sides);
+  makeStar(x, y, innerRadius, outerRadius, sides) {
+    const star = new Star(x, y, innerRadius, outerRadius, sides);
     this.scene.add(star);
 
     return star;
@@ -1045,7 +1045,7 @@ export default class Two {
    * @param {Number} radius
    * @param {...Two.Stop} args - Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
    * @returns {Two.RadialGradient}
-   * @description Creates a Two.js linear-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+   * @description Creates a Two.js radial-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
    */
   makeRadialGradient(x1, y1, radius /* stops */) {
     const stops = Array.prototype.slice.call(arguments, 3);

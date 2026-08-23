@@ -2,7 +2,7 @@ declare module 'two.js/extras/jsm/zui' {
   /**
    * @name Two.ZUI
    * @class
-   * @param {Group} group - The scene or group to
+   * @param {Group} group - The scene or group to enable panning and zooming on.
    * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
    */
   export class ZUI {

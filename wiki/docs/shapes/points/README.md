@@ -340,7 +340,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="description">
 
-[Two.Points.ending](/docs/shapes/points/#ending) is a percentage value that represents at what percentage into the path should the renderer start drawing.
+[Two.Points.ending](/docs/shapes/points/#ending) is a percentage value that represents at what percentage into the points the renderer should stop drawing.
 
 </div>
 
@@ -780,7 +780,7 @@ Array of numbers. Odd indices represent dash length. Even indices represent dash
 
 <div class="description">
 
-A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+A list of numbers that represent the repeated dash length and dash space applied to the stroke of the points.
 
 </div>
 

@@ -62,16 +62,16 @@
       }
 
       /**
-       * @name Two.ArcSegment#startAngle
-       * @property {Number} - The angle of one side for the arc segment.
+       * @name Two.Arc#startAngle
+       * @property {Number} - The starting angle of the arc in radians.
        */
       if (typeof startAngle === 'number') {
         this.startAngle = startAngle;
       }
 
       /**
-       * @name Two.ArcSegment#endAngle
-       * @property {Number} - The angle of the other side for the arc segment.
+       * @name Two.Arc#endAngle
+       * @property {Number} - The ending angle of the arc in radians.
        */
       if (typeof endAngle === 'number') {
         this.endAngle = endAngle;
@@ -151,10 +151,10 @@
      * @name Two.Arc#clone
      * @function
      * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
-     * @returns {Two.ArcSegment}
-     * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
+     * @returns {Two.Arc}
+     * @description Create a new instance of {@link Two.Arc} with the same properties as the current arc.
      */
-    clone() {
+    clone(parent) {
       const { width, height, startAngle, endAngle } = this;
       const resolution = this.vertices.length;
 
