@@ -185,7 +185,7 @@ The vertical size of the arc.
 
 ## startAngle
 
-<h2 class="longname" aria-hidden="true"><a href="#startAngle"><span class="prefix">Two.ArcSegment.</span><span class="shortname">startAngle</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#startAngle"><span class="prefix">Two.Arc.</span><span class="shortname">startAngle</span></a></h2>
 
 
 
@@ -199,7 +199,7 @@ The vertical size of the arc.
 <div class="properties">
 
 
-The angle of one side for the arc segment.
+The starting angle of the arc in radians.
 
 
 </div>
@@ -232,7 +232,7 @@ The angle of one side for the arc segment.
 
 ## endAngle
 
-<h2 class="longname" aria-hidden="true"><a href="#endAngle"><span class="prefix">Two.ArcSegment.</span><span class="shortname">endAngle</span></a></h2>
+<h2 class="longname" aria-hidden="true"><a href="#endAngle"><span class="prefix">Two.Arc.</span><span class="shortname">endAngle</span></a></h2>
 
 
 
@@ -246,7 +246,7 @@ The angle of one side for the arc segment.
 <div class="properties">
 
 
-The angle of the other side for the arc segment.
+The ending angle of the arc in radians.
 
 
 </div>
@@ -286,7 +286,7 @@ The angle of the other side for the arc segment.
 
 <div class="returns">
 
-__Returns__: Two.ArcSegment
+__Returns__: Two.Arc
 
 
 
@@ -312,7 +312,7 @@ __Returns__: Two.ArcSegment
 
 <div class="description">
 
-Create a new instance of [Two.ArcSegment](/docs/shapes/arc-segment/) with the same properties of the current path.
+Create a new instance of [Two.Arc](/docs/extras/arc/) with the same properties as the current arc.
 
 </div>
 

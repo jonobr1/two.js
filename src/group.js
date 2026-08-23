@@ -197,7 +197,7 @@ export class Group extends Shape {
   /**
    * @name Two.Group#ending
    * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-   * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+   * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes the renderer should stop drawing.
    * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
    */
   _ending = 1.0;
