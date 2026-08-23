@@ -105,7 +105,7 @@ two.update();
 
 <h3 class="visible"><a href="#shapes-and-groups">Shapes and Groups</a></h3>
 
-Adding shapes to groups makes managing multiple shapes easier and more sane. Group's provide an easy way to move your content through `position`, `rotation`, and `scale`. These operations emit from the coordinate space `(0, 0)`. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around `(0, 0)`, which allows us to transform the group around the centeroid of the shapes. In addition Group's styling operations trickle down and apply to each shape.
+Adding shapes to groups makes managing multiple shapes easier and more sane. Group's provide an easy way to move your content through `position`, `rotation`, and `scale`. These operations emit from the coordinate space `(0, 0)`. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around `(0, 0)`, which allows us to transform the group around the centroid of the shapes. In addition Group's styling operations trickle down and apply to each shape.
 
 <inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
 var params = { fullscreen: true }

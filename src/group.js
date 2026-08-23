@@ -250,7 +250,7 @@ export class Group extends Shape {
      * @name Two.Group#children
      * @property {Two.Group.Children}
      * @description A list of all the children in the scenegraph.
-     * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
+     * @nota-bene The order of this list indicates the order each element is rendered to the screen.
      */
     this.children = Array.isArray(children)
       ? children
@@ -822,7 +822,7 @@ export class Group extends Shape {
   add(objects) {
     // Allow to pass multiple objects either as array or as multiple arguments
     // If it's an array also create copy of it in case we're getting passed
-    // a childrens array directly.
+    // a children array directly.
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     } else {
@@ -864,7 +864,7 @@ export class Group extends Shape {
 
     // Allow to pass multiple objects either as array or as multiple arguments
     // If it's an array also create copy of it in case we're getting passed
-    // a childrens array directly.
+    // a children array directly.
     if (!(objects instanceof Array)) {
       objects = Array.prototype.slice.call(arguments);
     } else {

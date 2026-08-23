@@ -225,7 +225,7 @@ declare module 'two.js/src/group' {
      * @name Two.Group#children
      * @property {Group.Children}
      * @description A list of all the children in the scenegraph.
-     * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
+     * @nota-bene The order of this list indicates the order each element is rendered to the screen.
      */
     children: Children;
     /**

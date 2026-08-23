@@ -53,7 +53,7 @@ declare module 'two.js/src/effects/texture' {
     static getTag(image: HTMLImageElement): string;
     /**
      * @name Two.Texture.getImage
-     * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonincal versions set in {@link Two.Texture.ImageRegistry}.
+     * @property {Function} - Convenience function to set {@link Two.Texture#image} properties with canonical versions set in {@link Two.Texture.ImageRegistry}.
      * @param {String} src - The URL path of the image.
      * @returns {HTMLImageElement} - Returns either a cached version of the image or a new one that is registered in {@link Two.Texture.ImageRegistry}.
      */

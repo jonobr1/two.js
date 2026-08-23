@@ -2206,7 +2206,7 @@ __Returns__: Two.Points
 | Argument | Description |
 | ---- | ----------- |
 |  points  | An array of [Two.Vector](/docs/vector/) points |
-|  | Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into [Two.Vector](/docs/vector/)s for use in the points object. |
+|  | Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into [Two.Vector](/docs/vector/)s for use in the points object. |
 </div>
 
 
@@ -2934,5 +2934,4 @@ Load an SVG file or SVG text and interpret it into Two.js legible objects.
 
 
 </div>
-
 

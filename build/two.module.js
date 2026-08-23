@@ -285,7 +285,7 @@ var Events = class {
    * @function
    * @param {String} [name] - The name of the event intended to be removed.
    * @param {Function} [handler] - The handler intended to be removed.
-   * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
+   * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the object are removed.
    */
   removeEventListener(name, handler) {
     if (!this._events) {
@@ -486,7 +486,7 @@ var _Vector = class _Vector extends Events {
    * @function
    * @param {Two.Vector} v1 - First {@link Two.Vector}
    * @param {Two.Vector} v2 - Second {@link Two.Vector}
-   * @returns {Number} The ratio betwen two points `v1` and `v2`.
+   * @returns {Number} The ratio between two points `v1` and `v2`.
    */
   static ratioBetween(v1, v2) {
     return (v1.x * v2.x + v1.y * v2.y) / (v1.length() * v2.length());
@@ -733,7 +733,7 @@ var _Vector = class _Vector extends Events {
    * @name Two.Vector#multiplyScalar
    * @function
    * @param {Number} s - The scalar to multiply by.
-   * @description Mulitiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
+   * @description Multiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
    */
   multiplyScalar(s) {
     return this.multiply(s);
@@ -1228,7 +1228,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2026-04-23T05:35:40.785Z",
+  PublishDate: "2026-08-23T16:26:56.016Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -9010,7 +9010,7 @@ var _Text = class _Text extends Shape {
     __publicField(this, "_alignment", "center");
     /**
      * @name Two.Text#baseline
-     * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+     * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
      * @nota-bene In headless environments where the canvas is based on {@link https://github.com/Automattic/node-canvas}, `baseline` seems to be the only valid property.
      */
     __publicField(this, "_baseline", "middle");
@@ -16276,7 +16276,7 @@ var _Two = class _Two {
    * @name Two#makePoints
    * @function
    * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
-   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Vector}s for use in the points object.
    * @returns {Two.Points}
    * @description Creates a Two.js points object and adds it to the current scene.
    */

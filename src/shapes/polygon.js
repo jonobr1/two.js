@@ -98,7 +98,7 @@ export class Polygon extends Path {
 
     /**
      * @name Two.Polygon#sides
-     * @property {Number} - The amount of sides the polyogn has.
+     * @property {Number} - The amount of sides the polygon has.
      */
     if (typeof sides === 'number') {
       this.sides = sides;

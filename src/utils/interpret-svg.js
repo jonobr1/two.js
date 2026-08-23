@@ -122,7 +122,7 @@ function extractCSSText(text, styles) {
  * @function
  * @param {SVGElement} node - The SVG node to parse.
  * @returns {Object} styles
- * @description Get the CSS comands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
+ * @description Get the CSS commands from the `style` attribute of an SVG node and apply them as key value pairs to a JavaScript object.
  */
 function getSvgStyles(node) {
   const styles = {};
@@ -439,7 +439,7 @@ function applySvgAttributes(node, elem, parentStyles) {
         if (regex.cssBackgroundImage.test(value)) {
           id = value.replace(regex.cssBackgroundImage, '$1');
           // Overwritten id for non-conflicts on same page SVG documents
-          // TODO: Make this non-descructive
+          // TODO: Make this non-destructive
           // node.setAttribute('two-' + key, value.replace(/\)/i, '-' + Constants.Identifier + 'applied)'));
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
@@ -460,7 +460,7 @@ function applySvgAttributes(node, elem, parentStyles) {
       case 'id':
         elem.id = value;
         // Overwritten id for non-conflicts on same page SVG documents
-        // TODO: Make this non-descructive
+        // TODO: Make this non-destructive
         // node.id = value + '-' + Constants.Identifier + 'applied';
         break;
       case 'class':
@@ -1323,7 +1323,7 @@ export const read = {
     let message = '';
 
     // Detect tspan for getting text content.
-    // If not, svg indentation apears in text content
+    // If not, SVG indentation appears in text content
     if (node.childNodes.length > 0 && node.childNodes[0].tagName === 'TSPAN') {
       message = node.childNodes[0].textContent;
     } else {

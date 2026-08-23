@@ -14,7 +14,7 @@ Extends: [Two.Rectangle](/docs/shapes/rectangle/)
 </div>
 
 
-A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
+A convenient package to display still or animated images through a tiled image source. For more information on the principles of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
 
 
 <div class="meta">
@@ -754,5 +754,4 @@ for potential re-attachment.
 
 
 </div>
-
 

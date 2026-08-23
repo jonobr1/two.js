@@ -1175,7 +1175,7 @@ A list of all the children in the scenegraph.
 
 
 ::: tip nota-bene
-Ther order of this list indicates the order each element is rendered to the screen.
+The order of this list indicates the order each element is rendered to the screen.
 :::
 
 
@@ -2104,5 +2104,4 @@ When `strokeAttenuation` is `false`, this property is applied to all child shape
 
 
 </div>
-
 

@@ -49,7 +49,7 @@ export class Ellipse extends Path {
       ry = rx;
     }
 
-    // At least 2 vertices are required for proper circlage
+    // At least 2 vertices are required for proper ellipse construction
     const amount = resolution ? Math.max(resolution, 2) : 4;
     const points = [];
     for (let i = 0; i < amount; i++) {

@@ -32,7 +32,7 @@ export class Circle extends Path {
   _radius = 0;
 
   constructor(ox, oy, r, resolution) {
-    // At least 2 vertices are required for proper circlage
+    // At least 2 vertices are required for proper circle construction
     const amount = resolution ? Math.max(resolution, 2) : 4;
     const points = [];
     for (let i = 0; i < amount; i++) {

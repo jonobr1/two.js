@@ -65,7 +65,7 @@ declare module 'two.js/src/shapes/points' {
     size: number;
     /**
      * @name Two.Points#sizeAttenuation
-     * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
+     * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarchy.
      * @description Set to `true` if you'd like the size of the points to be relative to the scale of its parents; `false` to disregard. Default is `false`.
      */
     sizeAttenuation: boolean;
