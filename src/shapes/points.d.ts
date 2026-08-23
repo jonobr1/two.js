@@ -154,7 +154,7 @@ declare module 'two.js/src/shapes/points' {
      * @returns {Two.Points}
      * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
      */
-    clone(parent: Group): Points;
+    clone(parent?: Group): Points;
     /**
      * @name Two.Points#toObject
      * @function

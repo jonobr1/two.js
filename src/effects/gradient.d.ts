@@ -28,7 +28,7 @@ declare module 'two.js/src/effects/gradient' {
      */
     static fromObject(
       obj: Parameters<typeof TwoElement.fromObject>[0] & {
-        stops?: number[];
+        stops?: (Stop | Parameters<typeof Stop.fromObject>[0])[];
         spread?: SpreadProperties;
         units?: UnitsProperties;
       }

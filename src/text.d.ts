@@ -306,6 +306,14 @@ declare module 'two.js/src/text' {
       offset?: number;
     };
     /**
+     * @name Two.Text#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Text}
+     * @description Create a new instance of {@link Two.Text} with the same properties as the current text.
+     */
+    clone(parent?: Group): Text;
+    /**
      * @name Two.Text#strokeAttenuation
      * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
      * @description When `strokeAttenuation` is `false`, the stroke width is automatically adjusted to compensate for the object's world transform scale, maintaining constant visual thickness regardless of zoom level. When `true` (default), stroke width scales normally with transformations.
@@ -356,6 +364,7 @@ declare module 'two.js/src/text' {
     flagReset(): Text;
   }
   import { Shape } from 'two.js/src/shape';
+  import { Group } from 'two.js/src/group';
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Texture } from 'two.js/src/effects/texture';
   import { BoundingBox, Dimensions } from 'two.js';

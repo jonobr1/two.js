@@ -3,7 +3,7 @@ declare module 'two.js/src/renderers/canvas' {
      * @name Two.CanvasRenderer
      * @class
 
-     * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+     * @param {Object} parameters - This object is inherited when constructing a new instance of {@link Two}.
      * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
      * @param {Boolean} [parameters.overdraw] - Determines whether the canvas should clear the background or not. Defaults to `true`.
      * @param {Boolean} [parameters.smoothing=true] - Determines whether the canvas should antialias drawing. Set it to `false` when working with pixel art. `false` can lead to better performance, since it would use a cheaper interpolation algorithm.
@@ -56,7 +56,11 @@ declare module 'two.js/src/renderers/canvas' {
         y: any
       ) => void;
     };
-    constructor(params?: any);
+    constructor(params: {
+      domElement?: HTMLCanvasElement;
+      overdraw?: boolean;
+      smoothing?: boolean;
+    });
     /**
      * @name Two.CanvasRenderer#domElement
      * @property {Element} - The `<canvas />` associated with the Two.js scene.

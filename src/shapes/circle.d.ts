@@ -58,7 +58,7 @@ declare module 'two.js/src/shapes/circle' {
      * @returns {Two.Circle}
      * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
      */
-    clone(parent: Group): Circle;
+    clone(parent?: Group): Circle;
   }
   import { Path } from 'two.js/src/path';
   import { Group } from 'two.js/src/group';

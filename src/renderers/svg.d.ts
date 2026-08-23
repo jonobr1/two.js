@@ -3,7 +3,7 @@ declare module 'two.js/src/renderers/svg' {
      * @name Two.SVGRenderer
      * @class
 
-     * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+     * @param {Object} parameters - This object is inherited when constructing a new instance of {@link Two}.
      * @param {Element} [parameters.domElement] - The `<svg />` to draw to. If none given a new one will be constructed.
      * @description This class is used by {@link Two} when constructing with `type` of `Two.Types.svg` (the default type). It takes Two.js' scenegraph and renders it to a `<svg />`.
      */
@@ -53,7 +53,7 @@ declare module 'two.js/src/renderers/svg' {
         render: (domElement: any, silent: any) => any;
       };
     };
-    constructor(params?: any);
+    constructor(params: { domElement?: SVGElement });
     /**
      * @name Two.SVGRenderer#domElement
      * @property {Element} - The `<svg />` associated with the Two.js scene.

@@ -86,7 +86,16 @@ declare module 'two.js/src/shapes/rounded-rectangle' {
      * @nota-bene Works in conjunction with {@link Two.RoundedRectangle#toObject}
      */
     copy(roundedRectangle: RoundedRectangle): RoundedRectangle;
+    /**
+     * @name Two.RoundedRectangle#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.RoundedRectangle}
+     * @description Create a new instance of {@link Two.RoundedRectangle} with the same properties as the current rounded rectangle.
+     */
+    clone(parent?: Group): RoundedRectangle;
   }
   import { Path } from 'two.js/src/path';
   import { Vector } from 'two.js/src/vector';
+  import { Group } from 'two.js/src/group';
 }

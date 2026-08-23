@@ -66,6 +66,7 @@ declare module 'two.js/src/shapes/polygon' {
     private _sides;
     constructor(x?: number, y?: number, radius?: number, sides?: number);
     closed: boolean;
+    radius: number;
     width: number;
     height: number;
     sides: number;
@@ -83,7 +84,7 @@ declare module 'two.js/src/shapes/polygon' {
      * @returns {Two.Polygon}
      * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
      */
-    clone(parent: Group): Polygon;
+    clone(parent?: Group): Polygon;
   }
   import { Path } from 'two.js/src/path';
   import { Group } from 'two.js/src/group';

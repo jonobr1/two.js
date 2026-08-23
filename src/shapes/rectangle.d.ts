@@ -83,7 +83,7 @@ declare module 'two.js/src/shapes/rectangle' {
      * @returns {Two.Rectangle}
      * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
      */
-    clone(parent: Group): Rectangle;
+    clone(parent?: Group): Rectangle;
   }
   import { Path } from 'two.js/src/path';
   import { Vector } from 'two.js/src/vector';

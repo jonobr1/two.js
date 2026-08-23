@@ -204,7 +204,8 @@ declare module 'two.js' {
      * @returns {Two.Element} The object passed for event deallocation.
      * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
      */
-    release<T>(obj?: TwoElement): T;
+    release(obj?: undefined): Group;
+    release<T extends TwoElement>(obj: T): T;
     getShapesAtPoint(
       x: number,
       y: number,
@@ -593,7 +594,10 @@ declare module 'two.js' {
      * @returns {Texture}
      * @description Creates a Two.js texture object.
      */
-    makeTexture(src: any, callback?: () => void): Texture;
+    makeTexture(
+      src?: string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
+      callback?: () => void
+    ): Texture;
     /**
      * @name Two#makeGroup
      * @function

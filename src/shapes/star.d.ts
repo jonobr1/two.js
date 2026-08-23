@@ -101,7 +101,7 @@ declare module 'two.js/src/shapes/star' {
      * @returns {Two.Star}
      * @description Create a new instance of {@link Two.Star} with the same properties of the current path.
      */
-    clone(parent: Group): Star;
+    clone(parent?: Group): Star;
   }
   import { Path } from 'two.js/src/path';
   import { Group } from 'two.js/src/group';
