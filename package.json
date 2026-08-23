@@ -19,7 +19,8 @@
     "docs:dev": "vuepress dev wiki",
     "docs:build": "vuepress build wiki",
     "docs:publish": "./deploy.sh",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "types:check": "tsc --project tsconfig.types.json"
   },
   "directories": {
     "docs": "wiki/docs",

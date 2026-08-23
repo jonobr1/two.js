@@ -13,6 +13,8 @@ jobs:
       run: npm ci
     - name: Run ESLint
       run: npm run lint
+    - name: Check TypeScript declarations
+      run: npm run types:check
 
   check-dependency-files:
     name: Check dependency manifest/lockfile pairs
