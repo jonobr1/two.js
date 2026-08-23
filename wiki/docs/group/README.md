@@ -890,7 +890,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="description">
 
-[Two.Group.ending](/docs/group/#ending) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+[Two.Group.ending](/docs/group/#ending) is a percentage value that represents at what percentage into all child shapes the renderer should stop drawing.
 
 </div>
 

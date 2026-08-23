@@ -24,7 +24,7 @@ lang: en-US
 
 | Argument | Description |
 | ---- | ----------- |
-|  group  | The scene or group to |
+|  group  | The scene or group to enable panning and zooming on. |
 |  domElement  | The HTML Element to attach event listeners to. |
 
 
