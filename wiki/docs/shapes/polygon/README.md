@@ -343,7 +343,7 @@ This property is tied to [Two.Polygon.radius](/docs/shapes/polygon/#radius). Whe
 <div class="properties">
 
 
-The amount of sides the polyogn has.
+The amount of sides the polygon has.
 
 
 </div>
@@ -534,5 +534,4 @@ Return a JSON compatible plain object that represents the path.
 
 
 </div>
-
 

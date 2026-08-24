@@ -24,7 +24,7 @@ Two.js is a renderer-agnostic 2D drawing API for modern browsers. It provides a 
 - `Path` - Complex shapes defined by anchor points and curves
 - `Vector` - 2D vector mathematics
 - `Matrix` - 2D transformation matrices
-- `Anchor` - Control points for paths with B�zier curve handles
+- `Anchor` - Control points for paths with Bézier curve handles
 
 ### Shape Library
 Located in `src/shapes/`:
@@ -187,5 +187,5 @@ Designed for modern browsers with ES6+ support. Uses feature detection for rende
 
 ### Nota Bene
 - All visual tests run in the browser via HTML files
-- TypeScript tests verify the declarations by compiling the usage fixture and run in CI
-- Visual renderer testing remains manual
+- TypeScript tests verify that the type definitions work correctly by compiling sample code – this is work in progress
+- Manual testing approach - no automated test runners or CI integration

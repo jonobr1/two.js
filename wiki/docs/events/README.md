@@ -243,7 +243,7 @@ Alias for [Two.Events.addEventListener](/docs/events/#addeventlistener).
 
 <div class="description">
 
-Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the obejct are removed.
+Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the object are removed.
 
 </div>
 
@@ -406,5 +406,4 @@ Call to trigger a custom event. Any additional arguments passed after the name w
 
 
 </div>
-
 

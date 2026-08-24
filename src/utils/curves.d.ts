@@ -15,7 +15,7 @@ declare module 'two.js/src/utils/curves' {
    * @name Two.Utils.getComponentOnCubicBezier
    * @function
    * @param {Number} t - Zero-to-one value describing what percentage to calculate.
-   * @param {Number} a - The firt point's component value.
+   * @param {Number} a - The first point's component value.
    * @param {Number} b - The first point's bezier component value.
    * @param {Number} c - The second point's bezier component value.
    * @param {Number} d - The second point's component value.

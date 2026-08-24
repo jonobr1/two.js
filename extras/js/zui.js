@@ -28,7 +28,7 @@
   /**
    * @name Two.ZUI
    * @class
-   * @param {Two.Group} group - The scene or group to
+   * @param {Two.Group} group - The scene or group to enable panning and zooming on.
    * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
    */
   class ZUI {

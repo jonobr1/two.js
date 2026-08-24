@@ -60,7 +60,7 @@ Various examples of how to use different features of Two.js with associated tags
   title="Gradients"
   href="https://codepen.io/jonobr1/pen/yLoEEQJ"
   src="https://shots.codepen.io/username/pen/yLoEEQJ-512.jpg"
-  tags="es6, import, vector, mouse, radial-gradient, linear-gradent" />
+  tags="es6, import, vector, mouse, radial-gradient, linear-gradient" />
 
 <example-card
   title="Interpret SVG's"

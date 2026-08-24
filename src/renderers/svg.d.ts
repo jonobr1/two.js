@@ -66,7 +66,7 @@ declare module 'two.js/src/renderers/svg' {
     scene: Group;
     /**
      * @name Two.SVGRenderer#defs
-     * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
+     * @property {SVGDefsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
      */
     defs: SVGDefsElement;
     /**

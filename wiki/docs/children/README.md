@@ -14,7 +14,7 @@ Extends: [Two.Collection](/docs/collection/)
 </div>
 
 
-A children collection which is accesible both by index and by object `id`.
+A children collection which is accessible both by index and by object `id`.
 
 
 <div class="meta">
@@ -177,5 +177,4 @@ Removes elements to the `ids` map.
 
 
 </div>
-
 

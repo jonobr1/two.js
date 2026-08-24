@@ -890,7 +890,7 @@ Number between zero and one to state the ending of where the path is rendered.
 
 <div class="description">
 
-[Two.Group.ending](/docs/group/#ending) is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+[Two.Group.ending](/docs/group/#ending) is a percentage value that represents at what percentage into all child shapes the renderer should stop drawing.
 
 </div>
 
@@ -1175,7 +1175,7 @@ A list of all the children in the scenegraph.
 
 
 ::: tip nota-bene
-Ther order of this list indicates the order each element is rendered to the screen.
+The order of this list indicates the order each element is rendered to the screen.
 :::
 
 
@@ -2104,5 +2104,4 @@ When `strokeAttenuation` is `false`, this property is applied to all child shape
 
 
 </div>
-
 
