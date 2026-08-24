@@ -1202,7 +1202,7 @@ export class Renderer extends Events {
 
     /**
      * @name Two.SVGRenderer#defs
-     * @property {SvgDefintionsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
+     * @property {SVGDefsElement} - The `<defs />` to apply gradients, patterns, and bitmap imagery.
      */
     this.defs = svg.createElement('defs');
     this.defs._flagUpdate = false;

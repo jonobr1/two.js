@@ -189,7 +189,7 @@ declare module 'two.js/src/group' {
     /**
      * @name Two.Group#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes the renderer should stop drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
      */
     ending: number;
@@ -225,7 +225,7 @@ declare module 'two.js/src/group' {
      * @name Two.Group#children
      * @property {Group.Children}
      * @description A list of all the children in the scenegraph.
-     * @nota-bene Ther order of this list indicates the order each element is rendered to the screen.
+     * @nota-bene The order of this list indicates the order each element is rendered to the screen.
      */
     children: Children;
     /**

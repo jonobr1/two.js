@@ -312,7 +312,7 @@ declare module 'two.js' {
      * @param {Number} y
      * @param {Number} width
      * @param {Number} height
-     * @param {Number} radius
+     * @param {(Number|Vector)} radius
      * @returns {RoundedRectangle}
      * @description Creates a Two.js rounded rectangle and adds it to the scene.
      */
@@ -362,8 +362,8 @@ declare module 'two.js' {
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @param {Number} outerRadius
      * @param {Number} innerRadius
+     * @param {Number} outerRadius
      * @param {Number} sides
      * @returns {Star}
      * @description Creates a Two.js star and adds it to the scene.
@@ -371,8 +371,8 @@ declare module 'two.js' {
     makeStar(
       x: any,
       y: any,
-      outerRadius: number,
       innerRadius: number,
+      outerRadius: number,
       sides: number
     ): Star;
     /**
@@ -436,7 +436,7 @@ declare module 'two.js' {
     /**
      * @name Two#makePoints
      * @function
-     * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+     * @param {...Number} [args] - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Vector}s for use in the points object.
      * @returns {Points}
      * @description Creates a Two.js points object and adds it to the current scene.
      */
@@ -518,7 +518,7 @@ declare module 'two.js' {
      * @param {Number} radius
      * @param {...Stop} args - Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
      * @returns {RadialGradient}
-     * @description Creates a Two.js linear-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+     * @description Creates a Two.js radial-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
     makeRadialGradient(
       x1: number,

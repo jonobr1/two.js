@@ -14,7 +14,7 @@ Extends: [Two.Events](/docs/events/)
 </div>
 
 
-A class to store `x` / `y` component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
+A class to store `x` / `y` component vector data. In addition to storing data `Two.Vector` has souped-up methods for commonplace mathematical operations.
 
 
 <div class="meta">
@@ -451,7 +451,7 @@ Alias for [Two.Vector.sub](/docs/vector/#sub).
 __Returns__: Number
 
 
-The ratio betwen two points `v1` and `v2`.
+The ratio between two points `v1` and `v2`.
 
 
 </div>
@@ -1789,7 +1789,7 @@ Alias for [Two.Vector.multiply](/docs/vector/#multiply).
 
 <div class="description">
 
-Mulitiply the vector by a single number. Shorthand to call [Two.Vector.multiply](/docs/vector/#multiply) directly.
+Multiply the vector by a single number. Shorthand to call [Two.Vector.multiply](/docs/vector/#multiply) directly.
 
 </div>
 
@@ -2844,5 +2844,4 @@ Rotate a vector.
 
 
 </div>
-
 

@@ -20,7 +20,7 @@
 
 #### **Do you want to contribute to the Two.js documentation?**
 
-* This is still in its infancy and if you're interested to help out, please send an email to [inquires@jono.fyi](mailto:inquiries@jono.fyi) with the subject "Two.js Documentation". In the body of your email please describe why or how you'd like to help.
+* This is still in its infancy and if you're interested to help out, please send an email to [inquiries@jono.fyi](mailto:inquiries@jono.fyi) with the subject "Two.js Documentation". In the body of your email please describe why or how you'd like to help.
 
 Two.js is a volunteer effort, so we apologize in advance for any delays.
 

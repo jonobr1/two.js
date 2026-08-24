@@ -3,7 +3,7 @@ declare module 'two.js/src/children' {
      * @class
      * @name Two.Group.Children
 
-     * @description A children collection which is accesible both by index and by object `id`.
+     * @description A children collection which is accessible both by index and by object `id`.
      */
   export class Children extends Collection<Shape> {
     constructor(children?: Shape[]);
