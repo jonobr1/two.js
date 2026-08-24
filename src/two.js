@@ -924,7 +924,7 @@ export default class Two {
    * @name Two#makePoints
    * @function
    * @param {Two.Vector[]} [points] - An array of {@link Two.Vector} points
-   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual agrguments. These will be combined into {@link Two.Vector}s for use in the points object.
+   * @param {...Number} - Alternatively you can pass alternating `x` / `y` coordinate values as individual arguments. These will be combined into {@link Two.Vector}s for use in the points object.
    * @returns {Two.Points}
    * @description Creates a Two.js points object and adds it to the current scene.
    */

@@ -60,7 +60,7 @@ declare module 'two.js/src/text' {
         dashes?: number[] & {
           offset?: number;
         };
-      }
+      },
     ): Text;
 
     constructor(
@@ -84,7 +84,7 @@ declare module 'two.js/src/text' {
         fill?: string | Gradient | Texture;
         stroke?: string | Gradient | Texture;
         dashes?: number[] & { offset?: number };
-      }
+      },
     );
     /**
      * @name Two.Text#_flagValue
@@ -211,7 +211,7 @@ declare module 'two.js/src/text' {
     value: string;
     /**
      * @name Two.Text#family
-     * @property {String} - The font family Two.js should attempt to regsiter for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
+     * @property {String} - The font family Two.js should attempt to register for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
      */
     family: string;
     /**
@@ -286,13 +286,13 @@ declare module 'two.js/src/text' {
     /**
      * @name Two.Text#mask
      * @property {Shape} - The shape whose alpha property becomes a clipping area for the text.
-     * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
      */
     mask: Shape | null | undefined;
     /**
      * @name Two.Text#clip
      * @property {Shape} - Object to define clipping area.
-     * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
      */
     clip: boolean;
     /**

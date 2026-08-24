@@ -8,7 +8,7 @@ lang: en-US
 
 
 
-A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
+A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has souped-up methods for commonplace mathematical operations.
 
 
 <div class="meta">
@@ -1363,5 +1363,4 @@ Clone the current matrix.
 
 
 </div>
-
 

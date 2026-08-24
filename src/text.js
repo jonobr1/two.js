@@ -384,7 +384,7 @@ export class Text extends Shape {
       const width = this.value.length * this.size * Text.Ratio;
       const height = this.leading;
       console.warn(
-        'Two.Text: unable to accurately measure text, so using an approximation.'
+        'Two.Text: unable to accurately measure text, so using an approximation.',
       );
       return {
         width,

@@ -20,7 +20,7 @@ const array = [];
  * @param {Number} [g=0] - The value for element at the first column and third row.
  * @param {Number} [h=0] - The value for element at the second column and third row.
  * @param {Number} [i=1] - The value for element at the third column and third row.
- * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has suped up methods for commonplace mathematical operations.
+ * @description A class to store 3 x 3 transformation matrix information. In addition to storing data `Two.Matrix` has souped-up methods for commonplace mathematical operations.
  * @nota-bene Order is based on how to construct transformation strings for the browser.
  */
 export class Matrix extends Events {

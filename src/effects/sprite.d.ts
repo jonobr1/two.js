@@ -9,7 +9,7 @@ declare module 'two.js/src/effects/sprite' {
      * @param {Number} [cols=1] - The number of columns the sprite contains.
      * @param {Number} [rows=1] - The number of rows the sprite contains.
      * @param {Number} [frameRate=0] - The frame rate at which the partitions of the image should playback at.
-     * @description A convenient package to display still or animated images through a tiled image source. For more information on the principals of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
+     * @description A convenient package to display still or animated images through a tiled image source. For more information on the principles of animated imagery through tiling see [Texture Atlas](https://en.wikipedia.org/wiki/Texture_atlas) on Wikipedia.
      */
   export class Sprite extends Rectangle {
     /**

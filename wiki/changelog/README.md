@@ -187,7 +187,7 @@ All notable changes to this project will be documented in this file. The format 
 <h3 class="visible">Jan 21, 2022</h3><version-link v="v0.8.2" />
 
 - Removed `#` private declared variables for better EcmaScript compatibility
-- Fixed `Two.Path.begining` and `Two.Path.ending` interpolation when `Two.Anchor.relative = false`
+- Fixed `Two.Path.beginning` and `Two.Path.ending` interpolation when `Two.Anchor.relative = false`
 - Added `Two.Utils.read.path(string)` which allows for string interpretation of an SVG path's `d` attribute
 - Added `Two.Shape.worldMatrix`
 

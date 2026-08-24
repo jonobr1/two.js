@@ -38,7 +38,7 @@ const proto = {
  * @extends Two.Events
  * @param {Number} [x=0] - Any number to represent the horizontal `x` component of the vector.
  * @param {Number} [y=0] - Any number to represent the vertical `y` component of the vector.
- * @description A class to store `x` / `y` component vector data. In addition to storing data `Two.Vector` has suped up methods for commonplace mathematical operations.
+ * @description A class to store `x` / `y` component vector data. In addition to storing data `Two.Vector` has souped-up methods for commonplace mathematical operations.
  */
 export class Vector extends Events {
   /**
@@ -147,7 +147,7 @@ export class Vector extends Events {
    * @function
    * @param {Two.Vector} v1 - First {@link Two.Vector}
    * @param {Two.Vector} v2 - Second {@link Two.Vector}
-   * @returns {Number} The ratio betwen two points `v1` and `v2`.
+   * @returns {Number} The ratio between two points `v1` and `v2`.
    */
   static ratioBetween(v1, v2) {
     return (v1.x * v2.x + v1.y * v2.y) / (v1.length() * v2.length());
@@ -421,7 +421,7 @@ export class Vector extends Events {
    * @name Two.Vector#multiplyScalar
    * @function
    * @param {Number} s - The scalar to multiply by.
-   * @description Mulitiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
+   * @description Multiply the vector by a single number. Shorthand to call {@link Two.Vector#multiply} directly.
    */
   multiplyScalar(s) {
     return this.multiply(s);
