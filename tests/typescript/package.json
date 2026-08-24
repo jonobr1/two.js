@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "tsc --project ../../tsconfig.types.json"
+    "test": "npm --prefix ../.. run types:check"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "two.js": "file:../../",
-    "typescript": "^5.2.2"
+    "two.js": "file:../../"
   }
 }
