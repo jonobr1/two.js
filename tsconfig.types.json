@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2015", "DOM"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2015",
+    "types": []
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "extras/**/*.d.ts",
+    "tests/typescript/index.ts"
+  ]
+}
