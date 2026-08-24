@@ -87,6 +87,14 @@ declare module 'two.js/src/effects/image' {
      */
     mode: ModeProperties;
     /**
+     * @name Two.Image#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Image}
+     * @description Create a new instance of {@link Two.Image} with the same properties as the current image.
+     */
+    clone(parent?: Group): Image;
+    /**
      * @name Two.Image#dispose
      * @function
      * @description Release the image's renderer resources and detach all events.
@@ -98,4 +106,5 @@ declare module 'two.js/src/effects/image' {
   }
   import { Rectangle } from 'two.js/src/shapes/rectangle';
   import { Texture } from 'two.js/src/effects/texture';
+  import { Group } from 'two.js/src/group';
 }

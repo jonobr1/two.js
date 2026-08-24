@@ -125,7 +125,7 @@ declare module 'two.js/src/shapes/arc-segment' {
      * @returns {Two.ArcSegment}
      * @description Create a new instance of {@link Two.ArcSegment} with the same properties of the current path.
      */
-    clone(parent: Group): ArcSegment;
+    clone(parent?: Group): ArcSegment;
   }
   import { Path } from 'two.js/src/path';
   import { Group } from 'two.js/src/group';

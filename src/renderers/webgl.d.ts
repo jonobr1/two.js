@@ -3,7 +3,7 @@ declare module 'two.js/src/renderers/webgl' {
      * @name Two.WebGLRenderer
      * @class
 
-     * @param {Object} [parameters] - This object is inherited when constructing a new instance of {@link Two}.
+     * @param {Object} parameters - This object is inherited when constructing a new instance of {@link Two}.
      * @param {Element} [parameters.domElement] - The `<canvas />` to draw to. If none given a new one will be constructed.
      * @param {HTMLCanvasElement} [parameters.offscreenElement] - The offscreen two dimensional `<canvas />` to render each element on WebGL texture updates.
      * @param {Boolean} [parameters.antialias] - Determines whether the canvas should clear render with antialias on.
@@ -64,7 +64,16 @@ declare module 'two.js/src/renderers/webgl' {
       };
       TextureRegistry: Registry;
     };
-    constructor(params?: any);
+    constructor(params: {
+      domElement?: HTMLCanvasElement;
+      offscreenElement?: HTMLCanvasElement;
+      antialias?: boolean;
+      alpha?: boolean;
+      premultipliedAlpha?: boolean;
+      stencil?: boolean;
+      preserveDrawingBuffer?: boolean;
+      overdraw?: boolean;
+    });
     /**
      * @name Two.WebGLRenderer#domElement
      * @property {Element} - The `<canvas />` associated with the Two.js scene.
