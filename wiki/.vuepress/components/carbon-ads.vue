@@ -46,7 +46,7 @@
   }
 
   #carbonads {
-    display: flex;
+    display: inline-flex;
     max-width: 330px;
     background-color: hsl(0, 0%, 98%);
     border: 1px solid #ddd;
@@ -78,6 +78,7 @@
 
   #carbonads .carbon-img {
     display: block;
+    min-width: 130px;
     margin: 0;
     line-height: 1;
   }
