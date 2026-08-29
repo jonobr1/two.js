@@ -11,9 +11,11 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## Nightly
+## August 28, 2026 v0.8.24
 
 - Separated type signatures into their own respective files
+- Improved types and jsdocs typos
+- Improved Two.Path.length, Two.Path.beginning, Two.Path.ending accuracy [@Xuepoo](https://github.com/Xuepoo)
 
 ## December 22, 2025 v0.8.23
 

@@ -1215,12 +1215,12 @@ var Two = (() => {
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: "v0.8.23",
+    Version: "v0.8.24",
     /**
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2026-08-23T16:26:56.016Z",
+    PublishDate: "2026-08-29T05:18:06.865Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -4829,6 +4829,17 @@ var Two = (() => {
   var ceil = Math.ceil;
   var floor2 = Math.floor;
   var vector = new Vector();
+  function scaleControl(anchor2, side, amount) {
+    const control = anchor2.controls && anchor2.controls[side];
+    if (!control) {
+      return;
+    }
+    if (anchor2.relative) {
+      control.multiplyScalar(amount);
+    } else {
+      control.lerp(anchor2, 1 - amount);
+    }
+  }
   var hitTestMatrix = new Matrix2();
   var Path = class _Path extends Shape {
     /**
@@ -5441,17 +5452,17 @@ var Two = (() => {
       let target = this.length * Math.min(Math.max(t, 0), 1);
       const length = this.vertices.length;
       const last = length - 1;
+      const closingEdgeSubpathStart = this._lengths.length === length + 1 ? this._closingSubpathStart : -1;
       let a = null;
       let b = null;
       for (let i = 0, l = this._lengths.length, sum = 0; i < l; i++) {
         if (sum + this._lengths[i] >= target) {
-          if (this._closed) {
-            ia = mod(i, length);
-            ib = mod(i - 1, length);
-            if (i === 0) {
-              ia = ib;
-              ib = i;
-            }
+          if (i === length) {
+            ia = closingEdgeSubpathStart;
+            ib = last;
+          } else if (this.vertices[i].command === Commands.close && this._closeSubpathStarts) {
+            ia = this._closeSubpathStarts[i];
+            ib = Math.max(i - 1, 0);
           } else {
             ia = i;
             ib = Math.min(Math.max(i - 1, 0), last);
@@ -5747,26 +5758,51 @@ var Two = (() => {
       }
       const length = this.vertices.length;
       const last = length - 1;
-      const closed = false;
-      let b = this.vertices[last];
+      const hasCloseVertex = length > 0 && this.vertices[last].command === Commands.close;
+      const needsImplicitClose = length > 1 && this._closed && !hasCloseVertex;
+      let subpathStart = 0;
+      this._closeSubpathStarts = [];
+      this._needsImplicitClose = needsImplicitClose;
+      let b = this.vertices[0];
       let sum = 0;
       if (typeof this._lengths === "undefined") {
         this._lengths = [];
       }
+      this._lengths.length = length;
       _.each(
         this.vertices,
         function(a, i) {
-          if (i <= 0 && !closed || a.command === Commands.move) {
+          if (i <= 0 || a.command === Commands.move) {
+            subpathStart = i;
             b = a;
             this._lengths[i] = 0;
             return;
           }
-          this._lengths[i] = getCurveLength2(a, b, limit);
+          if (a.command === Commands.close) {
+            this._closeSubpathStarts[i] = subpathStart;
+            this._lengths[i] = getCurveLength2(
+              this.vertices[subpathStart],
+              b,
+              limit
+            );
+            b = this.vertices[subpathStart];
+          } else {
+            this._lengths[i] = getCurveLength2(a, b, limit);
+            b = a;
+          }
           sum += this._lengths[i];
-          b = a;
         },
         this
       );
+      this._closingSubpathStart = subpathStart;
+      if (needsImplicitClose) {
+        this._lengths[length] = getCurveLength2(
+          this.vertices[subpathStart],
+          this.vertices[last],
+          limit
+        );
+        sum += this._lengths[length];
+      }
       this._length = sum;
       this._flagLength = false;
       return this;
@@ -5788,6 +5824,7 @@ var Two = (() => {
           this._updateLength(void 0, true);
         }
         const l = this._collection.length;
+        const last = l - 1;
         const closed = this._closed;
         const beginning = Math.min(this._beginning, this._ending);
         const ending = Math.max(this._beginning, this._ending);
@@ -5795,6 +5832,9 @@ var Two = (() => {
         const eid = getIdByLength(this, ending * this._length);
         const low = ceil(bid);
         const high = floor2(eid);
+        const rendersFullPath = beginning === 0 && ending === 1;
+        const trimStartsInImplicitClose = this._needsImplicitClose && bid > last;
+        const trimEndsInImplicitClose = this._needsImplicitClose && !rendersFullPath && eid > last;
         let left, right, prev, next, v, i;
         this._renderer.vertices.length = 0;
         for (i = 0; i < l; i++) {
@@ -5804,7 +5844,7 @@ var Two = (() => {
           if (i > high && !right) {
             v = this._renderer.collection[i].copy(this._collection[i]);
             this.getPointAt(ending, v);
-            v.command = this._renderer.collection[i].command;
+            v.command = this._collection[i].command === Commands.close ? Commands.line : this._renderer.collection[i].command;
             this._renderer.vertices.push(v);
             right = v;
             prev = this._collection[i - 1];
@@ -5822,6 +5862,13 @@ var Two = (() => {
             }
           } else if (i >= low && i <= high) {
             v = this._renderer.collection[i].copy(this._collection[i]);
+            if (!rendersFullPath && v.command === Commands.close) {
+              const closeStart = this._closeSubpathStarts[i];
+              if (typeof closeStart === "number") {
+                v.copy(this._collection[closeStart]);
+                v.command = Commands.line;
+              }
+            }
             this._renderer.vertices.push(v);
             if (i === high && contains(this, ending)) {
               right = v;
@@ -5845,6 +5892,47 @@ var Two = (() => {
             }
           }
         }
+        if (trimStartsInImplicitClose) {
+          const start = new Anchor();
+          const end = new Anchor();
+          this.getPointAt(beginning, start);
+          this.getPointAt(ending, end);
+          const closingIsCurve = this._collection[last].command === Commands.curve;
+          const u = start.t;
+          const t = end.t;
+          start.command = Commands.move;
+          start.controls.left.clear();
+          end.controls.right.clear();
+          if (closingIsCurve) {
+            const span = Math.max(t - u, 0);
+            scaleControl(start, "right", u < 1 ? span / (1 - u) : 0);
+            scaleControl(end, "left", t > 0 ? span / t : 0);
+            end.command = Commands.curve;
+          } else {
+            start.controls.right.clear();
+            end.controls.left.clear();
+            end.command = Commands.line;
+          }
+          this._renderer.vertices.length = 0;
+          this._renderer.vertices.push(start, end);
+          left = start;
+          right = end;
+        } else if (trimEndsInImplicitClose && !right) {
+          const end = new Anchor();
+          this.getPointAt(ending, end);
+          const departure = this._renderer.vertices[this._renderer.vertices.length - 1];
+          const closingIsCurve = this._collection[last].command === Commands.curve;
+          if (closingIsCurve) {
+            scaleControl(departure, "right", end.t);
+            end.command = Commands.curve;
+          } else {
+            end.controls.left.clear();
+            end.command = Commands.line;
+          }
+          end.controls.right.clear();
+          this._renderer.vertices.push(end);
+          right = end;
+        }
         if (low > 0 && !left) {
           i = low - 1;
           v = this._renderer.collection[i].copy(this._collection[i]);
@@ -5862,6 +5950,7 @@ var Two = (() => {
             }
           }
         }
+        this._renderer.closed = closed && beginning === 0 && ending === 1;
       }
       Shape.prototype._update.apply(this, arguments);
       return this;
@@ -5991,6 +6080,7 @@ var Two = (() => {
       set: function(v) {
         this._closed = !!v;
         this._flagVertices = true;
+        this._flagLength = true;
       }
     },
     curved: {
@@ -8968,7 +9058,7 @@ var Two = (() => {
     _alignment = "center";
     /**
      * @name Two.Text#baseline
-     * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+     * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'middle'`.
      * @nota-bene In headless environments where the canvas is based on {@link https://github.com/Automattic/node-canvas}, `baseline` seems to be the only valid property.
      */
     _baseline = "middle";
@@ -10141,7 +10231,7 @@ var Two = (() => {
     /**
      * @name Two.Group#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes should the renderer start drawing.
+     * @description {@link Two.Group#ending} is a percentage value that represents at what percentage into all child shapes the renderer should stop drawing.
      * @nota-bene This is great for animating in and out stroked paths in conjunction with {@link Two.Group#beginning}.
      */
     _ending = 1;
@@ -12522,7 +12612,7 @@ var Two = (() => {
         cap = this._cap;
         join = this._join;
         miter = this._miter;
-        closed = this._closed;
+        closed = this._renderer.closed;
         commands = this._renderer.vertices;
         length = commands.length;
         last = length - 1;
@@ -13606,7 +13696,10 @@ var Two = (() => {
           changed.id = this._id;
         }
         if (this._flagVertices) {
-          const vertices = svg.toString(this._renderer.vertices, this._closed);
+          const vertices = svg.toString(
+            this._renderer.vertices,
+            this._renderer.closed
+          );
           changed.d = vertices;
         }
         if (this._fill && this._fill._renderer) {
@@ -14413,7 +14506,7 @@ var Two = (() => {
         const cap = elem._cap;
         const join = elem._join;
         const miter = elem._miter;
-        const closed = elem._closed;
+        const closed = elem._renderer.closed;
         const dashes = elem.dashes;
         const length = commands.length;
         const last = length - 1;
@@ -16176,12 +16269,12 @@ var Two = (() => {
      * @param {Number} y
      * @param {Number} width
      * @param {Number} height
-     * @param {Number} sides
+     * @param {(Number|Two.Vector)} radius
      * @returns {Two.RoundedRectangle}
      * @description Creates a Two.js rounded rectangle and adds it to the scene.
      */
-    makeRoundedRectangle(x, y, width, height, sides) {
-      const rect = new RoundedRectangle(x, y, width, height, sides);
+    makeRoundedRectangle(x, y, width, height, radius) {
+      const rect = new RoundedRectangle(x, y, width, height, radius);
       this.scene.add(rect);
       return rect;
     }
@@ -16221,14 +16314,14 @@ var Two = (() => {
      * @function
      * @param {Number} x
      * @param {Number} y
-     * @param {Number} outerRadius
      * @param {Number} innerRadius
+     * @param {Number} outerRadius
      * @param {Number} sides
      * @returns {Two.Star}
      * @description Creates a Two.js star and adds it to the scene.
      */
-    makeStar(x, y, outerRadius, innerRadius, sides) {
-      const star = new Star(x, y, outerRadius, innerRadius, sides);
+    makeStar(x, y, innerRadius, outerRadius, sides) {
+      const star = new Star(x, y, innerRadius, outerRadius, sides);
       this.scene.add(star);
       return star;
     }
@@ -16409,7 +16502,7 @@ var Two = (() => {
      * @param {Number} radius
      * @param {...Two.Stop} args - Any number of color stops sometimes referred to as ramp stops. If none are supplied then the default black-to-white two stop gradient is applied.
      * @returns {Two.RadialGradient}
-     * @description Creates a Two.js linear-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
+     * @description Creates a Two.js radial-gradient object and adds it to the scene. In the case of an effect it's added to an invisible "definitions" group.
      */
     makeRadialGradient(x1, y1, radius) {
       const stops = Array.prototype.slice.call(arguments, 3);
