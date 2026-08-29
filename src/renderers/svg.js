@@ -458,7 +458,10 @@ const svg = {
       }
 
       if (this._flagVertices) {
-        const vertices = svg.toString(this._renderer.vertices, this._closed);
+        const vertices = svg.toString(
+          this._renderer.vertices,
+          this._renderer.closed
+        );
         changed.d = vertices;
       }
 
