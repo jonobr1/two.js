@@ -50,6 +50,20 @@ const min = Math.min,
   floor = Math.floor;
 
 const vector = new Vector();
+
+function scaleControl(anchor, side, amount) {
+  const control = anchor.controls && anchor.controls[side];
+  if (!control) {
+    return;
+  }
+
+  if (anchor.relative) {
+    control.multiplyScalar(amount);
+  } else {
+    control.lerp(anchor, 1 - amount);
+  }
+}
+
 const hitTestMatrix = new Matrix();
 
 /**
@@ -954,6 +968,15 @@ export class Path extends Shape {
           // matching real drawing order.
           ia = closingEdgeSubpathStart;
           ib = last;
+        } else if (
+          this.vertices[i].command === Commands.close &&
+          this._closeSubpathStarts
+        ) {
+          // An explicit Z closes to the most recent M. Its own coordinate is
+          // ignored by renderers and can still be the preceding point (as it
+          // is for intermediate Z commands emitted by interpret-svg).
+          ia = this._closeSubpathStarts[i];
+          ib = Math.max(i - 1, 0);
         } else {
           ia = i;
           ib = Math.min(Math.max(i - 1, 0), last);
@@ -1317,35 +1340,23 @@ export class Path extends Shape {
 
     // A path can be "closed" two different ways: the `closed` property
     // (implicit -- most primitives, e.g. Two.Rectangle) or a trailing
-    // Commands.close vertex from SVG `Z` (explicit -- the vertex itself
-    // already carries the closing edge's endpoint, so it's a normal
-    // segment like any other and needs no extra handling here).
+    // Commands.close vertex from SVG `Z` (explicit).
     const hasCloseVertex =
       length > 0 && this.vertices[last].command === Commands.close;
     const needsImplicitClose = length > 1 && this._closed && !hasCloseVertex;
 
-    // Closure targets the start of the LAST subpath (most recent
-    // Commands.move), not necessarily global vertex 0 -- a compound
-    // path (multiple M's, e.g. from `interpret(svg)`) only implicitly
-    // closes its final subpath; earlier subpaths get their own explicit
-    // Commands.close vertex from the SVG parser and are unaffected.
+    // Closure targets the start of the current subpath (most recent M), not
+    // necessarily global vertex zero. Cache explicit-Z targets for
+    // getPointAt and retain the final subpath start for an implicit close.
     let subpathStart = 0;
-    if (needsImplicitClose) {
-      for (let i = last; i >= 0; i--) {
-        if (this.vertices[i].command === Commands.move) {
-          subpathStart = i;
-          break;
-        }
-      }
-    }
+    this._closeSubpathStarts = [];
 
     // Cached for `_update()`'s render-trim loop, which needs to know
     // whether `_lengths` carries the appended virtual closing-edge entry
     // and, if so, which vertex it arrives at.
     this._needsImplicitClose = needsImplicitClose;
-    this._closingSubpathStart = subpathStart;
 
-    let b = this.vertices[last];
+    let b = this.vertices[0];
     let sum = 0;
 
     if (typeof this._lengths === 'undefined') {
@@ -1359,18 +1370,30 @@ export class Path extends Shape {
       this.vertices,
       function (a, i) {
         if (i <= 0 || a.command === Commands.move) {
+          subpathStart = i;
           b = a;
           this._lengths[i] = 0;
           return;
         }
 
-        this._lengths[i] = getCurveLength(a, b, limit);
+        if (a.command === Commands.close) {
+          this._closeSubpathStarts[i] = subpathStart;
+          this._lengths[i] = getCurveLength(
+            this.vertices[subpathStart],
+            b,
+            limit
+          );
+          b = this.vertices[subpathStart];
+        } else {
+          this._lengths[i] = getCurveLength(a, b, limit);
+          b = a;
+        }
         sum += this._lengths[i];
-
-        b = a;
       },
       this
     );
+
+    this._closingSubpathStart = subpathStart;
 
     if (needsImplicitClose) {
       // Append the closing edge (last real vertex -> start of the
@@ -1411,6 +1434,7 @@ export class Path extends Shape {
       }
 
       const l = this._collection.length;
+      const last = l - 1;
       const closed = this._closed;
 
       const beginning = Math.min(this._beginning, this._ending);
@@ -1421,6 +1445,12 @@ export class Path extends Shape {
 
       const low = ceil(bid);
       const high = floor(eid);
+
+      const rendersFullPath = beginning === 0 && ending === 1;
+      const trimStartsInImplicitClose =
+        this._needsImplicitClose && bid > last;
+      const trimEndsInImplicitClose =
+        this._needsImplicitClose && !rendersFullPath && eid > last;
 
       let left, right, prev, next, v, i;
 
@@ -1435,7 +1465,10 @@ export class Path extends Shape {
         if (i > high && !right) {
           v = this._renderer.collection[i].copy(this._collection[i]);
           this.getPointAt(ending, v);
-          v.command = this._renderer.collection[i].command;
+          v.command =
+            this._collection[i].command === Commands.close
+              ? Commands.line
+              : this._renderer.collection[i].command;
           this._renderer.vertices.push(v);
 
           right = v;
@@ -1462,6 +1495,17 @@ export class Path extends Shape {
           }
         } else if (i >= low && i <= high) {
           v = this._renderer.collection[i].copy(this._collection[i]);
+
+          // A Z command closes to the renderer path's current M, which can be
+          // a newly synthesized trim point. Materialize the original close
+          // target as a line whenever only part of the path is rendered.
+          if (!rendersFullPath && v.command === Commands.close) {
+            const closeStart = this._closeSubpathStarts[i];
+            if (typeof closeStart === 'number') {
+              v.copy(this._collection[closeStart]);
+              v.command = Commands.line;
+            }
+          }
           this._renderer.vertices.push(v);
 
           if (i === high && contains(this, ending)) {
@@ -1487,17 +1531,61 @@ export class Path extends Shape {
         }
       }
 
-      // The main loop above only ever visits real vertex indices
-      // [0, l), so a trim `ending` that lands inside the *appended*
-      // implicit closing edge (past the last real vertex, see
-      // `_updateLength`) is otherwise silently dropped -- `high` floors
-      // to `last` without ever satisfying `i > high` for a real index.
-      if (!right && ending < 1 && this._needsImplicitClose && high === l - 1) {
-        v = new Anchor();
-        this.getPointAt(ending, v);
-        v.command = Commands.line;
-        this._renderer.vertices.push(v);
-        right = v;
+      // The implicit closing edge has no real destination vertex in the
+      // collection. Materialize the trimmed portion as an open line / cubic
+      // so every renderer sees the same geometry. When both trim endpoints
+      // lie on the closing cubic, rescale the split handles to the [u, v]
+      // sub-curve rather than retaining handles for [u, 1] and [0, v].
+      if (trimStartsInImplicitClose) {
+        const start = new Anchor();
+        const end = new Anchor();
+        this.getPointAt(beginning, start);
+        this.getPointAt(ending, end);
+
+        const closingIsCurve =
+          this._collection[last].command === Commands.curve;
+        const u = start.t;
+        const t = end.t;
+
+        start.command = Commands.move;
+        start.controls.left.clear();
+        end.controls.right.clear();
+
+        if (closingIsCurve) {
+          const span = Math.max(t - u, 0);
+          scaleControl(start, 'right', u < 1 ? span / (1 - u) : 0);
+          scaleControl(end, 'left', t > 0 ? span / t : 0);
+          end.command = Commands.curve;
+        } else {
+          start.controls.right.clear();
+          end.controls.left.clear();
+          end.command = Commands.line;
+        }
+
+        this._renderer.vertices.length = 0;
+        this._renderer.vertices.push(start, end);
+        left = start;
+        right = end;
+      } else if (trimEndsInImplicitClose && !right) {
+        const end = new Anchor();
+        this.getPointAt(ending, end);
+
+        const departure =
+          this._renderer.vertices[this._renderer.vertices.length - 1];
+        const closingIsCurve =
+          this._collection[last].command === Commands.curve;
+
+        if (closingIsCurve) {
+          scaleControl(departure, 'right', end.t);
+          end.command = Commands.curve;
+        } else {
+          end.controls.left.clear();
+          end.command = Commands.line;
+        }
+        end.controls.right.clear();
+
+        this._renderer.vertices.push(end);
+        right = end;
       }
       // Prepend the trimmed point if necessary.
       if (low > 0 && !left) {

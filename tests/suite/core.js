@@ -1760,7 +1760,7 @@ QUnit.test('Two.Path closed beginning / ending trims', function (assert) {
 });
 
 QUnit.test('Two.Path compound explicit close length', function (assert) {
-  assert.expect(3);
+  assert.expect(7);
 
   // Mirrors the intermediate Commands.close anchor emitted by interpret-svg:
   // its coordinate remains at the current point because renderers ignore a
@@ -1795,6 +1795,37 @@ QUnit.test('Two.Path compound explicit close length', function (assert) {
   assert.ok(
     pointMatches(compound.getPointAt(0.5625), { x: 105, y: 100 }),
     'Traversal resumes at the second subpath without measuring the move between subpaths.'
+  );
+
+  compound.beginning = 0;
+  compound.ending = 0.4375;
+  compound._update();
+  var endingVertices = compound._renderer.vertices;
+  var endingVertex = endingVertices[endingVertices.length - 1];
+  assert.equal(
+    endingVertex.command,
+    Two.Commands.line,
+    'Ending inside an explicit close materializes a line instead of an early Z.'
+  );
+  assert.ok(
+    pointMatches(endingVertex, compound.getPointAt(0.4375)),
+    'The explicit-close renderer endpoint matches getPointAt.'
+  );
+
+  compound.beginning = 0.4375;
+  compound.ending = 0.5;
+  compound._update();
+  var closingVertices = compound._renderer.vertices;
+  assert.ok(
+    closingVertices.length === 2 &&
+      closingVertices[0].command === Two.Commands.move &&
+      closingVertices[1].command === Two.Commands.line,
+    'A trim window inside an explicit close is represented as move then line.'
+  );
+  assert.ok(
+    pointMatches(closingVertices[0], compound.getPointAt(0.4375)) &&
+      pointMatches(closingVertices[1], compound.getPointAt(0.5)),
+    'Both explicit-close trim-window endpoints match getPointAt.'
   );
 
   function pointMatches(a, b) {
