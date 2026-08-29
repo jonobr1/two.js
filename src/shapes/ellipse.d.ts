@@ -68,6 +68,15 @@ declare module 'two.js/src/shapes/ellipse' {
      * @description Copy the properties of one {@link Two.Ellipse} onto another.
      */
     copy(ellipse: Ellipse): Ellipse;
+    /**
+     * @name Two.Ellipse#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Ellipse}
+     * @description Create a new instance of {@link Two.Ellipse} with the same properties as the current ellipse.
+     */
+    clone(parent?: Group): Ellipse;
   }
   import { Path } from 'two.js/src/path';
+  import { Group } from 'two.js/src/group';
 }

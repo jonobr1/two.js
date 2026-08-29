@@ -510,7 +510,7 @@ Alignment of text in relation to [Two.Text.translation](/docs/text/#translation)
 <div class="properties">
 
 
-The vertical aligment of the text in relation to [Two.Text.translation](/docs/text/#translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+The vertical alignment of the text in relation to [Two.Text.translation](/docs/text/#translation)'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'middle'`.
 
 
 </div>
@@ -1657,5 +1657,4 @@ When `strokeAttenuation` is `false`, the stroke width is automatically adjusted 
 
 
 </div>
-
 

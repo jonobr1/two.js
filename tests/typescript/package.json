@@ -2,14 +2,12 @@
   "name": "typescript",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm --prefix ../.. run types:check"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "two.js": "file:../../",
-    "typescript": "^5.2.2"
+    "two.js": "file:../../"
   }
 }

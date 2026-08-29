@@ -65,7 +65,7 @@ declare module 'two.js/src/shapes/points' {
     size: number;
     /**
      * @name Two.Points#sizeAttenuation
-     * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarcy.
+     * @property {Boolean} - Boolean dictating whether Two.js should scale the size of the points based on its matrix hierarchy.
      * @description Set to `true` if you'd like the size of the points to be relative to the scale of its parents; `false` to disregard. Default is `false`.
      */
     sizeAttenuation: boolean;
@@ -78,7 +78,7 @@ declare module 'two.js/src/shapes/points' {
     /**
      * @name Two.Points#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description {@link Two.Points#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @description {@link Two.Points#ending} is a percentage value that represents at what percentage into the points the renderer should stop drawing.
      */
     ending: number;
     /**
@@ -128,7 +128,7 @@ declare module 'two.js/src/shapes/points' {
      * @name Two.Points#dashes
      * @type {number[] & { offset?: number }}
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
-     * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+     * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the points.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
     dashes: number[] & {
@@ -154,7 +154,7 @@ declare module 'two.js/src/shapes/points' {
      * @returns {Two.Points}
      * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
      */
-    clone(parent: Group): Points;
+    clone(parent?: Group): Points;
     /**
      * @name Two.Points#toObject
      * @function

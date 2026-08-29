@@ -60,7 +60,7 @@ declare module 'two.js/src/text' {
         dashes?: number[] & {
           offset?: number;
         };
-      }
+      },
     ): Text;
 
     constructor(
@@ -84,7 +84,7 @@ declare module 'two.js/src/text' {
         fill?: string | Gradient | Texture;
         stroke?: string | Gradient | Texture;
         dashes?: number[] & { offset?: number };
-      }
+      },
     );
     /**
      * @name Two.Text#_flagValue
@@ -211,7 +211,7 @@ declare module 'two.js/src/text' {
     value: string;
     /**
      * @name Two.Text#family
-     * @property {String} - The font family Two.js should attempt to regsiter for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
+     * @property {String} - The font family Two.js should attempt to register for rendering. The default value is `'sans-serif'`. Comma separated font names can be supplied as a "stack", similar to the CSS implementation of `font-family`.
      */
     family: string;
     /**
@@ -231,7 +231,7 @@ declare module 'two.js/src/text' {
     alignment: AlignmentProperties;
     /**
      * @name Two.Text#baseline
-     * @property {String} - The vertical aligment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'baseline'`.
+     * @property {String} - The vertical alignment of the text in relation to {@link Two.Text#translation}'s coordinates. Possible values include `'top'`, `'middle'`, `'bottom'`, and `'baseline'`. Defaults to `'middle'`.
      */
     baseline: BaselineProperties;
     /**
@@ -286,13 +286,13 @@ declare module 'two.js/src/text' {
     /**
      * @name Two.Text#mask
      * @property {Shape} - The shape whose alpha property becomes a clipping area for the text.
-     * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
      */
     mask: Shape | null | undefined;
     /**
      * @name Two.Text#clip
      * @property {Shape} - Object to define clipping area.
-     * @nota-bene This property is currently not working becuase of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
+     * @nota-bene This property is currently not working because of SVG spec issues found here {@link https://code.google.com/p/chromium/issues/detail?id=370951}.
      */
     clip: boolean;
     /**
@@ -305,6 +305,14 @@ declare module 'two.js/src/text' {
     dashes: number[] & {
       offset?: number;
     };
+    /**
+     * @name Two.Text#clone
+     * @function
+     * @param {Two.Group} [parent] - The parent group or scene to add the clone to.
+     * @returns {Two.Text}
+     * @description Create a new instance of {@link Two.Text} with the same properties as the current text.
+     */
+    clone(parent?: Group): Text;
     /**
      * @name Two.Text#strokeAttenuation
      * @property {Boolean} - When set to `true`, stroke width scales with transformations (default behavior). When `false`, stroke width remains constant in screen space.
@@ -356,6 +364,7 @@ declare module 'two.js/src/text' {
     flagReset(): Text;
   }
   import { Shape } from 'two.js/src/shape';
+  import { Group } from 'two.js/src/group';
   import { Gradient } from 'two.js/src/effects/gradient';
   import { Texture } from 'two.js/src/effects/texture';
   import { BoundingBox, Dimensions } from 'two.js';

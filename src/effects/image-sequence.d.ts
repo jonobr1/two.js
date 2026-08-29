@@ -144,7 +144,7 @@ declare module 'two.js/src/effects/image-sequence' {
      * @param {Two.ImageSequence} imageSequence - The reference {@link Two.ImageSequence}
      * @description Copy the properties of one {@link Two.ImageSequence} onto another.
      */
-    copy(imageSeqence: ImageSequence): ImageSequence;
+    copy(imageSequence: ImageSequence): ImageSequence;
     /**
      * @name Two.ImageSequence#play
      * @function
@@ -177,7 +177,7 @@ declare module 'two.js/src/effects/image-sequence' {
      * @returns {Two.ImageSequence}
      * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
      */
-    clone(parent: Group): ImageSequence;
+    clone(parent?: Group): ImageSequence;
     /**
      * @name Two.ImageSequence#dispose
      * @function

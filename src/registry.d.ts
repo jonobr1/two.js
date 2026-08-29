@@ -29,5 +29,13 @@ declare module 'two.js/src/registry' {
      * @description Get a registered value by its `id`.
      */
     get(id: string): any | null;
+    /**
+     * @name Two.Registry#contains
+     * @function
+     * @param {String} id - A unique identifier.
+     * @returns {Boolean}
+     * @description Convenience method to see if a value is registered to an `id` already.
+     */
+    contains(id: string): boolean;
   }
 }

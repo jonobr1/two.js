@@ -97,7 +97,7 @@ export class Points extends Shape {
     /**
      * @name Two.Points#ending
      * @property {Number} - Number between zero and one to state the ending of where the path is rendered.
-     * @description {@link Two.Points#ending} is a percentage value that represents at what percentage into the path should the renderer start drawing.
+     * @description {@link Two.Points#ending} is a percentage value that represents at what percentage into the points the renderer should stop drawing.
      */
     this.ending = 1;
 
@@ -155,7 +155,7 @@ export class Points extends Shape {
     /**
      * @name Two.Points#dashes
      * @property {Number[]} - Array of numbers. Odd indices represent dash length. Even indices represent dash space.
-     * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the text.
+     * @description A list of numbers that represent the repeated dash length and dash space applied to the stroke of the points.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
      */
     this.dashes = [];

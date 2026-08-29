@@ -2,7 +2,7 @@ declare module 'two.js/extras/jsm/zui' {
   /**
    * @name Two.ZUI
    * @class
-   * @param {Group} group - The scene or group to
+   * @param {Group} group - The scene or group to enable panning and zooming on.
    * @param {HTMLElement} [domElement=document.body] - The HTML Element to attach event listeners to.
    */
   export class ZUI {
@@ -16,7 +16,7 @@ declare module 'two.js/extras/jsm/zui' {
     static TranslateMatrix(m: any, x: any, y: any): any;
     static PositionToScale(pos: any): number;
     static ScaleToPosition(scale: any): number;
-    constructor(group?: Group, domElement?: HTMLElement);
+    constructor(group: Group, domElement?: HTMLElement);
     limits: {
       scale: {};
       x: {};
@@ -31,13 +31,25 @@ declare module 'two.js/extras/jsm/zui' {
     surfaceMatrix: Matrix;
     surfaces: any[];
     add(surface: any): ZUI;
-    addLimits(min: number, max: number, type?: number): ZUI;
-    clientToSurface(v?: { x?: number; y?: number; z?: number }): {
+    addLimits(min?: number, max?: number): ZUI;
+    clientToSurface(): { x: number; y: number; z: number };
+    clientToSurface(v: { x?: number; y?: number; z?: number }): {
       x: number;
       y: number;
       z: number;
     };
-    surfaceToClient(v?: { x?: number; y?: number; z?: number }): {
+    clientToSurface(x: number, y: number, z?: number): {
+      x: number;
+      y: number;
+      z: number;
+    };
+    surfaceToClient(): { x: number; y: number; z: number };
+    surfaceToClient(v: { x?: number; y?: number; z?: number }): {
+      x: number;
+      y: number;
+      z: number;
+    };
+    surfaceToClient(x: number, y: number, z?: number): {
       x: number;
       y: number;
       z: number;

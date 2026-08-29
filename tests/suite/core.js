@@ -891,7 +891,7 @@ QUnit.test('Children adding and removing', function (assert) {
     ~poly1.parent.additions.indexOf(poly1),
     'Can add objects to group (via object)'
   );
-  assert.equal(group1.children.length, 1, 'Correct childrens length');
+  assert.equal(group1.children.length, 1, 'Correct children length');
 
   group2.add(poly2);
   assert.equal(
@@ -904,7 +904,7 @@ QUnit.test('Children adding and removing', function (assert) {
     ~poly2.parent.additions.indexOf(poly2),
     'Can add objects to group (via group)'
   );
-  assert.equal(group2.children.length, 1, 'Correct childrens length');
+  assert.equal(group2.children.length, 1, 'Correct children length');
 
   group1.add(poly2);
   assert.equal(poly2, group1.children[1], 'Can reassign objects to group');
@@ -914,19 +914,19 @@ QUnit.test('Children adding and removing', function (assert) {
     'Can reassign objects to group'
   );
   assert.ok(!~group2.additions.indexOf(poly2), 'Can reassign objects to group');
-  assert.equal(group1.children.length, 2, 'Correct childrens length');
-  assert.equal(group2.children.length, 0, 'Correct childrens length');
+  assert.equal(group1.children.length, 2, 'Correct children length');
+  assert.equal(group2.children.length, 0, 'Correct children length');
 
   group3.add(group1);
   assert.equal(group1, group3.children[0], 'Can add groups to group');
   assert.equal(group3, group1.parent, 'Can add groups to group');
   assert.ok(~group3.additions.indexOf(group1), 'Can add groups to group');
-  assert.equal(group3.children.length, 1, 'Correct childrens length');
+  assert.equal(group3.children.length, 1, 'Correct children length');
 
   group1.add(poly3);
   group1.add(poly4);
   group1.add(poly5);
-  assert.equal(group1.children.length, 5, 'Correct childrens length');
+  assert.equal(group1.children.length, 5, 'Correct children length');
 
   group3.add(group1.children);
   assert.equal(
