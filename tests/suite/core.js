@@ -1537,3 +1537,272 @@ QUnit.test('Two.Path closed length / getPointAt', function (assert) {
     'A fully-drawn (ending = 1) closed path reports renderer.closed = true.'
   );
 });
+
+QUnit.test('Two.Path closed beginning / ending trims', function (assert) {
+  assert.expect(25);
+
+  var tolerance = 0.001;
+
+  function pointMatches(a, b) {
+    return (
+      !!a &&
+      !!b &&
+      Math.abs(a.x - b.x) < tolerance &&
+      Math.abs(a.y - b.y) < tolerance
+    );
+  }
+
+  function vectorMatches(a, b) {
+    return pointMatches(a, b);
+  }
+
+  // A beginning inside the implicit closing edge must retain the remainder
+  // of that edge instead of leaving the renderer with only a move point.
+  var rectangle = new Two.Rectangle(0, 0, 100, 100);
+  rectangle.beginning = 0.875;
+  rectangle.ending = 1;
+  rectangle._update();
+
+  var rectangleVertices = rectangle._renderer.vertices;
+  var rectangleStart = rectangleVertices[0];
+  var rectangleEnd = rectangleVertices[1];
+  var expectedRectangleStart = rectangle.getPointAt(0.875);
+  var expectedRectangleEnd = rectangle.getPointAt(1);
+
+  assert.equal(
+    rectangleVertices.length,
+    2,
+    'Beginning inside a straight closing edge retains its start and destination.'
+  );
+  assert.equal(
+    rectangleStart && rectangleStart.command,
+    Two.Commands.move,
+    'The trimmed closing edge begins with a move command.'
+  );
+  assert.equal(
+    rectangleEnd && rectangleEnd.command,
+    Two.Commands.line,
+    'The straight closing edge retains a line destination.'
+  );
+  assert.ok(
+    pointMatches(rectangleStart, expectedRectangleStart),
+    'The rendered beginning matches getPointAt(0.875).'
+  );
+  assert.ok(
+    pointMatches(rectangleEnd, expectedRectangleEnd),
+    'The rendered closing-edge destination matches getPointAt(1).'
+  );
+  assert.notOk(
+    rectangle._renderer.closed,
+    'The trimmed straight closing edge remains an open renderer path.'
+  );
+
+  // When ending lands inside an implicit closing Bezier, the appended
+  // destination must remain a curve and the departure handle on the last
+  // real anchor must be projected to the split point.
+  var endingEllipse = new Two.Ellipse(0, 0, 50, 30);
+  endingEllipse.beginning = 0;
+  endingEllipse.ending = 0.875;
+  endingEllipse._update();
+
+  var endingVertices = endingEllipse._renderer.vertices;
+  var endingPoint = endingEllipse.getPointAt(0.875);
+  var endingDestination = endingVertices[endingVertices.length - 1];
+  var endingDeparture = endingVertices[endingVertices.length - 2];
+  var originalDeparture =
+    endingEllipse.vertices[endingEllipse.vertices.length - 1];
+  var expectedDepartureRight = originalDeparture.controls.right
+    .clone()
+    .multiplyScalar(endingPoint.t);
+
+  assert.equal(
+    endingDestination && endingDestination.command,
+    Two.Commands.curve,
+    'Ending inside a closing Bezier appends a curve destination, not a line.'
+  );
+  assert.ok(
+    pointMatches(endingDestination, endingPoint),
+    'The closing Bezier endpoint matches getPointAt(0.875).'
+  );
+  assert.ok(
+    endingDestination &&
+      vectorMatches(endingDestination.controls.left, endingPoint.controls.left),
+    'The split endpoint retains its incoming Bezier control.'
+  );
+  assert.ok(
+    endingDeparture &&
+      vectorMatches(endingDeparture.controls.right, expectedDepartureRight),
+    'The final real anchor projects its outgoing control to the split point.'
+  );
+  assert.notOk(
+    endingEllipse._renderer.closed,
+    'Ending inside a closing Bezier produces an open renderer path.'
+  );
+
+  // Beginning inside the same closing Bezier is the symmetric case: emit a
+  // move at the split point followed by an explicit curve to vertex zero.
+  var beginningEllipse = new Two.Ellipse(0, 0, 50, 30);
+  beginningEllipse.beginning = 0.875;
+  beginningEllipse.ending = 1;
+  beginningEllipse._update();
+
+  var beginningVertices = beginningEllipse._renderer.vertices;
+  var beginningPoint = beginningEllipse.getPointAt(0.875);
+  var beginningDestination = beginningEllipse.getPointAt(1);
+  var beginningStart = beginningVertices[0];
+  var beginningEnd = beginningVertices[1];
+  var originalDestination = beginningEllipse.vertices[0];
+  var expectedDestinationLeft = originalDestination.controls.left
+    .clone()
+    .multiplyScalar(1 - beginningPoint.t);
+
+  assert.equal(
+    beginningVertices.length,
+    2,
+    'Beginning inside a closing Bezier retains the remaining curved segment.'
+  );
+  assert.equal(
+    beginningStart && beginningStart.command,
+    Two.Commands.move,
+    'The remaining closing Bezier starts with a move command.'
+  );
+  assert.equal(
+    beginningEnd && beginningEnd.command,
+    Two.Commands.curve,
+    'The remaining closing Bezier ends with an explicit curve command.'
+  );
+  assert.ok(
+    pointMatches(beginningStart, beginningPoint),
+    'The curved renderer beginning matches getPointAt(0.875).'
+  );
+  assert.ok(
+    pointMatches(beginningEnd, beginningDestination),
+    'The remaining curve ends at getPointAt(1).'
+  );
+  assert.ok(
+    beginningStart &&
+      vectorMatches(beginningStart.controls.right, beginningPoint.controls.right),
+    'The split beginning retains its outgoing Bezier control.'
+  );
+  assert.ok(
+    beginningEnd &&
+      vectorMatches(beginningEnd.controls.left, expectedDestinationLeft),
+    'The destination projects its incoming control from the split point.'
+  );
+  assert.notOk(
+    beginningEllipse._renderer.closed,
+    'Beginning inside a closing Bezier produces an open renderer path.'
+  );
+
+  // Both ends can lie inside the virtual closing segment. This is useful for
+  // moving-window animations where beginning and ending advance together.
+  var windowEllipse = new Two.Ellipse(0, 0, 50, 30);
+  windowEllipse.beginning = 0.8;
+  windowEllipse.ending = 0.9;
+  windowEllipse._update();
+
+  var windowVertices = windowEllipse._renderer.vertices;
+  var windowStart = windowVertices[0];
+  var windowEnd = windowVertices[1];
+
+  assert.equal(
+    windowVertices.length,
+    2,
+    'A trim window inside the closing Bezier has two renderer vertices.'
+  );
+  assert.ok(
+    windowStart &&
+      windowEnd &&
+      windowStart.command === Two.Commands.move &&
+      windowEnd.command === Two.Commands.curve,
+    'A closing-Bezier trim window is represented as move then curve.'
+  );
+  assert.ok(
+    pointMatches(windowStart, windowEllipse.getPointAt(0.8)) &&
+      pointMatches(windowEnd, windowEllipse.getPointAt(0.9)),
+    'Both trim-window endpoints match getPointAt.'
+  );
+  assert.ok(
+    windowStart &&
+      windowEnd &&
+      windowStart.controls.right.length() > 0 &&
+      windowEnd.controls.left.length() > 0,
+    'A closing-Bezier trim window preserves non-zero curve controls.'
+  );
+
+  // Renderer endpoints must agree with getPointAt on both sides of the seam
+  // where the final real segment transitions to the virtual closing segment.
+  var seamEpsilon = 1e-6;
+  var seamSamples = [0.75 - seamEpsilon, 0.75, 0.75 + seamEpsilon];
+  var endingContinuous = seamSamples.every(function (t) {
+    var shape = new Two.Ellipse(0, 0, 50, 30);
+    shape.ending = t;
+    shape._update();
+    var vertices = shape._renderer.vertices;
+    return pointMatches(vertices[vertices.length - 1], shape.getPointAt(t));
+  });
+  assert.ok(
+    endingContinuous,
+    'Ending remains continuous across the start of the closing Bezier.'
+  );
+
+  var beginningContinuous = seamSamples.every(function (t) {
+    var shape = new Two.Ellipse(0, 0, 50, 30);
+    shape.beginning = t;
+    shape.ending = 1;
+    shape._update();
+    return pointMatches(shape._renderer.vertices[0], shape.getPointAt(t));
+  });
+  assert.ok(
+    beginningContinuous,
+    'Beginning remains continuous across the start of the closing Bezier.'
+  );
+});
+
+QUnit.test('Two.Path compound explicit close length', function (assert) {
+  assert.expect(3);
+
+  // Mirrors the intermediate Commands.close anchor emitted by interpret-svg:
+  // its coordinate remains at the current point because renderers ignore a
+  // Z coordinate and close back to the most recent M themselves.
+  var compound = new Two.Path(
+    [
+      new Two.Anchor(0, 0, 0, 0, 0, 0, Two.Commands.move),
+      new Two.Anchor(10, 0, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(10, 10, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(0, 10, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(0, 10, 0, 0, 0, 0, Two.Commands.close),
+      new Two.Anchor(100, 100, 0, 0, 0, 0, Two.Commands.move),
+      new Two.Anchor(110, 100, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(110, 110, 0, 0, 0, 0, Two.Commands.line),
+      new Two.Anchor(100, 110, 0, 0, 0, 0, Two.Commands.line),
+    ],
+    true,
+    false,
+    true
+  );
+  compound._update();
+
+  assert.equal(
+    compound.length,
+    80,
+    'Explicit-closed subpath 1 and implicit-closed subpath 2 both contribute their full perimeters.'
+  );
+  assert.ok(
+    pointMatches(compound.getPointAt(0.5), { x: 0, y: 0 }),
+    'The halfway point is the first subpath start reached by its explicit close.'
+  );
+  assert.ok(
+    pointMatches(compound.getPointAt(0.5625), { x: 105, y: 100 }),
+    'Traversal resumes at the second subpath without measuring the move between subpaths.'
+  );
+
+  function pointMatches(a, b) {
+    return (
+      !!a &&
+      !!b &&
+      Math.abs(a.x - b.x) < 0.001 &&
+      Math.abs(a.y - b.y) < 0.001
+    );
+  }
+});
