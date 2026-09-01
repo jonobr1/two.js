@@ -57,8 +57,11 @@
   "license": "MIT",
   "devDependencies": {
     "@types/minimatch": "^6.0.0",
-    "@vuepress/plugin-google-analytics": "^1.8.2",
-    "@vuepress/plugin-nprogress": "^1.5.4",
+    "@vuepress/bundler-vite": "2.0.0-rc.30",
+    "@vuepress/plugin-google-analytics": "2.0.0-rc.130",
+    "@vuepress/plugin-redirect": "2.0.0-rc.131",
+    "@vuepress/plugin-search": "2.0.0-rc.131",
+    "@vuepress/theme-default": "2.0.0-rc.132",
     "babel-eslint": "^10.1.0",
     "chalk": "^2.4.2",
     "commander": "^2.20.3",
@@ -66,11 +69,12 @@
     "eslint": "^7.8.1",
     "esm": "^3.2.25",
     "gzip-size": "^5.1.1",
-    "jsdoc": "^3.6.6",
-    "jsdoc-api": "^6.0.0",
+    "jsdoc": "^4.0.5",
+    "jsdoc-api": "^9.3.6",
+    "sass": "^1.103.1",
     "typescript": "^4.5.4",
-    "vuepress": "^1.9.5",
-    "vuepress-plugin-sitemap": "^2.3.1"
+    "vue": "^3.5.40",
+    "vuepress": "2.0.0-rc.30"
   },
   "autoupdate": {
     "source": "git",
