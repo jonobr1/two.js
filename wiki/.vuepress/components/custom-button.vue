@@ -4,7 +4,8 @@
     <span ref="label" class="label">
       {{ text }}
     </span>
-    <span v-if="displaySize" ref="size" class="size">
+    {{ ' ' }}
+    <span ref="size" class="size">
       {{ displaySize }}
     </span>
   </a>
@@ -55,7 +56,7 @@ export default {
 
 <style scoped>
 a.button {
-  background: rgb(232 251 247);
+  background: rgb(242 251 250);
   border: 2px solid var(--two-green);
   border-radius: 9999px;
   color: var(--two-green);

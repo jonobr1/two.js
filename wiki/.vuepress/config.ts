@@ -55,6 +55,10 @@ const twoDocsPlugin = () => ({
   name: 'two-docs-plugin',
   alias: {
     '@two-file-sizes': path.resolve(projectRoot, 'utils/file-sizes.json'),
+    '@theme/VPPageMeta.vue': path.resolve(
+      configDir,
+      'components/vp-page-meta.vue',
+    ),
   },
   extendsPage(page) {
     if (!Array.isArray(page.headers)) {
@@ -156,9 +160,9 @@ export default defineUserConfig({
     hostname: 'https://two.js.org',
     colorMode: 'light',
     colorModeSwitch: false,
-    repo: 'jonobr1/two.js',
-    repoLabel: 'GitHub',
+    docsRepo: 'https://github.com/jonobr1/two.js',
     logo: '/images/logo.svg',
+    externalLinkIcon: false,
     docsDir: 'wiki',
     docsBranch: 'dev',
     editLink: true,
@@ -187,8 +191,10 @@ export default defineUserConfig({
     },
     themePlugins: {
       activeHeaderLinks: false,
+      backToTop: false,
+      copyCode: false,
       prismjs: {
-        lineNumbers: true,
+        lineNumbers: false,
         preloadLanguages: ['bash', 'javascript', 'jsdoc', 'markdown', 'yaml'],
       },
       sitemap: {

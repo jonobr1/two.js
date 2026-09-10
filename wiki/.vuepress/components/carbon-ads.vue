@@ -49,7 +49,7 @@ export default {
   background-color: hsl(0deg 0% 98%);
   border: 1px solid #ddd;
   border-radius: 4px;
-  display: flex;
+  display: inline-flex;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial,
     sans-serif;
@@ -83,6 +83,7 @@ export default {
   display: block;
   line-height: 1;
   margin: 0;
+  min-width: 130px;
 }
 
 #carbonads .carbon-img img {
