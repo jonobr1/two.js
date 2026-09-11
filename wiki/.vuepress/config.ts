@@ -14,11 +14,23 @@ const sourceFiles = require('../../utils/source-files');
 const configDir = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(configDir, '../..');
 const gaMeasurementId = 'G-SWY5MWPRFR';
-const root = { text: 'Base', children: [] as string[] };
-const effects = { text: 'Effects', children: [] as string[] };
-const renderers = { text: 'Renderers', children: [] as string[] };
-const shapes = { text: 'Shapes', children: [] as string[] };
-const extras = { text: 'Extras', children: [] as string[] };
+const root = { text: 'Base', collapsible: true, children: [] as string[] };
+const effects = {
+  text: 'Effects',
+  collapsible: true,
+  children: [] as string[],
+};
+const renderers = {
+  text: 'Renderers',
+  collapsible: true,
+  children: [] as string[],
+};
+const shapes = {
+  text: 'Shapes',
+  collapsible: true,
+  children: [] as string[],
+};
+const extras = { text: 'Extras', collapsible: true, children: [] as string[] };
 const sidebarForDocs = [root, effects, renderers, shapes, extras];
 const changelogSidebar = ['/changelog/'];
 

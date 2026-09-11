@@ -523,7 +523,7 @@ body {
 
 .docs {
   .vp-sidebar {
-    .vp-sidebar-children {
+    .vp-sidebar-children .vp-sidebar-children {
       font-size: 1rem;
       margin-left: 1rem;
       padding-left: 0;
@@ -543,6 +543,24 @@ body {
         &.active {
           color: $green;
         }
+      }
+    }
+
+    .vp-sidebar-heading {
+      font-size: 1rem;
+      transition: color 0.2s;
+
+      &:hover,
+      &.active {
+        color: $green;
+      }
+
+      &.active:hover {
+        color: $orange;
+      }
+
+      .arrow {
+        display: none;
       }
     }
   }
