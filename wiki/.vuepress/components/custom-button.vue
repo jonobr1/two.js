@@ -141,6 +141,10 @@ a.button span {
 }
 
 @media (max-width: 719px) {
+  a.button {
+    margin-inline-end: 1.25rem;
+  }
+
   a.button.source {
     bottom: 1rem;
     padding: 0.5rem 1.25rem;

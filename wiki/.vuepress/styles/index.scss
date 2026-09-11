@@ -86,6 +86,49 @@ html {
       padding-inline-start: 2.5rem;
       vertical-align: top;
       width: 25.625rem;
+
+      &:focus {
+        border-color: color.mix(white, $orange, 50%);
+      }
+
+      &::-webkit-search-cancel-button {
+        appearance: none;
+      }
+    }
+
+    .suggestions {
+      border-color: color.mix(white, $orange, 50%);
+      border-radius: 6px;
+      inset-inline-end: auto;
+      left: 0;
+      padding: 0;
+      top: 1.85rem;
+      width: 100%;
+    }
+
+    .suggestion {
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: normal;
+      line-height: normal;
+      padding: 0.75rem 1.25rem;
+
+      a {
+        color: var(--two-text-muted);
+      }
+
+      &.focus {
+        background-color: color.mix(white, $orange, 92%);
+
+        a {
+          color: var(--two-orange);
+        }
+      }
+
+      .page-header {
+        font-size: 0.9em;
+        margin-inline-start: 0.25em;
+      }
     }
   }
 }
@@ -756,14 +799,54 @@ div[class*="language-"] {
     }
 
     .vp-navbar-items-wrapper {
-      inset-inline-end: 0;
+      inset-inline: 0 1.5rem;
+      padding-inline-start: 1.5rem;
+    }
+
+    .vp-navbar-items.vp-hide-mobile {
+      display: inline-block;
+    }
+
+    .vp-navbar-item > .auto-link {
+      font-weight: 600;
+      padding: 0 0.5rem;
     }
 
     .search-box {
       background-color: #fff;
+      height: 3rem;
       left: 0;
+      line-height: 3rem;
       top: 3.5rem;
-      width: 100%;
+      width: 100vw;
+
+      input,
+      input:focus {
+        background-position: 0.5rem 0.75rem;
+        border-color: #e6e6e6;
+        border-left: none;
+        border-radius: 0;
+        border-right: none;
+        cursor: text;
+        height: 3rem;
+        inset-inline-start: 0;
+        max-width: 100vw;
+        width: 100vw;
+      }
+
+      input:focus {
+        border-bottom-color: color.mix(white, $orange, 50%);
+        border-top-color: color.mix(white, $orange, 50%);
+      }
+
+      .suggestions {
+        border-left: 0;
+        border-radius: 0;
+        border-right: 0;
+        inset-inline: 0;
+        top: 2.85rem;
+        width: 100%;
+      }
     }
   }
 
@@ -777,7 +860,7 @@ div[class*="language-"] {
 
   .vp-page {
     padding-bottom: 4rem !important;
-    padding-top: 4rem;
+    padding-top: 7.5rem;
   }
 
   [vp-content] {
