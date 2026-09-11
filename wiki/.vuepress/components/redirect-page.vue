@@ -15,7 +15,7 @@ export default {
     if (/^https?:\/\//i.test(this.src)) {
       window.location.replace(this.src);
     } else if (this.src) {
-      this.$router.replace(this.src);
+      this.$router.replace(this.src).catch(() => {});
     }
   },
 };

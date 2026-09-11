@@ -17,6 +17,8 @@
 var beautifyOptions = {
   indent_size: 2,
 };
+var embedScript;
+var embedInstances = 0;
 
 export default {
   name: 'InlineEditor',
@@ -58,16 +60,25 @@ export default {
       return;
     }
 
-    this.embedScript = document.createElement('script');
-    this.embedScript.type = 'text/javascript';
-    this.embedScript.className = 'codepen';
-    this.embedScript.async = true;
-    this.embedScript.src = 'https://static.codepen.io/assets/embed/ei.js';
-    document.body.appendChild(this.embedScript);
+    embedInstances++;
+
+    if (!embedScript) {
+      embedScript = document.createElement('script');
+      embedScript.type = 'text/javascript';
+      embedScript.className = 'codepen';
+      embedScript.async = true;
+      embedScript.src = 'https://static.codepen.io/assets/embed/ei.js';
+      document.body.appendChild(embedScript);
+    }
   },
   beforeUnmount() {
-    if (this.embedScript && this.embedScript.parentNode) {
-      this.embedScript.parentNode.removeChild(this.embedScript);
+    embedInstances = Math.max(0, embedInstances - 1);
+
+    if (embedInstances === 0 && embedScript) {
+      if (embedScript.parentNode) {
+        embedScript.parentNode.removeChild(embedScript);
+      }
+      embedScript = undefined;
     }
   },
 };
