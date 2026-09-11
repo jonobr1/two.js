@@ -47,6 +47,7 @@ for (let i = 0; i < sourceFiles.length; i++) {
 
 const redirectConfig = {
   '/projects/': '/examples/',
+  '/docs': '/docs/',
   '/docs/': '/docs/two/',
   '/change-log/': '/changelog/',
 };
