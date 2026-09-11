@@ -80,6 +80,7 @@ html {
     input {
       border-color: #cfd4db;
       color: #666;
+      font-family: var(--two-font-family);
       font-size: 1rem;
       font-weight: 600;
       height: 2.125rem;
@@ -738,9 +739,9 @@ table tr:last-child td:last-child {
   }
 }
 
-.vp-theme-container .vp-sidebar-mask {
-  display: block !important;
-}
+// .vp-theme-container .vp-sidebar-mask {
+//   display: block !important;
+// }
 
 div[class*="language-"] {
   background: rgba(255, 244, 95, 0.2);
