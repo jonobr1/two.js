@@ -732,6 +732,17 @@ table tr:last-child td:last-child {
   margin: 0 0 1.25rem 0;
 }
 
+.vp-sidebar {
+  scrollbar-color: auto;
+  scrollbar-width: auto;
+
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-thumb {
+    all: revert;
+  }
+}
+
 .vp-sidebar,
 .vp-page {
   transition: opacity 0.35s ease-in-out;
