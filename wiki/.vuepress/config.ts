@@ -161,6 +161,7 @@ export default defineUserConfig({
     colorMode: 'light',
     colorModeSwitch: false,
     docsRepo: 'https://github.com/jonobr1/two.js',
+    home: '/',
     logo: '/images/logo.svg',
     externalLinkIcon: false,
     docsDir: 'wiki',

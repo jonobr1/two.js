@@ -40,12 +40,14 @@ html {
     inset-inline: 0 var(--navbar-padding-h);
     max-width: none !important;
     padding-inline-start: 0;
+    pointer-events: none;
     top: 0;
   }
 
   .vp-navbar-items {
     font-size: 1rem;
     margin-inline-start: auto;
+    pointer-events: auto;
   }
 
   .vp-navbar-item {
@@ -71,9 +73,10 @@ html {
 
   .search-box {
     height: 2.2rem;
-    left: calc((100% - var(--content-width)) / 2 + 0.75rem);
+    left: 9.25rem;
     line-height: 2.2rem;
     margin-inline-start: 0;
+    pointer-events: auto;
     position: absolute;
     top: 0.7rem;
 
@@ -84,9 +87,11 @@ html {
       font-size: 1rem;
       font-weight: 600;
       height: 2.125rem;
+      max-width: 22.5rem;
       padding-inline-start: 2.5rem;
+      transition: all 0.2s ease;
       vertical-align: top;
-      width: 25.625rem;
+      width: 33.3vw;
 
       &:focus {
         border-color: color.mix(white, $orange, 50%);
@@ -795,6 +800,10 @@ div[class*="language-"] {
   .vp-navbar {
     border-bottom: none;
     padding: 0;
+
+    .vp-toggle-sidebar-button {
+      display: none;
+    }
 
     > span > .route-link {
       padding: 0.7rem 0;
