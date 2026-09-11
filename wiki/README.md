@@ -70,6 +70,7 @@ For a list of all properties and construction parameters check out the [document
 :::
 
 <inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
+<pre>
 // Make an instance of two and place it on the page.
 var params = { fullscreen: true };
 var elem = document.body;
@@ -98,7 +99,7 @@ rect.noStroke();
 
 // Don’t forget to tell two to draw everything to the screen
 two.update();
-
+</pre>
 </inline-editor>
 
 ## Shapes and Groups
@@ -108,6 +109,7 @@ two.update();
 Adding shapes to groups makes managing multiple shapes easier and more sane. Groups provide an easy way to move your content through `position`, `rotation`, and `scale`. These operations emit from the coordinate space `(0, 0)`. In the example below we can see that the initial orientation of the circle and rectangle changed from the first example. These shapes are oriented around `(0, 0)`, which allows us to transform the group around the centroid of the shapes. In addition, a Group's styling operations trickle down and apply to each shape.
 
 <inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
+<pre>
 var params = { fullscreen: true }
 var elem = document.body;
 var two = new Two(params).appendTo(elem);
@@ -131,7 +133,7 @@ group.scale = 0.75;
 group.linewidth = 7;
 
 two.update();
-
+</pre>
 </inline-editor>
 
 ## Adding Motion
@@ -143,6 +145,7 @@ Finally, let's add some motion to our shapes. So far the examples use `two.updat
 The second method is `two.bind();` This method takes a string as its first parameter indicating what event to listen to and a function as its second argument delineating what to do when the event described in the first parameter happens. To sync a function with the animation loop simply invoke `two.bind('update', referenceToFunction);` as outlined below:
 
 <inline-editor scripts="https://cdn.jsdelivr.net/npm/two.js@latest/build/two.js">
+<pre>
 var params = { fullscreen: true };
 var elem = document.body;
 var two = new Two(params).appendTo(elem);
@@ -173,7 +176,7 @@ function update(frameCount) {
   group.scale += t;
   group.rotation += t * 4 * Math.PI;
 }
-
+</pre>
 </inline-editor>
 
 ### Next Steps
