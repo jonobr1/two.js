@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ## August 28, 2026 v0.8.24
 
+<h3 class="visible">Aug 28, 2026</h3><version-link v="v0.8.24" />
+
 - Separated type signatures into their own respective files
 - Improved types and jsdocs typos
 - Improved Two.Path.length, Two.Path.beginning, Two.Path.ending accuracy [@Xuepoo](https://github.com/Xuepoo)
