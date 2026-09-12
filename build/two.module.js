@@ -1228,7 +1228,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2026-08-29T05:18:06.865Z",
+  PublishDate: "2026-09-12T00:25:24.636Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -5920,7 +5920,6 @@ var _Path = class _Path extends Shape {
         this._renderer.vertices.length = 0;
         this._renderer.vertices.push(start, end);
         left = start;
-        right = end;
       } else if (trimEndsInImplicitClose && !right) {
         const end = new Anchor();
         this.getPointAt(ending, end);
@@ -5935,7 +5934,6 @@ var _Path = class _Path extends Shape {
         }
         end.controls.right.clear();
         this._renderer.vertices.push(end);
-        right = end;
       }
       if (low > 0 && !left) {
         i = low - 1;

@@ -1878,8 +1878,8 @@ The sum of distances between all [Two.Path.vertices](/docs/path/#vertices).
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1780">
-    path.js:1780
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1778">
+    path.js:1778
   </a>
 
 </div>
@@ -1925,8 +1925,8 @@ The shape whose alpha property becomes a clipping area for the path.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1890">
-    path.js:1890
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1888">
+    path.js:1888
   </a>
 
 </div>
@@ -1982,8 +1982,8 @@ Tells Two.js renderer if this object represents a mask for another object (or no
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1911">
-    path.js:1911
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1909">
+    path.js:1909
   </a>
 
 </div>
@@ -2035,8 +2035,8 @@ When `strokeAttenuation` is `false`, the stroke width is automatically adjusted 
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1939">
-    path.js:1939
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/path.js#L1937">
+    path.js:1937
   </a>
 
 </div>
