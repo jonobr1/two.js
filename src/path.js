@@ -1565,7 +1565,6 @@ export class Path extends Shape {
         this._renderer.vertices.length = 0;
         this._renderer.vertices.push(start, end);
         left = start;
-        right = end;
       } else if (trimEndsInImplicitClose && !right) {
         const end = new Anchor();
         this.getPointAt(ending, end);
@@ -1585,7 +1584,6 @@ export class Path extends Shape {
         end.controls.right.clear();
 
         this._renderer.vertices.push(end);
-        right = end;
       }
       // Prepend the trimmed point if necessary.
       if (low > 0 && !left) {
