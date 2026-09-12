@@ -6,6 +6,8 @@ docs.json
 dist
 .idea
 .codacy
+wiki/.vuepress/.cache/
+wiki/.vuepress/.temp/
 
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md

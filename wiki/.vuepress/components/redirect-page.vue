@@ -3,17 +3,20 @@
 </template>
 
 <script>
-  module.exports = {
-    name: 'redirect-page',
-    props: {
-      src: String
+export default {
+  name: 'RedirectPage',
+  props: {
+    src: {
+      type: String,
+      default: '',
     },
-    mounted: function() {
-      if (/^https:\/\//i.test(this._props.src)) {
-        window.location.href = this._props.src;
-      } else {
-        this.$router.replace(this._props.src).catch(() => {});
-      }
+  },
+  mounted() {
+    if (/^https?:\/\//i.test(this.src)) {
+      window.location.replace(this.src);
+    } else if (this.src) {
+      this.$router.replace(this.src).catch(() => {});
     }
-  };
+  },
+};
 </script>

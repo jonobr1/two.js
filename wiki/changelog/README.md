@@ -11,13 +11,15 @@ All notable changes to this project will be documented in this file. The format 
 
 <carbon-ads />
 
-## August 28, 2026 v0.8.24
+## Aug 28, 2026 v0.8.24
+
+<h3 class="visible">Aug 28, 2026</h3><version-link v="v0.8.24" />
 
 - Separated type signatures into their own respective files
 - Improved types and jsdocs typos
 - Improved Two.Path.length, Two.Path.beginning, Two.Path.ending accuracy [@Xuepoo](https://github.com/Xuepoo)
 
-## December 22, 2025 v0.8.23
+## Dec 22, 2025 v0.8.23
 
 <h3 class="visible">Dec 22, 2025</h3><version-link v="v0.8.23" />
 
@@ -25,7 +27,7 @@ All notable changes to this project will be documented in this file. The format 
 - Added `Two.Shape.dispose`
 - Added test suite for `dispose` methods
 
-## December 3, 2025 v0.8.22
+## Dec 3, 2025 v0.8.22
 
 <h3 class="visible">Dec 3, 2025</h3><version-link v="v0.8.22" />
 
@@ -34,7 +36,7 @@ All notable changes to this project will be documented in this file. The format 
 - Added `Two.Path.contains`, `Two.Group.contains`, and `Two.Shape.contains` method for hit testing
 - Added `Two.getShapesAtPoint` and `Two.Group.getShapesAtPoint` with visibility/filter options
 
-## October 1, 2025 v0.8.21
+## Oct 1, 2025 v0.8.21
 
 <h3 class="visible">Oct 1, 2025</h3><version-link v="v0.8.21" />
 
@@ -47,7 +49,7 @@ All notable changes to this project will be documented in this file. The format 
 - Enabled Code Scanning
 - Added more tests for security vulnerabilities
 
-## September 8, 2025 v0.8.20
+## Sep 8, 2025 v0.8.20
 
 <h3 class="visible">Sep 8, 2025</h3><version-link v="v0.8.20" />
 
@@ -59,7 +61,7 @@ All notable changes to this project will be documented in this file. The format 
 - Improved `Two.ImageSequence` to take all optional arguments on instantiation
 - Fixed command setting on `Two.Line.left` and `Two.Line.right`
 
-## June 27, 2025 v0.8.19
+## Jun 27, 2025 v0.8.19
 
 <h3 class="visible">Jun 27, 2025</h3><version-link v="v0.8.19" />
 
@@ -67,7 +69,7 @@ All notable changes to this project will be documented in this file. The format 
 - Improved TypeScript types for the `Two.Element.renderer` property
 - Added `Two.Element.renderer.onBeforeRender` and `Two.Element.renderer.onAfterRender` for higher context manipulation
 
-## April 8, 2025 v0.8.18
+## Apr 8, 2025 v0.8.18
 
 <h3 class="visible">Apr 8, 2025</h3><version-link v="v0.8.18" />
 

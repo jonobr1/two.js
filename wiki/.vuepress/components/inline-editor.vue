@@ -5,83 +5,116 @@
     data-editable="true"
     data-theme-id="40346"
     data-height="500"
-    class="codepen">
-
-      <pre data-lang="html"></pre>
-      <pre data-lang="css" data-options-autoprefixer="true"></pre>
-      <pre data-lang="js" ref="pre"></pre>
-
+    class="codepen"
+  >
+    <pre data-lang="html"></pre>
+    <pre data-lang="css" data-options-autoprefixer="true"></pre>
+    <pre data-lang="js" ref="pre"></pre>
   </div>
-
 </template>
 
 <script>
+var beautifyOptions = {
+  indent_size: 2,
+};
+var embedScript;
+var embedInstances = 0;
 
-  var beautifyOptions = {
-    indent_size: 2
-  };
+export default {
+  name: 'InlineEditor',
+  props: {
+    title: String,
+    description: String,
+    tags: String,
+    scripts: String,
+  },
+  computed: {
+    prefill() {
+      var result = {};
+      var props = this.$props;
 
-  module.exports = {
-    name: 'inline-editor',
-    computed: {
-      prefill() {
-        var result = {};
-        var props = this._props;
-        if (props.title) {
-          result.title = props.title;
-        }
-        if (props.description) {
-          result.description = props.description;
-        }
-        if (props.tags) {
-          result.tags = props.tags.split(',');
-        }
-        if (props.scripts) {
-          result.scripts = props.scripts.split(',');
-        }
-        return JSON.stringify(result);
+      if (props.title) {
+        result.title = props.title;
       }
-    },
-    props: {
-      scripts: String
-    },
-    mounted: function() {
+      if (props.description) {
+        result.description = props.description;
+      }
+      if (props.tags) {
+        result.tags = props.tags.split(',');
+      }
+      if (props.scripts) {
+        result.scripts = props.scripts.split(',');
+      }
 
-      var textContent = getTextContent(this.$slots.default);
-      this.$refs.pre.innerHTML = textContent;
-
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.className = 'codepen';
-      script.async = '';
-      script.src = 'https://static.codepen.io/assets/embed/ei.js';
-      document.body.appendChild(script);
-
+      return JSON.stringify(result);
     },
-    beforeDestroyed: function() {
-      // TODO: Maybe remove all script tags that are codepen references
+  },
+  mounted() {
+    var textContent = getTextContent(
+      this.$slots.default ? this.$slots.default() : []
+    );
+
+    this.$refs.pre.textContent = textContent;
+
+    if (typeof document === 'undefined') {
+      return;
     }
-  };
 
-  function getTextContent(nodes) {
-    var result = '';
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      if (node.children && node.children.length > 0) {
-        if (result !== '') {
-          result += '\n';
-        }
-        result += getTextContent(node.children);
+    embedInstances++;
+
+    if (!embedScript) {
+      embedScript = document.createElement('script');
+      embedScript.type = 'text/javascript';
+      embedScript.className = 'codepen';
+      embedScript.async = true;
+      embedScript.src = 'https://static.codepen.io/assets/embed/ei.js';
+      document.body.appendChild(embedScript);
+    }
+  },
+  beforeUnmount() {
+    embedInstances = Math.max(0, embedInstances - 1);
+
+    if (embedInstances === 0 && embedScript) {
+      if (embedScript.parentNode) {
+        embedScript.parentNode.removeChild(embedScript);
+      }
+      embedScript = undefined;
+    }
+  },
+};
+
+function getTextContent(nodes) {
+  var result = '';
+
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+
+    if (!node) {
+      continue;
+    }
+
+    if (Array.isArray(node)) {
+      result += getTextContent(node);
+      continue;
+    }
+
+    if (Array.isArray(node.children) && node.children.length > 0) {
+      if (result !== '') {
         result += '\n';
-      } else if (typeof node.text === 'string') {
-        result += node.text;
       }
-    }
-    if (window.js_beautify) {
-      return window.js_beautify(result, beautifyOptions);
-    } else {
-      return result;
+      result += getTextContent(node.children);
+      result += '\n';
+    } else if (typeof node.children === 'string') {
+      result += node.children;
+    } else if (typeof node.text === 'string') {
+      result += node.text;
     }
   }
 
+  if (typeof window !== 'undefined' && window.js_beautify) {
+    return window.js_beautify(result, beautifyOptions);
+  }
+
+  return result;
+}
 </script>
