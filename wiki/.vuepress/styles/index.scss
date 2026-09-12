@@ -772,6 +772,11 @@ table tr:last-child td:last-child {
   }
 }
 
+.vp-page .vp-page-nav .auto-link,
+.vp-page .vp-page-nav .auto-link:hover {
+  border-bottom-color: var(--vp-c-divider);
+}
+
 .returns {
   margin: 0 0 1.25rem 0;
 }
