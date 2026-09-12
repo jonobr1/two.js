@@ -523,14 +523,39 @@ body {
 
 .docs {
   .vp-sidebar {
+    .vp-sidebar-heading + .vp-sidebar-children {
+      font-size: 0.95em;
+
+      > li > a.vp-sidebar-item {
+        color: var(--two-text-muted);
+        font-weight: 600;
+        line-height: 1.7;
+
+        &:hover {
+          color: $green;
+        }
+
+        &.active {
+          border-inline-start-color: transparent;
+          color: $green;
+
+          &:hover {
+            color: $orange;
+          }
+        }
+      }
+    }
+
     .vp-sidebar-children .vp-sidebar-children {
       font-size: 1rem;
-      margin-left: 1rem;
+      margin-left: 2.4rem;
       padding-left: 0;
 
       a.vp-sidebar-item {
         border-left: 2px solid color.mix(white, $green, 20%);
         color: $green;
+        font-weight: 600;
+        line-height: 1.7;
         padding-bottom: 0.125rem;
         padding-left: 0.75rem;
         padding-top: 0.125rem;
@@ -547,6 +572,7 @@ body {
     }
 
     .vp-sidebar-heading {
+      color: var(--two-text-muted);
       font-size: 1rem;
       transition: color 0.2s;
 

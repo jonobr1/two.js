@@ -203,6 +203,7 @@ export default defineUserConfig({
       '/docs/': sidebarForDocs,
       '/': false,
     },
+    sidebarDepth: 1,
     themePlugins: {
       activeHeaderLinks: false,
       backToTop: false,
