@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url=/examples/index.html">
+  <link rel="canonical" href="/examples/index.html">
+  <title>Redirecting...</title>
+  <script>
+    const anchor = window.location.hash.slice(1);
+    window.location.replace(`/examples/index.html${anchor? `#${anchor}`: ""}`);
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>

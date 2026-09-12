@@ -1,0 +1,4 @@
+User-agent:*
+Disallow:
+
+Sitemap: https://two.js.org/sitemap.xml
