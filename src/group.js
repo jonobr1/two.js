@@ -24,6 +24,20 @@ import { Sprite } from './effects/sprite.js';
 const min = Math.min,
   max = Math.max;
 
+/**
+ * @private
+ * @param {Object} rect - A bounding rect from {@link Two.Group#getBoundingClientRect}.
+ * @returns {Boolean} Whether the rect has finite bounds. An empty group, or a group whose children are all hidden or effects, has infinite bounds.
+ */
+function hasFiniteBounds(rect) {
+  return (
+    isFinite(rect.left) &&
+    isFinite(rect.top) &&
+    isFinite(rect.right) &&
+    isFinite(rect.bottom)
+  );
+}
+
 const cache = {
   getShapesAtPoint: {
     results: [],
@@ -700,6 +714,12 @@ export class Group extends Shape {
   corner() {
     const rect = this.getBoundingClientRect(true);
 
+    // Without visible, measurable children the bounds are not finite,
+    // so there is nothing to orient to.
+    if (!hasFiniteBounds(rect)) {
+      return this;
+    }
+
     for (let i = 0; i < this.children.length; i++) {
       const child = this.children[i];
       child.translation.x -= rect.left;
@@ -721,6 +741,13 @@ export class Group extends Shape {
    */
   center() {
     const rect = this.getBoundingClientRect(true);
+
+    // Without visible, measurable children the bounds are not finite,
+    // so there is nothing to orient to.
+    if (!hasFiniteBounds(rect)) {
+      return this;
+    }
+
     const cx = rect.left + rect.width / 2 - this.translation.x;
     const cy = rect.top + rect.height / 2 - this.translation.y;
 
