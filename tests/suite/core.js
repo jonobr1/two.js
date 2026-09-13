@@ -26,6 +26,81 @@ QUnit.test('Two.Events', function (assert) {
   item.trigger('change');
 });
 
+QUnit.test('Two.Events listen and ignore', function (assert) {
+  assert.expect(10);
+
+  var source = new Two.Events();
+  var listener = new Two.Events();
+  var calls = [];
+  var handler = function (value) {
+    calls.push({ scope: this, value: value });
+  };
+  var other = function () {};
+
+  var result;
+  try {
+    result = listener.listen(source, 'change', handler);
+    assert.ok(true, 'Two.Events.listen does not throw.');
+  } catch (error) {
+    assert.ok(false, 'Two.Events.listen does not throw: ' + error.message);
+  }
+  assert.equal(result, listener, 'Two.Events.listen returns the listener.');
+
+  source.trigger('change', 1);
+  assert.equal(calls.length, 1, 'Two.Events.listen subscribes the handler.');
+  assert.equal(
+    calls[0] && calls[0].scope,
+    listener,
+    'Two.Events.listen calls the handler with the listener as scope.'
+  );
+
+  // Removing a different handler must keep the listen wrapper intact.
+  source.bind('change', other);
+  source.unbind('change', other);
+  source.trigger('change', 2);
+  assert.equal(
+    calls[1] && calls[1].scope,
+    listener,
+    'Removing a different handler keeps the listen scope.'
+  );
+  assert.equal(
+    calls[1] && calls[1].value,
+    2,
+    'Removing a different handler keeps passing arguments.'
+  );
+
+  listener.ignore(source, 'change', handler);
+  source.trigger('change', 3);
+  assert.equal(calls.length, 2, 'Two.Events.ignore removes the listen wrapper.');
+
+  var collection = new Two.Collection();
+  var collectionCalls = [];
+  var collectionHandler = function () {
+    collectionCalls.push(this);
+  };
+
+  collection.listen(source, 'update', collectionHandler);
+  source.trigger('update');
+  assert.equal(
+    collectionCalls.length,
+    1,
+    'Two.Collection.listen subscribes the handler.'
+  );
+  assert.equal(
+    collectionCalls[0],
+    collection,
+    'Two.Collection.listen calls the handler with the collection as scope.'
+  );
+
+  collection.ignore(source, 'update', collectionHandler);
+  source.trigger('update');
+  assert.equal(
+    collectionCalls.length,
+    1,
+    'Two.Collection.ignore removes the listen wrapper.'
+  );
+});
+
 QUnit.test('Two.Vector', function (assert) {
   assert.expect(48);
 
