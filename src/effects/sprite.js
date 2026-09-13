@@ -231,6 +231,11 @@ export class Sprite extends Rectangle {
   static fromObject(obj) {
     const sprite = new Sprite().copy(obj);
 
+    // Serialized sprites store their texture in object notation
+    if (obj.texture && !(obj.texture instanceof Texture)) {
+      sprite.texture = Texture.fromObject(obj.texture);
+    }
+
     if ('id' in obj) {
       sprite.id = obj.id;
     }
