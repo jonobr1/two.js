@@ -1298,6 +1298,97 @@ QUnit.test('Two.Group.getBoundingClientRect(shallow)', function (assert) {
   );
 });
 
+QUnit.test('Two.Group.center and corner without visible bounds', function (assert) {
+  assert.expect(16);
+
+  const isFiniteVector = function (vector) {
+    return isFinite(vector.x) && isFinite(vector.y);
+  };
+
+  for (const method of ['center', 'corner']) {
+    // Empty group with a mask
+    const empty = new Two.Group();
+    empty.mask = new Two.Rectangle(0, 0, 10, 10);
+    empty[method]();
+    assert.ok(
+      isFiniteVector(empty.mask.translation),
+      `Two.Group.${method} keeps the mask translation finite on an empty group.`
+    );
+    assert.deepEqual(
+      [empty.mask.translation.x, empty.mask.translation.y],
+      [0, 0],
+      `Two.Group.${method} does not move the mask of an empty group.`
+    );
+
+    // Group whose children are all hidden
+    const hidden = new Two.Rectangle(10, 20, 5, 5);
+    hidden.visible = false;
+    const hiddenGroup = new Two.Group(hidden);
+    hiddenGroup[method]();
+    assert.ok(
+      isFiniteVector(hidden.translation),
+      `Two.Group.${method} keeps hidden children translations finite.`
+    );
+    assert.deepEqual(
+      [hidden.translation.x, hidden.translation.y],
+      [10, 20],
+      `Two.Group.${method} leaves hidden-only children in place.`
+    );
+
+    // Group that only holds an effect, which bounds ignore
+    const effectGroup = new Two.Group();
+    effectGroup.add(new Two.LinearGradient());
+    effectGroup.mask = new Two.Rectangle(0, 0, 10, 10);
+    effectGroup[method]();
+    assert.ok(
+      isFiniteVector(effectGroup.mask.translation),
+      `Two.Group.${method} keeps the mask translation finite on an effect-only group.`
+    );
+
+    // Mixed visible and hidden children still orient to the visible bounds
+    const visible = new Two.Rectangle(100, 100, 20, 20);
+    const invisible = new Two.Rectangle(-500, -500, 20, 20);
+    invisible.visible = false;
+    const mixed = new Two.Group(visible, invisible);
+    mixed[method]();
+    assert.ok(
+      isFiniteVector(visible.translation) && isFiniteVector(invisible.translation),
+      `Two.Group.${method} keeps translations finite for mixed children.`
+    );
+    const rect = mixed.getBoundingClientRect(true);
+    if (method === 'center') {
+      assert.ok(
+        Math.abs(rect.left + rect.width / 2) < 1e-9 &&
+          Math.abs(rect.top + rect.height / 2) < 1e-9,
+        'Two.Group.center centers the visible children of a mixed group.'
+      );
+    } else {
+      assert.ok(
+        Math.abs(rect.left) < 1e-9 && Math.abs(rect.top) < 1e-9,
+        'Two.Group.corner corners the visible children of a mixed group.'
+      );
+    }
+  }
+
+  // Hidden children must not change the result for visible ones
+  const reference = new Two.Group(new Two.Rectangle(100, 100, 20, 20));
+  reference.center();
+  const withHidden = new Two.Rectangle(-500, -500, 20, 20);
+  withHidden.visible = false;
+  const compared = new Two.Group(new Two.Rectangle(100, 100, 20, 20), withHidden);
+  compared.center();
+  assert.equal(
+    compared.children[0].translation.x,
+    reference.children[0].translation.x,
+    'Two.Group.center ignores hidden children when computing x.'
+  );
+  assert.equal(
+    compared.children[0].translation.y,
+    reference.children[0].translation.y,
+    'Two.Group.center ignores hidden children when computing y.'
+  );
+});
+
 QUnit.test('Two.Text Object Conversion', function (assert) {
   assert.expect(9);
 
