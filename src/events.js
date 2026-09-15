@@ -72,9 +72,11 @@ export class Events {
         let events = [];
         if (handler) {
           for (let j = 0, k = list.length; j < k; j++) {
-            let e = list[j];
-            e = e.handler ? e.handler : e;
-            if (handler !== e) {
+            const e = list[j];
+            // Compare against the original handler of a `listen` wrapper,
+            // but keep the wrapper itself so its scope is preserved.
+            const callback = e.handler ? e.handler : e;
+            if (handler !== callback) {
               events.push(e);
             }
           }
@@ -140,9 +142,10 @@ export class Events {
 
     if (obj) {
 
-      // Add references about the object that assigned this listener
+      // Add references about the object that assigned this listener.
+      // A function's `name` is read-only, so store the event name as `event`.
       e.obj = obj;
-      e.name = name;
+      e.event = name;
       e.handler = handler;
 
       obj.on(name, e);
