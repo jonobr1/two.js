@@ -107,6 +107,11 @@ export class Image extends Rectangle {
   static fromObject(obj) {
     const image = new Image().copy(obj);
 
+    // Serialized images store their texture in object notation
+    if (obj.texture && !(obj.texture instanceof Texture)) {
+      image.texture = Texture.fromObject(obj.texture);
+    }
+
     if ('id' in obj) {
       image.id = obj.id;
     }
