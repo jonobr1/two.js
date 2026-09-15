@@ -199,7 +199,7 @@ export class Texture extends Element {
    * @description Create a new {@link Two.Texture} from an object notation of a {@link Two.Texture}.
    * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
    */
-  fromObject(obj) {
+  static fromObject(obj) {
     const texture = new Texture().copy(obj);
 
     if ('id' in obj) {
