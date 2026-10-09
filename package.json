@@ -58,10 +58,10 @@
   "devDependencies": {
     "@types/minimatch": "^6.0.0",
     "@vuepress/bundler-vite": "2.0.0-rc.31",
-    "@vuepress/plugin-google-analytics": "2.0.0-rc.134",
+    "@vuepress/plugin-google-analytics": "2.0.0-rc.135",
     "@vuepress/plugin-redirect": "2.0.0-rc.135",
-    "@vuepress/plugin-search": "2.0.0-rc.134",
-    "@vuepress/theme-default": "2.0.0-rc.134",
+    "@vuepress/plugin-search": "2.0.0-rc.135",
+    "@vuepress/theme-default": "2.0.0-rc.136",
     "babel-eslint": "^10.1.0",
     "chalk": "^2.4.2",
     "commander": "^2.20.3",
