@@ -304,9 +304,9 @@ var Events = class {
         let events = [];
         if (handler) {
           for (let j = 0, k = list.length; j < k; j++) {
-            let e = list[j];
-            e = e.handler ? e.handler : e;
-            if (handler !== e) {
+            const e = list[j];
+            const callback = e.handler ? e.handler : e;
+            if (handler !== callback) {
               events.push(e);
             }
           }
@@ -359,7 +359,7 @@ var Events = class {
     const scope = this;
     if (obj) {
       e.obj = obj;
-      e.name = name;
+      e.event = name;
       e.handler = handler;
       obj.on(name, e);
     }
@@ -1228,7 +1228,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2026-09-12T00:25:24.636Z",
+  PublishDate: "2026-09-22T01:17:47.007Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -2197,7 +2197,7 @@ var _Texture = class _Texture extends Element {
    * @description Create a new {@link Two.Texture} from an object notation of a {@link Two.Texture}.
    * @nota-bene Works in conjunction with {@link Two.Texture#toObject}
    */
-  fromObject(obj) {
+  static fromObject(obj) {
     const texture = new _Texture().copy(obj);
     if ("id" in obj) {
       texture.id = obj.id;
@@ -6624,6 +6624,9 @@ var _Sprite = class _Sprite extends Rectangle {
    */
   static fromObject(obj) {
     const sprite = new _Sprite().copy(obj);
+    if (obj.texture && !(obj.texture instanceof Texture)) {
+      sprite.texture = Texture.fromObject(obj.texture);
+    }
     if ("id" in obj) {
       sprite.id = obj.id;
     }
@@ -9790,7 +9793,24 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
    * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
    */
   static fromObject(obj) {
-    const sequence = new _ImageSequence().copy(obj);
+    let source = obj;
+    if (Array.isArray(obj.textures)) {
+      const textures = [];
+      let converted = false;
+      for (let i = 0; i < obj.textures.length; i++) {
+        const texture = obj.textures[i];
+        if (texture instanceof Texture) {
+          textures.push(texture);
+        } else {
+          textures.push(Texture.fromObject(texture));
+          converted = true;
+        }
+      }
+      if (converted) {
+        source = __spreadProps(__spreadValues({}, obj), { textures });
+      }
+    }
+    const sequence = new _ImageSequence().copy(source);
     if ("id" in obj) {
       sequence.id = obj.id;
     }
@@ -12362,6 +12382,9 @@ var _Image = class _Image extends Rectangle {
    */
   static fromObject(obj) {
     const image = new _Image().copy(obj);
+    if (obj.texture && !(obj.texture instanceof Texture)) {
+      image.texture = Texture.fromObject(obj.texture);
+    }
     if ("id" in obj) {
       image.id = obj.id;
     }

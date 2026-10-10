@@ -309,8 +309,8 @@ Copy the properties of one [Two.Image](/docs/effects/image/) onto another.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L117">
-    image.js:117
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L122">
+    image.js:122
   </a>
 
 </div>
@@ -369,8 +369,8 @@ Create a new instance of [Two.Image](/docs/effects/image/) with the same propert
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L136">
-    image.js:136
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L141">
+    image.js:141
   </a>
 
 </div>
@@ -422,8 +422,8 @@ Return a JSON compatible plain object that represents the image.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L159">
-    image.js:159
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L164">
+    image.js:164
   </a>
 
 </div>
@@ -478,8 +478,8 @@ for potential re-attachment.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L173">
-    image.js:173
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L178">
+    image.js:178
   </a>
 
 </div>

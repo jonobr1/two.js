@@ -26,6 +26,81 @@ QUnit.test('Two.Events', function (assert) {
   item.trigger('change');
 });
 
+QUnit.test('Two.Events listen and ignore', function (assert) {
+  assert.expect(10);
+
+  var source = new Two.Events();
+  var listener = new Two.Events();
+  var calls = [];
+  var handler = function (value) {
+    calls.push({ scope: this, value: value });
+  };
+  var other = function () {};
+
+  var result;
+  try {
+    result = listener.listen(source, 'change', handler);
+    assert.ok(true, 'Two.Events.listen does not throw.');
+  } catch (error) {
+    assert.ok(false, 'Two.Events.listen does not throw: ' + error.message);
+  }
+  assert.equal(result, listener, 'Two.Events.listen returns the listener.');
+
+  source.trigger('change', 1);
+  assert.equal(calls.length, 1, 'Two.Events.listen subscribes the handler.');
+  assert.equal(
+    calls[0] && calls[0].scope,
+    listener,
+    'Two.Events.listen calls the handler with the listener as scope.'
+  );
+
+  // Removing a different handler must keep the listen wrapper intact.
+  source.bind('change', other);
+  source.unbind('change', other);
+  source.trigger('change', 2);
+  assert.equal(
+    calls[1] && calls[1].scope,
+    listener,
+    'Removing a different handler keeps the listen scope.'
+  );
+  assert.equal(
+    calls[1] && calls[1].value,
+    2,
+    'Removing a different handler keeps passing arguments.'
+  );
+
+  listener.ignore(source, 'change', handler);
+  source.trigger('change', 3);
+  assert.equal(calls.length, 2, 'Two.Events.ignore removes the listen wrapper.');
+
+  var collection = new Two.Collection();
+  var collectionCalls = [];
+  var collectionHandler = function () {
+    collectionCalls.push(this);
+  };
+
+  collection.listen(source, 'update', collectionHandler);
+  source.trigger('update');
+  assert.equal(
+    collectionCalls.length,
+    1,
+    'Two.Collection.listen subscribes the handler.'
+  );
+  assert.equal(
+    collectionCalls[0],
+    collection,
+    'Two.Collection.listen calls the handler with the collection as scope.'
+  );
+
+  collection.ignore(source, 'update', collectionHandler);
+  source.trigger('update');
+  assert.equal(
+    collectionCalls.length,
+    1,
+    'Two.Collection.ignore removes the listen wrapper.'
+  );
+});
+
 QUnit.test('Two.Vector', function (assert) {
   assert.expect(48);
 
@@ -1421,6 +1496,106 @@ QUnit.test('Two.Text Object Conversion', function (assert) {
     { ...copiedText.toObject(), id: text.id },
     text.toObject(),
     'Two.Text.copy creates identical text'
+  );
+});
+
+QUnit.test('Two.Texture Object Conversion', function (assert) {
+  assert.expect(14);
+
+  var src = '/tests/images/sequence/00000.png';
+
+  var texture = new Two.Texture(src);
+  texture.id = 'my-texture';
+
+  var restored = Two.Texture.fromObject(texture.toObject());
+  assert.ok(
+    restored instanceof Two.Texture,
+    'Two.Texture.fromObject returns a Two.Texture'
+  );
+  assert.equal(restored.src, texture.src, 'Two.Texture.fromObject preserves src');
+  assert.equal(restored.id, texture.id, 'Two.Texture.fromObject preserves id');
+
+  var path = new Two.Path([new Two.Anchor(0, 0), new Two.Anchor(10, 10)]);
+  path.fill = new Two.Texture(src);
+  path.stroke = new Two.Texture(src);
+
+  var newPath = Two.Path.fromObject(path.toObject());
+  assert.ok(
+    newPath.fill instanceof Two.Texture,
+    'Two.Path.fromObject restores a texture fill as a Two.Texture'
+  );
+  assert.ok(
+    newPath.stroke instanceof Two.Texture,
+    'Two.Path.fromObject restores a texture stroke as a Two.Texture'
+  );
+  assert.equal(
+    newPath.fill.src,
+    path.fill.src,
+    'Two.Path.fromObject preserves the texture fill src'
+  );
+
+  var text = new Two.Text('Hello', 0, 0);
+  text.fill = new Two.Texture(src);
+
+  var newText = Two.Text.fromObject(text.toObject());
+  assert.ok(
+    newText.fill instanceof Two.Texture,
+    'Two.Text.fromObject restores a texture fill as a Two.Texture'
+  );
+
+  var group = new Two.Group();
+  var child = new Two.Path([new Two.Anchor(0, 0), new Two.Anchor(10, 10)]);
+  child.fill = new Two.Texture(src);
+  group.add(child);
+
+  var newGroup = Two.Group.fromObject(group.toObject());
+  assert.ok(
+    newGroup.children[0].fill instanceof Two.Texture,
+    'Two.Group.fromObject restores a nested texture fill as a Two.Texture'
+  );
+
+  var image = new Two.Image(src, 0, 0, 10, 10);
+  var newImage = Two.Image.fromObject(image.toObject());
+  assert.ok(
+    newImage.texture instanceof Two.Texture,
+    'Two.Image.fromObject restores its texture as a Two.Texture'
+  );
+  assert.equal(
+    newImage.texture.src,
+    image.texture.src,
+    'Two.Image.fromObject preserves the texture src'
+  );
+
+  var sprite = new Two.Sprite('/tests/images/spritesheet.jpg', 0, 0, 4, 4);
+  var newSprite = Two.Sprite.fromObject(sprite.toObject());
+  assert.ok(
+    newSprite.texture instanceof Two.Texture,
+    'Two.Sprite.fromObject restores its texture as a Two.Texture'
+  );
+
+  var sequence = new Two.ImageSequence(
+    [
+      '/tests/images/sequence/00000.png',
+      '/tests/images/sequence/00001.png',
+    ],
+    0,
+    0
+  );
+  var newSequence = Two.ImageSequence.fromObject(sequence.toObject());
+  assert.equal(
+    newSequence.textures.length,
+    2,
+    'Two.ImageSequence.fromObject preserves the number of textures'
+  );
+  assert.ok(
+    newSequence.textures[0] instanceof Two.Texture &&
+      newSequence.textures[1] instanceof Two.Texture,
+    'Two.ImageSequence.fromObject restores its textures as Two.Texture instances'
+  );
+  assert.equal(
+    newSequence.textures[1].src,
+    sequence.textures[1].src,
+    'Two.ImageSequence.fromObject preserves the texture src values'
   );
 });
 

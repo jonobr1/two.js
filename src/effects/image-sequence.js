@@ -196,7 +196,31 @@ export class ImageSequence extends Rectangle {
    * @nota-bene Works in conjunction with {@link Two.ImageSequence#toObject}
    */
   static fromObject(obj) {
-    const sequence = new ImageSequence().copy(obj);
+    let source = obj;
+
+    // Serialized image sequences store their textures in object notation.
+    // Convert them before copying, because the textures setter binds events
+    // on each item.
+    if (Array.isArray(obj.textures)) {
+      const textures = [];
+      let converted = false;
+
+      for (let i = 0; i < obj.textures.length; i++) {
+        const texture = obj.textures[i];
+        if (texture instanceof Texture) {
+          textures.push(texture);
+        } else {
+          textures.push(Texture.fromObject(texture));
+          converted = true;
+        }
+      }
+
+      if (converted) {
+        source = { ...obj, textures };
+      }
+    }
+
+    const sequence = new ImageSequence().copy(source);
 
     if ('id' in obj) {
       sequence.id = obj.id;
