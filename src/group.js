@@ -34,7 +34,9 @@ function hasFiniteBounds(rect) {
     isFinite(rect.left) &&
     isFinite(rect.top) &&
     isFinite(rect.right) &&
-    isFinite(rect.bottom)
+    isFinite(rect.bottom) &&
+    isFinite(rect.width) &&
+    isFinite(rect.height)
   );
 }
 
