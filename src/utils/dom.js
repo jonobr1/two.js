@@ -16,7 +16,7 @@ export const dom = {
 
   unbind: function(elem, event, func, bool) {
     if (dom.hasEventListeners) {
-      elem.removeEventListeners(event, func, !!bool);
+      elem.removeEventListener(event, func, !!bool);
     } else {
       elem.detachEvent('on' + event, func);
     }
