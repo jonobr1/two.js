@@ -786,6 +786,61 @@ QUnit.test('Two.Collection', function (assert) {
   );
 });
 
+QUnit.test(
+  'Two.Collection mutations preserve child bookkeeping',
+  function (assert) {
+    const emptyGroup = new Two.Group();
+    assert.strictEqual(
+      emptyGroup.children.pop(),
+      undefined,
+      'Empty pop is safe.'
+    );
+    assert.strictEqual(
+      emptyGroup.children.shift(),
+      undefined,
+      'Empty shift is safe.'
+    );
+
+    [-1, 99, undefined].forEach(function (start) {
+      const first = new Two.Rectangle();
+      const second = new Two.Rectangle();
+      const inserted = new Two.Rectangle();
+      const group = new Two.Group(first, second);
+      const expectedChildren = [first, second];
+      expectedChildren.splice(start, 0, inserted);
+      const expectedIndex = expectedChildren.indexOf(inserted);
+
+      group.children.splice(start, 0, inserted);
+
+      assert.strictEqual(
+        group.children[expectedIndex],
+        inserted,
+        `Splice start ${start} inserts at the native Array index.`
+      );
+      assert.deepEqual(
+        Array.from(group.children),
+        expectedChildren,
+        `Splice start ${start} preserves the native Array order.`
+      );
+      assert.strictEqual(
+        inserted.parent,
+        group,
+        'Inserted child has its parent.'
+      );
+      assert.strictEqual(
+        group.children.ids[inserted.id],
+        inserted,
+        'Inserted child is indexed by id.'
+      );
+      assert.ok(group.additions.includes(inserted), 'Inserted child is added.');
+      assert.notOk(
+        group.subtractions.includes(inserted),
+        'Inserted child is not removed.'
+      );
+    });
+  }
+);
+
 QUnit.test('Two.Children', function (assert) {
   assert.expect(4);
 
