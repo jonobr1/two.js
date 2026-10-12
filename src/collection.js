@@ -73,14 +73,20 @@ export class Collection extends Array {
   }
 
   pop() {
+    const hadItems = this.length > 0;
     const popped = super.pop.apply(this, arguments);
-    this.trigger(Events.Types.remove, [popped]);
+    if (hadItems) {
+      this.trigger(Events.Types.remove, [popped]);
+    }
     return popped;
   }
 
   shift() {
+    const hadItems = this.length > 0;
     const shifted = super.shift.apply(this, arguments);
-    this.trigger(Events.Types.remove, [shifted]);
+    if (hadItems) {
+      this.trigger(Events.Types.remove, [shifted]);
+    }
     return shifted;
   }
 
@@ -100,10 +106,7 @@ export class Collection extends Array {
     const spliced = super.splice.apply(this, arguments);
     this.trigger(Events.Types.remove, spliced);
     if (arguments.length > 2) {
-      const inserted = this.slice(
-        arguments[0],
-        arguments[0] + arguments.length - 2
-      );
+      const inserted = Array.prototype.slice.call(arguments, 2);
       this.trigger(Events.Types.insert, inserted);
       this.trigger(Events.Types.order);
     }
