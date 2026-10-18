@@ -273,11 +273,13 @@ export class Shape extends Element {
   copy(shape) {
     super.copy.call(this, shape);
 
-    if ('position' in shape) {
-      if (shape.position instanceof Vector) {
-        this.position = shape.position;
+    // `toObject` writes `translation`, an alias of `position`
+    const position = 'position' in shape ? shape.position : shape.translation;
+    if (position) {
+      if (position instanceof Vector) {
+        this.position = position;
       } else {
-        this.position.copy(shape.position);
+        this.position.copy(position);
       }
     }
     if ('rotation' in shape) {
@@ -342,7 +344,7 @@ export class Shape extends Element {
     result.renderer = { type: 'shape' };
     result.isShape = true;
     result.translation = this.translation.toObject();
-    result.rotation = this.translation.rotation;
+    result.rotation = this.rotation;
     result.scale =
       this.scale instanceof Vector ? this.scale.toObject() : this.scale;
     result.skewX = this.skewX;
