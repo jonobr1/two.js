@@ -1616,6 +1616,106 @@
     })();
   });
 
+  QUnit.test('Two.interpret display and visibility', function (assert) {
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var interpret = function (markup) {
+      var svg = QUnit.Utils.textToDOM(
+        '<svg xmlns="http://www.w3.org/2000/svg">' + markup + '</svg>'
+      )[0];
+      return two.interpret(svg.firstElementChild, false, false);
+    };
+
+    var rect = '<rect width="10" height="10" />';
+    var hidden = [
+      '<rect width="10" height="10" display="none" />',
+      '<rect width="10" height="10" style="display:none" />',
+      '<rect width="10" height="10" visibility="hidden" />',
+      '<rect width="10" height="10" style="visibility: hidden" />',
+      '<rect width="10" height="10" display="inline" visibility="hidden" />',
+      '<rect width="10" height="10" display="none" visibility="visible" />',
+    ];
+    var shown = [
+      rect,
+      '<rect width="10" height="10" display="inline" />',
+      '<rect width="10" height="10" visibility="visible" />',
+      '<rect width="10" height="10" style="display:block;visibility:visible" />',
+    ];
+
+    hidden.forEach(function (markup) {
+      assert.equal(interpret(markup).visible, false, markup + ' is hidden.');
+    });
+    shown.forEach(function (markup) {
+      assert.equal(interpret(markup).visible, true, markup + ' is visible.');
+    });
+
+    var group = interpret('<g visibility="hidden">' + rect + '</g>');
+    assert.equal(group.visible, false, '<g visibility="hidden"> is hidden.');
+    assert.equal(
+      group.children[0].visible,
+      false,
+      'Children inherit visibility="hidden" from their group.'
+    );
+
+    group = interpret(
+      '<g visibility="hidden"><rect visibility="visible" /></g>'
+    );
+    assert.equal(
+      group.children[0].visible,
+      true,
+      'A child can override the visibility of its group.'
+    );
+
+    group = interpret('<g style="display:none">' + rect + '</g>');
+    assert.equal(group.visible, false, '<g style="display:none"> is hidden.');
+    assert.equal(
+      group.children[0].visible,
+      true,
+      'Children do not inherit display, the hidden group hides them.'
+    );
+
+    // Styles from a stylesheet are only available through
+    // getComputedStyle on elements in the document.
+    var svg = QUnit.Utils.textToDOM(
+      '<svg xmlns="http://www.w3.org/2000/svg">' +
+        '<style>.gone { display: none; } .ghost { visibility: hidden; }</style>' +
+        '<rect class="gone" width="10" height="10" />' +
+        '<rect class="ghost" width="10" height="10" />' +
+        '<g class="ghost">' +
+        rect +
+        '</g>' +
+        rect +
+        '</svg>'
+    )[0];
+    document.body.appendChild(svg);
+    var shape = two.interpret(svg, false, false);
+    document.body.removeChild(svg);
+
+    assert.equal(
+      shape.children[0].visible,
+      false,
+      'display: none from a stylesheet hides the element.'
+    );
+    assert.equal(
+      shape.children[1].visible,
+      false,
+      'visibility: hidden from a stylesheet hides the element.'
+    );
+    assert.equal(
+      shape.children[2].children[0].visible,
+      false,
+      'visibility: hidden from a stylesheet is inherited.'
+    );
+    assert.equal(
+      shape.children[3].visible,
+      true,
+      'Elements without display or visibility are visible.'
+    );
+  });
+
   QUnit.test('Two.subdivide', function (assert) {
     assert.expect(3);
     assert.done = assert.async(3);
