@@ -274,16 +274,23 @@ function applySvgAttributes(node, elem, parentStyles) {
 
   // Merge attributes and applied styles (attributes take precedence)
   if (parentStyles) {
+    // `display` is not inherited, a hidden group already hides its children.
+    const display = styles.display;
     _.defaults(styles, parentStyles);
+    if (typeof display === 'undefined') {
+      delete styles.display;
+    }
   }
   _.extend(styles, extracted, attributes);
 
   // Similarly visibility is influenced by the value of both display and visibility.
   // Calculate a unified value here which defaults to `true`.
   styles.visible =
-    !(typeof styles.display === 'undefined' && /none/i.test(styles.display)) ||
-    (typeof styles.visibility === 'undefined' &&
-      /hidden/i.test(styles.visibility));
+    !(typeof styles.display !== 'undefined' && /none/i.test(styles.display)) &&
+    !(
+      typeof styles.visibility !== 'undefined' &&
+      /hidden/i.test(styles.visibility)
+    );
 
   // Now iterate the whole thing
   for (key in styles) {
