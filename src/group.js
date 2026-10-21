@@ -328,6 +328,9 @@ export class Group extends Shape {
   static fromObject(obj) {
     const group = new Group();
 
+    // Restore the transforms Group inherits from Shape
+    Shape.prototype.copy.call(group, obj);
+
     for (let i = 0; i < Group.Properties.length; i++) {
       const k = Group.Properties[i];
       if (k in obj) {
