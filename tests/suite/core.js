@@ -1352,6 +1352,115 @@ QUnit.test('Two.Group Object Conversion', function (assert) {
   // );
 });
 
+QUnit.test('Two.Shape transforms survive Object Conversion', function (assert) {
+  var shapes = {
+    Shape: function () {
+      return new Two.Shape();
+    },
+    Path: function () {
+      return new Two.Path([new Two.Anchor(0, 0), new Two.Anchor(10, 10)]);
+    },
+    Text: function () {
+      return new Two.Text('Hello', 0, 0);
+    },
+    Points: function () {
+      return new Two.Points([new Two.Vector(0, 0), new Two.Vector(10, 10)]);
+    },
+    Circle: function () {
+      return new Two.Circle(0, 0, 5);
+    },
+    Ellipse: function () {
+      return new Two.Ellipse(0, 0, 5, 3);
+    },
+    Polygon: function () {
+      return new Two.Polygon(0, 0, 5, 6);
+    },
+    Rectangle: function () {
+      return new Two.Rectangle(0, 0, 10, 10);
+    },
+    RoundedRectangle: function () {
+      return new Two.RoundedRectangle(0, 0, 10, 10, 2);
+    },
+    Star: function () {
+      return new Two.Star(0, 0, 5, 10, 5);
+    },
+    ArcSegment: function () {
+      return new Two.ArcSegment(0, 0, 2, 5, 0, Math.PI);
+    },
+    Group: function () {
+      return new Two.Group([new Two.Rectangle(0, 0, 10, 10)]);
+    },
+  };
+  var names = Object.keys(shapes);
+
+  assert.expect(names.length * 3 + 1);
+
+  var transform = function (shape) {
+    shape._update();
+    return {
+      translation: { x: shape.translation.x, y: shape.translation.y },
+      rotation: shape.rotation,
+      scale:
+        shape.scale instanceof Two.Vector
+          ? { x: shape.scale.x, y: shape.scale.y }
+          : shape.scale,
+      skewX: shape.skewX,
+      skewY: shape.skewY,
+      matrix: shape.matrix.toArray(true),
+      manual: !!shape.matrix.manual,
+    };
+  };
+  var roundTrip = function (name, shape) {
+    var obj = JSON.parse(JSON.stringify(shape.toObject()));
+    return Two[name].fromObject(obj);
+  };
+
+  names.forEach(function (name) {
+    var shape = shapes[name]();
+    shape.translation.set(12, 34);
+    shape.rotation = 0.75;
+    shape.scale = new Two.Vector(2, 3);
+    shape.skewX = 0.1;
+    shape.skewY = 0.2;
+
+    assert.equal(
+      shape.toObject().rotation,
+      0.75,
+      'Two.' + name + '.toObject preserves rotation'
+    );
+    assert.deepEqual(
+      transform(roundTrip(name, shape)),
+      transform(shape),
+      'Two.' +
+        name +
+        '.fromObject preserves translation, rotation, scale and skew'
+    );
+
+    shape = shapes[name]();
+    shape.matrix.manual = true;
+    shape.matrix.set(1, 2, 3, 4, 5, 6, 0, 0, 1);
+
+    assert.deepEqual(
+      transform(roundTrip(name, shape)),
+      transform(shape),
+      'Two.' + name + '.fromObject preserves a manual matrix'
+    );
+  });
+
+  var group = new Two.Group();
+  var rect = new Two.Rectangle(0, 0, 10, 10);
+  rect.translation.set(56, 78);
+  rect.rotation = 1.5;
+  rect.scale = 4;
+  group.add(rect);
+
+  assert.deepEqual(
+    transform(roundTrip('Group', group).children[0]),
+    transform(rect),
+    'Two.Group.fromObject preserves the transforms of its children'
+  );
+});
+
 QUnit.test('Two.Group strokeAttenuation', function (assert) {
   assert.expect(4);
 
