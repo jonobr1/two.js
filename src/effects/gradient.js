@@ -199,7 +199,9 @@ export class Gradient extends Element {
     // Remove gradient from SVG document
     if ('elem' in this._renderer) {
       const elem = this._renderer.elem;
-      elem.parentNode.removeChild(elem);
+      if (elem.parentNode) {
+        elem.parentNode.removeChild(elem);
+      }
     }
     // Deallocate textures from the graphics card
     if ('effect' in this._renderer) {
