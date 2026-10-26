@@ -1522,4 +1522,168 @@
       sequence.textures.unbind = originalUnbind;
     }
   );
+
+  // ===========================
+  // Two Instance Tests
+  // ===========================
+
+  function afterFrames(count, callback) {
+    requestAnimationFrame(function () {
+      if (count > 1) {
+        afterFrames(count - 1, callback);
+      } else {
+        callback();
+      }
+    });
+  }
+
+  QUnit.test('Two.dispose - Instance Registry', function (assert) {
+    assert.expect(3);
+
+    var count = Two.Instances.length;
+
+    for (var i = 0; i < 5; i++) {
+      new Two({
+        type: Two.Types.svg,
+        width: 100,
+        height: 100,
+      })
+        .appendTo(document.body)
+        .dispose();
+    }
+
+    assert.equal(
+      Two.Instances.length,
+      count,
+      'Repeated construction and disposal does not grow Two.Instances'
+    );
+
+    var two = new Two({ width: 100, height: 100 });
+    assert.ok(Two.Instances.indexOf(two) >= 0, 'Instance is registered');
+
+    two.dispose();
+    assert.equal(
+      Two.Instances.indexOf(two),
+      -1,
+      'Instance is removed from Two.Instances'
+    );
+  });
+
+  QUnit.test('Two.dispose - Renderer Element', function (assert) {
+    assert.expect(3);
+
+    var two = new Two({
+      type: Two.Types.canvas,
+      width: 100,
+      height: 100,
+    }).appendTo(document.body);
+    var elem = two.renderer.domElement;
+
+    assert.equal(elem.parentNode, document.body, 'Element is in the document');
+    two.dispose();
+    assert.equal(elem.parentNode, null, 'Created element is removed');
+
+    var canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    new Two({ domElement: canvas, width: 100, height: 100 }).dispose();
+    assert.equal(
+      canvas.parentNode,
+      document.body,
+      'Element passed in as options.domElement stays in the document'
+    );
+    document.body.removeChild(canvas);
+  });
+
+  QUnit.test('Two.dispose - Fitted Resize Listener', function (assert) {
+    assert.expect(2);
+
+    var parent = document.createElement('div');
+    parent.style.width = '200px';
+    parent.style.height = '100px';
+    document.body.appendChild(parent);
+
+    // A passed in element stays in the parent, so fitting could still work
+    var canvas = document.createElement('canvas');
+    var two = new Two({ fitted: true, domElement: canvas }).appendTo(parent);
+    var fits = 0;
+    two.renderer.setSize = function () {
+      fits++;
+    };
+
+    parent.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize fits the instance to its parent');
+
+    two.dispose();
+    parent.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize listener is detached');
+
+    document.body.removeChild(parent);
+  });
+
+  QUnit.test('Two.dispose - Fullscreen', function (assert) {
+    assert.expect(5);
+
+    var style = document.body.style;
+    var overflow = style.overflow;
+    var position = style.position;
+
+    var two = new Two({ fullscreen: true }).appendTo(document.body);
+    var fits = 0;
+    two.renderer.setSize = function () {
+      fits++;
+    };
+
+    assert.equal(style.position, 'fixed', 'Fullscreen changes body styles');
+
+    window.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize fits the instance to the window');
+
+    two.dispose();
+    window.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize listener is detached');
+    assert.equal(style.overflow, overflow, 'Body overflow is restored');
+    assert.equal(style.position, position, 'Body position is restored');
+  });
+
+  QUnit.test('Two.dispose - Animation Loop', function (assert) {
+    assert.expect(5);
+    var done = assert.async();
+
+    var a = new Two({ width: 10, height: 10, autostart: true });
+    var b = new Two({ width: 10, height: 10, autostart: true });
+
+    afterFrames(2, function () {
+      a.dispose();
+      var frameCount = b.frameCount;
+
+      afterFrames(2, function () {
+        assert.ok(
+          b.frameCount > frameCount,
+          'Remaining instance keeps updating'
+        );
+        assert.notEqual(Two.NextFrameId, null, 'Loop runs while one plays');
+
+        b.dispose();
+
+        afterFrames(2, function () {
+          assert.equal(
+            Two.NextFrameId,
+            null,
+            'Loop sleeps when no instance is playing'
+          );
+
+          var c = new Two({ width: 10, height: 10 });
+          c.play();
+          frameCount = c.frameCount;
+
+          afterFrames(2, function () {
+            assert.ok(c.frameCount > frameCount, 'Two#play wakes the loop');
+            assert.notEqual(Two.NextFrameId, null, 'Loop runs again');
+            c.dispose();
+            done();
+          });
+        });
+      });
+    });
+  });
 })();

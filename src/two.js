@@ -227,7 +227,7 @@ export default class Two {
       this.fit = fitToWindow.bind(this);
       this.fit.domElement = window;
       this.fit.attached = true;
-      _.extend(document.body.style, {
+      const bodyStyle = {
         overflow: 'hidden',
         margin: 0,
         padding: 0,
@@ -236,7 +236,17 @@ export default class Two {
         right: 0,
         bottom: 0,
         position: 'fixed',
-      });
+      };
+      // Remember the previous values so that dispose can restore them
+      this.fit.previousBodyStyle = {};
+      _.each(
+        bodyStyle,
+        function (v, k) {
+          this.fit.previousBodyStyle[k] = document.body.style[k];
+        },
+        this
+      );
+      _.extend(document.body.style, bodyStyle);
       _.extend(this.renderer.domElement.style, {
         display: 'block',
         top: 0,
@@ -420,6 +430,47 @@ export default class Two {
 
   setPlaying(p) {
     this.playing = p;
+  }
+
+  /**
+   * @name Two#dispose
+   * @function
+   * @fires pause
+   * @returns {Two} The instance itself.
+   * @description Tear down the instance. This pauses it, removes it from {@link Two.Instances}, detaches the resize listener of a `fitted` or `fullscreen` instance, restores the `document.body` styles changed by `fullscreen`, releases the scene, and removes the renderer's DOM element from the document. An element passed in as `options.domElement` stays where it is.
+   * @nota-bene The shared `requestAnimationFrame` loop stops when no instance is playing and starts again on {@link Two#play}.
+   */
+  dispose() {
+    this.pause();
+
+    const index = Two.Instances.indexOf(this);
+    if (index >= 0) {
+      Two.Instances.splice(index, 1);
+    }
+
+    if (this.fit) {
+      if (this.fit.attached) {
+        dom.unbind(this.fit.domElement, 'resize', this.fit);
+      }
+      if (this.fit.previousBodyStyle) {
+        _.extend(document.body.style, this.fit.previousBodyStyle);
+        delete this.fit.previousBodyStyle;
+      }
+      this.fit.attached = false;
+      this.fit.domElement = null;
+    }
+
+    this.release();
+
+    const elem = this.renderer.domElement;
+    if (!this.domElement && elem.parentNode) {
+      elem.parentNode.removeChild(elem);
+    }
+
+    this.renderer.unbind();
+    this.unbind();
+
+    return this;
   }
 
   /**
@@ -1259,18 +1310,31 @@ function updateDimensions(width, height) {
 
 const raf = dom.getRequestAnimationFrame();
 
+let looping = false;
+
 function loop() {
+  let playing = false;
+
   for (let i = 0; i < Two.Instances.length; i++) {
     const t = Two.Instances[i];
     if (t.playing) {
       t.update();
+      playing = true;
     }
   }
 
-  Two.NextFrameId = raf(loop);
+  // Sleep when no instance is playing. Two#play calls raf.init to wake up.
+  if (playing) {
+    Two.NextFrameId = raf(loop);
+  } else {
+    Two.NextFrameId = null;
+    looping = false;
+  }
 }
 
 raf.init = function () {
-  loop();
-  raf.init = function () {};
+  if (!looping) {
+    looping = true;
+    loop();
+  }
 };

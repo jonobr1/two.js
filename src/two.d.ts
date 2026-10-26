@@ -198,6 +198,15 @@ declare module 'two.js' {
     pause(): Two;
     setPlaying(p: boolean): Two;
     /**
+     * @name Two#dispose
+     * @function
+     * @fires Two.Events.Types.pause event
+     * @returns {Two} The instance itself.
+     * @description Tear down the instance. This pauses it, removes it from {@link Two.Instances}, detaches the resize listener of a `fitted` or `fullscreen` instance, restores the `document.body` styles changed by `fullscreen`, releases the scene, and removes the renderer's DOM element from the document. An element passed in as `options.domElement` stays where it is.
+     * @nota-bene The shared `requestAnimationFrame` loop stops when no instance is playing and starts again on {@link Two#play}.
+     */
+    dispose(): Two;
+    /**
      * @name Two#release
      * @function
      * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.

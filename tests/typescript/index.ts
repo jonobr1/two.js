@@ -103,3 +103,6 @@ path.scale = new Two.Vector(1, 1);
 group.add(path);
 
 two.appendTo(document.body);
+
+const disposedTwo: Two = two.dispose();
+void disposedTwo;
