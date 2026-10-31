@@ -69,6 +69,7 @@ const webgl = {
         gl.deleteBuffer(child._renderer.positionBuffer);
         delete child._renderer.positionBuffer;
       }
+      delete child._renderer.gl;
     },
 
     /**
@@ -901,6 +902,8 @@ const webgl = {
           gl.deleteBuffer(positionBuffer);
         }
 
+        // Retain the allocating context for disposal after detachment.
+        this._renderer.gl = gl;
         // Bind the vertex buffer
         this._renderer.positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.positionBuffer);
@@ -1631,6 +1634,8 @@ const webgl = {
     }
 
     if (!elem._renderer.texture) {
+      // Retain the allocating context for disposal after detachment.
+      elem._renderer.gl = gl;
       elem._renderer.texture = gl.createTexture();
     }
 

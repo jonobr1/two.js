@@ -139,6 +139,109 @@
     }
   });
 
+  ['attached', 'detached', 'group'].forEach(function (mode) {
+    QUnit.test('Element.dispose - WebGL Resources (' + mode + ')', function (assert) {
+      var canvas = document.createElement('canvas');
+      var gl = canvas.getContext('webgl');
+      if (!gl) {
+        assert.ok(true, 'WebGL is unavailable in this browser');
+        return;
+      }
+      var two = new Two({ type: Two.Types.webgl, domElement: canvas, width: 100, height: 100 });
+      var other;
+      var originalDeleteTexture = gl.deleteTexture;
+      var originalDeleteBuffer = gl.deleteBuffer;
+      var deletedTextures = [];
+      var deletedBuffers = [];
+      try {
+        var rect = two.makeRectangle(25, 25, 20, 20);
+        var text = two.makeText('Test', 50, 50);
+        var points = two.makePoints(10, 10, 20, 20);
+        var elements = [rect, text, points];
+        var group = two.makeGroup(two.makeGroup(elements));
+        var sibling = two.makeCircle(75, 75, 10);
+        two.update();
+        var textures = elements.map(function (element) {
+          assert.ok(gl.isTexture(element._renderer.texture), 'Element has an allocated texture');
+          return element._renderer.texture;
+        });
+        var buffer = points._renderer.positionBuffer;
+        var sharedBuffer = two.renderer.programs.buffers.position;
+        assert.ok(gl.isBuffer(buffer), 'Points have an allocated vertex buffer');
+        gl.deleteTexture = function (texture) {
+          deletedTextures.push(texture);
+          originalDeleteTexture.call(gl, texture);
+        };
+        gl.deleteBuffer = function (buffer) {
+          deletedBuffers.push(buffer);
+          originalDeleteBuffer.call(gl, buffer);
+        };
+        if (mode === 'detached') {
+          group.remove();
+          other = new Two({ type: Two.Types.canvas, width: 100, height: 100 });
+          other.add(group);
+        }
+        var dispose = function () {
+          if (mode === 'group') {
+            group.dispose();
+          } else {
+            elements.forEach(function (element) {
+              assert.strictEqual(element.dispose(), element, 'Disposal returns the element');
+            });
+          }
+        };
+        dispose();
+        dispose();
+        elements.forEach(function (element, index) {
+          assert.notOk(gl.isTexture(textures[index]), 'Element texture is deleted');
+          assert.equal(deletedTextures.filter(function (texture) {
+            return texture === textures[index];
+          }).length, 1, 'Texture deletion is called exactly once');
+          assert.notOk(element._renderer.texture, 'Texture handle is released');
+          assert.notOk(element._renderer.gl, 'Allocating context is released');
+          assert.ok(element._renderer.type, 'Element renderer type is preserved');
+        });
+        assert.deepEqual(deletedBuffers, [buffer], 'Points buffer deletion is called exactly once');
+        assert.notOk(gl.isBuffer(buffer), 'Points buffer is deleted');
+        assert.notOk(points._renderer.positionBuffer, 'Buffer handle is released');
+        assert.ok(gl.isBuffer(sharedBuffer), 'Shared renderer buffer remains usable');
+        assert.ok(gl.isTexture(sibling._renderer.texture), 'Sibling texture remains usable');
+        assert.equal(gl.getError(), gl.NO_ERROR, 'Disposal produces no WebGL errors');
+      } finally {
+        gl.deleteTexture = originalDeleteTexture;
+        gl.deleteBuffer = originalDeleteBuffer;
+        if (other) {
+          other.dispose();
+        }
+        two.dispose();
+      }
+    });
+  });
+
+  QUnit.test('Element.dispose - Canvas Caches', function (assert) {
+    var two = new Two({ type: Two.Types.canvas, width: 100, height: 100 });
+    try {
+      var gradient = two.makeLinearGradient(0, 0, 20, 20,
+        new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'));
+      var rect = two.makeRectangle(25, 25, 20, 20);
+      rect.fill = gradient;
+      var group = two.makeGroup(rect);
+      two.update();
+      assert.strictEqual(group._renderer.context.ctx, two.renderer.ctx, 'Group caches the Canvas context');
+      assert.ok(gradient._renderer.effect, 'Gradient caches a Canvas effect');
+      assert.strictEqual(group.dispose(), group, 'Group disposal returns the instance');
+      assert.strictEqual(group.dispose(), group, 'Repeated disposal is safe');
+      assert.notOk(group._renderer.context, 'Group context cache is released');
+      assert.notOk(gradient._renderer.effect, 'Gradient effect cache is released');
+      assert.equal(group._renderer.type, 'group', 'Group type is preserved');
+      assert.equal(rect._renderer.type, 'rectangle', 'Shape type is preserved');
+      assert.equal(gradient._renderer.type, 'linear-gradient', 'Effect type is preserved');
+      assert.strictEqual(two.renderer.domElement.getContext('2d'), two.renderer.ctx, 'Canvas context remains usable');
+    } finally {
+      two.dispose();
+    }
+  });
+
   // ===========================
   // Shape Tests
   // ===========================

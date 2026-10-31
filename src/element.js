@@ -110,7 +110,8 @@ export class Element extends Events {
    * @name Two.Element#dispose
    * @function
    * @description Release the element's renderer object and detach any events.
-   * This cleans up renderer-specific resources and unbinds all event listeners.
+   * WebGL resources retain their allocating context so disposal also works after
+   * detachment. Canvas context and effect caches are released with the renderer object.
    */
   dispose() {
     // Unbind all events
@@ -127,9 +128,8 @@ export class Element extends Events {
       }
 
       // WebGL resource cleanup
-      if (this.type === 'WebGLRenderer' && this.renderer.ctx) {
-        const gl = this.renderer.ctx;
-
+      const gl = this._renderer.gl;
+      if (gl) {
         // Clean up textures
         if (this._renderer.texture) {
           gl.deleteTexture(this._renderer.texture);
@@ -141,16 +141,6 @@ export class Element extends Events {
           gl.deleteBuffer(this._renderer.positionBuffer);
           delete this._renderer.positionBuffer;
         }
-
-        // Clean up any other WebGL effects
-        if (this._renderer.effect) {
-          this._renderer.effect = null;
-        }
-      }
-
-      // Canvas renderer cleanup - clear cached contexts and data
-      if (this.type === 'CanvasRenderer' && this._renderer.context) {
-        delete this._renderer.context;
       }
     }
 
