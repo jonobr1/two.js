@@ -1,3 +1,4 @@
+import { unbindEffects } from './utils/effects.js';
 // Utils
 
 import { CanvasPolyfill } from './utils/canvas-polyfill.js';
@@ -501,6 +502,8 @@ export default class Two {
    * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
    * @returns {Two.Element} The object passed for event deallocation.
    * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
+   * Shared effects keep their other shapes' listeners until the last assignment
+   * is released. Releasing a shape does not dispose the effect's renderer resources.
    */
   release(obj) {
     let i, v, child;
@@ -514,16 +517,9 @@ export default class Two {
       obj.unbind();
     }
 
-    // Unbind effects applied to an object
-    if (typeof obj.fill === 'object' && typeof obj.fill.unbind === 'function') {
-      obj.fill.unbind();
-    }
-    if (
-      typeof obj.stroke === 'object' &&
-      typeof obj.stroke.unbind === 'function'
-    ) {
-      obj.stroke.unbind();
-    }
+    // Release only this object's effect assignments. Other shapes may still
+    // use the same effects, including shapes belonging to another Two instance.
+    unbindEffects(obj);
 
     // Unbind vertices on an object
     if (obj.vertices) {

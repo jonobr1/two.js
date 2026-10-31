@@ -731,8 +731,8 @@ __Returns__: Two.Sprite
 <div class="description">
 
 Release the sprite's renderer resources and detach all events.
-This method stops any running animation, clears animation callbacks, disposes
-the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+This method stops any running animation, clears animation callbacks, releases
+its texture assignment, and inherits comprehensive
 cleanup from the Rectangle/Path hierarchy while preserving the renderer type
 for potential re-attachment.
 
@@ -744,8 +744,8 @@ for potential re-attachment.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L373">
-    sprite.js:373
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/sprite.js#L374">
+    sprite.js:374
   </a>
 
 </div>
