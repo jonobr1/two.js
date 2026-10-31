@@ -592,6 +592,8 @@ export default class Two {
           delete obj._renderer.positionBuffer;
         }
 
+        delete obj._renderer.gl;
+
         // Clean up any other WebGL effects
         if (obj._renderer.effect) {
           obj._renderer.effect = null;
