@@ -1,5 +1,6 @@
 # Two.js
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16110/badge)](https://www.bestpractices.dev/projects/16110)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/jonobr1/two.js/badge)](https://scorecard.dev/viewer/?uri=github.com/jonobr1/two.js)
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
