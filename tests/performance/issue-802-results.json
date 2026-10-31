@@ -1,0 +1,2260 @@
+{
+  "environment": {
+    "browser": "156.0.8078.79",
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M4 Pro"
+  },
+  "samples": 300,
+  "rounds": 3,
+  "warmup": 100,
+  "samplingInterval": 4096,
+  "bundleHashes": {
+    "baseline": "7cdeaa4fccfedba1d57daf128d7d21a099596399240d8add0274862146acb720",
+    "current": "7b4fc5ad0d8c047728317b6ab894ddd2d686113792b6ad0a66fc54b696b26cd4"
+  },
+  "workloadsHash": "ed14b12a42ce30feabfda29941320d7a806b8ae7f703cf446e621e055297da48",
+  "measurements": [
+    {
+      "round": 0,
+      "name": "matrix",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 351733.9766025543,
+      "p50Milliseconds": 0.034999966621398926,
+      "p95Milliseconds": 0.05500000715255737,
+      "sampledAllocatedBytes": 63754900,
+      "gcCount": 62,
+      "gcMilliseconds": 2.3529999999999998,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1647928,
+      "topAllocationSites": [
+        [
+          "multiply",
+          48682296
+        ],
+        [
+          "slice",
+          9188880
+        ],
+        [
+          "step",
+          5869720
+        ],
+        [
+          "(V8 API)",
+          9336
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "matrix",
+      "version": "current",
+      "samples": 300,
+      "checksum": 351733.9766025543,
+      "p50Milliseconds": 0.014999985694885254,
+      "p95Milliseconds": 0.020000040531158447,
+      "sampledAllocatedBytes": 1784940,
+      "gcCount": 2,
+      "gcMilliseconds": 0.775,
+      "retainedHeapDeltaBytes": 176,
+      "disposedHeapBytes": 1578992,
+      "topAllocationSites": [
+        [
+          "step",
+          1780272
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "curve-bounds",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 50829067.40593775,
+      "p50Milliseconds": 0.08499997854232788,
+      "p95Milliseconds": 0.10500001907348633,
+      "sampledAllocatedBytes": 168488376,
+      "gcCount": 167,
+      "gcMilliseconds": 4.831000000000003,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1644288,
+      "topAllocationSites": [
+        [
+          "getCurveBoundingBox",
+          161239412
+        ],
+        [
+          "max",
+          3482604
+        ],
+        [
+          "step",
+          1878720
+        ],
+        [
+          "min",
+          1870512
+        ],
+        [
+          "(V8 API)",
+          8812
+        ],
+        [
+          "(PARSER)",
+          4200
+        ],
+        [
+          "(anonymous)",
+          4116
+        ],
+        [
+          "(root)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "curve-bounds",
+      "version": "current",
+      "samples": 300,
+      "checksum": 50829067.40593775,
+      "p50Milliseconds": 0.014999985694885254,
+      "p95Milliseconds": 0.02499997615814209,
+      "sampledAllocatedBytes": 16883728,
+      "gcCount": 17,
+      "gcMilliseconds": 1.2170000000000003,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1633692,
+      "topAllocationSites": [
+        [
+          "getCurveBoundingBox",
+          16530372
+        ],
+        [
+          "step",
+          344568
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "serializeAsCallArgument",
+          4120
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ],
+        [
+          "evaluate",
+          0
+        ],
+        [
+          "_promiseAwareJsonValueNoThrow",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "world-matrix",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 615634.5844268799,
+      "p50Milliseconds": 0.04000002145767212,
+      "p95Milliseconds": 0.06000000238418579,
+      "sampledAllocatedBytes": 64999912,
+      "gcCount": 65,
+      "gcMilliseconds": 2.5819999999999994,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1692260,
+      "topAllocationSites": [
+        [
+          "multiply",
+          34517556
+        ],
+        [
+          "getComputedMatrix",
+          24991272
+        ],
+        [
+          "slice",
+          5285968
+        ],
+        [
+          "step",
+          201000
+        ],
+        [
+          "(anonymous)",
+          4116
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "evaluate",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "world-matrix",
+      "version": "current",
+      "samples": 300,
+      "checksum": 615634.5844268799,
+      "p50Milliseconds": 0.025000035762786865,
+      "p95Milliseconds": 0.04000002145767212,
+      "sampledAllocatedBytes": 21503268,
+      "gcCount": 21,
+      "gcMilliseconds": 1.3770000000000002,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1692520,
+      "topAllocationSites": [
+        [
+          "getComputedMatrix",
+          21281196
+        ],
+        [
+          "step",
+          217404
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ],
+        [
+          "evaluate",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "path-hit",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 28000,
+      "p50Milliseconds": 1.2050000429153442,
+      "p95Milliseconds": 1.2949999570846558,
+      "sampledAllocatedBytes": 304176808,
+      "gcCount": 175,
+      "gcMilliseconds": 8.223999999999995,
+      "retainedHeapDeltaBytes": 69148,
+      "disposedHeapBytes": 1890300,
+      "topAllocationSites": [
+        [
+          "_Anchor",
+          116477700
+        ],
+        [
+          "buildPathHitParts",
+          30027168
+        ],
+        [
+          "multiply",
+          27851604
+        ],
+        [
+          "set",
+          27394204
+        ],
+        [
+          "_Vector",
+          27016572
+        ],
+        [
+          "Events",
+          27011012
+        ],
+        [
+          "getCurveBoundingBox",
+          23299892
+        ],
+        [
+          "getSubdivisions",
+          10837928
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "path-hit",
+      "version": "current",
+      "samples": 300,
+      "checksum": 28000,
+      "p50Milliseconds": 0.14500004053115845,
+      "p95Milliseconds": 0.20499998331069946,
+      "sampledAllocatedBytes": 37527760,
+      "gcCount": 39,
+      "gcMilliseconds": 2.6279999999999997,
+      "retainedHeapDeltaBytes": 71032,
+      "disposedHeapBytes": 1865384,
+      "topAllocationSites": [
+        [
+          "buildPathHitParts",
+          29909884
+        ],
+        [
+          "getCurveBoundingBox",
+          4212540
+        ],
+        [
+          "_update",
+          2180776
+        ],
+        [
+          "getBoundingClientRect",
+          913980
+        ],
+        [
+          "contains",
+          295932
+        ],
+        [
+          "(V8 API)",
+          9336
+        ],
+        [
+          "set",
+          5312
+        ],
+        [
+          "(root)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "hit-query",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 140000,
+      "p50Milliseconds": 5.774999976158142,
+      "p95Milliseconds": 6.449999988079071,
+      "sampledAllocatedBytes": 1779438416,
+      "gcCount": 608,
+      "gcMilliseconds": 25.00800000000004,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1904092,
+      "topAllocationSites": [
+        [
+          "_Anchor",
+          582256452
+        ],
+        [
+          "getCurveBoundingBox",
+          235511280
+        ],
+        [
+          "multiply",
+          227896476
+        ],
+        [
+          "buildPathHitParts",
+          160399304
+        ],
+        [
+          "set",
+          136375188
+        ],
+        [
+          "Events",
+          135914100
+        ],
+        [
+          "_Vector",
+          132036780
+        ],
+        [
+          "getBoundingClientRect",
+          58872432
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "hit-query",
+      "version": "current",
+      "samples": 300,
+      "checksum": 140000,
+      "p50Milliseconds": 0.800000011920929,
+      "p95Milliseconds": 0.8499999642372131,
+      "sampledAllocatedBytes": 218985712,
+      "gcCount": 204,
+      "gcMilliseconds": 7.461999999999997,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1880712,
+      "topAllocationSites": [
+        [
+          "buildPathHitParts",
+          149015608
+        ],
+        [
+          "getCurveBoundingBox",
+          43652196
+        ],
+        [
+          "_update",
+          15725460
+        ],
+        [
+          "getBoundingClientRect",
+          10158336
+        ],
+        [
+          "VisitForHitTest",
+          396612
+        ],
+        [
+          "getShapesAtPoint",
+          32832
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "svg",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.1600000262260437,
+      "p95Milliseconds": 0.22999995946884155,
+      "sampledAllocatedBytes": 79041028,
+      "gcCount": 34,
+      "gcMilliseconds": 4.7909999999999995,
+      "retainedHeapDeltaBytes": 97568,
+      "disposedHeapBytes": 2106168,
+      "topAllocationSites": [
+        [
+          "multiply",
+          32961276
+        ],
+        [
+          "render",
+          15423156
+        ],
+        [
+          "join",
+          8849996
+        ],
+        [
+          "slice",
+          5842692
+        ],
+        [
+          "_update",
+          5643840
+        ],
+        [
+          "map",
+          3530812
+        ],
+        [
+          "toTransformArray",
+          2863728
+        ],
+        [
+          "keys",
+          1734256
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "svg",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.16500002145767212,
+      "p95Milliseconds": 0.2200000286102295,
+      "sampledAllocatedBytes": 38510480,
+      "gcCount": 17,
+      "gcMilliseconds": 4.056000000000001,
+      "retainedHeapDeltaBytes": 89264,
+      "disposedHeapBytes": 2103976,
+      "topAllocationSites": [
+        [
+          "render",
+          15131028
+        ],
+        [
+          "join",
+          8812520
+        ],
+        [
+          "map",
+          3753908
+        ],
+        [
+          "_update",
+          3630276
+        ],
+        [
+          "toTransformArray",
+          3079400
+        ],
+        [
+          "keys",
+          1680900
+        ],
+        [
+          "toFixed",
+          1037808
+        ],
+        [
+          "get",
+          820448
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "canvas",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.26999998092651367,
+      "p95Milliseconds": 0.33500003814697266,
+      "sampledAllocatedBytes": 44876708,
+      "gcCount": 36,
+      "gcMilliseconds": 8.596,
+      "retainedHeapDeltaBytes": 80788,
+      "disposedHeapBytes": 2006256,
+      "topAllocationSites": [
+        [
+          "multiply",
+          31633092
+        ],
+        [
+          "slice",
+          5852560
+        ],
+        [
+          "_update",
+          5290728
+        ],
+        [
+          "render",
+          797284
+        ],
+        [
+          "get",
+          746556
+        ],
+        [
+          "join",
+          473276
+        ],
+        [
+          "update",
+          28728
+        ],
+        [
+          "set",
+          20508
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "canvas",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.26999998092651367,
+      "p95Milliseconds": 0.3149999976158142,
+      "sampledAllocatedBytes": 5516996,
+      "gcCount": 6,
+      "gcMilliseconds": 7.662,
+      "retainedHeapDeltaBytes": 77604,
+      "disposedHeapBytes": 2004460,
+      "topAllocationSites": [
+        [
+          "_update",
+          3601560
+        ],
+        [
+          "render",
+          731596
+        ],
+        [
+          "get",
+          721956
+        ],
+        [
+          "join",
+          399156
+        ],
+        [
+          "update",
+          20528
+        ],
+        [
+          "(V8 API)",
+          8780
+        ],
+        [
+          "evaluate",
+          8772
+        ],
+        [
+          "step",
+          8208
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "webgl",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 4.775000035762787,
+      "p95Milliseconds": 10.5799999833107,
+      "sampledAllocatedBytes": 45634416,
+      "gcCount": 45,
+      "gcMilliseconds": 6.616,
+      "retainedHeapDeltaBytes": 100608,
+      "disposedHeapBytes": 2182932,
+      "topAllocationSites": [
+        [
+          "multiply",
+          32309504
+        ],
+        [
+          "slice",
+          5716948
+        ],
+        [
+          "_update",
+          5204700
+        ],
+        [
+          "render",
+          1378960
+        ],
+        [
+          "get",
+          816300
+        ],
+        [
+          "updateCanvas",
+          65640
+        ],
+        [
+          "(anonymous)",
+          61536
+        ],
+        [
+          "flagReset",
+          23380
+        ]
+      ]
+    },
+    {
+      "round": 0,
+      "name": "webgl",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 4.474999964237213,
+      "p95Milliseconds": 9.834999978542328,
+      "sampledAllocatedBytes": 5913408,
+      "gcCount": 7,
+      "gcMilliseconds": 3.042,
+      "retainedHeapDeltaBytes": 94452,
+      "disposedHeapBytes": 2181160,
+      "topAllocationSites": [
+        [
+          "_update",
+          3704112
+        ],
+        [
+          "render",
+          1342052
+        ],
+        [
+          "get",
+          701448
+        ],
+        [
+          "updateCanvas",
+          45132
+        ],
+        [
+          "(anonymous)",
+          41016
+        ],
+        [
+          "flagReset",
+          24604
+        ],
+        [
+          "multiply",
+          12312
+        ],
+        [
+          "update",
+          12308
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "matrix",
+      "version": "current",
+      "samples": 300,
+      "checksum": 351733.9766025543,
+      "p50Milliseconds": 0.025000035762786865,
+      "p95Milliseconds": 0.034999966621398926,
+      "sampledAllocatedBytes": 1883952,
+      "gcCount": 2,
+      "gcMilliseconds": 1.109,
+      "retainedHeapDeltaBytes": 176,
+      "disposedHeapBytes": 1578992,
+      "topAllocationSites": [
+        [
+          "step",
+          1874616
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "matrix",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 351733.9766025543,
+      "p50Milliseconds": 0.05500000715255737,
+      "p95Milliseconds": 0.07499998807907104,
+      "sampledAllocatedBytes": 64551288,
+      "gcCount": 62,
+      "gcMilliseconds": 3.1140000000000003,
+      "retainedHeapDeltaBytes": 69680,
+      "disposedHeapBytes": 1647928,
+      "topAllocationSites": [
+        [
+          "multiply",
+          48757032
+        ],
+        [
+          "slice",
+          9779840
+        ],
+        [
+          "step",
+          6005080
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "curve-bounds",
+      "version": "current",
+      "samples": 300,
+      "checksum": 50829067.40593775,
+      "p50Milliseconds": 0.019999980926513672,
+      "p95Milliseconds": 0.0350000262260437,
+      "sampledAllocatedBytes": 16391220,
+      "gcCount": 17,
+      "gcMilliseconds": 1.6420000000000001,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1633692,
+      "topAllocationSites": [
+        [
+          "getCurveBoundingBox",
+          16094592
+        ],
+        [
+          "step",
+          283044
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "serializeAsCallArgument",
+          4248
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ],
+        [
+          "_promiseAwareJsonValueNoThrow",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "curve-bounds",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 50829067.40593775,
+      "p50Milliseconds": 0.13999998569488525,
+      "p95Milliseconds": 0.1549999713897705,
+      "sampledAllocatedBytes": 168287732,
+      "gcCount": 167,
+      "gcMilliseconds": 7.467999999999998,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1644288,
+      "topAllocationSites": [
+        [
+          "getCurveBoundingBox",
+          160325164
+        ],
+        [
+          "max",
+          3872292
+        ],
+        [
+          "min",
+          2145348
+        ],
+        [
+          "step",
+          1936140
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "serializeAsCallArgument",
+          4120
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "world-matrix",
+      "version": "current",
+      "samples": 300,
+      "checksum": 615634.5844268799,
+      "p50Milliseconds": 0.0350000262260437,
+      "p95Milliseconds": 0.05500000715255737,
+      "sampledAllocatedBytes": 20794188,
+      "gcCount": 21,
+      "gcMilliseconds": 1.7800000000000002,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1692520,
+      "topAllocationSites": [
+        [
+          "getComputedMatrix",
+          20616672
+        ],
+        [
+          "step",
+          168180
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "world-matrix",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 615634.5844268799,
+      "p50Milliseconds": 0.05500000715255737,
+      "p95Milliseconds": 0.07999998331069946,
+      "sampledAllocatedBytes": 66076144,
+      "gcCount": 65,
+      "gcMilliseconds": 3.3549999999999986,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1692260,
+      "topAllocationSites": [
+        [
+          "multiply",
+          34625448
+        ],
+        [
+          "getComputedMatrix",
+          25838920
+        ],
+        [
+          "slice",
+          5425488
+        ],
+        [
+          "step",
+          172284
+        ],
+        [
+          "evaluate",
+          9336
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "path-hit",
+      "version": "current",
+      "samples": 300,
+      "checksum": 28000,
+      "p50Milliseconds": 0.17500001192092896,
+      "p95Milliseconds": 0.24000000953674316,
+      "sampledAllocatedBytes": 37704224,
+      "gcCount": 39,
+      "gcMilliseconds": 3.391,
+      "retainedHeapDeltaBytes": 71032,
+      "disposedHeapBytes": 1865384,
+      "topAllocationSites": [
+        [
+          "buildPathHitParts",
+          29940312
+        ],
+        [
+          "getCurveBoundingBox",
+          4316244
+        ],
+        [
+          "_update",
+          2085208
+        ],
+        [
+          "getBoundingClientRect",
+          1018104
+        ],
+        [
+          "contains",
+          320572
+        ],
+        [
+          "pointsEqual",
+          10192
+        ],
+        [
+          "evaluate",
+          9336
+        ],
+        [
+          "set",
+          4256
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "path-hit",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 28000,
+      "p50Milliseconds": 1.2899999618530273,
+      "p95Milliseconds": 1.375,
+      "sampledAllocatedBytes": 306724456,
+      "gcCount": 174,
+      "gcMilliseconds": 8.621999999999995,
+      "retainedHeapDeltaBytes": 69148,
+      "disposedHeapBytes": 1890236,
+      "topAllocationSites": [
+        [
+          "_Anchor",
+          117309764
+        ],
+        [
+          "buildPathHitParts",
+          30979084
+        ],
+        [
+          "multiply",
+          27525384
+        ],
+        [
+          "set",
+          27104084
+        ],
+        [
+          "_Vector",
+          27015192
+        ],
+        [
+          "Events",
+          26994576
+        ],
+        [
+          "getCurveBoundingBox",
+          23906436
+        ],
+        [
+          "getSubdivisions",
+          11036336
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "hit-query",
+      "version": "current",
+      "samples": 300,
+      "checksum": 140000,
+      "p50Milliseconds": 0.9599999785423279,
+      "p95Milliseconds": 1,
+      "sampledAllocatedBytes": 219959048,
+      "gcCount": 204,
+      "gcMilliseconds": 7.71399999999999,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1880712,
+      "topAllocationSites": [
+        [
+          "buildPathHitParts",
+          149663836
+        ],
+        [
+          "getCurveBoundingBox",
+          43735140
+        ],
+        [
+          "_update",
+          16028304
+        ],
+        [
+          "getBoundingClientRect",
+          10147512
+        ],
+        [
+          "VisitForHitTest",
+          354392
+        ],
+        [
+          "getShapesAtPoint",
+          20528
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "evaluate",
+          4668
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "hit-query",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 140000,
+      "p50Milliseconds": 4.930000007152557,
+      "p95Milliseconds": 5.2700000405311584,
+      "sampledAllocatedBytes": 1780325576,
+      "gcCount": 608,
+      "gcMilliseconds": 24.31200000000003,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1904156,
+      "topAllocationSites": [
+        [
+          "_Anchor",
+          581466424
+        ],
+        [
+          "getCurveBoundingBox",
+          236139884
+        ],
+        [
+          "multiply",
+          229098612
+        ],
+        [
+          "buildPathHitParts",
+          158944756
+        ],
+        [
+          "set",
+          136239816
+        ],
+        [
+          "Events",
+          135351048
+        ],
+        [
+          "_Vector",
+          133042176
+        ],
+        [
+          "getBoundingClientRect",
+          58988068
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "svg",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.1499999761581421,
+      "p95Milliseconds": 0.1899999976158142,
+      "sampledAllocatedBytes": 38693028,
+      "gcCount": 15,
+      "gcMilliseconds": 2.4930000000000003,
+      "retainedHeapDeltaBytes": 92356,
+      "disposedHeapBytes": 2103984,
+      "topAllocationSites": [
+        [
+          "render",
+          14988476
+        ],
+        [
+          "join",
+          8902984
+        ],
+        [
+          "map",
+          3819328
+        ],
+        [
+          "_update",
+          3699996
+        ],
+        [
+          "toTransformArray",
+          3009600
+        ],
+        [
+          "keys",
+          1869908
+        ],
+        [
+          "toFixed",
+          1004704
+        ],
+        [
+          "get",
+          754764
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "svg",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.18000000715255737,
+      "p95Milliseconds": 0.24500000476837158,
+      "sampledAllocatedBytes": 79275256,
+      "gcCount": 36,
+      "gcMilliseconds": 4.757999999999999,
+      "retainedHeapDeltaBytes": 97568,
+      "disposedHeapBytes": 2106168,
+      "topAllocationSites": [
+        [
+          "multiply",
+          32741280
+        ],
+        [
+          "render",
+          15532332
+        ],
+        [
+          "join",
+          9199556
+        ],
+        [
+          "slice",
+          5894380
+        ],
+        [
+          "_update",
+          5475524
+        ],
+        [
+          "map",
+          3465364
+        ],
+        [
+          "toTransformArray",
+          2842848
+        ],
+        [
+          "keys",
+          1758948
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "canvas",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.2250000238418579,
+      "p95Milliseconds": 0.2549999952316284,
+      "sampledAllocatedBytes": 5376440,
+      "gcCount": 6,
+      "gcMilliseconds": 7.095,
+      "retainedHeapDeltaBytes": 76812,
+      "disposedHeapBytes": 2004408,
+      "topAllocationSites": [
+        [
+          "_update",
+          3556428
+        ],
+        [
+          "get",
+          713748
+        ],
+        [
+          "render",
+          628860
+        ],
+        [
+          "join",
+          415528
+        ],
+        [
+          "update",
+          32832
+        ],
+        [
+          "evaluate",
+          8288
+        ],
+        [
+          "step",
+          8208
+        ],
+        [
+          "flagReset",
+          4284
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "canvas",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.26499998569488525,
+      "p95Milliseconds": 0.32499998807907104,
+      "sampledAllocatedBytes": 45527876,
+      "gcCount": 36,
+      "gcMilliseconds": 8.541,
+      "retainedHeapDeltaBytes": 80788,
+      "disposedHeapBytes": 2006256,
+      "topAllocationSites": [
+        [
+          "multiply",
+          32645808
+        ],
+        [
+          "slice",
+          5663896
+        ],
+        [
+          "_update",
+          5225004
+        ],
+        [
+          "render",
+          739704
+        ],
+        [
+          "get",
+          660420
+        ],
+        [
+          "join",
+          559628
+        ],
+        [
+          "update",
+          20516
+        ],
+        [
+          "evaluate",
+          4668
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "webgl",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 4.7200000286102295,
+      "p95Milliseconds": 10.5450000166893,
+      "sampledAllocatedBytes": 5872464,
+      "gcCount": 6,
+      "gcMilliseconds": 2.867,
+      "retainedHeapDeltaBytes": 91492,
+      "disposedHeapBytes": 2181160,
+      "topAllocationSites": [
+        [
+          "_update",
+          3613872
+        ],
+        [
+          "render",
+          1354408
+        ],
+        [
+          "get",
+          738360
+        ],
+        [
+          "(anonymous)",
+          45120
+        ],
+        [
+          "updateCanvas",
+          41028
+        ],
+        [
+          "flagReset",
+          29296
+        ],
+        [
+          "parseFloat",
+          12312
+        ],
+        [
+          "step",
+          8208
+        ]
+      ]
+    },
+    {
+      "round": 1,
+      "name": "webgl",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 4.425000011920929,
+      "p95Milliseconds": 9.975000023841858,
+      "sampledAllocatedBytes": 45502124,
+      "gcCount": 45,
+      "gcMilliseconds": 5.859000000000001,
+      "retainedHeapDeltaBytes": 100608,
+      "disposedHeapBytes": 2182408,
+      "topAllocationSites": [
+        [
+          "multiply",
+          32301072
+        ],
+        [
+          "slice",
+          5602088
+        ],
+        [
+          "_update",
+          5233512
+        ],
+        [
+          "render",
+          1354332
+        ],
+        [
+          "get",
+          767076
+        ],
+        [
+          "(anonymous)",
+          69732
+        ],
+        [
+          "update",
+          45180
+        ],
+        [
+          "dispatchEvent",
+          45168
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "matrix",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 351733.9766025543,
+      "p50Milliseconds": 0.0350000262260437,
+      "p95Milliseconds": 0.05500000715255737,
+      "sampledAllocatedBytes": 64091372,
+      "gcCount": 62,
+      "gcMilliseconds": 2.42,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1647928,
+      "topAllocationSites": [
+        [
+          "multiply",
+          48391776
+        ],
+        [
+          "slice",
+          9705968
+        ],
+        [
+          "step",
+          5984832
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(BYTECODE_COMPILER)",
+          4128
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ],
+        [
+          "evaluate",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "matrix",
+      "version": "current",
+      "samples": 300,
+      "checksum": 351733.9766025543,
+      "p50Milliseconds": 0.014999985694885254,
+      "p95Milliseconds": 0.020000040531158447,
+      "sampledAllocatedBytes": 1830648,
+      "gcCount": 2,
+      "gcMilliseconds": 0.714,
+      "retainedHeapDeltaBytes": 176,
+      "disposedHeapBytes": 1579060,
+      "topAllocationSites": [
+        [
+          "step",
+          1817184
+        ],
+        [
+          "evaluate",
+          8796
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "curve-bounds",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 50829067.40593775,
+      "p50Milliseconds": 0.07999998331069946,
+      "p95Milliseconds": 0.09500002861022949,
+      "sampledAllocatedBytes": 169421664,
+      "gcCount": 167,
+      "gcMilliseconds": 4.915999999999998,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1644288,
+      "topAllocationSites": [
+        [
+          "getCurveBoundingBox",
+          162164664
+        ],
+        [
+          "max",
+          3646680
+        ],
+        [
+          "min",
+          1911528
+        ],
+        [
+          "step",
+          1694124
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ],
+        [
+          "evaluate",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "curve-bounds",
+      "version": "current",
+      "samples": 300,
+      "checksum": 50829067.40593775,
+      "p50Milliseconds": 0.014999985694885254,
+      "p95Milliseconds": 0.029999971389770508,
+      "sampledAllocatedBytes": 15785532,
+      "gcCount": 17,
+      "gcMilliseconds": 1.2890000000000001,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1633692,
+      "topAllocationSites": [
+        [
+          "getCurveBoundingBox",
+          15517764
+        ],
+        [
+          "step",
+          258432
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "evaluate",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "world-matrix",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 615634.5844268799,
+      "p50Milliseconds": 0.04000002145767212,
+      "p95Milliseconds": 0.06499999761581421,
+      "sampledAllocatedBytes": 65725128,
+      "gcCount": 65,
+      "gcMilliseconds": 2.6599999999999997,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1692260,
+      "topAllocationSites": [
+        [
+          "multiply",
+          34052724
+        ],
+        [
+          "getComputedMatrix",
+          26152028
+        ],
+        [
+          "slice",
+          5343424
+        ],
+        [
+          "step",
+          172284
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ],
+        [
+          "evaluate",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "world-matrix",
+      "version": "current",
+      "samples": 300,
+      "checksum": 615634.5844268799,
+      "p50Milliseconds": 0.029999971389770508,
+      "p95Milliseconds": 0.04500001668930054,
+      "sampledAllocatedBytes": 21240760,
+      "gcCount": 21,
+      "gcMilliseconds": 1.6490000000000005,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1692520,
+      "topAllocationSites": [
+        [
+          "getComputedMatrix",
+          21030972
+        ],
+        [
+          "step",
+          201000
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "serializeAsCallArgument",
+          4120
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ],
+        [
+          "evaluate",
+          0
+        ],
+        [
+          "_promiseAwareJsonValueNoThrow",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "path-hit",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 28000,
+      "p50Milliseconds": 1.3050000071525574,
+      "p95Milliseconds": 1.375,
+      "sampledAllocatedBytes": 306183020,
+      "gcCount": 175,
+      "gcMilliseconds": 9.112999999999996,
+      "retainedHeapDeltaBytes": 69148,
+      "disposedHeapBytes": 1890236,
+      "topAllocationSites": [
+        [
+          "_Anchor",
+          117894432
+        ],
+        [
+          "buildPathHitParts",
+          30456164
+        ],
+        [
+          "multiply",
+          28880488
+        ],
+        [
+          "set",
+          27385616
+        ],
+        [
+          "Events",
+          26883612
+        ],
+        [
+          "_Vector",
+          26646876
+        ],
+        [
+          "getCurveBoundingBox",
+          23626020
+        ],
+        [
+          "getSubdivisions",
+          10341968
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "path-hit",
+      "version": "current",
+      "samples": 300,
+      "checksum": 28000,
+      "p50Milliseconds": 0.1499999761581421,
+      "p95Milliseconds": 0.19999998807907104,
+      "sampledAllocatedBytes": 37742640,
+      "gcCount": 38,
+      "gcMilliseconds": 2.773,
+      "retainedHeapDeltaBytes": 71032,
+      "disposedHeapBytes": 1865384,
+      "topAllocationSites": [
+        [
+          "buildPathHitParts",
+          29764508
+        ],
+        [
+          "getCurveBoundingBox",
+          4449060
+        ],
+        [
+          "_update",
+          2077328
+        ],
+        [
+          "getBoundingClientRect",
+          1087392
+        ],
+        [
+          "contains",
+          337008
+        ],
+        [
+          "copy",
+          10192
+        ],
+        [
+          "(V8 API)",
+          8768
+        ],
+        [
+          "serializeAsCallArgument",
+          4248
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "hit-query",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 140000,
+      "p50Milliseconds": 5.594999969005585,
+      "p95Milliseconds": 6.384999990463257,
+      "sampledAllocatedBytes": 1780877908,
+      "gcCount": 608,
+      "gcMilliseconds": 24.475000000000026,
+      "retainedHeapDeltaBytes": 67596,
+      "disposedHeapBytes": 1904092,
+      "topAllocationSites": [
+        [
+          "_Anchor",
+          582204016
+        ],
+        [
+          "getCurveBoundingBox",
+          234025884
+        ],
+        [
+          "multiply",
+          229901976
+        ],
+        [
+          "buildPathHitParts",
+          160901852
+        ],
+        [
+          "Events",
+          136292240
+        ],
+        [
+          "set",
+          136022424
+        ],
+        [
+          "_Vector",
+          133292340
+        ],
+        [
+          "getBoundingClientRect",
+          59138464
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "hit-query",
+      "version": "current",
+      "samples": 300,
+      "checksum": 140000,
+      "p50Milliseconds": 0.7850000262260437,
+      "p95Milliseconds": 0.8450000286102295,
+      "sampledAllocatedBytes": 220196140,
+      "gcCount": 204,
+      "gcMilliseconds": 6.963999999999994,
+      "retainedHeapDeltaBytes": 67780,
+      "disposedHeapBytes": 1880712,
+      "topAllocationSites": [
+        [
+          "buildPathHitParts",
+          150770340
+        ],
+        [
+          "getCurveBoundingBox",
+          43681248
+        ],
+        [
+          "_update",
+          15416580
+        ],
+        [
+          "getBoundingClientRect",
+          9868836
+        ],
+        [
+          "VisitForHitTest",
+          421636
+        ],
+        [
+          "getShapesAtPoint",
+          32832
+        ],
+        [
+          "(V8 API)",
+          4668
+        ],
+        [
+          "(root)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "svg",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.16500002145767212,
+      "p95Milliseconds": 0.22499996423721313,
+      "sampledAllocatedBytes": 77542624,
+      "gcCount": 34,
+      "gcMilliseconds": 4.483,
+      "retainedHeapDeltaBytes": 97536,
+      "disposedHeapBytes": 2106160,
+      "topAllocationSites": [
+        [
+          "multiply",
+          31670352
+        ],
+        [
+          "render",
+          15213120
+        ],
+        [
+          "join",
+          9104620
+        ],
+        [
+          "slice",
+          6121436
+        ],
+        [
+          "_update",
+          5081708
+        ],
+        [
+          "map",
+          3510528
+        ],
+        [
+          "toTransformArray",
+          2884608
+        ],
+        [
+          "keys",
+          1639772
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "svg",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.16500002145767212,
+      "p95Milliseconds": 0.2200000286102295,
+      "sampledAllocatedBytes": 38300208,
+      "gcCount": 16,
+      "gcMilliseconds": 4.006,
+      "retainedHeapDeltaBytes": 91464,
+      "disposedHeapBytes": 2105028,
+      "topAllocationSites": [
+        [
+          "render",
+          15272856
+        ],
+        [
+          "join",
+          9080228
+        ],
+        [
+          "map",
+          3560044
+        ],
+        [
+          "_update",
+          3548232
+        ],
+        [
+          "toTransformArray",
+          2788704
+        ],
+        [
+          "keys",
+          1837040
+        ],
+        [
+          "toFixed",
+          1009772
+        ],
+        [
+          "get",
+          742584
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "canvas",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.2549999952316284,
+      "p95Milliseconds": 0.3100000023841858,
+      "sampledAllocatedBytes": 45252056,
+      "gcCount": 36,
+      "gcMilliseconds": 9.079,
+      "retainedHeapDeltaBytes": 80788,
+      "disposedHeapBytes": 2006248,
+      "topAllocationSites": [
+        [
+          "multiply",
+          32234868
+        ],
+        [
+          "slice",
+          5692320
+        ],
+        [
+          "_update",
+          5299032
+        ],
+        [
+          "render",
+          747912
+        ],
+        [
+          "get",
+          709656
+        ],
+        [
+          "join",
+          502016
+        ],
+        [
+          "update",
+          36932
+        ],
+        [
+          "dispatchEvent",
+          16420
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "canvas",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 0.25,
+      "p95Milliseconds": 0.29500001668930054,
+      "sampledAllocatedBytes": 5478872,
+      "gcCount": 6,
+      "gcMilliseconds": 7.518,
+      "retainedHeapDeltaBytes": 77604,
+      "disposedHeapBytes": 2004532,
+      "topAllocationSites": [
+        [
+          "_update",
+          3503112
+        ],
+        [
+          "render",
+          760236
+        ],
+        [
+          "get",
+          758880
+        ],
+        [
+          "join",
+          427908
+        ],
+        [
+          "update",
+          20528
+        ],
+        [
+          "set",
+          8208
+        ],
+        [
+          "(root)",
+          0
+        ],
+        [
+          "(anonymous)",
+          0
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "webgl",
+      "version": "baseline",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 4.665000021457672,
+      "p95Milliseconds": 10.020000040531158,
+      "sampledAllocatedBytes": 46329640,
+      "gcCount": 45,
+      "gcMilliseconds": 5.892,
+      "retainedHeapDeltaBytes": 100596,
+      "disposedHeapBytes": 2182400,
+      "topAllocationSites": [
+        [
+          "multiply",
+          32778340
+        ],
+        [
+          "slice",
+          5680036
+        ],
+        [
+          "_update",
+          5512288
+        ],
+        [
+          "render",
+          1383124
+        ],
+        [
+          "get",
+          791688
+        ],
+        [
+          "(anonymous)",
+          61536
+        ],
+        [
+          "flagReset",
+          31584
+        ],
+        [
+          "update",
+          28760
+        ]
+      ]
+    },
+    {
+      "round": 2,
+      "name": "webgl",
+      "version": "current",
+      "samples": 300,
+      "checksum": 246050,
+      "p50Milliseconds": 4.444999992847443,
+      "p95Milliseconds": 10.004999995231628,
+      "sampledAllocatedBytes": 5773292,
+      "gcCount": 7,
+      "gcMilliseconds": 3.052,
+      "retainedHeapDeltaBytes": 94452,
+      "disposedHeapBytes": 2181160,
+      "topAllocationSites": [
+        [
+          "_update",
+          3601560
+        ],
+        [
+          "render",
+          1321468
+        ],
+        [
+          "get",
+          668640
+        ],
+        [
+          "updateCanvas",
+          61524
+        ],
+        [
+          "flagReset",
+          37412
+        ],
+        [
+          "(anonymous)",
+          28716
+        ],
+        [
+          "multiply",
+          12328
+        ],
+        [
+          "set",
+          12312
+        ]
+      ]
+    }
+  ],
+  "hitQueryRetainedAfterGC": {
+    "baseline": [
+      true,
+      true
+    ],
+    "current": [
+      false,
+      false
+    ]
+  },
+  "notes": [
+    "The third round was restarted in a fresh Chrome process after a local navigation timeout. All measurements from the incomplete third round were discarded."
+  ]
+}

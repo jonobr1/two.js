@@ -334,10 +334,6 @@ const svg = {
 
       // _Update styles for the <g>
       const flagMatrix = this._matrix.manual || this._flagMatrix;
-      const context = {
-        domElement: domElement,
-        elem: this._renderer.elem,
-      };
 
       if (flagMatrix) {
         this._renderer.elem.setAttribute(
@@ -371,16 +367,25 @@ const svg = {
         this._renderer.elem.setAttribute('class', this.classList.join(' '));
       }
 
-      if (this._flagAdditions) {
-        this.additions.forEach(svg.group.appendChild, context);
-      }
+      // This context is only needed when the child list changes. Keep it local
+      // to the invocation because child render hooks can re-enter the renderer.
+      if (this._flagAdditions || this._flagSubtractions || this._flagOrder) {
+        const context = {
+          domElement: domElement,
+          elem: this._renderer.elem,
+        };
 
-      if (this._flagSubtractions) {
-        this.subtractions.forEach(svg.group.removeChild, context);
-      }
+        if (this._flagAdditions) {
+          this.additions.forEach(svg.group.appendChild, context);
+        }
 
-      if (this._flagOrder) {
-        this.children.forEach(svg.group.orderChild, context);
+        if (this._flagSubtractions) {
+          this.subtractions.forEach(svg.group.removeChild, context);
+        }
+
+        if (this._flagOrder) {
+          this.children.forEach(svg.group.orderChild, context);
+        }
       }
 
       // Commented two-way functionality of clips / masks with groups and

@@ -138,6 +138,9 @@ var Two = (() => {
   var Matrix;
   var TWO_PI = Math.PI * 2;
   var HALF_PI = Math.PI * 0.5;
+  var cache = {
+    getComputedMatrix: { active: false, matrices: [] }
+  };
   function decomposeMatrix(matrix, b, c, d, e, f) {
     let a;
     if (arguments.length <= 1) {
@@ -162,30 +165,41 @@ var Two = (() => {
     Matrix = matrix;
   }
   function getComputedMatrix(object, matrix) {
-    matrix = matrix && matrix.identity() || new Matrix();
-    let parent = object;
-    const matrices = [];
-    while (parent && parent._matrix) {
-      matrices.push(parent._matrix);
-      parent = parent.parent;
+    const workspace = cache.getComputedMatrix.active ? { active: false, matrices: [] } : cache.getComputedMatrix;
+    const matrices = workspace.matrices;
+    let length = 0;
+    workspace.active = true;
+    try {
+      matrix = matrix && matrix.identity() || new Matrix();
+      let parent = object;
+      while (parent && parent._matrix) {
+        matrices[length++] = parent._matrix;
+        parent = parent.parent;
+      }
+      for (let i = length - 1; i >= 0; i--) {
+        const e = matrices[i].elements;
+        matrix.multiply(
+          e[0],
+          e[1],
+          e[2],
+          e[3],
+          e[4],
+          e[5],
+          e[6],
+          e[7],
+          e[8]
+        );
+      }
+      return matrix;
+    } finally {
+      for (let i = 0; i < length; i++) {
+        matrices[i] = null;
+      }
+      if (matrices.length > 64) {
+        matrices.length = 64;
+      }
+      workspace.active = false;
     }
-    matrices.reverse();
-    for (let i = 0; i < matrices.length; i++) {
-      const m = matrices[i];
-      const e = m.elements;
-      matrix.multiply(
-        e[0],
-        e[1],
-        e[2],
-        e[3],
-        e[4],
-        e[5],
-        e[6],
-        e[7],
-        e[8]
-      );
-    }
-    return matrix;
   }
   function lerp(a, b, t) {
     return t * (b - a) + a;
@@ -336,11 +350,28 @@ var Two = (() => {
       if (!this._events) {
         return this;
       }
-      const args = Array.prototype.slice.call(arguments, 1);
       const events = this._events[name];
-      if (events) {
-        for (let i = 0; i < events.length; i++) {
-          events[i].call(this, ...args);
+      if (!events || events.length === 0) {
+        return this;
+      }
+      const length = arguments.length;
+      const args = length > 4 ? Array.prototype.slice.call(arguments, 1) : null;
+      for (let i = 0; i < events.length; i++) {
+        switch (length) {
+          case 1:
+            events[i].call(this);
+            break;
+          case 2:
+            events[i].call(this, arguments[1]);
+            break;
+          case 3:
+            events[i].call(this, arguments[1], arguments[2]);
+            break;
+          case 4:
+            events[i].call(this, arguments[1], arguments[2], arguments[3]);
+            break;
+          default:
+            events[i].apply(this, args);
         }
       }
       return this;
@@ -1220,7 +1251,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2026-09-22T01:17:47.007Z",
+    PublishDate: "2026-10-31T07:05:31.180Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1447,8 +1478,7 @@ var Two = (() => {
     return integrate(integrand, 0, 1, limit || Curve.RecursionLimit);
   }
   function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
-    const tvalues = [];
-    const bounds = [[], []];
+    let minX = Math.min(x1, x4), minY = Math.min(y1, y4), maxX = Math.max(x1, x4), maxY = Math.max(y1, y4);
     let a, b, c, t, t1, t2, b2ac, sqrtb2ac;
     for (let i = 0; i < 2; ++i) {
       if (i === 0) {
@@ -1464,43 +1494,34 @@ var Two = (() => {
         if (Math.abs(b) < 1e-3) {
           continue;
         }
-        t = -c / b;
-        if (0 < t && t < 1) {
-          tvalues.push(t);
+        t1 = -c / b;
+        t2 = NaN;
+      } else {
+        b2ac = b * b - 4 * c * a;
+        if (b2ac < 0) {
+          continue;
         }
-        continue;
+        sqrtb2ac = Math.sqrt(b2ac);
+        t1 = (-b + sqrtb2ac) / (2 * a);
+        t2 = (-b - sqrtb2ac) / (2 * a);
       }
-      b2ac = b * b - 4 * c * a;
-      sqrtb2ac = Math.sqrt(b2ac);
-      if (b2ac < 0) {
-        continue;
-      }
-      t1 = (-b + sqrtb2ac) / (2 * a);
-      if (0 < t1 && t1 < 1) {
-        tvalues.push(t1);
-      }
-      t2 = (-b - sqrtb2ac) / (2 * a);
-      if (0 < t2 && t2 < 1) {
-        tvalues.push(t2);
+      for (let j = 0; j < 2; j++) {
+        t = j === 0 ? t1 : t2;
+        if (!(0 < t && t < 1)) {
+          continue;
+        }
+        const mt = 1 - t;
+        const x = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
+        const y = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
       }
     }
-    let j = tvalues.length;
-    let jlen = j;
-    let mt;
-    while (j--) {
-      t = tvalues[j];
-      mt = 1 - t;
-      bounds[0][j] = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
-      bounds[1][j] = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
-    }
-    bounds[0][jlen] = x1;
-    bounds[1][jlen] = y1;
-    bounds[0][jlen + 1] = x4;
-    bounds[1][jlen + 1] = y4;
-    bounds[0].length = bounds[1].length = jlen + 2;
     return {
-      min: { x: Math.min.apply(0, bounds[0]), y: Math.min.apply(0, bounds[1]) },
-      max: { x: Math.max.apply(0, bounds[0]), y: Math.max.apply(0, bounds[1]) }
+      min: { x: minX, y: minY },
+      max: { x: maxX, y: maxY }
     };
   }
   function integrate(f, a, b, n) {
@@ -1654,7 +1675,7 @@ var Two = (() => {
     },
     unbind: function(elem, event, func, bool) {
       if (dom.hasEventListeners) {
-        elem.removeEventListeners(event, func, !!bool);
+        elem.removeEventListener(event, func, !!bool);
       } else {
         elem.detachEvent("on" + event, func);
       }
@@ -1825,13 +1846,19 @@ var Two = (() => {
       }
     }
     pop() {
+      const hadItems = this.length > 0;
       const popped = super.pop.apply(this, arguments);
-      this.trigger(Events.Types.remove, [popped]);
+      if (hadItems) {
+        this.trigger(Events.Types.remove, [popped]);
+      }
       return popped;
     }
     shift() {
+      const hadItems = this.length > 0;
       const shifted = super.shift.apply(this, arguments);
-      this.trigger(Events.Types.remove, [shifted]);
+      if (hadItems) {
+        this.trigger(Events.Types.remove, [shifted]);
+      }
       return shifted;
     }
     push() {
@@ -1848,10 +1875,7 @@ var Two = (() => {
       const spliced = super.splice.apply(this, arguments);
       this.trigger(Events.Types.remove, spliced);
       if (arguments.length > 2) {
-        const inserted = this.slice(
-          arguments[0],
-          arguments[0] + arguments.length - 2
-        );
+        const inserted = Array.prototype.slice.call(arguments, 2);
         this.trigger(Events.Types.insert, inserted);
         this.trigger(Events.Types.order);
       }
@@ -1975,7 +1999,8 @@ var Two = (() => {
      * @name Two.Element#dispose
      * @function
      * @description Release the element's renderer object and detach any events.
-     * This cleans up renderer-specific resources and unbinds all event listeners.
+     * WebGL resources retain their allocating context so disposal also works after
+     * detachment. Canvas context and effect caches are released with the renderer object.
      */
     dispose() {
       if (typeof this.unbind === "function") {
@@ -1986,8 +2011,8 @@ var Two = (() => {
           this._renderer.elem.parentNode.removeChild(this._renderer.elem);
           delete this._renderer.elem;
         }
-        if (this.type === "WebGLRenderer" && this.renderer.ctx) {
-          const gl = this.renderer.ctx;
+        const gl = this._renderer.gl;
+        if (gl) {
           if (this._renderer.texture) {
             gl.deleteTexture(this._renderer.texture);
             delete this._renderer.texture;
@@ -1996,12 +2021,6 @@ var Two = (() => {
             gl.deleteBuffer(this._renderer.positionBuffer);
             delete this._renderer.positionBuffer;
           }
-          if (this._renderer.effect) {
-            this._renderer.effect = null;
-          }
-        }
-        if (this.type === "CanvasRenderer" && this._renderer.context) {
-          delete this._renderer.context;
         }
       }
       const rendererType = this._renderer.type;
@@ -2889,7 +2908,9 @@ var Two = (() => {
     dispose() {
       if ("elem" in this._renderer) {
         const elem = this._renderer.elem;
-        elem.parentNode.removeChild(elem);
+        if (elem.parentNode) {
+          elem.parentNode.removeChild(elem);
+        }
       }
       if ("effect" in this._renderer) {
         this._renderer.effect = null;
@@ -3653,22 +3674,18 @@ var Two = (() => {
         return [x, y, z];
       }
       const A = this.elements;
-      const B = [a, b, c, d, e, f, g, h, i];
       const A0 = A[0], A1 = A[1], A2 = A[2];
       const A3 = A[3], A4 = A[4], A5 = A[5];
       const A6 = A[6], A7 = A[7], A8 = A[8];
-      const B0 = B[0], B1 = B[1], B2 = B[2];
-      const B3 = B[3], B4 = B[4], B5 = B[5];
-      const B6 = B[6], B7 = B[7], B8 = B[8];
-      this.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
-      this.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
-      this.elements[2] = A0 * B2 + A1 * B5 + A2 * B8;
-      this.elements[3] = A3 * B0 + A4 * B3 + A5 * B6;
-      this.elements[4] = A3 * B1 + A4 * B4 + A5 * B7;
-      this.elements[5] = A3 * B2 + A4 * B5 + A5 * B8;
-      this.elements[6] = A6 * B0 + A7 * B3 + A8 * B6;
-      this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
-      this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
+      this.elements[0] = A0 * a + A1 * d + A2 * g;
+      this.elements[1] = A0 * b + A1 * e + A2 * h;
+      this.elements[2] = A0 * c + A1 * f + A2 * i;
+      this.elements[3] = A3 * a + A4 * d + A5 * g;
+      this.elements[4] = A3 * b + A4 * e + A5 * h;
+      this.elements[5] = A3 * c + A4 * f + A5 * i;
+      this.elements[6] = A6 * a + A7 * d + A8 * g;
+      this.elements[7] = A6 * b + A7 * e + A8 * h;
+      this.elements[8] = A6 * c + A7 * f + A8 * i;
       return this.trigger(Events.Types.change);
     }
     /**
@@ -4071,11 +4088,12 @@ var Two = (() => {
      */
     copy(shape) {
       super.copy.call(this, shape);
-      if ("position" in shape) {
-        if (shape.position instanceof Vector) {
-          this.position = shape.position;
+      const position = "position" in shape ? shape.position : shape.translation;
+      if (position) {
+        if (position instanceof Vector) {
+          this.position = position;
         } else {
-          this.position.copy(shape.position);
+          this.position.copy(position);
         }
       }
       if ("rotation" in shape) {
@@ -4129,7 +4147,7 @@ var Two = (() => {
       result.renderer = { type: "shape" };
       result.isShape = true;
       result.translation = this.translation.toObject();
-      result.rotation = this.translation.rotation;
+      result.rotation = this.rotation;
       result.scale = this.scale instanceof Vector ? this.scale.toObject() : this.scale;
       result.skewX = this.skewX;
       result.skewY = this.skewY;
@@ -4295,14 +4313,16 @@ var Two = (() => {
     }
     return ang;
   }
-  function sampleArcPoints(prev, anchor2, precision) {
+  function appendArcPoints(prev, anchor2, precision, appendPoint) {
     if (!prev) {
-      return [createPoint(anchor2.x, anchor2.y)];
+      appendPoint(createPoint(anchor2.x, anchor2.y));
+      return;
     }
     let rx = anchor2.rx;
     let ry = anchor2.ry;
     if (!(rx && ry)) {
-      return [createPoint(anchor2.x, anchor2.y)];
+      appendPoint(createPoint(anchor2.x, anchor2.y));
+      return;
     }
     const xAxisRotation = (anchor2.xAxisRotation || 0) * Math.PI / 180;
     const largeArcFlag = anchor2.largeArcFlag ? 1 : 0;
@@ -4348,20 +4368,16 @@ var Two = (() => {
     ) % TWO_PI;
     const endAngle = startAngle + delta;
     const clockwise = sweepFlag === 0;
-    const angleDelta = (() => {
-      const raw = endAngle - startAngle;
-      const samePoints = Math.abs(raw) < Number.EPSILON;
-      let deltaAngle = mod(raw, TWO_PI);
-      if (deltaAngle < Number.EPSILON) {
-        deltaAngle = samePoints ? 0 : TWO_PI;
-      }
-      if (clockwise && !samePoints) {
-        deltaAngle = deltaAngle === TWO_PI ? -TWO_PI : deltaAngle - TWO_PI;
-      }
-      return deltaAngle;
-    })();
+    const raw = endAngle - startAngle;
+    const samePoints = Math.abs(raw) < Number.EPSILON;
+    let angleDelta = mod(raw, TWO_PI);
+    if (angleDelta < Number.EPSILON) {
+      angleDelta = samePoints ? 0 : TWO_PI;
+    }
+    if (clockwise && !samePoints) {
+      angleDelta = angleDelta === TWO_PI ? -TWO_PI : angleDelta - TWO_PI;
+    }
     const steps = Math.max(Constants.Resolution, Math.max(precision * 2, 1));
-    const points = [];
     for (let i = 1; i <= steps; i++) {
       const t = i / steps;
       const angle = startAngle + t * angleDelta;
@@ -4375,9 +4391,8 @@ var Two = (() => {
         px = tx * cosR - ty * sinR + cx;
         py = tx * sinR + ty * cosR + cy;
       }
-      points.push(createPoint(px, py));
+      appendPoint(createPoint(px, py));
     }
-    return points;
   }
   function buildPathHitParts(path, precision = DEFAULT_PRECISION) {
     const polygons = [];
@@ -4443,17 +4458,33 @@ var Two = (() => {
       if (command === Commands.line) {
         appendPoint(createPoint(vertex.x, vertex.y));
       } else if (command === Commands.curve) {
-        const subdivisions = getSubdivisions(vertex, prevVertex, limit);
-        for (let j = 1; j < subdivisions.length; j++) {
-          const sv = subdivisions[j];
-          appendPoint(createPoint(sv.x, sv.y));
+        const right = prevVertex.controls && prevVertex.controls.right;
+        const left = vertex.controls && vertex.controls.left;
+        let x2 = (right || prevVertex).x;
+        let y2 = (right || prevVertex).y;
+        let x3 = (left || vertex).x;
+        let y3 = (left || vertex).y;
+        if (right && prevVertex._relative) {
+          x2 += prevVertex.x;
+          y2 += prevVertex.y;
+        }
+        if (left && vertex._relative) {
+          x3 += vertex.x;
+          y3 += vertex.y;
+        }
+        if (!(Math.abs(prevVertex.x - vertex.x) < 1e-3 && Math.abs(prevVertex.y - vertex.y) < 1e-3)) {
+          const amount = (limit || Curve.RecursionLimit) + 1;
+          for (let j = 1; j < amount; j++) {
+            const t = j / amount;
+            appendPoint(createPoint(
+              getComponentOnCubicBezier(t, prevVertex.x, x2, x3, vertex.x),
+              getComponentOnCubicBezier(t, prevVertex.y, y2, y3, vertex.y)
+            ));
+          }
         }
         appendPoint(createPoint(vertex.x, vertex.y));
       } else if (command === Commands.arc) {
-        const arcPoints = sampleArcPoints(prevVertex, vertex, limit);
-        for (let j = 0; j < arcPoints.length; j++) {
-          appendPoint(arcPoints[j]);
-        }
+        appendArcPoints(prevVertex, vertex, limit, appendPoint);
       } else if (command === Commands.close) {
         closePolygon(true);
         prevVertex = vertex;
@@ -5335,8 +5366,13 @@ var Two = (() => {
       for (i = 0; i < l; i++) {
         v1 = this._renderer.vertices[i];
         v0 = this._renderer.vertices[(i + l - 1) % l];
-        const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
-        const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
+        const e = matrix.elements;
+        const x0 = v0.x || 0, y0 = v0.y || 0;
+        const x1 = v1.x || 0, y1 = v1.y || 0;
+        const v0x = e[0] * x0 + e[1] * y0 + e[2];
+        const v0y = e[3] * x0 + e[4] * y0 + e[5];
+        const v1x = e[0] * x1 + e[1] * y1 + e[2];
+        const v1y = e[3] * x1 + e[4] * y1 + e[5];
         if (v0.controls && v1.controls) {
           let rx = v0.controls.right.x;
           let ry = v0.controls.right.y;
@@ -5344,14 +5380,20 @@ var Two = (() => {
             rx += v0.x;
             ry += v0.y;
           }
-          let [c0x, c0y] = matrix.multiply(rx, ry);
+          rx = rx || 0;
+          ry = ry || 0;
+          const c0x = e[0] * rx + e[1] * ry + e[2];
+          const c0y = e[3] * rx + e[4] * ry + e[5];
           let lx = v1.controls.left.x;
           let ly = v1.controls.left.y;
           if (v1.relative) {
             lx += v1.x;
             ly += v1.y;
           }
-          let [c1x, c1y] = matrix.multiply(lx, ly);
+          lx = lx || 0;
+          ly = ly || 0;
+          const c1x = e[0] * lx + e[1] * ly + e[2];
+          const c1y = e[3] * lx + e[4] * ly + e[5];
           const bb = getCurveBoundingBox(v0x, v0y, c0x, c0y, c1x, c1y, v1x, v1y);
           top = min(bb.min.y - border, top);
           left = min(bb.min.x - border, left);
@@ -5411,7 +5453,10 @@ var Two = (() => {
       if (!inverse) {
         return super.contains(x, y, opts);
       }
-      const [localX, localY] = inverse.multiply(x, y, 1);
+      const e = inverse.elements;
+      const px = x || 0, py = y || 0;
+      const localX = e[0] * px + e[1] * py + e[2];
+      const localY = e[3] * px + e[4] * py + e[5];
       const precision = typeof opts.precision === "number" && !Number.isNaN(opts.precision) ? Math.max(1, Math.floor(opts.precision)) : 8;
       const fillTest = hasVisibleFill(this, opts.fill);
       const strokeTest = hasVisibleStroke(this, opts.stroke);
@@ -10107,20 +10152,24 @@ var Two = (() => {
   // src/group.js
   var min3 = Math.min;
   var max3 = Math.max;
-  var cache = {
-    getShapesAtPoint: {
-      results: [],
+  function hasFiniteBounds(rect) {
+    return isFinite(rect.left) && isFinite(rect.top) && isFinite(rect.right) && isFinite(rect.bottom) && isFinite(rect.width) && isFinite(rect.height);
+  }
+  function createHitTestWorkspace() {
+    return {
+      active: false,
       hitOptions: {},
       context: {
         x: 0,
         y: 0,
         visibleOnly: true,
         results: null
-      },
-      single: [],
-      output: [],
-      empty: []
-    }
+      }
+    };
+  }
+  var cache2 = {
+    getShapesAtPoint: createHitTestWorkspace(),
+    emptyOptions: {}
   };
   var Group = class _Group extends Shape {
     /**
@@ -10327,6 +10376,7 @@ var Two = (() => {
     ];
     static fromObject(obj) {
       const group = new _Group();
+      Shape.prototype.copy.call(group, obj);
       for (let i = 0; i < _Group.Properties.length; i++) {
         const k = _Group.Properties[i];
         if (k in obj) {
@@ -10575,59 +10625,58 @@ var Two = (() => {
      * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
      */
     getShapesAtPoint(x, y, options) {
-      const opts = options || {};
-      const { results, hitOptions, context, single, empty } = cache.getShapesAtPoint;
-      results.length = 0;
-      const mode = opts.mode === "deepest" || opts.deepest ? "deepest" : "all";
-      const visibleOnly = opts.visibleOnly !== false;
-      const includeGroups = !!opts.includeGroups;
-      const filter = typeof opts.filter === "function" ? opts.filter : null;
-      const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0;
-      if (typeof opts.precision === "number") {
-        hitOptions.precision = opts.precision;
-      } else {
-        delete hitOptions.precision;
-      }
-      if (typeof opts.fill !== "undefined") {
-        hitOptions.fill = opts.fill;
-      } else {
-        delete hitOptions.fill;
-      }
-      if (typeof opts.stroke !== "undefined") {
-        hitOptions.stroke = opts.stroke;
-      } else {
-        delete hitOptions.stroke;
-      }
-      hitOptions.tolerance = tolerance;
-      hitOptions.ignoreVisibility = !visibleOnly;
-      const stopOnFirst = mode === "deepest";
-      context.x = x;
-      context.y = y;
-      context.visibleOnly = visibleOnly;
-      context.results = results;
-      _Group.VisitForHitTest(
-        this,
-        context,
-        includeGroups,
-        filter,
-        hitOptions,
-        tolerance,
-        stopOnFirst
-      );
-      if (stopOnFirst) {
-        if (results.length > 0) {
-          const first = results[0];
-          results.length = 0;
-          single[0] = first;
-          single.length = 1;
-          return single;
+      const workspace = cache2.getShapesAtPoint.active ? createHitTestWorkspace() : cache2.getShapesAtPoint;
+      const { hitOptions, context } = workspace;
+      const results = [];
+      workspace.active = true;
+      try {
+        const opts = options || cache2.emptyOptions;
+        const mode = opts.mode === "deepest" || opts.deepest ? "deepest" : "all";
+        const visibleOnly = opts.visibleOnly !== false;
+        const includeGroups = !!opts.includeGroups;
+        const filter = typeof opts.filter === "function" ? opts.filter : null;
+        const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0;
+        if (typeof opts.precision === "number") {
+          hitOptions.precision = opts.precision;
+        } else {
+          delete hitOptions.precision;
         }
-        empty.length = 0;
-        return empty;
+        if (typeof opts.fill !== "undefined") {
+          hitOptions.fill = opts.fill;
+        } else {
+          delete hitOptions.fill;
+        }
+        if (typeof opts.stroke !== "undefined") {
+          hitOptions.stroke = opts.stroke;
+        } else {
+          delete hitOptions.stroke;
+        }
+        hitOptions.tolerance = tolerance;
+        hitOptions.ignoreVisibility = !visibleOnly;
+        const stopOnFirst = mode === "deepest";
+        context.x = x;
+        context.y = y;
+        context.visibleOnly = visibleOnly;
+        context.results = results;
+        _Group.VisitForHitTest(
+          this,
+          context,
+          includeGroups,
+          filter,
+          hitOptions,
+          tolerance,
+          stopOnFirst
+        );
+        return results;
+      } finally {
+        context.results = null;
+        delete hitOptions.precision;
+        delete hitOptions.fill;
+        delete hitOptions.stroke;
+        hitOptions.tolerance = 0;
+        hitOptions.ignoreVisibility = false;
+        workspace.active = false;
       }
-      const hits = results.slice();
-      results.length = 0;
-      return hits;
     }
     /**
      * @name Two.Group#corner
@@ -10636,6 +10685,9 @@ var Two = (() => {
      */
     corner() {
       const rect = this.getBoundingClientRect(true);
+      if (!hasFiniteBounds(rect)) {
+        return this;
+      }
       for (let i = 0; i < this.children.length; i++) {
         const child = this.children[i];
         child.translation.x -= rect.left;
@@ -10654,6 +10706,9 @@ var Two = (() => {
      */
     center() {
       const rect = this.getBoundingClientRect(true);
+      if (!hasFiniteBounds(rect)) {
+        return this;
+      }
       const cx = rect.left + rect.width / 2 - this.translation.x;
       const cy = rect.top + rect.height / 2 - this.translation.y;
       for (let i = 0; i < this.children.length; i++) {
@@ -11433,10 +11488,14 @@ var Two = (() => {
       delete styles.opacity;
     }
     if (parentStyles) {
+      const display = styles.display;
       _.defaults(styles, parentStyles);
+      if (typeof display === "undefined") {
+        delete styles.display;
+      }
     }
     _.extend(styles, extracted, attributes);
-    styles.visible = !(typeof styles.display === "undefined" && /none/i.test(styles.display)) || typeof styles.visibility === "undefined" && /hidden/i.test(styles.visibility);
+    styles.visible = !(typeof styles.display !== "undefined" && /none/i.test(styles.display)) && !(typeof styles.visibility !== "undefined" && /hidden/i.test(styles.visibility));
     for (key in styles) {
       value = styles[key];
       switch (key) {
@@ -13639,10 +13698,6 @@ var Two = (() => {
           domElement.appendChild(this._renderer.elem);
         }
         const flagMatrix = this._matrix.manual || this._flagMatrix;
-        const context = {
-          domElement,
-          elem: this._renderer.elem
-        };
         if (flagMatrix) {
           this._renderer.elem.setAttribute(
             "transform",
@@ -13669,14 +13724,20 @@ var Two = (() => {
         if (this._flagClassName) {
           this._renderer.elem.setAttribute("class", this.classList.join(" "));
         }
-        if (this._flagAdditions) {
-          this.additions.forEach(svg.group.appendChild, context);
-        }
-        if (this._flagSubtractions) {
-          this.subtractions.forEach(svg.group.removeChild, context);
-        }
-        if (this._flagOrder) {
-          this.children.forEach(svg.group.orderChild, context);
+        if (this._flagAdditions || this._flagSubtractions || this._flagOrder) {
+          const context = {
+            domElement,
+            elem: this._renderer.elem
+          };
+          if (this._flagAdditions) {
+            this.additions.forEach(svg.group.appendChild, context);
+          }
+          if (this._flagSubtractions) {
+            this.subtractions.forEach(svg.group.removeChild, context);
+          }
+          if (this._flagOrder) {
+            this.children.forEach(svg.group.orderChild, context);
+          }
         }
         if (this._flagMask) {
           if (this._mask) {
@@ -14429,6 +14490,7 @@ var Two = (() => {
           gl.deleteBuffer(child._renderer.positionBuffer);
           delete child._renderer.positionBuffer;
         }
+        delete child._renderer.gl;
       },
       /**
        * @function
@@ -15011,6 +15073,7 @@ var Two = (() => {
           if (positionBuffer) {
             gl.deleteBuffer(positionBuffer);
           }
+          this._renderer.gl = gl;
           this._renderer.positionBuffer = gl.createBuffer();
           gl.bindBuffer(gl.ARRAY_BUFFER, this._renderer.positionBuffer);
           gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
@@ -15530,6 +15593,7 @@ var Two = (() => {
         return;
       }
       if (!elem._renderer.texture) {
+        elem._renderer.gl = gl;
         elem._renderer.texture = gl.createTexture();
       }
       gl.bindTexture(gl.TEXTURE_2D, elem._renderer.texture);
@@ -15639,8 +15703,7 @@ var Two = (() => {
       program.position = gl.getAttribLocation(program, "a_position");
       program.matrix = gl.getUniformLocation(program, "u_matrix");
       program.rect = gl.getUniformLocation(program, "u_rect");
-      const positionBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.programs.buffers.position);
       gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(program.position);
       gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
@@ -15661,6 +15724,43 @@ var Two = (() => {
      */
     static Utils = webgl;
     /**
+     * @name Two.WebGLRenderer#dispose
+     * @function
+     * @returns {Two.WebGLRenderer} The renderer itself.
+     * @description Release scene textures, buffers, programs, shaders, and event listeners while preserving the canvas and its WebGL context.
+     */
+    dispose() {
+      if (this._disposed) {
+        return this;
+      }
+      this._disposed = true;
+      const gl = this.ctx;
+      const programs = [this.programs.path, this.programs.points];
+      webgl.group.removeChild(this.scene, gl);
+      if (programs.indexOf(gl.getParameter(gl.CURRENT_PROGRAM)) >= 0) {
+        gl.useProgram(null);
+      }
+      for (let i = 0; i < programs.length; i++) {
+        const program = programs[i];
+        const attached = gl.getAttachedShaders(program) || [];
+        for (let j = 0; j < attached.length; j++) {
+          gl.detachShader(program, attached[j]);
+          gl.deleteShader(attached[j]);
+        }
+        gl.deleteProgram(program);
+      }
+      _.each(this.programs.buffers, function(buffer) {
+        gl.deleteBuffer(buffer);
+      });
+      this.programs.buffers = {};
+      this.programs.current = this.programs.path = this.programs.text = this.programs.points = null;
+      if (gl.renderer === this) {
+        delete gl.renderer;
+      }
+      this.unbind();
+      return this;
+    }
+    /**
      * @name Two.WebGLRenderer#setSize
      * @function
      * @fires resize
@@ -15670,6 +15770,9 @@ var Two = (() => {
      * @description Change the size of the renderer.
      */
     setSize(width, height, ratio) {
+      if (this._disposed) {
+        return this;
+      }
       let w, h;
       const ctx = this.ctx;
       this.width = width;
@@ -15700,6 +15803,9 @@ var Two = (() => {
      * @description Render the current scene to the `<canvas />`.
      */
     render() {
+      if (this._disposed) {
+        return this;
+      }
       const gl = this.ctx;
       if (!this.overdraw) {
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -15724,6 +15830,8 @@ var Two = (() => {
     curves_exports,
     math_exports
   );
+  var fullscreenInstances = 0;
+  var previousBodyStyle;
   var Two = class _Two {
     // Warning: inherit events while overriding static properties
     /**
@@ -15807,6 +15915,10 @@ var Two = (() => {
      * @property {Boolean} - A boolean representing whether or not the instance is being updated through the automatic `requestAnimationFrame`.
      */
     playing = false;
+    /**
+     * @private
+     */
+    _disposed = false;
     constructor(options) {
       const params = _.defaults(options || {}, {
         fullscreen: false,
@@ -15841,7 +15953,7 @@ var Two = (() => {
         this.fit = fitToWindow.bind(this);
         this.fit.domElement = window;
         this.fit.attached = true;
-        _.extend(document.body.style, {
+        const bodyStyle = {
           overflow: "hidden",
           margin: 0,
           padding: 0,
@@ -15850,7 +15962,16 @@ var Two = (() => {
           right: 0,
           bottom: 0,
           position: "fixed"
-        });
+        };
+        if (fullscreenInstances === 0) {
+          previousBodyStyle = {};
+          _.each(bodyStyle, function(v, k) {
+            previousBodyStyle[k] = document.body.style[k];
+          });
+        }
+        fullscreenInstances++;
+        this.fit.fullscreen = true;
+        _.extend(document.body.style, bodyStyle);
         _.extend(this.renderer.domElement.style, {
           display: "block",
           top: 0,
@@ -15990,6 +16111,9 @@ var Two = (() => {
      * @nota-bene This function initiates a `requestAnimationFrame` loop.
      */
     play() {
+      if (this._disposed) {
+        return this;
+      }
       this.playing = true;
       raf.init();
       return this.trigger(Events.Types.play);
@@ -16005,7 +16129,52 @@ var Two = (() => {
       return this.trigger(Events.Types.pause);
     }
     setPlaying(p) {
-      this.playing = p;
+      this.playing = !this._disposed && p;
+    }
+    /**
+     * @name Two#dispose
+     * @function
+     * @fires pause
+     * @returns {Two} The instance itself.
+     * @description Tear down the instance. This pauses it, removes it from {@link Two.Instances}, detaches the resize listener of a `fitted` or `fullscreen` instance, restores the `document.body` styles when the last fullscreen instance is disposed, releases scene and renderer resources, and removes the renderer's DOM element from the document. An element passed in as `options.domElement` stays where it is. Repeated calls have no effect. A disposed instance cannot play, update, or render again.
+     * @nota-bene The shared `requestAnimationFrame` loop stops when no instance is playing and starts again on {@link Two#play}.
+     */
+    dispose() {
+      if (this._disposed) {
+        return this;
+      }
+      this._disposed = true;
+      this.pause();
+      const index = _Two.Instances.indexOf(this);
+      if (index >= 0) {
+        _Two.Instances.splice(index, 1);
+      }
+      if (this.fit) {
+        if (this.fit.attached) {
+          dom.unbind(this.fit.domElement, "resize", this.fit);
+        }
+        if (this.fit.fullscreen) {
+          fullscreenInstances--;
+          this.fit.fullscreen = false;
+          if (fullscreenInstances === 0) {
+            _.extend(document.body.style, previousBodyStyle);
+            previousBodyStyle = null;
+          }
+        }
+        this.fit.attached = false;
+        this.fit.domElement = null;
+      }
+      this.release();
+      if (typeof this.renderer.dispose === "function") {
+        this.renderer.dispose();
+      }
+      const elem = this.renderer.domElement;
+      if (!this.domElement && elem.parentNode) {
+        elem.parentNode.removeChild(elem);
+      }
+      this.renderer.unbind();
+      this.unbind();
+      return this;
     }
     /**
      * @name Two#release
@@ -16077,6 +16246,7 @@ var Two = (() => {
             gl.deleteBuffer(obj._renderer.positionBuffer);
             delete obj._renderer.positionBuffer;
           }
+          delete obj._renderer.gl;
           if (obj._renderer.effect) {
             obj._renderer.effect = null;
           }
@@ -16120,6 +16290,9 @@ var Two = (() => {
      * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
      */
     update() {
+      if (this._disposed) {
+        return this;
+      }
       const animated = !!this._lastFrame;
       const now = _.performance.now();
       if (animated) {
@@ -16147,6 +16320,9 @@ var Two = (() => {
      * @description Render all drawable and visible objects of the scene.
      */
     render() {
+      if (this._disposed) {
+        return this;
+      }
       this.renderer.render();
       return this.trigger(Events.Types.render, this.frameCount++);
     }
@@ -16695,19 +16871,28 @@ var Two = (() => {
     this.trigger(Events.Types.resize, width, height);
   }
   var raf = dom.getRequestAnimationFrame();
+  var looping = false;
   function loop() {
-    for (let i = 0; i < Two.Instances.length; i++) {
-      const t = Two.Instances[i];
-      if (t.playing) {
+    const instances = Two.Instances.slice();
+    for (let i = 0; i < instances.length; i++) {
+      const t = instances[i];
+      if (t.playing && !t._disposed) {
         t.update();
       }
     }
-    Two.NextFrameId = raf(loop);
+    const playing = Two.Instances.some((t) => t.playing && !t._disposed);
+    if (playing) {
+      Two.NextFrameId = raf(loop);
+    } else {
+      Two.NextFrameId = null;
+      looping = false;
+    }
   }
   raf.init = function() {
-    loop();
-    raf.init = function() {
-    };
+    if (!looping) {
+      looping = true;
+      loop();
+    }
   };
   return __toCommonJS(two_exports);
 })().default;
