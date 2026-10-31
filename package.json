@@ -76,6 +76,9 @@
     "vue": "^3.5.43",
     "vuepress": "2.0.0-rc.31"
   },
+  "overrides": {
+    "markdown-it": "^14.3.3"
+  },
   "autoupdate": {
     "source": "git",
     "target": "git://github.com/jonobr1/two.js.git",
