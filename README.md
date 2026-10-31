@@ -48,6 +48,10 @@ Here is boilerplate html in order to draw a spinning rectangle in two.js:
 </html>
 ```
 
+## Loading SVG
+
+`two.load()` imports a sanitized SVG drawing format. Stylesheets and active content are removed; external images require an explicit option. `two.interpret()` accepts trusted DOM nodes without sanitizing them. See the [SVG import contract and migration guide](./wiki/svg-import/README.md).
+
 ## Custom Build
 Two.js uses [nodejs](http://nodejs.org/) in order to build source files. You'll first want to install that. Once installed open up a terminal and head to the repository folder:
 

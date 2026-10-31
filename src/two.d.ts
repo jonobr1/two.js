@@ -1,4 +1,10 @@
 declare module 'two.js' {
+  export interface SvgLoadOptions {
+    /** Allow HTTP(S) image requests, resolved relative to the loaded SVG URL. */
+    allowExternalImages?: boolean;
+    /** Inline failures throw if omitted; asynchronous failures emit `error`. */
+    onError?: (error: Error) => void;
+  }
   /**
      * @name Two
      * @class
@@ -630,7 +636,7 @@ declare module 'two.js' {
      * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
      * @param {Boolean} [add=true] � Automatically add the reconstructed SVG node to scene.
      * @returns {Group}
-     * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
+     * @description Interpret a trusted SVG Node without sanitizing the source DOM. Use load() for untrusted SVG text.
      */
     interpret(svg: SVGElement, shallow?: boolean, add?: boolean): Group;
     /**
@@ -639,13 +645,15 @@ declare module 'two.js' {
      * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
      * @param {Function} [callback] - Function to call once loading has completed.
      * @returns {Group}
-     * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
+     * @param {SvgLoadOptions} [options] - Resource policy and failure callback.
+     * @description Load SVG through a sanitized, detached drawing document. The callback receives sanitized detached nodes, or a stable array for multiple roots.
      */
     load(
-      pathOrSVGContent: any,
+      pathOrSVGContent: string | SVGElement,
       callback?: (
         group: Group,
         svg:
+          | undefined
           | SVGElement
           | SVGGElement
           | SVGPathElement
@@ -672,7 +680,8 @@ declare module 'two.js' {
               | SVGClipPathElement
               | SVGStopElement
             )[]
-      ) => void
+      ) => void,
+      options?: SvgLoadOptions
     ): Group;
   }
   import { Line } from 'two.js/src/shapes/line';

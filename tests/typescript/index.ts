@@ -1,9 +1,10 @@
-import Two from 'two.js';
+import Two, { SvgLoadOptions } from 'two.js';
 import { Arc } from 'two.js/extras/jsm/arc';
 import { ZUI } from 'two.js/extras/jsm/zui';
 import { Renderer as CanvasRenderer } from 'two.js/src/renderers/canvas';
 import { Renderer as SVGRenderer } from 'two.js/src/renderers/svg';
 import { Renderer as WebGLRenderer } from 'two.js/src/renderers/webgl';
+import { Group } from 'two.js/src/group';
 
 const two = new Two({
   fullscreen: true,
@@ -37,6 +38,22 @@ releasedScene.add(new Two.Circle());
 two.release(undefined).add(new Two.Rectangle());
 
 two.makeTexture();
+
+const svgOptions: SvgLoadOptions = {
+  allowExternalImages: false,
+  onError: (error) => { console.error(error.message); },
+};
+const imported: Group = two.load('<rect width="10" height="10"/>', (group, nodes) => {
+  two.add(group);
+  if (Array.isArray(nodes)) nodes.forEach((node) => node.getAttribute('id'));
+  else if (nodes) nodes.getAttribute('id');
+}, svgOptions);
+void imported;
+two.bind(Two.Events.Types.error, (error: Error) => { console.error(error.message); });
+// @ts-expect-error SVG input must be a string or SVG element.
+two.load(42);
+// @ts-expect-error External images are enabled with a boolean.
+two.load('/drawing.svg', undefined, { allowExternalImages: 'yes' });
 
 new Two.ArcSegment().clone().startAngle = 0;
 new Two.Circle().clone().radius = 10;
