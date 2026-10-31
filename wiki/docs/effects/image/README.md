@@ -466,7 +466,7 @@ __Returns__: Two.Image
 <div class="description">
 
 Release the image's renderer resources and detach all events.
-This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+This method releases its texture assignment and inherits comprehensive
 cleanup from the Rectangle/Path hierarchy while preserving the renderer type
 for potential re-attachment.
 
@@ -478,8 +478,8 @@ for potential re-attachment.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L178">
-    image.js:178
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image.js#L179">
+    image.js:179
   </a>
 
 </div>

@@ -1060,21 +1060,49 @@
       var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
       var gradient = new Two[kind]();
       gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+      gradient.spread = 'reflect';
+      gradient.units = 'userSpaceOnUse';
+      if (kind === 'LinearGradient') {
+        gradient.left.set(10, 20);
+        gradient.right.set(70, 80);
+      } else {
+        gradient.center.set(30, 40);
+        gradient.focal.set(35, 45);
+        gradient.radius = 20;
+      }
       var rect = two.makeRectangle(50, 50, 80, 80);
       rect.fill = gradient;
       two.update();
 
       var elem = gradient._renderer.elem;
+      function attributes(node) {
+        var result = {};
+        _.each(node.attributes, function (attribute) {
+          result[attribute.name] = attribute.value;
+        });
+        return result;
+      }
+      var originalAttributes = attributes(elem);
       assert.ok(elem.parentNode, 'The rendered gradient is attached');
       assert.equal(elem.childNodes.length, 2, 'Both color stops are rendered');
       assert.strictEqual(gradient.dispose(), gradient, 'Disposal returns the gradient');
       assert.notOk(elem.parentNode, 'Disposal detaches the SVG element');
+      assert.notOk(gradient._renderer.elem, 'Disposal clears the cached SVG element');
       assert.strictEqual(gradient.dispose(), gradient, 'Repeated disposal is safe');
 
       two.update();
-      assert.strictEqual(gradient._renderer.elem, elem, 'Rendering reuses the gradient element');
-      assert.ok(elem.parentNode, 'Rendering reattaches the gradient');
-      assert.equal(elem.childNodes.length, 2, 'Rendering preserves the color stops');
+      var replacement = gradient._renderer.elem;
+      assert.notStrictEqual(replacement, elem, 'Rendering recreates the gradient element');
+      assert.ok(replacement.parentNode, 'Rendering attaches the new gradient');
+      assert.equal(replacement.childNodes.length, 2, 'Rendering preserves the color stops');
+      assert.equal(replacement.firstChild.getAttribute('stop-color'), 'red', 'Stop attributes are recreated');
+      assert.equal(replacement.lastChild.getAttribute('offset'), '100%', 'Stop offsets are recreated');
+      assert.equal(replacement.getAttribute('spreadMethod'), gradient.spread, 'Spread is recreated');
+      assert.equal(replacement.getAttribute('gradientUnits'), gradient.units, 'Units are recreated');
+      assert.deepEqual(attributes(replacement), originalAttributes, 'All gradient coordinates and attributes are preserved');
+      gradient.stops[0].color = 'green';
+      two.update();
+      assert.equal(replacement.firstChild.getAttribute('stop-color'), 'green', 'Stop changes still render after reuse');
       gradient.dispose();
     });
 
@@ -1113,6 +1141,217 @@
         assert.notOk(elem.parentNode, 'Shape disposal detaches the gradient');
         assert.strictEqual(shape.dispose(), shape, 'Shape disposal remains repeatable');
       });
+    });
+  });
+
+  _.each(['LinearGradient', 'RadialGradient', 'Texture'], function (kind) {
+    function makeEffect() {
+      if (kind === 'Texture') {
+        var canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 2;
+        canvas.getContext('2d').fillRect(0, 0, 2, 2);
+        return new Two.Texture(canvas);
+      }
+      var gradient = new Two[kind]();
+      gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+      return gradient;
+    }
+
+    _.each(['Path', 'Text', 'Points'], function (shapeKind) {
+      QUnit.test(shapeKind + '.dispose - Dispose identical ' + kind + ' only once', function (assert) {
+        var effect = makeEffect();
+        var calls = 0;
+        var dispose = effect.dispose;
+        effect.dispose = function () {
+          calls++;
+          return dispose.call(this);
+        };
+        var shape = new Two[shapeKind]();
+        shape.fill = shape.stroke = effect;
+        shape.dispose();
+        shape.dispose();
+        assert.equal(calls, 1, 'Identical assignments and repeated shape disposal release the effect once');
+      });
+    });
+
+    QUnit.test(kind + ' shared across Path, Text, and Points survives partial disposal', function (assert) {
+      var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
+      var effect = makeEffect();
+      var path = two.makeRectangle(20, 20, 20, 20);
+      var text = two.makeText('Shared', 50, 50);
+      var points = two.makePoints([new Two.Vector(70, 70)]);
+      path.fill = path.stroke = effect;
+      text.stroke = effect;
+      points.fill = effect;
+      two.update();
+      var elem = effect._renderer.elem;
+      var changes = 0;
+      effect.bind('change', function () { changes++; });
+
+      path.remove().dispose();
+      assert.ok(elem.parentNode, 'Disposing the first shape preserves the shared SVG resource');
+      path._flagFill = path._flagStroke = text._flagStroke = points._flagFill = false;
+      effect.trigger('change');
+      assert.notOk(path._flagFill || path._flagStroke, 'Disposed shape listeners are detached');
+      assert.ok(text._flagStroke && points._flagFill, 'Both surviving shapes still receive changes');
+      assert.equal(changes, 1, 'External listeners survive partial disposal');
+      text.remove().dispose();
+      path.dispose();
+      assert.ok(elem.parentNode, 'Repeated disposal does not release another shape\'s assignment');
+      two.update();
+      assert.strictEqual(effect._renderer.elem, elem, 'Survivor renders with the original resource');
+      points.remove().dispose();
+      assert.notOk(elem.parentNode, 'Last shape disposal removes the SVG resource');
+      assert.notOk(effect._renderer.elem, 'Last shape disposal clears the renderer reference');
+      effect.trigger('change');
+      assert.equal(changes, 1, 'Last shape disposal performs parent event cleanup');
+      two.dispose();
+    });
+
+    QUnit.test(kind + ' assignments outside the scene and replacements', function (assert) {
+      var effect = makeEffect();
+      var first = new Two.Path();
+      var second = new Two.Text();
+      var calls = 0;
+      var dispose = effect.dispose;
+      effect.dispose = function () { calls++; return dispose.call(this); };
+      first.fill = first.stroke = effect;
+      second.fill = effect;
+      first.fill = effect;
+      first.fill = '#fff';
+      first.dispose();
+      assert.equal(calls, 0, 'Unrendered shape assignments retain the shared effect');
+      second.fill = '#000';
+      assert.equal(calls, 0, 'Replacement does not destroy the previous effect');
+      second.fill = effect;
+      second.dispose();
+      assert.equal(calls, 1, 'Reassignment is tracked without stale references');
+    });
+  });
+
+  _.each(['Image', 'Sprite', 'ImageSequence'], function (kind) {
+    QUnit.test(kind + '.dispose - Shared textures', function (assert) {
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 4;
+      var texture = new Two.Texture(canvas);
+      var image = new Two[kind](kind === 'ImageSequence' ? [texture, texture] : texture);
+      var path = new Two.Path();
+      path.stroke = texture;
+      var calls = 0;
+      var dispose = texture.dispose;
+      texture.dispose = function () { calls++; return dispose.call(this); };
+      image.dispose();
+      image.dispose();
+      assert.equal(calls, 0, 'Image disposal preserves another shape\'s texture');
+      path._flagStroke = false;
+      texture.trigger('change');
+      assert.ok(path._flagStroke, 'Survivor still receives texture changes');
+      path.dispose();
+      assert.equal(calls, 1, 'The last assignment disposes a texture once');
+    });
+  });
+
+  QUnit.test('ImageSequence.dispose - Texture collection edits', function (assert) {
+    var first = new Two.Texture();
+    var second = new Two.Texture();
+    var calls = [0, 0];
+    first.dispose = function () { calls[0]++; return this; };
+    second.dispose = function () { calls[1]++; return this; };
+    var sequence = new Two.ImageSequence([first, second, first]);
+    sequence.textures.pop();
+    sequence.textures.shift();
+    sequence.textures.push(first);
+    sequence.textures = [second];
+    sequence.noFill();
+    sequence.dispose();
+    sequence.dispose();
+    assert.deepEqual(calls, [0, 1], 'Only textures still assigned at disposal are released, once');
+    var path = new Two.Path();
+    path.fill = first;
+    path.dispose();
+    assert.deepEqual(calls, [1, 1], 'Removed textures have no stale sequence references');
+  });
+
+  _.each(['release', 'dispose'], function (method) {
+    QUnit.test('Two.' + method + ' preserves effects shared with another instance', function (assert) {
+      var first = new Two({ type: Two.Types.canvas, width: 100, height: 100 });
+      var second = new Two({ type: Two.Types.canvas, width: 100, height: 100 });
+      var gradient = new Two.LinearGradient(0, 0, 1, 1, [
+        new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'),
+      ]);
+      var a = first.makeRectangle(50, 50, 50, 50);
+      var b = second.makeRectangle(50, 50, 50, 50);
+      a.fill = b.fill = gradient;
+      first[method]();
+      a._flagFill = b._flagFill = false;
+      gradient.trigger('change');
+      assert.notOk(a._flagFill, 'Released shape listeners are detached');
+      assert.ok(b._flagFill, 'Other instance still receives changes');
+      second.update();
+      assert.ok(gradient._renderer.effect, 'Other instance still renders the gradient');
+      b.remove().dispose();
+      assert.notOk(gradient._renderer.effect, 'No stale reference prevents final disposal');
+      first.dispose();
+      second.dispose();
+    });
+  });
+
+  _.each(['LinearGradient', 'RadialGradient'], function (kind) {
+    _.each([Two.Types.canvas, Two.Types.webgl], function (type) {
+      QUnit.test(kind + '.dispose - Reuse in ' + type, function (assert) {
+        var two = new Two({ type: type, width: 40, height: 40, ratio: 1 });
+        var gradient = kind === 'LinearGradient'
+          ? two.makeLinearGradient(0, 0, 1, 1, new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'))
+          : two.makeRadialGradient(0.5, 0.5, 0.5, new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'));
+        var rect = two.makeRectangle(20, 20, 40, 40);
+        rect.fill = gradient;
+        rect.noStroke();
+        two.update();
+        var canvas = two.renderer.domElement;
+        var before = canvas.toDataURL();
+        gradient.dispose();
+        gradient.dispose();
+        two.update();
+        assert.equal(canvas.toDataURL(), before, 'Recreated resources preserve rendered pixels');
+        gradient.stops[0].color = 'lime';
+        two.update();
+        assert.notEqual(canvas.toDataURL(), before, 'Stop edits still change the rendered pixels');
+        rect.remove().dispose();
+        two.dispose();
+      });
+    });
+
+    QUnit.test(kind + '.dispose - Parent cleanup and change tracking after reuse', function (assert) {
+      var gradient = new Two[kind]();
+      gradient.stops = [new Two.Stop(0, 'red')];
+      var changes = 0;
+      gradient.bind('change', function () { changes++; });
+      gradient._renderer.effect = {};
+      var type = gradient._renderer.type;
+      gradient.dispose();
+      gradient.dispose();
+      gradient.trigger('change');
+      assert.equal(changes, 0, 'Parent cleanup removes external listeners');
+      assert.notOk(gradient._renderer.effect, 'Cached effects are cleared');
+      assert.equal(gradient._renderer.type, type, 'Renderer type is preserved');
+      gradient.flagReset();
+      gradient.stops.push(new Two.Stop(1, 'blue'));
+      assert.ok(gradient._flagStops, 'Collection callbacks survive cleanup');
+      gradient.flagReset();
+      gradient.stops[0].color = 'green';
+      assert.ok(gradient._flagStops, 'Stop callbacks survive cleanup');
+      gradient.flagReset();
+      if (kind === 'LinearGradient') {
+        gradient.left = new Two.Vector(2, 3);
+        gradient.flagReset();
+        gradient.left.x = 4;
+        assert.ok(gradient._flagEndPoints, 'Replaced endpoint vectors remain observable');
+      } else {
+        gradient.center = new Two.Vector(2, 3);
+        gradient.flagReset();
+        gradient.center.x = 4;
+        assert.ok(gradient._flagCenter, 'Replaced center vectors remain observable');
+      }
     });
   });
 
