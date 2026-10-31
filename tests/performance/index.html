@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Two.js allocation benchmarks</title>
+  </head>
+  <body>
+    <h1>Allocation benchmarks</h1>
+    <p>Run the same workload against two builds. Use the browser allocation profiler
+      to measure allocations and GC; elapsed time alone does not measure either.</p>
+    <label>Workload <select id="workload"></select></label>
+    <button id="run" type="button">Run 300 samples</button>
+    <pre id="results"></pre>
+    <div id="scene"></div>
+    <script>
+      // A different bundle can be selected with ?bundle=/path/to/two.js.
+      var script = document.createElement('script');
+      script.src = new URLSearchParams(location.search).get('bundle') || '../../build/two.js';
+      script.onload = function () {
+        var workloads = document.createElement('script');
+        workloads.src = './workloads.js';
+        document.body.appendChild(workloads);
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
