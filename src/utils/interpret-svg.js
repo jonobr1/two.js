@@ -1,3 +1,4 @@
+/* eslint-env es6 */
 import { root } from './root.js';
 import { Commands } from './path-commands.js';
 import { decomposeMatrix } from './math.js';
@@ -25,11 +26,30 @@ import { RadialGradient } from '../effects/radial-gradient.js';
 import { Text } from '../text.js';
 
 import { Constants } from '../constants.js';
+import { isSvgImport, getSvgImportStyles } from './svg-import.js';
+
+const references = new Set();
+
+function readReference(node, styles, reference = node) {
+  const tag = getTagName(node.nodeName);
+  if (!Object.prototype.hasOwnProperty.call(read, tag)) {
+    return null;
+  }
+  if (references.has(reference)) {
+    throw new TwoError('Circular SVG reference.');
+  }
+  references.add(reference);
+  try {
+    return read[tag].call(this, node, styles);
+  } finally {
+    references.delete(reference);
+  }
+}
 
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 const regex = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
-  cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
+  cssBackgroundImage: /url\(['"]?#([\w.-]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i,
 };
 
@@ -229,7 +249,7 @@ function applySvgAttributes(node, elem, parentStyles) {
     extracted = {};
   let i, m, key, value, prop, attr;
   let transforms, x, y;
-  let id, scene, ref, tagName;
+  let id, scene, ref;
   let ca, cb, cc, error;
 
   if (node === null) {
@@ -237,7 +257,7 @@ function applySvgAttributes(node, elem, parentStyles) {
   }
 
   // Not available in non browser environments
-  if (root.getComputedStyle) {
+  if (root.getComputedStyle && !isSvgImport(node)) {
     // Convert CSSStyleDeclaration to a normal object
     const computedStyles = root.getComputedStyle(node);
     i = computedStyles.length;
@@ -304,7 +324,9 @@ function applySvgAttributes(node, elem, parentStyles) {
           node.gradientTransform &&
           node.gradientTransform.baseVal &&
           node.gradientTransform.baseVal.length > 0
-            ? node.gradientTransform.baseVal[0].matrix
+            ? (isSvgImport(node)
+              ? node.gradientTransform.baseVal.consolidate().matrix
+              : node.gradientTransform.baseVal[0].matrix)
             : node.getCTM
             ? node.getCTM()
             : null;
@@ -337,7 +359,9 @@ function applySvgAttributes(node, elem, parentStyles) {
           node.transform &&
           node.transform.baseVal &&
           node.transform.baseVal.length > 0
-            ? node.transform.baseVal[0].matrix
+            ? (isSvgImport(node)
+              ? node.transform.baseVal.consolidate().matrix
+              : node.transform.baseVal[0].matrix)
             : node.getCTM
             ? node.getCTM()
             : null;
@@ -366,9 +390,10 @@ function applySvgAttributes(node, elem, parentStyles) {
           }
         } else {
           // Edit the underlying matrix and don't force an auto calc.
-          m = node.getCTM();
+          if (!isSvgImport(node)) m = node.getCTM();
+          if (!m) break;
           elem._matrix.manual = true;
-          elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
+          elem._matrix.set(m.a, m.c, m.e, m.b, m.d, m.f, 0, 0, 1);
         }
 
         break;
@@ -423,10 +448,10 @@ function applySvgAttributes(node, elem, parentStyles) {
           id = value.replace(regex.cssBackgroundImage, '$1');
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
-            if (ref && ref.childNodes.length > 0) {
-              ref = ref.childNodes[0];
-              tagName = getTagName(ref.nodeName);
-              elem.mask = read[tagName].call(this, ref, {});
+            if (ref && ref.children.length > 0) {
+              ref = ref.children[0];
+              elem.mask = readReference.call(this, ref, {});
+              if (!elem.mask) break;
               switch (elem._renderer.type) {
                 case 'text':
                 case 'path':
@@ -451,15 +476,14 @@ function applySvgAttributes(node, elem, parentStyles) {
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             if (!ref.object) {
-              tagName = getTagName(ref.nodeName);
-              ref.object = read[tagName].call(this, ref, {});
+              ref.object = readReference.call(this, ref, {});
             }
             ref = ref.object;
-          } else {
+          } else if (!isSvgImport(node)) {
             scene = getScene(this);
             ref = scene.getById(id);
           }
-          elem[prop] = ref;
+          if (ref) elem[prop] = ref;
         } else {
           elem[prop] = value;
         }
@@ -574,47 +598,56 @@ function getScene(node) {
  */
 export const read = {
   svg: function (node) {
+    const previous = read.defs.current;
     const defs = (read.defs.current = new Registry());
-    const elements = node.getElementsByTagName('defs');
+    defs.map = Object.create(null);
+    try {
+      const elements = node.getElementsByTagName('defs');
 
-    for (let i = 0; i < elements.length; i++) {
-      updateDefsCache(elements[i], defs);
+      for (let i = 0; i < elements.length; i++) {
+        updateDefsCache(elements[i], defs);
+      }
+      if (isSvgImport(node)) {
+        for (const target of node.querySelectorAll('[id]')) {
+          if (!defs.contains(target.id)) defs.add(target.id, target);
+        }
+      }
+
+      const svg = read.g.call(this, node);
+      const viewBox = node.getAttribute('viewBox');
+      const x = node.getAttribute('x');
+      const y = node.getAttribute('y');
+      const width = node.getAttribute('width');
+      const height = node.getAttribute('height');
+
+      svg.defs = defs; // Export out the <defs /> for later use
+
+      const viewBoxExists = viewBox !== null;
+      const xExists = x !== null;
+      const yExists = y !== null;
+      const widthExists = width !== null;
+      const heightExists = height !== null;
+
+      if (xExists) {
+        svg.x = parseFloat(x.replace(regex.unitSuffix, ''));
+      }
+      if (yExists) {
+        svg.y = parseFloat(y.replace(regex.unitSuffix, ''));
+      }
+      if (widthExists) {
+        svg.width = parseFloat(width.replace(regex.unitSuffix, ''));
+      }
+      if (heightExists) {
+        svg.height = parseFloat(height.replace(regex.unitSuffix, ''));
+      }
+      if (viewBoxExists) {
+        applySvgViewBox(svg, viewBox);
+      }
+
+      return svg;
+    } finally {
+      read.defs.current = previous;
     }
-
-    const svg = read.g.call(this, node);
-    const viewBox = node.getAttribute('viewBox');
-    const x = node.getAttribute('x');
-    const y = node.getAttribute('y');
-    const width = node.getAttribute('width');
-    const height = node.getAttribute('height');
-
-    svg.defs = defs; // Export out the <defs /> for later use
-
-    const viewBoxExists = viewBox !== null;
-    const xExists = x !== null;
-    const yExists = y !== null;
-    const widthExists = width !== null;
-    const heightExists = height !== null;
-
-    if (xExists) {
-      svg.x = parseFloat(x.replace(regex.unitSuffix, ''));
-    }
-    if (yExists) {
-      svg.y = parseFloat(y.replace(regex.unitSuffix, ''));
-    }
-    if (widthExists) {
-      svg.width = parseFloat(width.replace(regex.unitSuffix, ''));
-    }
-    if (heightExists) {
-      svg.height = parseFloat(height.replace(regex.unitSuffix, ''));
-    }
-    if (viewBoxExists) {
-      applySvgViewBox(svg, viewBox);
-    }
-
-    delete read.defs.current;
-
-    return svg;
   },
 
   defs: function (node) {
@@ -632,7 +665,7 @@ export const read = {
     }
 
     const id = href.slice(1);
-    if (!read.defs.current.contains(id)) {
+    if (href[0] !== '#' || !read.defs.current || !read.defs.current.contains(id)) {
       error = new TwoError(
         'unable to find element for reference ' + href + '.'
       );
@@ -645,6 +678,7 @@ export const read = {
 
     for (let i = 0; i < node.attributes.length; i++) {
       const attr = node.attributes[i];
+      if (attr.nodeName === 'href' || attr.nodeName === 'xlink:href') continue;
       const ca = overwriteAttrs.includes(attr.nodeName);
       const cb = !fullNode.hasAttribute(attr.nodeName);
       if (ca || cb) {
@@ -652,8 +686,7 @@ export const read = {
       }
     }
 
-    const tagName = getTagName(fullNode.nodeName);
-    return read[tagName].call(this, fullNode, styles);
+    return readReference.call(this, fullNode, styles, template);
   },
 
   g: function (node, parentStyles) {
@@ -661,10 +694,13 @@ export const read = {
 
     applySvgAttributes.call(this, node, group, parentStyles);
 
-    this.add(group);
+    // Imported groups are assembled off-scene so a failed import is atomic.
+    if (!isSvgImport(node)) this.add(group);
 
     // Switched up order to inherit more specific styles
-    const styles = getSvgStyles.call(this, node);
+    const styles = isSvgImport(node)
+      ? getSvgImportStyles(node, parentStyles)
+      : getSvgStyles.call(this, node);
 
     for (let i = 0, l = node.childNodes.length; i < l; i++) {
       const n = node.childNodes[i];
@@ -673,7 +709,7 @@ export const read = {
 
       const tagName = getTagName(tag);
 
-      if (tagName in read) {
+      if (Object.prototype.hasOwnProperty.call(read, tagName)) {
         const o = read[tagName].call(group, n, styles);
         if (!!o && !o.parent) {
           group.add(o);

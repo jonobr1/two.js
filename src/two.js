@@ -10,6 +10,8 @@ import * as math from './utils/math.js';
 import { Commands } from './utils/path-commands.js';
 import { _ } from './utils/underscore.js';
 import { xhr } from './utils/xhr.js';
+import { parseSvg } from './utils/svg-import.js';
+import { root } from './utils/root.js';
 
 // Core Classes
 
@@ -327,8 +329,12 @@ export default class Two {
    * @property {Boolean} - When importing SVGs through the {@link Two#interpret} and {@link Two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
    * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
    */
-  static AutoCalculateImportedMatrices =
-    Constants.AutoCalculateImportedMatrices;
+  static get AutoCalculateImportedMatrices() {
+    return Constants.AutoCalculateImportedMatrices;
+  }
+  static set AutoCalculateImportedMatrices(value) {
+    Constants.AutoCalculateImportedMatrices = value;
+  }
 
   /**
    * @name Two.Instances
@@ -1239,22 +1245,22 @@ export default class Two {
    * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
    * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
    * @returns {Two.Group}
-   * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
+   * @description Interpret a trusted SVG Node and add it to this instance's scene. This does not sanitize the source DOM. Use {@link Two#load} for untrusted SVG text. Interpretation reconstructs compatible Two.js objects rather than transcribing SVG directly.
    */
   interpret(svg, shallow, add) {
     const tag = svg.tagName.toLowerCase();
 
     add = typeof add !== 'undefined' ? add : true;
 
-    if (!(tag in read)) {
+    if (!Object.prototype.hasOwnProperty.call(read, tag)) {
       return null;
     }
 
     const node = read[tag].call(this, svg);
 
-    if (add) {
+    if (add && node) {
       this.add(shallow && node instanceof Group ? node.children : node);
-    } else if (node.parent) {
+    } else if (node && node.parent) {
       // Remove `g` tags that have been added to scenegraph / DOM
       // in order to be compatible with `getById` methods.
       node.remove();
@@ -1268,40 +1274,57 @@ export default class Two {
    * @function
    * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
    * @param {Function} [callback] - Function to call once loading has completed.
+   * @param {Object} [options] - SVG import options.
+   * @param {Boolean} [options.allowExternalImages=false] - Allow HTTP(S) image requests. Embedded PNG, JPEG, GIF, WebP and AVIF images are allowed by default.
+   * @param {Function} [options.onError] - Called with an error on failure. Inline failures throw if omitted; asynchronous failures emit an `error` event on this instance.
    * @returns {Two.Group}
-   * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
+   * @description Load SVG through a sanitized, detached drawing document. Active content, stylesheets and external references are removed. The success callback receives sanitized detached nodes (a stable array for multiple roots). Existing DOM nodes are serialized and sanitized; effects from their earlier insertion cannot be undone.
    */
-  load(pathOrSVGContent, callback) {
+  load(pathOrSVGContent, callback, options = {}) {
     const group = new Group();
-    let elem, i, child;
+    const fail = (error, asynchronous) => {
+      if (typeof options.onError === 'function') {
+        options.onError(error);
+      } else if (asynchronous) {
+        this.trigger(Events.Types.error, error);
+      } else {
+        throw error;
+      }
+    };
 
-    const attach = function (data) {
-      dom.temp.innerHTML = data;
-
-      for (i = 0; i < dom.temp.children.length; i++) {
-        elem = dom.temp.children[i];
-        child = this.interpret(elem, false, false);
-        if (child !== null) {
-          group.add(child);
-        }
+    const attach = (data, baseURL, asynchronous) => {
+      let nodes;
+      try {
+        const parsed = parseSvg(data, options, baseURL);
+        nodes = parsed.wrapped ? Array.from(parsed.svg.children) : [parsed.svg];
+        const child = this.interpret(parsed.svg, false, false);
+        group.add(parsed.wrapped ? child.children.slice() : child);
+      } catch (error) {
+        fail(error, asynchronous);
+        return;
       }
 
       if (typeof callback === 'function') {
-        const svg =
-          dom.temp.children.length <= 1
-            ? dom.temp.children[0]
-            : dom.temp.children;
-        callback(group, svg);
+        callback(group, nodes.length <= 1 ? nodes[0] : nodes);
       }
-    }.bind(this);
+    };
 
-    if (/\.svg$/i.test(pathOrSVGContent)) {
-      xhr(pathOrSVGContent, attach);
-
-      return group;
+    const baseURL = root.document && root.document.baseURI;
+    if (typeof pathOrSVGContent === 'string' && !/^\s*</.test(pathOrSVGContent)) {
+      try {
+        const url = new root.URL(pathOrSVGContent, baseURL);
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+          throw new TwoError('SVG URLs must use HTTP or HTTPS.');
+        }
+        xhr(url.href, (data, request) => {
+          attach(data, request.responseURL || url.href, true);
+        }, (error) => fail(error, true));
+      } catch (error) {
+        fail(error, false);
+      }
+    } else {
+      attach(pathOrSVGContent, baseURL, false);
     }
-
-    attach(pathOrSVGContent);
 
     return group;
   }

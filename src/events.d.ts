@@ -20,6 +20,7 @@ declare module 'two.js/src/events' {
       insert: 'insert';
       order: 'order';
       load: 'load';
+      error: 'error';
     };
     static Methods: (
       | 'addEventListener'

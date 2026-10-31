@@ -181,7 +181,8 @@ export class Events {
     remove: 'remove',
     insert: 'insert',
     order: 'order',
-    load: 'load'
+    load: 'load',
+    error: 'error'
   }
 
   static Methods = [
