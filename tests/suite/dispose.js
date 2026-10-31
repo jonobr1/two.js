@@ -952,6 +952,67 @@
   // Gradient Tests
   // ===========================
 
+  _.each(['LinearGradient', 'RadialGradient'], function (kind) {
+    QUnit.test(kind + '.dispose - Repeated SVG disposal', function (assert) {
+      var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
+      var gradient = new Two[kind]();
+      gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+      var rect = two.makeRectangle(50, 50, 80, 80);
+      rect.fill = gradient;
+      two.update();
+
+      var elem = gradient._renderer.elem;
+      assert.ok(elem.parentNode, 'The rendered gradient is attached');
+      assert.equal(elem.childNodes.length, 2, 'Both color stops are rendered');
+      assert.strictEqual(gradient.dispose(), gradient, 'Disposal returns the gradient');
+      assert.notOk(elem.parentNode, 'Disposal detaches the SVG element');
+      assert.strictEqual(gradient.dispose(), gradient, 'Repeated disposal is safe');
+
+      two.update();
+      assert.strictEqual(gradient._renderer.elem, elem, 'Rendering reuses the gradient element');
+      assert.ok(elem.parentNode, 'Rendering reattaches the gradient');
+      assert.equal(elem.childNodes.length, 2, 'Rendering preserves the color stops');
+      gradient.dispose();
+    });
+
+    QUnit.test(kind + '.dispose - Already detached SVG element', function (assert) {
+      var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
+      var gradient = new Two[kind]();
+      gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+      two.makeRectangle(50, 50, 80, 80).fill = gradient;
+      two.update();
+
+      var elem = gradient._renderer.elem;
+      assert.ok(elem.parentNode, 'The rendered gradient is attached');
+      elem.parentNode.removeChild(elem);
+      assert.strictEqual(gradient.dispose(), gradient, 'An already detached gradient can be disposed');
+    });
+
+    _.each(['Path', 'Text', 'Points'], function (shapeKind) {
+      QUnit.test(shapeKind + '.dispose - Identical ' + kind + ' fill and stroke', function (assert) {
+        var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
+        var gradient = new Two[kind]();
+        gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+        var shape;
+        if (shapeKind === 'Text') {
+          shape = two.makeText('Gradient', 50, 50);
+        } else if (shapeKind === 'Points') {
+          shape = two.makePoints([new Two.Vector(50, 50)]);
+        } else {
+          shape = two.makeRectangle(50, 50, 80, 80);
+        }
+        shape.fill = shape.stroke = gradient;
+        two.update();
+
+        var elem = gradient._renderer.elem;
+        assert.ok(elem.parentNode, 'The shared fill and stroke is rendered');
+        assert.strictEqual(shape.dispose(), shape, 'Shape disposal completes');
+        assert.notOk(elem.parentNode, 'Shape disposal detaches the gradient');
+        assert.strictEqual(shape.dispose(), shape, 'Shape disposal remains repeatable');
+      });
+    });
+  });
+
   QUnit.test('Gradient.dispose - SVG Element Removal', function (assert) {
     assert.expect(3);
 
@@ -1522,4 +1583,341 @@
       sequence.textures.unbind = originalUnbind;
     }
   );
+
+  // ===========================
+  // Two Instance Tests
+  // ===========================
+
+  function afterFrames(count, callback) {
+    requestAnimationFrame(function () {
+      if (count > 1) {
+        afterFrames(count - 1, callback);
+      } else {
+        callback();
+      }
+    });
+  }
+
+  QUnit.test('Two.dispose - Instance Registry', function (assert) {
+    assert.expect(3);
+
+    var count = Two.Instances.length;
+
+    for (var i = 0; i < 5; i++) {
+      new Two({
+        type: Two.Types.svg,
+        width: 100,
+        height: 100,
+      })
+        .appendTo(document.body)
+        .dispose();
+    }
+
+    assert.equal(
+      Two.Instances.length,
+      count,
+      'Repeated construction and disposal does not grow Two.Instances'
+    );
+
+    var two = new Two({ width: 100, height: 100 });
+    assert.ok(Two.Instances.indexOf(two) >= 0, 'Instance is registered');
+
+    two.dispose();
+    assert.equal(
+      Two.Instances.indexOf(two),
+      -1,
+      'Instance is removed from Two.Instances'
+    );
+  });
+
+  QUnit.test('Two.dispose - Renderer Element', function (assert) {
+    assert.expect(3);
+
+    var two = new Two({
+      type: Two.Types.canvas,
+      width: 100,
+      height: 100,
+    }).appendTo(document.body);
+    var elem = two.renderer.domElement;
+
+    assert.equal(elem.parentNode, document.body, 'Element is in the document');
+    two.dispose();
+    assert.equal(elem.parentNode, null, 'Created element is removed');
+
+    var canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    new Two({ domElement: canvas, width: 100, height: 100 }).dispose();
+    assert.equal(
+      canvas.parentNode,
+      document.body,
+      'Element passed in as options.domElement stays in the document'
+    );
+    document.body.removeChild(canvas);
+  });
+
+  QUnit.test('Two.dispose - Fitted Resize Listener', function (assert) {
+    assert.expect(2);
+
+    var parent = document.createElement('div');
+    parent.style.width = '200px';
+    parent.style.height = '100px';
+    document.body.appendChild(parent);
+
+    // A passed in element stays in the parent, so fitting could still work
+    var canvas = document.createElement('canvas');
+    var two = new Two({ fitted: true, domElement: canvas }).appendTo(parent);
+    var fits = 0;
+    two.renderer.setSize = function () {
+      fits++;
+    };
+
+    parent.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize fits the instance to its parent');
+
+    two.dispose();
+    parent.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize listener is detached');
+
+    document.body.removeChild(parent);
+  });
+
+  QUnit.test('Two.dispose - Fullscreen', function (assert) {
+    assert.expect(5);
+
+    var style = document.body.style;
+    var overflow = style.overflow;
+    var position = style.position;
+
+    var two = new Two({ fullscreen: true }).appendTo(document.body);
+    var fits = 0;
+    two.renderer.setSize = function () {
+      fits++;
+    };
+
+    assert.equal(style.position, 'fixed', 'Fullscreen changes body styles');
+
+    window.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize fits the instance to the window');
+
+    two.dispose();
+    window.dispatchEvent(new Event('resize'));
+    assert.equal(fits, 1, 'Resize listener is detached');
+    assert.equal(style.overflow, overflow, 'Body overflow is restored');
+    assert.equal(style.position, position, 'Body position is restored');
+  });
+
+  ['update', 'render'].forEach(function (event) {
+    QUnit.test('Two.dispose - Registry Mutation During ' + event, function (assert) {
+      var done = assert.async();
+      var a = new Two({ width: 10, height: 10 });
+      var b = new Two({ width: 10, height: 10 });
+      var c = new Two({ width: 10, height: 10 });
+      var d = new Two({ width: 10, height: 10 });
+      b.setPlaying(true);
+      c.setPlaying(true);
+      d.setPlaying(true);
+
+      a.bind(event, function () {
+        var bFrame = b.frameCount;
+        var cFrame = c.frameCount;
+        var dFrame = d.frameCount;
+        a.dispose();
+        c.dispose();
+
+        afterFrames(1, function () {
+          assert.equal(b.frameCount, bFrame + 1, 'Following instance renders this frame');
+          assert.equal(c.frameCount, cFrame, 'Instance disposed before its turn does not render');
+          assert.equal(d.frameCount, dFrame + 1, 'Later instance renders exactly once');
+          b.dispose();
+          d.dispose();
+          done();
+        });
+      });
+      a.play();
+    });
+  });
+
+  [false, true].forEach(function (reverse) {
+    QUnit.test('Two.dispose - Fullscreen Ownership ' + (reverse ? 'Newest First' : 'Oldest First'), function (assert) {
+      var style = document.body.style;
+      var keys = ['overflow', 'margin', 'padding', 'top', 'left', 'right', 'bottom', 'position'];
+      var original = {};
+      keys.forEach(function (key) {
+        original[key] = style[key];
+      });
+      var a = new Two({ fullscreen: true });
+      var b = new Two({ fullscreen: true });
+      var first = reverse ? b : a;
+      var last = reverse ? a : b;
+
+      first.dispose();
+      first.dispose();
+      assert.equal(style.position, 'fixed', 'Remaining owner keeps fullscreen positioning');
+      assert.equal(style.overflow, 'hidden', 'Remaining owner keeps fullscreen overflow');
+      last.dispose();
+      keys.forEach(function (key) {
+        assert.equal(style[key], original[key], 'Last owner restores ' + key);
+      });
+
+      // A later fullscreen lifetime must take a fresh snapshot.
+      style.overflow = 'scroll';
+      new Two({ fullscreen: true }).dispose();
+      assert.equal(style.overflow, 'scroll', 'New owner saves current styles');
+      keys.forEach(function (key) {
+        style[key] = original[key];
+      });
+    });
+  });
+
+  QUnit.test('Two.dispose - SVG Disposal During Update', function (assert) {
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    document.body.appendChild(svg);
+    var two = new Two({ domElement: svg, width: 100, height: 100 });
+    var rect = two.makeRectangle(50, 50, 20, 20);
+    two.update();
+    assert.ok(svg.querySelector('#' + rect.id), 'Scene rendered before disposal');
+    var frame = two.frameCount;
+    two.bind('update', function () {
+      two.dispose();
+    });
+    two.update();
+    two.update();
+    two.render();
+    two.play();
+    two.setPlaying(true);
+    assert.equal(svg.querySelector('#' + rect.id), null, 'Released scene is not recreated');
+    assert.equal(two.frameCount, frame, 'Disposed update does not render');
+    assert.notOk(two.playing, 'Disposed instance cannot resume playing');
+    assert.equal(svg.parentNode, document.body, 'Caller-owned SVG stays attached');
+    document.body.removeChild(svg);
+  });
+
+  QUnit.test('Two.dispose - Repeated and Recursive Disposal', function (assert) {
+    var two = new Two({ width: 10, height: 10 });
+    var pauses = 0;
+    two.bind('pause', function () {
+      pauses++;
+      if (pauses === 1) {
+        two.dispose();
+        two.play();
+      }
+    });
+    assert.strictEqual(two.dispose(), two, 'Disposal returns the instance');
+    assert.strictEqual(two.dispose(), two, 'Repeated disposal returns the instance');
+    assert.equal(pauses, 1, 'Recursive and repeated disposal only pause once');
+    assert.notOk(two.playing, 'A pause listener cannot restart a disposed instance');
+  });
+
+  [false, true].forEach(function (duringUpdate) {
+    QUnit.test('Two.dispose - WebGL Resources' + (duringUpdate ? ' During Update' : ''), function (assert) {
+      var canvas = document.createElement('canvas');
+      var gl = canvas.getContext('webgl');
+      if (!gl) {
+        assert.ok(true, 'WebGL is unavailable in this browser');
+        return;
+      }
+      document.body.appendChild(canvas);
+      var allocations = { Buffer: [], Program: [], Shader: [], Texture: [] };
+      var originals = {};
+      Object.keys(allocations).forEach(function (kind) {
+        var name = 'create' + kind;
+        originals[name] = gl[name];
+        gl[name] = function () {
+          var resource = originals[name].apply(gl, arguments);
+          allocations[kind].push(resource);
+          return resource;
+        };
+      });
+      var two;
+      try {
+        two = new Two({ type: Two.Types.webgl, domElement: canvas, width: 100, height: 100 });
+        var rect = two.makeRectangle(50, 50, 20, 20);
+        two.makePoints(10, 10, 20, 20);
+        two.makeText('Test', 50, 50);
+        two.update();
+        assert.ok(rect._renderer.texture, 'Scene has allocated textures');
+        assert.ok(allocations.Buffer.length > 1, 'Renderer and points buffers allocated');
+        assert.equal(allocations.Program.length, 2, 'Both shader programs allocated');
+        assert.equal(allocations.Shader.length, 4, 'All shaders allocated');
+        if (duringUpdate) {
+          two.bind('update', function () {
+            two.dispose();
+          });
+          two.update();
+        } else {
+          two.dispose();
+        }
+        var textureCount = allocations.Texture.length;
+        two.dispose();
+        two.update();
+        two.render();
+        two.renderer.render();
+        Object.keys(allocations).forEach(function (kind) {
+          allocations[kind].forEach(function (resource) {
+            assert.notOk(gl['is' + kind](resource), kind + ' is deleted');
+          });
+        });
+        assert.equal(allocations.Texture.length, textureCount, 'Rendering after disposal allocates no textures');
+        assert.notOk(gl.renderer, 'Context no longer retains renderer');
+        assert.equal(canvas.parentNode, document.body, 'Caller-owned canvas stays attached');
+        assert.strictEqual(canvas.getContext('webgl'), gl, 'Caller-owned context is preserved');
+        assert.notOk(gl.isContextLost(), 'Context remains usable');
+        var buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        assert.ok(gl.isBuffer(buffer), 'Caller can allocate resources after disposal');
+        gl.deleteBuffer(buffer);
+        assert.equal(gl.getError(), gl.NO_ERROR, 'Teardown produces no WebGL errors');
+      } finally {
+        if (two) {
+          two.dispose();
+        }
+        Object.keys(originals).forEach(function (name) {
+          gl[name] = originals[name];
+        });
+        document.body.removeChild(canvas);
+      }
+    });
+  });
+
+  QUnit.test('Two.dispose - Animation Loop', function (assert) {
+    assert.expect(5);
+    var done = assert.async();
+
+    var a = new Two({ width: 10, height: 10, autostart: true });
+    var b = new Two({ width: 10, height: 10, autostart: true });
+
+    afterFrames(2, function () {
+      a.dispose();
+      var frameCount = b.frameCount;
+
+      afterFrames(2, function () {
+        assert.ok(
+          b.frameCount > frameCount,
+          'Remaining instance keeps updating'
+        );
+        assert.notEqual(Two.NextFrameId, null, 'Loop runs while one plays');
+
+        b.dispose();
+
+        afterFrames(2, function () {
+          assert.equal(
+            Two.NextFrameId,
+            null,
+            'Loop sleeps when no instance is playing'
+          );
+
+          var c = new Two({ width: 10, height: 10 });
+          c.play();
+          frameCount = c.frameCount;
+
+          afterFrames(2, function () {
+            assert.ok(c.frameCount > frameCount, 'Two#play wakes the loop');
+            assert.notEqual(Two.NextFrameId, null, 'Loop runs again');
+            c.dispose();
+            done();
+          });
+        });
+      });
+    });
+  });
 })();
