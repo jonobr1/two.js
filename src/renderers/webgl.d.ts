@@ -133,6 +133,8 @@ declare module 'two.js/src/renderers/webgl' {
      * @description Render the current scene to the `<canvas />`.
      */
     render(): Renderer;
+    /** Release scene and renderer resources while preserving the canvas and WebGL context. */
+    dispose(): Renderer;
   }
   import { Events } from 'two.js/src/events';
   import { Group } from 'two.js/src/group';

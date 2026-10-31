@@ -1818,8 +1818,7 @@ export class Renderer extends Events {
     program.rect = gl.getUniformLocation(program, 'u_rect');
 
     // Bind the vertex buffer
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.programs.buffers.position);
     gl.vertexAttribPointer(program.position, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(program.position);
     gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
@@ -1853,6 +1852,48 @@ export class Renderer extends Events {
   static Utils = webgl;
 
   /**
+   * @name Two.WebGLRenderer#dispose
+   * @function
+   * @returns {Two.WebGLRenderer} The renderer itself.
+   * @description Release scene textures, buffers, programs, shaders, and event listeners while preserving the canvas and its WebGL context.
+   */
+  dispose() {
+    if (this._disposed) {
+      return this;
+    }
+    this._disposed = true;
+
+    const gl = this.ctx;
+    const programs = [this.programs.path, this.programs.points];
+    webgl.group.removeChild(this.scene, gl);
+
+    if (programs.indexOf(gl.getParameter(gl.CURRENT_PROGRAM)) >= 0) {
+      gl.useProgram(null);
+    }
+    for (let i = 0; i < programs.length; i++) {
+      const program = programs[i];
+      const attached = gl.getAttachedShaders(program) || [];
+      for (let j = 0; j < attached.length; j++) {
+        gl.detachShader(program, attached[j]);
+        gl.deleteShader(attached[j]);
+      }
+      gl.deleteProgram(program);
+    }
+    _.each(this.programs.buffers, function (buffer) {
+      gl.deleteBuffer(buffer);
+    });
+    this.programs.buffers = {};
+    this.programs.current = this.programs.path = this.programs.text =
+      this.programs.points = null;
+
+    if (gl.renderer === this) {
+      delete gl.renderer;
+    }
+    this.unbind();
+    return this;
+  }
+
+  /**
    * @name Two.WebGLRenderer#setSize
    * @function
    * @fires resize
@@ -1862,6 +1903,9 @@ export class Renderer extends Events {
    * @description Change the size of the renderer.
    */
   setSize(width, height, ratio) {
+    if (this._disposed) {
+      return this;
+    }
     let w, h;
     const ctx = this.ctx;
 
@@ -1907,6 +1951,9 @@ export class Renderer extends Events {
    * @description Render the current scene to the `<canvas />`.
    */
   render() {
+    if (this._disposed) {
+      return this;
+    }
     const gl = this.ctx;
 
     if (!this.overdraw) {
