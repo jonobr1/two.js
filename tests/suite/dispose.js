@@ -952,6 +952,67 @@
   // Gradient Tests
   // ===========================
 
+  _.each(['LinearGradient', 'RadialGradient'], function (kind) {
+    QUnit.test(kind + '.dispose - Repeated SVG disposal', function (assert) {
+      var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
+      var gradient = new Two[kind]();
+      gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+      var rect = two.makeRectangle(50, 50, 80, 80);
+      rect.fill = gradient;
+      two.update();
+
+      var elem = gradient._renderer.elem;
+      assert.ok(elem.parentNode, 'The rendered gradient is attached');
+      assert.equal(elem.childNodes.length, 2, 'Both color stops are rendered');
+      assert.strictEqual(gradient.dispose(), gradient, 'Disposal returns the gradient');
+      assert.notOk(elem.parentNode, 'Disposal detaches the SVG element');
+      assert.strictEqual(gradient.dispose(), gradient, 'Repeated disposal is safe');
+
+      two.update();
+      assert.strictEqual(gradient._renderer.elem, elem, 'Rendering reuses the gradient element');
+      assert.ok(elem.parentNode, 'Rendering reattaches the gradient');
+      assert.equal(elem.childNodes.length, 2, 'Rendering preserves the color stops');
+      gradient.dispose();
+    });
+
+    QUnit.test(kind + '.dispose - Already detached SVG element', function (assert) {
+      var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
+      var gradient = new Two[kind]();
+      gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+      two.makeRectangle(50, 50, 80, 80).fill = gradient;
+      two.update();
+
+      var elem = gradient._renderer.elem;
+      assert.ok(elem.parentNode, 'The rendered gradient is attached');
+      elem.parentNode.removeChild(elem);
+      assert.strictEqual(gradient.dispose(), gradient, 'An already detached gradient can be disposed');
+    });
+
+    _.each(['Path', 'Text', 'Points'], function (shapeKind) {
+      QUnit.test(shapeKind + '.dispose - Identical ' + kind + ' fill and stroke', function (assert) {
+        var two = new Two({ type: Two.Types.svg, width: 100, height: 100 });
+        var gradient = new Two[kind]();
+        gradient.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+        var shape;
+        if (shapeKind === 'Text') {
+          shape = two.makeText('Gradient', 50, 50);
+        } else if (shapeKind === 'Points') {
+          shape = two.makePoints([new Two.Vector(50, 50)]);
+        } else {
+          shape = two.makeRectangle(50, 50, 80, 80);
+        }
+        shape.fill = shape.stroke = gradient;
+        two.update();
+
+        var elem = gradient._renderer.elem;
+        assert.ok(elem.parentNode, 'The shared fill and stroke is rendered');
+        assert.strictEqual(shape.dispose(), shape, 'Shape disposal completes');
+        assert.notOk(elem.parentNode, 'Shape disposal detaches the gradient');
+        assert.strictEqual(shape.dispose(), shape, 'Shape disposal remains repeatable');
+      });
+    });
+  });
+
   QUnit.test('Gradient.dispose - SVG Element Removal', function (assert) {
     assert.expect(3);
 
