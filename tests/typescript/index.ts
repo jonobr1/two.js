@@ -62,7 +62,9 @@ arc.clone().endAngle = Math.PI * 2;
 
 new CanvasRenderer({});
 new SVGRenderer({});
-new WebGLRenderer({});
+const webglRenderer = new WebGLRenderer({});
+const disposedRenderer: WebGLRenderer = webglRenderer.dispose();
+void disposedRenderer;
 // @ts-expect-error Renderer constructors require a parameter object.
 new CanvasRenderer();
 // @ts-expect-error Renderer constructors require a parameter object.

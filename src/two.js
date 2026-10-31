@@ -69,6 +69,9 @@ const Utils = _.extend(
   math
 );
 
+let fullscreenInstances = 0;
+let previousBodyStyle;
+
 /**
  * @name Two
  * @class
@@ -178,6 +181,11 @@ export default class Two {
    */
   playing = false;
 
+  /**
+   * @private
+   */
+  _disposed = false;
+
   constructor(options) {
     // Determine what Renderer to use and setup a scene.
 
@@ -237,15 +245,15 @@ export default class Two {
         bottom: 0,
         position: 'fixed',
       };
-      // Remember the previous values so that dispose can restore them
-      this.fit.previousBodyStyle = {};
-      _.each(
-        bodyStyle,
-        function (v, k) {
-          this.fit.previousBodyStyle[k] = document.body.style[k];
-        },
-        this
-      );
+      // Share the original styles until the last fullscreen owner is disposed.
+      if (fullscreenInstances === 0) {
+        previousBodyStyle = {};
+        _.each(bodyStyle, function (v, k) {
+          previousBodyStyle[k] = document.body.style[k];
+        });
+      }
+      fullscreenInstances++;
+      this.fit.fullscreen = true;
       _.extend(document.body.style, bodyStyle);
       _.extend(this.renderer.domElement.style, {
         display: 'block',
@@ -412,6 +420,9 @@ export default class Two {
    * @nota-bene This function initiates a `requestAnimationFrame` loop.
    */
   play() {
+    if (this._disposed) {
+      return this;
+    }
     this.playing = true;
     raf.init();
     return this.trigger(Events.Types.play);
@@ -429,7 +440,7 @@ export default class Two {
   }
 
   setPlaying(p) {
-    this.playing = p;
+    this.playing = !this._disposed && p;
   }
 
   /**
@@ -437,10 +448,14 @@ export default class Two {
    * @function
    * @fires pause
    * @returns {Two} The instance itself.
-   * @description Tear down the instance. This pauses it, removes it from {@link Two.Instances}, detaches the resize listener of a `fitted` or `fullscreen` instance, restores the `document.body` styles changed by `fullscreen`, releases the scene, and removes the renderer's DOM element from the document. An element passed in as `options.domElement` stays where it is.
+   * @description Tear down the instance. This pauses it, removes it from {@link Two.Instances}, detaches the resize listener of a `fitted` or `fullscreen` instance, restores the `document.body` styles when the last fullscreen instance is disposed, releases scene and renderer resources, and removes the renderer's DOM element from the document. An element passed in as `options.domElement` stays where it is. Repeated calls have no effect. A disposed instance cannot play, update, or render again.
    * @nota-bene The shared `requestAnimationFrame` loop stops when no instance is playing and starts again on {@link Two#play}.
    */
   dispose() {
+    if (this._disposed) {
+      return this;
+    }
+    this._disposed = true;
     this.pause();
 
     const index = Two.Instances.indexOf(this);
@@ -452,15 +467,22 @@ export default class Two {
       if (this.fit.attached) {
         dom.unbind(this.fit.domElement, 'resize', this.fit);
       }
-      if (this.fit.previousBodyStyle) {
-        _.extend(document.body.style, this.fit.previousBodyStyle);
-        delete this.fit.previousBodyStyle;
+      if (this.fit.fullscreen) {
+        fullscreenInstances--;
+        this.fit.fullscreen = false;
+        if (fullscreenInstances === 0) {
+          _.extend(document.body.style, previousBodyStyle);
+          previousBodyStyle = null;
+        }
       }
       this.fit.attached = false;
       this.fit.domElement = null;
     }
 
     this.release();
+    if (typeof this.renderer.dispose === 'function') {
+      this.renderer.dispose();
+    }
 
     const elem = this.renderer.domElement;
     if (!this.domElement && elem.parentNode) {
@@ -619,6 +641,9 @@ export default class Two {
    * @nota-bene This function is called automatically if using {@link Two#play} or the `autostart` parameter in construction.
    */
   update() {
+    if (this._disposed) {
+      return this;
+    }
     const animated = !!this._lastFrame;
     const now = _.performance.now();
 
@@ -654,6 +679,9 @@ export default class Two {
    * @description Render all drawable and visible objects of the scene.
    */
   render() {
+    if (this._disposed) {
+      return this;
+    }
     this.renderer.render();
     return this.trigger(Events.Types.render, this.frameCount++);
   }
@@ -1313,17 +1341,17 @@ const raf = dom.getRequestAnimationFrame();
 let looping = false;
 
 function loop() {
-  let playing = false;
-
-  for (let i = 0; i < Two.Instances.length; i++) {
-    const t = Two.Instances[i];
-    if (t.playing) {
+  // User callbacks may remove any instance from the live registry.
+  const instances = Two.Instances.slice();
+  for (let i = 0; i < instances.length; i++) {
+    const t = instances[i];
+    if (t.playing && !t._disposed) {
       t.update();
-      playing = true;
     }
   }
 
   // Sleep when no instance is playing. Two#play calls raf.init to wake up.
+  const playing = Two.Instances.some((t) => t.playing && !t._disposed);
   if (playing) {
     Two.NextFrameId = raf(loop);
   } else {
