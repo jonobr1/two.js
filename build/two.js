@@ -1251,7 +1251,7 @@ var Two = (() => {
      * @name Two.PublishDate
      * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
      */
-    PublishDate: "2026-10-31T07:05:31.180Z",
+    PublishDate: "2026-11-03T01:50:04.731Z",
     /**
      * @name Two.Identifier
      * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -16873,19 +16873,25 @@ var Two = (() => {
   var raf = dom.getRequestAnimationFrame();
   var looping = false;
   function loop() {
-    const instances = Two.Instances.slice();
-    for (let i = 0; i < instances.length; i++) {
-      const t = instances[i];
-      if (t.playing && !t._disposed) {
-        t.update();
+    try {
+      const instances = Two.Instances.slice();
+      for (let i = 0; i < instances.length; i++) {
+        const t = instances[i];
+        if (t.playing && !t._disposed) {
+          t.update();
+        }
       }
-    }
-    const playing = Two.Instances.some((t) => t.playing && !t._disposed);
-    if (playing) {
-      Two.NextFrameId = raf(loop);
-    } else {
+      const playing = Two.Instances.some((t) => t.playing && !t._disposed);
+      if (playing) {
+        Two.NextFrameId = raf(loop);
+      } else {
+        Two.NextFrameId = null;
+        looping = false;
+      }
+    } catch (error) {
       Two.NextFrameId = null;
       looping = false;
+      throw error;
     }
   }
   raf.init = function() {

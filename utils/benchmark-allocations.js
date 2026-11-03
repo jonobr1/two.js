@@ -60,7 +60,7 @@ async function measure(browser, origin, name, version) {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   try {
-    const query = version === 'baseline' ? '?bundle=/baseline.js' : '';
+    const query = version === 'baseline' ? '?bundle=baseline' : '';
     await page.goto(origin + '/tests/performance/index.html' + query);
     await page.waitForFunction(() => window.AllocationBenchmark);
     await client.send('HeapProfiler.enable');
@@ -127,7 +127,7 @@ async function checkHitResultRetention(browser, origin, version) {
   const page = await browser.newPage();
   try {
     await page.goto(origin + '/tests/performance/index.html' +
-      (version === 'baseline' ? '?bundle=/baseline.js' : ''));
+      (version === 'baseline' ? '?bundle=baseline' : ''));
     await page.waitForFunction(() => window.AllocationBenchmark);
     const client = await page.context().newCDPSession(page);
     await page.evaluate(() => {

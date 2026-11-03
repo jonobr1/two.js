@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>Animation loop test fixture</title></head>
+  <body>
+    <script>
+      // Isolate the shared loop and control every scheduled frame explicitly.
+      window.frameCallbacks = [];
+      window.requestAnimationFrame = function (callback) {
+        window.frameCallbacks.push(callback);
+        return window.frameCallbacks.length;
+      };
+    </script>
+    <script src="../../build/two.js"></script>
+  </body>
+</html>

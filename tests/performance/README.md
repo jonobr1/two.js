@@ -10,8 +10,10 @@ The public API and handwritten declarations are unchanged.
 
 Run `npm run build` and `npm run dev`, then open
 `http://localhost:8080/tests/performance/`. Select a workload and run it with
-the browser's allocation profiler. A different build can be selected with
-`?bundle=/path/to/two.js`. The interactive button reports CPU timings only;
+the browser's allocation profiler. The page selects only the current build or
+the driver's fixed local baseline route with `?bundle=baseline`. Supply other
+trusted builds through the driver's `--baseline` option; arbitrary script URLs
+are not accepted by the page. The interactive button reports CPU timings only;
 elapsed time is not a measurement of allocations or GC.
 
 ## Run a comparison
@@ -53,6 +55,30 @@ Each step is one of the following:
 
 | Workload | Work per step |
 | --- | --- |
+| matrix | 500 reset/translate/rotate/scale sequences |
+| curve-bounds | 500 cubic bounding boxes |
+| world-matrix | 50 ancestor walks through a hierarchy 21 groups deep |
+| path-hit | 40 curved-path containment calls |
+| hit-query | Five queries over 40 overlapping curved paths |
+| svg / canvas / webgl | One update of 20 groups containing 200 shapes and 20 text labels; transforms change each frame |
+
+These are synchronous CPU/render workloads, not requestAnimationFrame
+intervals or measurements of dropped frames. The renderer fixture changes
+transforms and scale; dedicated points-buffer, image-resize, and changing-text
+workloads remain useful before optimizing those sites.
+
+## Measured results for #802
+
+Baseline: `b3cb894c`. Measured optimized bundle: `837bd8a5`, rebuilt from source.
+Environment: macOS arm64, Apple M4 Pro, headless Chrome 156.0.8078.79,
+Playwright 1.64.1. Rendering uses SwiftShader for reproducible headless WebGL
+support. Results are the median of three rounds with the parameters above.
+The recorded bundle hashes and measurements are preserved in
+[issue-802-results.json](./issue-802-results.json). These manual-update
+workloads do not measure animation-loop exception recovery.
+
+| Workload | Baseline allocated MiB | Optimized allocated MiB | Reduction | p95 CPU ms, baseline / optimized | GC events, baseline / optimized |
+| --- | ---: | ---: | ---: | ---: | ---: |
 | matrix | 61.12 | 1.75 | 97.1% | 0.055 / 0.020 | 62 / 2 |
 | curve-bounds | 160.68 | 15.63 | 90.3% | 0.105 / 0.030 | 167 / 17 |
 | world-matrix | 62.68 | 20.26 | 67.7% | 0.065 / 0.045 | 65 / 21 |
@@ -86,12 +112,12 @@ introduced.
 
 - The new hit-query regressions failed against the baseline with eight
   assertion failures and pass with the cache fix.
-- Full Chrome QUnit runner: **1,368 passed / 10 failed** assertions. The
+- Full Chrome QUnit runner: **1,393 passed / 10 failed** assertions. The
   untouched rebuilt baseline has **1,144 passed / the same 10 failed** image
-  comparisons. The added suites contribute 224 passing assertions with no
+  comparisons. The added suites contribute 249 passing assertions with no
   additional failures. QUnit 3.0.0 and Resemble.js 5.0.0 were served locally
   in the browser harness.
-- The non-WebGL runner loads the new suites and reports **1,147 passed / 4
+- The non-WebGL runner loads the new suites and reports **1,172 passed / 4
   failed** assertions; its four image failures are also present in the full
   baseline run.
 - Seeded differential checks matched the baseline exactly for 5,000 cubic
@@ -100,7 +126,10 @@ introduced.
 - Regression coverage includes retained and mutated results, empty/deepest
   queries, nested filters and change events, option reset, callback exceptions,
   deep/short hierarchies, event arities, absolute/relative controls, arc sweep,
-  degenerate radii, and nested SVG render hooks during child-list changes.
+  degenerate radii, nested SVG render hooks during child-list changes, and
+  animation recovery after startup, scheduled-update, and autostart exceptions.
+- `node utils/test-benchmark-loader.js` passes 13 selector cases, including
+  external, protocol-relative, data, JavaScript, and arbitrary local URLs.
 - `npm run build`, `npx eslint .`, `npm run types:check`,
   `npm run docs:generate`, `npm run docs:build`, and `git diff --check` pass.
 

@@ -33,7 +33,7 @@ recursive or re-entrant invocations must never share active scratch state.
 | `src/registry.js` | Instance-owned registry map; no repeated temporary workspace. |
 | `src/shape.js` | Preserve matrices, vectors, clones, serialization, and independently returned bounds. Empty default options are small; no additional shared mutable options introduced. |
 | `src/text.js` | Preserve measurement results, native metrics, and public bounds. Font formatting and intermediate transforms remain candidates; this change does not add font or metrics invalidation state. |
-| `src/two.js` | Preserve factory outputs, scene instances, load callbacks, and `Instances.slice()` iteration semantics when update handlers dispose instances. |
+| `src/two.js` | Preserve factory outputs, scene instances, load callbacks, and `Instances.slice()` iteration semantics when update handlers dispose instances. Clear animation-loop guards after failed updates so subsequent play calls can restart without swallowing the original exception. |
 | `src/vector.js` | Preserve caller-owned arithmetic/clone results and per-instance event state. |
 
 ## Renderers
