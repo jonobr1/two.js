@@ -1343,22 +1343,30 @@ const raf = dom.getRequestAnimationFrame();
 let looping = false;
 
 function loop() {
-  // User callbacks may remove any instance from the live registry.
-  const instances = Two.Instances.slice();
-  for (let i = 0; i < instances.length; i++) {
-    const t = instances[i];
-    if (t.playing && !t._disposed) {
-      t.update();
+  try {
+    // User callbacks may remove any instance from the live registry.
+    const instances = Two.Instances.slice();
+    for (let i = 0; i < instances.length; i++) {
+      const t = instances[i];
+      if (t.playing && !t._disposed) {
+        t.update();
+      }
     }
-  }
 
-  // Sleep when no instance is playing. Two#play calls raf.init to wake up.
-  const playing = Two.Instances.some((t) => t.playing && !t._disposed);
-  if (playing) {
-    Two.NextFrameId = raf(loop);
-  } else {
+    // Sleep when no instance is playing. Two#play calls raf.init to wake up.
+    const playing = Two.Instances.some((t) => t.playing && !t._disposed);
+    if (playing) {
+      Two.NextFrameId = raf(loop);
+    } else {
+      Two.NextFrameId = null;
+      looping = false;
+    }
+  } catch (error) {
+    // A failed startup or scheduled update has no next frame. Allow play() to
+    // restart the shared loop after the caller handles the original exception.
     Two.NextFrameId = null;
     looping = false;
+    throw error;
   }
 }
 

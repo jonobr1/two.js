@@ -216,8 +216,10 @@ function getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
  * @see {@link https://github.com/adobe-webplatform/Snap.svg/blob/master/src/path.js#L856}
  */
 function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
-  const tvalues = [];
-  const bounds = [[], []];
+  let minX = Math.min(x1, x4),
+    minY = Math.min(y1, y4),
+    maxX = Math.max(x1, x4),
+    maxY = Math.max(y1, y4);
   let a, b, c, t, t1, t2, b2ac, sqrtb2ac;
 
   for (let i = 0; i < 2; ++i) {
@@ -234,55 +236,46 @@ function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
       if (Math.abs(b) < 0.001) {
         continue;
       }
-      t = -c / b;
-      if (0 < t && t < 1) {
-        tvalues.push(t);
+      t1 = -c / b;
+      t2 = NaN;
+    } else {
+      b2ac = b * b - 4 * c * a;
+      if (b2ac < 0) {
+        continue;
       }
-      continue;
+      sqrtb2ac = Math.sqrt(b2ac);
+      t1 = (-b + sqrtb2ac) / (2 * a);
+      t2 = (-b - sqrtb2ac) / (2 * a);
     }
-    b2ac = b * b - 4 * c * a;
-    sqrtb2ac = Math.sqrt(b2ac);
-    if (b2ac < 0) {
-      continue;
-    }
-    t1 = (-b + sqrtb2ac) / (2 * a);
-    if (0 < t1 && t1 < 1) {
-      tvalues.push(t1);
-    }
-    t2 = (-b - sqrtb2ac) / (2 * a);
-    if (0 < t2 && t2 < 1) {
-      tvalues.push(t2);
+
+    // Evaluate extrema as they are found instead of retaining three arrays
+    // of roots and coordinates for every curve segment.
+    for (let j = 0; j < 2; j++) {
+      t = j === 0 ? t1 : t2;
+      if (!(0 < t && t < 1)) {
+        continue;
+      }
+      const mt = 1 - t;
+      const x =
+        mt * mt * mt * x1 +
+        3 * mt * mt * t * x2 +
+        3 * mt * t * t * x3 +
+        t * t * t * x4;
+      const y =
+        mt * mt * mt * y1 +
+        3 * mt * mt * t * y2 +
+        3 * mt * t * t * y3 +
+        t * t * t * y4;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
     }
   }
-
-  let j = tvalues.length;
-  let jlen = j;
-  let mt;
-
-  while (j--) {
-    t = tvalues[j];
-    mt = 1 - t;
-    bounds[0][j] =
-      mt * mt * mt * x1 +
-      3 * mt * mt * t * x2 +
-      3 * mt * t * t * x3 +
-      t * t * t * x4;
-    bounds[1][j] =
-      mt * mt * mt * y1 +
-      3 * mt * mt * t * y2 +
-      3 * mt * t * t * y3 +
-      t * t * t * y4;
-  }
-
-  bounds[0][jlen] = x1;
-  bounds[1][jlen] = y1;
-  bounds[0][jlen + 1] = x4;
-  bounds[1][jlen + 1] = y4;
-  bounds[0].length = bounds[1].length = jlen + 2;
 
   return {
-    min: { x: Math.min.apply(0, bounds[0]), y: Math.min.apply(0, bounds[1]) },
-    max: { x: Math.max.apply(0, bounds[0]), y: Math.max.apply(0, bounds[1]) },
+    min: { x: minX, y: minY },
+    max: { x: maxX, y: maxY },
   };
 }
 

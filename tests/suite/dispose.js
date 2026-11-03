@@ -1701,6 +1701,97 @@
     });
   }
 
+  function withAnimationLoop(assert, callback) {
+    var done = assert.async();
+    var frame = document.createElement('iframe');
+    frame.hidden = true;
+    frame.onload = function () {
+      try {
+        callback(frame.contentWindow);
+      } catch (error) {
+        assert.ok(false, 'Animation fixture failed: ' + error.message);
+      } finally {
+        frame.remove();
+        done();
+      }
+    };
+    frame.src = './fixtures/animation-loop.html';
+    document.body.appendChild(frame);
+  }
+
+  ['update', 'render'].forEach(function (event) {
+    QUnit.test('Two.play - Recovery After Initial ' + event + ' Exception', function (assert) {
+      withAnimationLoop(assert, function (scope) {
+        var T = scope.Two;
+        var two = new T({ width: 10, height: 10 });
+        var error = new Error(event + ' failed');
+        var handler = function () { throw error; };
+        two.bind(event, handler);
+        assert.throws(function () { two.play(); }, function (caught) { return caught === error; },
+          'The original callback exception propagates.');
+        assert.strictEqual(T.NextFrameId, null, 'The failed startup has no pending frame.');
+        assert.equal(scope.frameCallbacks.length, 0, 'No frame was scheduled before the exception.');
+
+        two.unbind(event, handler);
+        var count = two.frameCount;
+        two.play();
+        assert.ok(two.frameCount > count, 'The same instance can restart synchronously.');
+        assert.equal(scope.frameCallbacks.length, 1, 'Restart schedules exactly one frame.');
+        count = two.frameCount;
+        scope.frameCallbacks.shift()();
+        assert.ok(two.frameCount > count, 'The restarted animation continues on the next frame.');
+        two.dispose();
+        scope.frameCallbacks.shift()();
+        assert.strictEqual(T.NextFrameId, null, 'The loop can sleep after recovery.');
+      });
+    });
+  });
+
+  QUnit.test('Two.play - Recovery After Scheduled Update Exception', function (assert) {
+    withAnimationLoop(assert, function (scope) {
+      var T = scope.Two;
+      var two = new T({ width: 10, height: 10 });
+      var calls = 0;
+      var error = new Error('scheduled update failed');
+      two.bind('update', function () { if (++calls === 2) { throw error; } });
+      two.play();
+      assert.notStrictEqual(T.NextFrameId, null, 'Startup schedules the next frame.');
+      assert.throws(function () { scope.frameCallbacks.shift()(); },
+        function (caught) { return caught === error; }, 'Scheduled exceptions propagate unchanged.');
+      assert.strictEqual(T.NextFrameId, null, 'The consumed frame handle is cleared after failure.');
+      assert.equal(scope.frameCallbacks.length, 0, 'Failure does not schedule a retry automatically.');
+      two.dispose();
+
+      var other = new T({ width: 10, height: 10 });
+      other.play();
+      assert.equal(other.frameCount, 1, 'Another instance can restart the shared loop.');
+      assert.equal(scope.frameCallbacks.length, 1, 'The other instance schedules a frame.');
+      other.dispose();
+      scope.frameCallbacks.shift()();
+      assert.strictEqual(T.NextFrameId, null, 'The recovered loop returns to sleep.');
+    });
+  });
+
+  QUnit.test('Two - Recovery After Autostart Exception', function (assert) {
+    withAnimationLoop(assert, function (scope) {
+      var T = scope.Two;
+      var update = T.prototype.update;
+      var error = new Error('autostart failed');
+      T.prototype.update = function () { throw error; };
+      assert.throws(function () { new T({ width: 10, height: 10, autostart: true }); },
+        function (caught) { return caught === error; }, 'Autostart propagates the original exception.');
+      T.prototype.update = update;
+      assert.strictEqual(T.NextFrameId, null, 'Failed autostart has no pending frame.');
+      T.Instances[0].dispose();
+      var other = new T({ width: 10, height: 10 });
+      other.play();
+      assert.equal(other.frameCount, 1, 'Another instance can start after failed autostart.');
+      assert.equal(scope.frameCallbacks.length, 1, 'Recovery schedules a single frame.');
+      other.dispose();
+      scope.frameCallbacks.shift()();
+    });
+  });
+
   QUnit.test('Two.dispose - Instance Registry', function (assert) {
     assert.expect(3);
 

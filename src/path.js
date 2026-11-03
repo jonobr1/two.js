@@ -792,8 +792,15 @@ export class Path extends Shape {
       // This is important for handling cyclic paths.
       v0 = this._renderer.vertices[(i + l - 1) % l];
 
-      const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
-      const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
+      // These coordinates never escape the bounds calculation. Transform them
+      // directly instead of allocating a Matrix#multiply result per vertex.
+      const e = matrix.elements;
+      const x0 = v0.x || 0, y0 = v0.y || 0;
+      const x1 = v1.x || 0, y1 = v1.y || 0;
+      const v0x = e[0] * x0 + e[1] * y0 + e[2];
+      const v0y = e[3] * x0 + e[4] * y0 + e[5];
+      const v1x = e[0] * x1 + e[1] * y1 + e[2];
+      const v1y = e[3] * x1 + e[4] * y1 + e[5];
 
       if (v0.controls && v1.controls) {
         let rx = v0.controls.right.x;
@@ -804,7 +811,10 @@ export class Path extends Shape {
           ry += v0.y;
         }
 
-        let [c0x, c0y] = matrix.multiply(rx, ry);
+        rx = rx || 0;
+        ry = ry || 0;
+        const c0x = e[0] * rx + e[1] * ry + e[2];
+        const c0y = e[3] * rx + e[4] * ry + e[5];
 
         let lx = v1.controls.left.x;
         let ly = v1.controls.left.y;
@@ -814,7 +824,10 @@ export class Path extends Shape {
           ly += v1.y;
         }
 
-        let [c1x, c1y] = matrix.multiply(lx, ly);
+        lx = lx || 0;
+        ly = ly || 0;
+        const c1x = e[0] * lx + e[1] * ly + e[2];
+        const c1y = e[3] * lx + e[4] * ly + e[5];
 
         const bb = getCurveBoundingBox(v0x, v0y, c0x, c0y, c1x, c1y, v1x, v1y);
 
@@ -898,7 +911,10 @@ export class Path extends Shape {
       return super.contains(x, y, opts);
     }
 
-    const [localX, localY] = inverse.multiply(x, y, 1);
+    const e = inverse.elements;
+    const px = x || 0, py = y || 0;
+    const localX = e[0] * px + e[1] * py + e[2];
+    const localY = e[3] * px + e[4] * py + e[5];
     const precision =
       typeof opts.precision === 'number' && !Number.isNaN(opts.precision)
         ? Math.max(1, Math.floor(opts.precision))
