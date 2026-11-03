@@ -110,7 +110,11 @@ declare module 'two.js/src/effects/gradient' {
     /**
      * @name Two.Gradient#dispose
      * @function
-     * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+     * @returns {Two.Gradient}
+     * @description Release renderer resources and event listeners. Safe to call
+     * repeatedly. Shapes release shared effects only after their last assignment
+     * is disposed. Call this method directly only when all users are finished.
+     * The gradient's values and internal change tracking remain available for reuse.
      */
     dispose(): Gradient;
   }

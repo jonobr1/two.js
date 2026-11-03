@@ -1,3 +1,4 @@
+import { bindEffects } from '../utils/effects.js';
 import { Vector } from '../vector.js';
 import { Rectangle } from '../shapes/rectangle.js';
 import { Texture } from './texture.js';
@@ -180,20 +181,13 @@ export class Image extends Rectangle {
    * @function
    * @returns {Two.Image}
    * @description Release the image's renderer resources and detach all events.
-   * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+   * This method releases its texture assignment and inherits comprehensive
    * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
    * for potential re-attachment.
    */
   dispose() {
     // Call parent dispose for inherited cleanup (vertices, fill/stroke effects)
     super.dispose();
-
-    // Dispose texture (more thorough than unbind)
-    if (this._texture && typeof this._texture.dispose === 'function') {
-      this._texture.dispose();
-    } else if (this._texture && typeof this._texture.unbind === 'function') {
-      this._texture.unbind();
-    }
 
     return this;
   }
@@ -298,6 +292,7 @@ const proto = {
       return this._texture;
     },
     set: function (v) {
+      bindEffects(this, 'texture', [v]);
       this._texture = v;
       this._flagTexture = true;
     },

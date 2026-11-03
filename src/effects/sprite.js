@@ -1,3 +1,4 @@
+import { bindEffects } from '../utils/effects.js';
 import { lerp } from '../utils/math.js';
 import { _ } from '../utils/underscore.js';
 
@@ -375,8 +376,8 @@ export class Sprite extends Rectangle {
    * @function
    * @returns {Two.Sprite}
    * @description Release the sprite's renderer resources and detach all events.
-   * This method stops any running animation, clears animation callbacks, disposes
-   * the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+   * This method stops any running animation, clears animation callbacks, releases
+   * its texture assignment, and inherits comprehensive
    * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
    * for potential re-attachment.
    */
@@ -394,13 +395,6 @@ export class Sprite extends Rectangle {
 
     // Reset timing properties
     this._startTime = 0;
-
-    // Dispose texture (more thorough than unbind)
-    if (this._texture && typeof this._texture.dispose === 'function') {
-      this._texture.dispose();
-    } else if (this._texture && typeof this._texture.unbind === 'function') {
-      this._texture.unbind();
-    }
 
     return this;
   }
@@ -523,6 +517,7 @@ const proto = {
       return this._texture;
     },
     set: function (v) {
+      bindEffects(this, 'texture', [v]);
       this._texture = v;
       this._flagTexture = true;
     },

@@ -1,3 +1,4 @@
+import { hasEffectReferences, unbindEffects } from './utils/effects.js';
 // Utils
 
 import { CanvasPolyfill } from './utils/canvas-polyfill.js';
@@ -480,6 +481,10 @@ export default class Two {
     }
 
     this.release();
+    if (this.renderer.defs) {
+      // Shared SVG effects can move out of these definitions on their next render.
+      this.renderer.defs._disposed = true;
+    }
     if (typeof this.renderer.dispose === 'function') {
       this.renderer.dispose();
     }
@@ -501,111 +506,24 @@ export default class Two {
    * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
    * @returns {Two.Element} The object passed for event deallocation.
    * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
+   * Shared effects keep their other shapes' listeners until the last assignment
+   * is released. Releasing a shape does not dispose the effect's renderer resources.
    */
   release(obj) {
-    let i, v, child;
-
-    // Release this instance of Two.js if nothing passed
     if (typeof obj === 'undefined') {
-      return this.release(this.scene);
+      obj = this.scene;
     }
 
-    if (typeof obj.unbind === 'function') {
-      obj.unbind();
-    }
-
-    // Unbind effects applied to an object
-    if (typeof obj.fill === 'object' && typeof obj.fill.unbind === 'function') {
-      obj.fill.unbind();
-    }
-    if (
-      typeof obj.stroke === 'object' &&
-      typeof obj.stroke.unbind === 'function'
-    ) {
-      obj.stroke.unbind();
-    }
-
-    // Unbind vertices on an object
-    if (obj.vertices) {
-      if (typeof obj.vertices.unbind === 'function') {
-        try {
-          obj.vertices.unbind();
-        } catch (e) {
-          // Ignore unbind errors for incomplete Collection objects
-        }
-      }
-      for (i = 0; i < obj.vertices.length; i++) {
-        v = obj.vertices[i];
-        if (typeof v.unbind === 'function') {
-          v.unbind();
-        }
-        if (v.controls) {
-          if (v.controls.left && typeof v.controls.left.unbind === 'function') {
-            v.controls.left.unbind();
-          }
-          if (
-            v.controls.right &&
-            typeof v.controls.right.unbind === 'function'
-          ) {
-            v.controls.right.unbind();
-          }
-        }
+    // Factory effects are scene children too. Visit them after all shapes have
+    // released their assignments, including shapes in sibling and nested groups.
+    const effects = [];
+    release.call(this, obj, effects);
+    for (let i = 0; i < effects.length; i++) {
+      const effect = effects[i];
+      if (!hasEffectReferences(effect)) {
+        release.call(this, effect, effects);
       }
     }
-
-    // Unbind any children of the object
-    if (obj.children) {
-      for (i = 0; i < obj.children.length; i++) {
-        child = obj.children[i];
-        this.release(child);
-      }
-      if (typeof obj.children.unbind === 'function') {
-        try {
-          obj.children.unbind();
-        } catch (e) {
-          // Ignore unbind errors for incomplete Collection objects
-        }
-      }
-    }
-
-    // Clean up renderer-specific resources
-    if (obj._renderer) {
-      // SVG DOM element cleanup
-      if (obj._renderer.elem && obj._renderer.elem.parentNode) {
-        obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
-        delete obj._renderer.elem;
-      }
-
-      // WebGL resource cleanup
-      if (this.type === 'WebGLRenderer' && this.renderer.ctx) {
-        const gl = this.renderer.ctx;
-
-        // Clean up textures
-        if (obj._renderer.texture) {
-          gl.deleteTexture(obj._renderer.texture);
-          delete obj._renderer.texture;
-        }
-
-        // Clean up buffers
-        if (obj._renderer.positionBuffer) {
-          gl.deleteBuffer(obj._renderer.positionBuffer);
-          delete obj._renderer.positionBuffer;
-        }
-
-        delete obj._renderer.gl;
-
-        // Clean up any other WebGL effects
-        if (obj._renderer.effect) {
-          obj._renderer.effect = null;
-        }
-      }
-
-      // Canvas renderer cleanup - clear cached contexts and data
-      if (this.type === 'CanvasRenderer' && obj._renderer.context) {
-        delete obj._renderer.context;
-      }
-    }
-
     return obj;
   }
 
@@ -1305,6 +1223,106 @@ export default class Two {
 
     return group;
   }
+}
+
+/** @private Release a subtree while deferring its effect children. */
+function release(obj, pendingEffects) {
+  let i, v, child;
+
+  if (typeof obj.unbind === 'function') {
+    obj.unbind();
+  }
+
+  // Release only this object's effect assignments. Other shapes may still
+  // use the same effects, including shapes belonging to another Two instance.
+  unbindEffects(obj);
+
+  // Unbind vertices on an object
+  if (obj.vertices) {
+    if (typeof obj.vertices.unbind === 'function') {
+      try {
+        obj.vertices.unbind();
+      } catch (e) {
+        // Ignore unbind errors for incomplete Collection objects
+      }
+    }
+    for (i = 0; i < obj.vertices.length; i++) {
+      v = obj.vertices[i];
+      if (typeof v.unbind === 'function') {
+        v.unbind();
+      }
+      if (v.controls) {
+        if (v.controls.left && typeof v.controls.left.unbind === 'function') {
+          v.controls.left.unbind();
+        }
+        if (
+          v.controls.right &&
+          typeof v.controls.right.unbind === 'function'
+        ) {
+          v.controls.right.unbind();
+        }
+      }
+    }
+  }
+
+  // Unbind any children of the object
+  if (obj.children) {
+    for (i = 0; i < obj.children.length; i++) {
+      child = obj.children[i];
+      if (child instanceof Gradient || child instanceof Texture) {
+        pendingEffects.push(child);
+      } else {
+        release.call(this, child, pendingEffects);
+      }
+    }
+    if (typeof obj.children.unbind === 'function') {
+      try {
+        obj.children.unbind();
+      } catch (e) {
+        // Ignore unbind errors for incomplete Collection objects
+      }
+    }
+  }
+
+  // Clean up renderer-specific resources
+  if (obj._renderer) {
+    // SVG DOM element cleanup
+    if (obj._renderer.elem && obj._renderer.elem.parentNode) {
+      obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
+      delete obj._renderer.elem;
+    }
+
+    // WebGL resource cleanup
+    if (this.type === 'WebGLRenderer' && this.renderer.ctx) {
+      const gl = this.renderer.ctx;
+
+      // Clean up textures
+      if (obj._renderer.texture) {
+        gl.deleteTexture(obj._renderer.texture);
+        delete obj._renderer.texture;
+      }
+
+      // Clean up buffers
+      if (obj._renderer.positionBuffer) {
+        gl.deleteBuffer(obj._renderer.positionBuffer);
+        delete obj._renderer.positionBuffer;
+      }
+
+      delete obj._renderer.gl;
+
+      // Clean up any other WebGL effects
+      if (obj._renderer.effect) {
+        obj._renderer.effect = null;
+      }
+    }
+
+    // Canvas renderer cleanup - clear cached contexts and data
+    if (this.type === 'CanvasRenderer' && obj._renderer.context) {
+      delete obj._renderer.context;
+    }
+  }
+
+  return obj;
 }
 
 function fitToWindow() {

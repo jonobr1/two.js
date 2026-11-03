@@ -523,6 +523,14 @@ Return a JSON compatible plain object that represents the path.
 
 
 
+<div class="returns">
+
+__Returns__: Two.Gradient
+
+
+
+</div>
+
 
 
 
@@ -536,7 +544,10 @@ Return a JSON compatible plain object that represents the path.
 
 <div class="description">
 
-Detach instance from renderer including any `<defs />` or textures stored in memory.
+Release renderer resources and event listeners. Safe to call
+repeatedly. Shapes release shared effects only after their last assignment
+is disposed. Call this method directly only when all users are finished.
+The gradient's values and internal change tracking remain available for reuse.
 
 </div>
 

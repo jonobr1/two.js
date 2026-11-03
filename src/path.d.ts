@@ -369,11 +369,13 @@ declare module 'two.js/src/path' {
     /**
      * @name Two.Path#dispose
      * @function
+     * @returns {Two.Path}
      * @description Release the path's renderer resources and detach all events.
-     * This method cleans up vertices collection events, individual vertex events,
-     * control point events, and disposes fill/stroke effects (calling dispose()
-     * on Gradients and Textures for thorough cleanup) while preserving the
-     * renderer type for potential re-attachment to a new renderer.
+     * Releases this shape's fill and stroke assignments and listeners. An effect
+     * is disposed once, only when no other shape assignments use it. This includes
+     * shapes outside the scene. Replacing fill or stroke does not dispose the old
+     * effect; call its dispose() explicitly when it is no longer needed.
+     * Also cleans up inherited resources and preserves the renderer type.
      */
     dispose(): Path;
     /**

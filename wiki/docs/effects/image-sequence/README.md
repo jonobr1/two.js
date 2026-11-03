@@ -683,9 +683,9 @@ __Returns__: Two.ImageSequence
 
 Release the image sequence's renderer resources and detach all events.
 This method stops any running animation, clears animation callbacks, unbinds
-textures collection events, and disposes individual textures (calling dispose()
-for thorough cleanup) while preserving the renderer type for potential
-re-attachment to a new renderer.
+textures collection events, and releases its texture assignments (disposing
+each texture only when no other shape assignments remain) while preserving
+the renderer type for potential re-attachment to a new renderer.
 
 </div>
 
@@ -695,8 +695,8 @@ re-attachment to a new renderer.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L355">
-    image-sequence.js:355
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/effects/image-sequence.js#L356">
+    image-sequence.js:356
   </a>
 
 </div>

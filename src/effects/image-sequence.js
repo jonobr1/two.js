@@ -1,3 +1,4 @@
+import { bindEffects } from '../utils/effects.js';
 import { Collection } from '../collection.js';
 import { Events } from '../events.js';
 import { lerp } from '../utils/math.js';
@@ -358,9 +359,9 @@ export class ImageSequence extends Rectangle {
    * @returns {Two.ImageSequence}
    * @description Release the image sequence's renderer resources and detach all events.
    * This method stops any running animation, clears animation callbacks, unbinds
-   * textures collection events, and disposes individual textures (calling dispose()
-   * for thorough cleanup) while preserving the renderer type for potential
-   * re-attachment to a new renderer.
+   * textures collection events, and releases its texture assignments (disposing
+   * each texture only when no other shape assignments remain) while preserving
+   * the renderer type for potential re-attachment to a new renderer.
    */
   dispose() {
     // Call parent dispose to preserve renderer type and unbind events
@@ -380,18 +381,6 @@ export class ImageSequence extends Rectangle {
         this.textures.unbind();
       } catch (e) {
         // Ignore unbind errors for incomplete Collection objects
-      }
-    }
-
-    // Dispose individual textures (more thorough than unbind)
-    if (this.textures) {
-      for (let i = 0; i < this.textures.length; i++) {
-        const texture = this.textures[i];
-        if (typeof texture.dispose === 'function') {
-          texture.dispose();
-        } else if (typeof texture.unbind === 'function') {
-          texture.unbind();
-        }
       }
     }
 
@@ -596,11 +585,7 @@ function FlagTextures() {
  * @description Cached method to let {@link Two.ImageSequence} know textures have been added to the instance.
  */
 function BindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].bind(Events.Types.change, this._renderer.flagTextures);
-  }
-
+  bindEffects(this, 'textures', this.textures, this._renderer.flagTextures);
   this._renderer.flagTextures();
 }
 
@@ -611,11 +596,7 @@ function BindTextures(items) {
  * @description Cached method to let {@link Two.ImageSequence} know textures have been removed from the instance.
  */
 function UnbindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].unbind(Events.Types.change, this._renderer.flagTextures);
-  }
-
+  bindEffects(this, 'textures', this.textures, this._renderer.flagTextures);
   this._renderer.flagTextures();
 }
 
