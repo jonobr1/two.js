@@ -1218,6 +1218,7 @@
       first.fill = first.stroke = effect;
       second.fill = effect;
       first.fill = effect;
+      assert.strictEqual(first.fill, second.fill, 'Repeated assignment retains the shared effect');
       first.fill = '#fff';
       first.dispose();
       assert.equal(calls, 0, 'Unrendered shape assignments retain the shared effect');
@@ -1272,6 +1273,74 @@
     assert.deepEqual(calls, [1, 1], 'Removed textures have no stale sequence references');
   });
 
+  QUnit.test('Two.release - Released texture collections cannot restore ownership', function (assert) {
+    var two = new Two({ width: 40, height: 40 });
+    var shared = new Two.Texture();
+    var sequence = two.makeImageSequence([shared, new Two.Texture()]);
+    var path = new Two.Path();
+    path.fill = shared;
+    var calls = 0;
+    var dispose = shared.dispose;
+    shared.dispose = function () { calls++; return dispose.call(this); };
+    two.release(sequence);
+    sequence._flagTextures = sequence._flagFill = false;
+    sequence.textures.pop();
+    sequence.textures.push(new Two.Texture());
+    sequence.textures.splice(1, 1);
+    shared.trigger('change');
+    assert.notOk(sequence._flagTextures || sequence._flagFill, 'Collection edits do not reattach released listeners');
+    path.dispose();
+    assert.equal(calls, 1, 'Collection edits do not prevent the last live user from disposing a shared texture');
+    two.dispose();
+  });
+
+  QUnit.test('Two.release - Empty texture collections stay released', function (assert) {
+    var two = new Two({ width: 40, height: 40 });
+    var sequence = two.makeImageSequence([new Two.Texture()]);
+    sequence.textures = [];
+    sequence.noFill();
+    var texture = new Two.Texture();
+    var path = new Two.Path();
+    path.fill = texture;
+    var calls = 0;
+    texture.dispose = function () { calls++; return this; };
+    two.release(sequence);
+    sequence.textures.push(texture);
+    path.dispose();
+    assert.equal(calls, 1, 'An initially empty collection cannot register ownership after release');
+    two.dispose();
+  });
+
+  _.each(['LinearGradient', 'RadialGradient', 'Texture'], function (kind) {
+    QUnit.test('Two.dispose - Reattach shared ' + kind + ' after an earlier release', function (assert) {
+      var first = new Two({ type: Two.Types.svg, width: 40, height: 40 }).appendTo(document.body);
+      var second = new Two({ type: Two.Types.svg, width: 40, height: 40 }).appendTo(document.body);
+      var effect;
+      if (kind === 'Texture') {
+        var canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 2;
+        effect = new Two.Texture(canvas);
+      } else {
+        effect = new Two[kind]();
+        effect.stops = [new Two.Stop(0, 'red'), new Two.Stop(1, 'blue')];
+      }
+      first.makeRectangle(20, 20, 40, 40).fill = effect;
+      var survivor = second.makeRectangle(20, 20, 40, 40);
+      survivor.fill = effect;
+      first.update();
+      second.update();
+      var elem = effect._renderer.elem;
+      first.release();
+      first.dispose();
+      second.update();
+      assert.strictEqual(effect._renderer.elem, elem, 'Renderer reuses the cached SVG resource');
+      assert.strictEqual(elem.parentNode, second.renderer.defs, 'Resource moves to surviving definitions');
+      assert.strictEqual(document.getElementById(effect.id), elem, 'Resource remains resolvable in the document');
+      survivor.remove().dispose();
+      second.dispose();
+    });
+  });
+
   _.each(['release', 'dispose'], function (method) {
     QUnit.test('Two.' + method + ' preserves effects shared with another instance', function (assert) {
       var first = new Two({ type: Two.Types.canvas, width: 100, height: 100 });
@@ -1297,9 +1366,77 @@
   });
 
   _.each(['LinearGradient', 'RadialGradient'], function (kind) {
+    _.each(['release', 'dispose'], function (method) {
+      _.each([Two.Types.canvas, Two.Types.svg], function (type) {
+        QUnit.test('Two.' + method + ' - Factory ' + kind + ' shared across ' + type + ' instances', function (assert) {
+          var first = new Two({ type: type, width: 40, height: 40 }).appendTo(document.body);
+          var second = new Two({ type: type, width: 40, height: 40 }).appendTo(document.body);
+          var gradient = kind === 'LinearGradient'
+            ? first.makeLinearGradient(0, 0, 1, 1, new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'))
+            : first.makeRadialGradient(0.5, 0.5, 0.5, new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'));
+          // Visit the effect in a nested group before releasing its local user.
+          first.makeGroup(gradient);
+          var a = first.makeRectangle(20, 20, 40, 40);
+          var b = second.makeRectangle(20, 20, 40, 40);
+          a.fill = b.fill = gradient;
+          a.noStroke();
+          b.noStroke();
+          first.update();
+          second.update();
+          var elem = gradient._renderer.elem;
+          var changes = 0;
+          gradient.bind('change', function () { changes++; });
+
+          first[method]();
+          a._flagFill = b._flagFill = false;
+          gradient.stops[0].color = 'lime';
+          gradient._update();
+          assert.notOk(a._flagFill, 'Released local shape no longer receives changes');
+          assert.ok(b._flagFill, 'Factory gradient keeps the other instance\'s listener');
+          assert.equal(changes, 1, 'Recursive release preserves external gradient listeners');
+          if (type === Two.Types.svg) {
+            assert.strictEqual(gradient._renderer.elem, elem, 'Shared SVG resource stays cached');
+          }
+          // Exercise disposal after ownership has already been released too.
+          first.dispose();
+          second.update();
+          if (type === Two.Types.svg) {
+            assert.strictEqual(document.getElementById(gradient.id), elem, 'Surviving renderer can still resolve the gradient');
+            assert.equal(elem.firstChild.getAttribute('stop-color'), 'lime', 'Survivor renders stop changes');
+          } else {
+            assert.ok(gradient._renderer.effect, 'Surviving renderer retains the gradient effect');
+          }
+          b.remove().dispose();
+          assert.notOk(gradient._renderer.elem || gradient._renderer.effect, 'Final assignment can dispose the resource');
+          first.dispose();
+          second.dispose();
+        });
+      });
+    });
+
+    QUnit.test('Two.release - Deferred ' + kind + ' cleanup without surviving users', function (assert) {
+      var two = new Two({ type: Two.Types.svg, width: 40, height: 40 });
+      var gradient = kind === 'LinearGradient'
+        ? two.makeLinearGradient(0, 0, 1, 1, new Two.Stop(0, 'red'))
+        : two.makeRadialGradient(0.5, 0.5, 0.5, new Two.Stop(0, 'red'));
+      two.makeGroup(gradient);
+      two.makeRectangle(20, 20, 40, 40).fill = gradient;
+      two.update();
+      var elem = gradient._renderer.elem;
+      two.release();
+      assert.notOk(elem.parentNode, 'Unshared factory resource is removed after all shapes release it');
+      assert.notOk(gradient._renderer.elem, 'Deferred cleanup clears the renderer reference');
+      two.dispose();
+    });
+
     _.each([Two.Types.canvas, Two.Types.webgl], function (type) {
       QUnit.test(kind + '.dispose - Reuse in ' + type, function (assert) {
-        var two = new Two({ type: type, width: 40, height: 40, ratio: 1 });
+        var canvas = document.createElement('canvas');
+        if (type === Two.Types.webgl && !canvas.getContext('webgl')) {
+          assert.ok(true, 'WebGL is unavailable in this browser');
+          return;
+        }
+        var two = new Two({ type: type, domElement: canvas, width: 40, height: 40, ratio: 1 });
         var gradient = kind === 'LinearGradient'
           ? two.makeLinearGradient(0, 0, 1, 1, new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'))
           : two.makeRadialGradient(0.5, 0.5, 0.5, new Two.Stop(0, 'red'), new Two.Stop(1, 'blue'));
@@ -1307,7 +1444,6 @@
         rect.fill = gradient;
         rect.noStroke();
         two.update();
-        var canvas = two.renderer.domElement;
         var before = canvas.toDataURL();
         gradient.dispose();
         gradient.dispose();

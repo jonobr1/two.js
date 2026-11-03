@@ -6,6 +6,11 @@ import { Events } from '../events.js';
 const references = new WeakMap();
 const bindings = new WeakMap();
 
+/** @private Whether any shape assignments still use an effect. */
+export function hasEffectReferences(effect) {
+  return references.has(effect);
+}
+
 /**
  * @private
  * Track one property (or texture collection) without disposing replaced effects.
@@ -65,6 +70,19 @@ export function unbindEffects(shape) {
 }
 
 function releaseEffects(shape, dispose) {
+  // Collection callbacks must stop before releasing their ownership records;
+  // otherwise editing a released sequence can register those records again.
+  const textures = shape.textures;
+  const renderer = shape._renderer;
+  if (textures && typeof textures.unbind === 'function' && renderer) {
+    if (renderer.bindTextures) {
+      textures.unbind(Events.Types.insert, renderer.bindTextures);
+    }
+    if (renderer.unbindTextures) {
+      textures.unbind(Events.Types.remove, renderer.unbindTextures);
+    }
+  }
+
   const properties = bindings.get(shape);
   if (!properties) {
     return;
