@@ -12,20 +12,6 @@
     <button id="run" type="button">Run 300 samples</button>
     <pre id="results"></pre>
     <div id="scene"></div>
-    <script>
-      // The driver exposes its trusted baseline file at a fixed local route.
-      var script = document.createElement('script');
-      if (new URLSearchParams(location.search).get('bundle') === 'baseline') {
-        script.src = '/baseline.js';
-      } else {
-        script.src = '../../build/two.js';
-      }
-      script.onload = function () {
-        var workloads = document.createElement('script');
-        workloads.src = './workloads.js';
-        document.body.appendChild(workloads);
-      };
-      document.body.appendChild(script);
-    </script>
+    <script src="./loader.js"></script>
   </body>
 </html>

@@ -1,11 +1,12 @@
-// Exercise the actual inline loader without fetching or executing script URLs.
+// Exercise the actual loader without fetching or executing script URLs.
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
 const html = fs.readFileSync(path.join(__dirname, '../tests/performance/index.html'), 'utf8');
-const loader = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+assert.ok(html.includes('<script src="./loader.js"></script>'), 'The page loads the tested entry point.');
+const loader = fs.readFileSync(path.join(__dirname, '../tests/performance/loader.js'), 'utf8');
 const cases = [
   ['', '../../build/two.js'],
   ['?bundle=', '../../build/two.js'],
