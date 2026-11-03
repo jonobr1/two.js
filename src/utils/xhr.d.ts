@@ -9,6 +9,7 @@ declare module 'two.js/src/utils/xhr' {
    */
   export function xhr(
     path: string,
-    callback: (resp: XMLHttpRequestResponseType) => void
+    callback: (resp: string, request: XMLHttpRequest) => void,
+    onError?: (error: Error) => void
   ): XMLHttpRequest;
 }

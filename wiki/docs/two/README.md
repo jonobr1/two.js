@@ -2853,7 +2853,7 @@ __Returns__: Two.Group
 
 <div class="description">
 
-Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
+Interpret a trusted SVG Node and add it to this instance's scene. This does not sanitize the source DOM. Use [Two.load](#load) for untrusted SVG text. Interpretation reconstructs compatible Two.js objects rather than transcribing SVG directly.
 
 </div>
 
@@ -2907,6 +2907,9 @@ __Returns__: Two.Group
 | ---- | ----------- |
 |  pathOrSVGContent  | The URL path of an SVG file or an SVG document as text. |
 |  callback  | Function to call once loading has completed. |
+|  options  | SVG import options. |
+|  options.allowExternalImages  | Allow HTTP(S) image requests; defaults to false. Embedded raster images are allowed by default. |
+|  options.onError  | Receives loading or parsing errors. Inline failures throw if omitted; asynchronous failures emit an error event. |
 </div>
 
 
@@ -2914,7 +2917,7 @@ __Returns__: Two.Group
 
 <div class="description">
 
-Load an SVG file or SVG text and interpret it into Two.js legible objects.
+Load SVG through a sanitized, detached drawing document. Active content, stylesheets and external references are removed. The success callback receives sanitized detached nodes (a stable array for multiple roots). See the [SVG import contract and migration guide](/svg-import/).
 
 </div>
 
