@@ -246,6 +246,55 @@
     })();
   });
 
+  QUnit.test('Two.Text.getBoundingClientRect without a 2d context', function (assert) {
+    assert.expect(3);
+
+    // Like jsdom without the canvas package, where getContext returns null.
+    var two = new Two({
+      type: Two.Types.canvas,
+      width: 400,
+      height: 400,
+    });
+    var getContext = HTMLCanvasElement.prototype.getContext;
+    var warn = console.warn;
+    var warnings = 0;
+
+    HTMLCanvasElement.prototype.getContext = function () {
+      return null;
+    };
+    console.warn = function () {
+      warnings++;
+    };
+
+    try {
+      var text = two.makeText('Hello', 200, 200, { size: 20, leading: 24 });
+      text.noStroke();
+
+      var rect = text.getBoundingClientRect(true);
+      assert.deepEqual(
+        [rect.width, rect.height],
+        [5 * 20 * Two.Text.Ratio, 24],
+        'Two.Text.getBoundingClientRect approximates the size of the text.'
+      );
+      assert.ok(warnings > 0, 'Two.Text warns that it is approximating.');
+
+      text.fill = new Two.LinearGradient(0, -0.5, 0, 0.5, [
+        new Two.Stop(0, 'red'),
+        new Two.Stop(1, 'blue'),
+      ]);
+      two.update();
+      assert.ok(
+        text.fill._renderer.effect,
+        'Two.Text renders gradients with objectBoundingBox units.'
+      );
+    } finally {
+      HTMLCanvasElement.prototype.getContext = getContext;
+      console.warn = warn;
+    }
+
+    QUnit.Utils.addElemToTest(assert.test, [two.renderer.domElement]);
+  });
+
   QUnit.test('Two.getComputedMatrix', function (assert) {
     assert.expect(2);
     // assert.done = assert.async(1);
