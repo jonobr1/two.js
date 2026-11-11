@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "description": "Closing-edge traversal from the existing closed-path QUnit tests, including a repeated anchor.",
+  "input": {
+    "target": "geometry",
+    "points": [[0, 0], [100, 0], [100, 0], [100, 100], [0, 100]],
+    "closed": true,
+    "t": 0.875,
+    "shift": [5, -10],
+    "factor": -2
+  }
+}

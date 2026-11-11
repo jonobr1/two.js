@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "description": "getPointAt estimates a Bezier parameter on the correct segment; it does not promise constant-speed interpolation.",
+  "input": {
+    "target": "geometry",
+    "points": [[0, 0], [0, -1], [-1, 0]],
+    "closed": false,
+    "t": 0.5,
+    "shift": [0, 0],
+    "factor": -2
+  }
+}

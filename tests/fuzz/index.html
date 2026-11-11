@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>Two.js fuzz case</title></head>
+  <body>
+    <script type="module">
+      import { execute } from './targets.js';
+      const builds = { source: '/src/two.js', esm: '/build/two.module.js' };
+      const build = new URLSearchParams(location.search).get('build') || 'source';
+      let Two;
+      if (build === 'umd' || build === 'min') {
+        const script = document.createElement('script');
+        script.src = build === 'umd' ? '/build/two.js' : '/build/two.min.js';
+        await new Promise((resolve, reject) => {
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+        Two = window.Two;
+      } else {
+        if (!builds[build]) throw new Error('Unknown build: ' + build);
+        Two = (await import(builds[build])).default;
+      }
+      window.runFuzzCase = (input, selfTest = false) => execute(Two, input, selfTest);
+      window.fuzzReady = true;
+    </script>
+  </body>
+</html>

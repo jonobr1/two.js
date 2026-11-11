@@ -1,0 +1,94 @@
+name: Browser fuzzing
+
+on:
+  pull_request:
+  push:
+    branches: [dev]
+  schedule:
+    - cron: '23 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: SVG and geometry smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v5
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx eslint tests/fuzz tests/browser.cjs --ext .js,.cjs
+      - run: npm run build
+      - run: npm run fuzz:self-test
+      - run: npm run fuzz:smoke
+      - name: Replay corpus against shipped builds
+        run: |
+          for build in umd esm min; do
+            npm run fuzz:smoke -- --corpus-only --build "$build" || exit 1
+          done
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: fuzz-smoke
+          path: .fuzz-artifacts/
+          include-hidden-files: true
+          retention-days: 14
+
+  nightly:
+    name: Discovery (${{ matrix.browser }})
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v5
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run fuzz:nightly -- --browser ${{ matrix.browser }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: fuzz-${{ matrix.browser }}
+          path: .fuzz-artifacts/
+          include-hidden-files: true
+          retention-days: 14
+
+  browser-baseline:
+    name: Existing QUnit suite (advisory)
+    # The newly automated legacy image-fit snapshots already fail on current dev.
+    # Keep the full report visible without weakening assertions or gating fuzzing
+    # on an unresolved visual baseline. See tests/fuzz/README.md.
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v5
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: qunit-browser-baseline
+          path: .fuzz-artifacts/
+          include-hidden-files: true
+          retention-days: 14
