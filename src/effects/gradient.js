@@ -193,19 +193,47 @@ export class Gradient extends Element {
   /**
    * @name Two.Gradient#dispose
    * @function
-   * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+   * @returns {Two.Gradient}
+   * @description Release renderer resources and event listeners. Safe to call
+   * repeatedly. Shapes release shared effects only after their last assignment
+   * is disposed. Call this method directly only when all users are finished.
+   * The gradient's values and internal change tracking remain available for reuse.
    */
   dispose() {
-    // Remove gradient from SVG document
-    if ('elem' in this._renderer) {
-      const elem = this._renderer.elem;
-      if (elem.parentNode) {
-        elem.parentNode.removeChild(elem);
+    const renderer = this._renderer;
+    super.dispose();
+
+    // Keep the callbacks used by stop collections and endpoint vectors, but let
+    // Element.dispose clear cached DOM elements, effects, and external events.
+    const callbacks = [
+      'flagStops', 'bindStops', 'unbindStops',
+      'flagEndPoints', 'flagCenter', 'flagFocal',
+    ];
+    for (let i = 0; i < callbacks.length; i++) {
+      const key = callbacks[i];
+      if (typeof renderer[key] === 'function') {
+        this._renderer[key] = renderer[key];
       }
     }
-    // Deallocate textures from the graphics card
-    if ('effect' in this._renderer) {
-      this._renderer.effect = null;
+
+    // A fresh SVG element needs every attribute, even after a previous render
+    // reset the flags. Clear stop elements too so they do not retain the old
+    // gradient DOM tree through their parentNode references.
+    if (this.stops) {
+      for (let i = 0; i < this.stops.length; i++) {
+        const stop = this.stops[i];
+        delete stop._renderer.elem;
+        stop._flagOffset = stop._flagColor = stop._flagOpacity = true;
+      }
+    }
+    const flags = [
+      '_flagId', '_flagStops', '_flagSpread', '_flagUnits',
+      '_flagEndPoints', '_flagCenter', '_flagFocal', '_flagRadius',
+    ];
+    for (let i = 0; i < flags.length; i++) {
+      if (flags[i] in this) {
+        this[flags[i]] = true;
+      }
     }
     return this;
   }

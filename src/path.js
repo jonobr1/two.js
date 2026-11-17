@@ -1,3 +1,4 @@
+import { bindEffects, disposeEffects } from './utils/effects.js';
 import { Commands } from './utils/path-commands.js';
 import { Collection } from './collection.js';
 import { lerp, mod, decomposeMatrix } from './utils/math.js';
@@ -21,10 +22,6 @@ import { Vector } from './vector.js';
 import { Anchor } from './anchor.js';
 import { Matrix } from './matrix.js';
 
-import { Gradient } from './effects/gradient.js';
-import { LinearGradient } from './effects/linear-gradient.js';
-import { RadialGradient } from './effects/radial-gradient.js';
-import { Texture } from './effects/texture.js';
 import {
   buildPathHitParts,
   pointInPolygons,
@@ -588,12 +585,16 @@ export class Path extends Shape {
    * @function
    * @returns {Two.Path}
    * @description Release the path's renderer resources and detach all events.
-   * This method cleans up vertices collection events, individual vertex events,
-   * control point events, and disposes fill/stroke effects (calling dispose()
-   * on Gradients and Textures for thorough cleanup) while preserving the
-   * renderer type for potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    // Release effects before parent cleanup clears the renderer callbacks.
+    disposeEffects(this);
+
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
 
@@ -625,32 +626,6 @@ export class Path extends Shape {
           }
         }
       }
-    }
-
-    // Dispose fill effect (more thorough than unbind)
-    if (
-      typeof this.fill === 'object' &&
-      typeof this.fill.dispose === 'function'
-    ) {
-      this.fill.dispose();
-    } else if (
-      typeof this.fill === 'object' &&
-      typeof this.fill.unbind === 'function'
-    ) {
-      this.fill.unbind();
-    }
-
-    // Dispose stroke effect (more thorough than unbind)
-    if (
-      typeof this.stroke === 'object' &&
-      typeof this.stroke.dispose === 'function'
-    ) {
-      this.stroke.dispose();
-    } else if (
-      typeof this.stroke === 'object' &&
-      typeof this.stroke.unbind === 'function'
-    ) {
-      this.stroke.unbind();
     }
 
     return this;
@@ -1723,26 +1698,9 @@ const proto = {
       return this._fill;
     },
     set: function (f) {
-      if (
-        this._fill instanceof Gradient ||
-        this._fill instanceof LinearGradient ||
-        this._fill instanceof RadialGradient ||
-        this._fill instanceof Texture
-      ) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
-
+      bindEffects(this, 'fill', [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-
-      if (
-        this._fill instanceof Gradient ||
-        this._fill instanceof LinearGradient ||
-        this._fill instanceof RadialGradient ||
-        this._fill instanceof Texture
-      ) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     },
   },
 
@@ -1752,26 +1710,9 @@ const proto = {
       return this._stroke;
     },
     set: function (f) {
-      if (
-        this._stroke instanceof Gradient ||
-        this._stroke instanceof LinearGradient ||
-        this._stroke instanceof RadialGradient ||
-        this._stroke instanceof Texture
-      ) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
-
+      bindEffects(this, 'stroke', [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-
-      if (
-        this._stroke instanceof Gradient ||
-        this._stroke instanceof LinearGradient ||
-        this._stroke instanceof RadialGradient ||
-        this._stroke instanceof Texture
-      ) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     },
   },
 

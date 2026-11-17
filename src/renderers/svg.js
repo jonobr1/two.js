@@ -907,7 +907,8 @@ const svg = {
         svg.setAttributes(this._renderer.elem, changed);
       }
 
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
 
@@ -1001,7 +1002,8 @@ const svg = {
         svg.setAttributes(this._renderer.elem, changed);
       }
 
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
 
@@ -1156,7 +1158,8 @@ const svg = {
         svg.setAttributes(this._renderer.elem, changed);
       }
 
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
 
