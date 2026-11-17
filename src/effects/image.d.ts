@@ -97,8 +97,9 @@ declare module 'two.js/src/effects/image' {
     /**
      * @name Two.Image#dispose
      * @function
+     * @returns {Two.Image}
      * @description Release the image's renderer resources and detach all events.
-     * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+     * This method releases its texture assignment and inherits comprehensive
      * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
      * for potential re-attachment.
      */

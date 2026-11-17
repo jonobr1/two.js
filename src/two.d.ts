@@ -212,6 +212,8 @@ declare module 'two.js' {
      * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
      * @returns {Two.Element} The object passed for event deallocation.
      * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
+     * Shared effects keep their other shapes' listeners until the last assignment
+     * is released. Releasing a shape does not dispose the effect's renderer resources.
      */
     release(obj?: undefined): Group;
     release<T extends TwoElement>(obj: T): T;

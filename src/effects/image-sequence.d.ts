@@ -181,11 +181,12 @@ declare module 'two.js/src/effects/image-sequence' {
     /**
      * @name Two.ImageSequence#dispose
      * @function
+     * @returns {Two.ImageSequence}
      * @description Release the image sequence's renderer resources and detach all events.
      * This method stops any running animation, clears animation callbacks, unbinds
-     * textures collection events, and disposes individual textures (calling dispose()
-     * for thorough cleanup) while preserving the renderer type for potential
-     * re-attachment to a new renderer.
+     * textures collection events, and releases its texture assignments (disposing
+     * each texture only when no other shape assignments remain) while preserving
+     * the renderer type for potential re-attachment to a new renderer.
      */
     dispose(): ImageSequence;
   }
