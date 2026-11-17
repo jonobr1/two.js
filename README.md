@@ -3,7 +3,6 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16110/badge)](https://www.bestpractices.dev/projects/16110)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/jonobr1/two.js/badge)](https://scorecard.dev/viewer/?uri=github.com/jonobr1/two.js)
 [![NPM Package][npm]][npm-url]
-[![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
 
 A two-dimensional drawing api meant for modern browsers. It is renderer agnostic enabling the same api to render in multiple contexts: webgl, canvas2d, and svg.
@@ -185,7 +184,5 @@ Two.js has been in operation since 2012. For a full list of changes from its fir
 
 [npm]: https://img.shields.io/npm/v/two.js
 [npm-url]: https://www.npmjs.com/package/two.js
-[build-size]: https://badgen.net/bundlephobia/minzip/two.js
-[build-size-url]: https://bundlephobia.com/result?p=two.js
 [npm-downloads]: https://img.shields.io/npm/dt/two.js
 [npmtrends-url]: https://www.npmtrends.com/two.js
