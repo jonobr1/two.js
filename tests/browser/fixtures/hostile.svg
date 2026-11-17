@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onload="window.svgExecuted = true">
+  <script>window.svgExecuted = true;</script>
+  <style>@import url('/forbidden-style.css'); #host-marker { display:none !important; }</style>
+  <foreignObject><img xmlns="http://www.w3.org/1999/xhtml" src="/forbidden-html" onerror="window.svgExecuted = true" /></foreignObject>
+  <image href="/forbidden-image.png" width="10" height="10" />
+  <image href="javascript:window.svgExecuted=true" />
+  <image href="data:image/svg+xml,%3Csvg%20onload='alert(1)'/%3E" />
+  <use href="https://example.invalid/forbidden.svg#shape" />
+  <defs>
+    <rect id="template" width="10" height="10" onmouseover="window.svgExecuted = true" />
+    <linearGradient id="paint"><stop offset="0" stop-color="red" /></linearGradient>
+  </defs>
+  <use href="#template" onload="window.svgExecuted = true" />
+  <rect id="safe" x="10" width="20" height="20" fill="red" style="background-image:url('/forbidden-css'); stroke:url(https://example.invalid/paint); fill:rgb(0, 128, 0)" />
+  <rect width="20" height="20" fill="url('/forbidden-paint.svg#x')" />
+  <rect width="20" height="20" fill="u\72l(https://example.invalid/escaped)" />
+  <rect width="20" height="20" fill="var(--host-paint)" clip-path="url(https://example.invalid/clip)" />
+  <text x="0" y="20">&lt;img src=x onerror=alert(1)&gt;</text>
+</svg>

@@ -4,6 +4,8 @@ junk/
 *.log
 docs.json
 dist
+test-results/
+playwright-report/
 .idea
 .codacy
 wiki/.vuepress/.cache/
