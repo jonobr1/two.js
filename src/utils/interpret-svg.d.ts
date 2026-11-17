@@ -4,7 +4,7 @@ declare module 'two.js/src/utils/interpret-svg' {
    * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
    */
   export const read: {
-    svg: (node: any) => any;
+    svg: (node: any, parentStyles?: any) => any;
     defs: (node: any) => any;
     use: (node: any, styles: any) => any;
     g: (node: any, parentStyles: any) => Group;

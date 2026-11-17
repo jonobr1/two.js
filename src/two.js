@@ -1310,7 +1310,8 @@ export default class Two {
     };
 
     const baseURL = root.document && root.document.baseURI;
-    if (typeof pathOrSVGContent === 'string' && !/^\s*</.test(pathOrSVGContent)) {
+    if (typeof pathOrSVGContent === 'string' && pathOrSVGContent.trim()
+      && !/^\s*</.test(pathOrSVGContent)) {
       try {
         const url = new root.URL(pathOrSVGContent, baseURL);
         if (url.protocol !== 'http:' && url.protocol !== 'https:') {

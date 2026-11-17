@@ -1229,7 +1229,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2026-10-31T06:08:10.786Z",
+  PublishDate: "2026-11-17T05:50:59.582Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -13463,6 +13463,35 @@ var attributes = [
 var fragment = /^#[\w.-]+$/;
 var paintReference = /^url\(\s*['"]?(#[\w.-]+)['"]?\s*\)$/i;
 var raster = /^data:image\/(?:png|jpeg|gif|webp|avif);base64,[a-z\d+/=\s]+$/i;
+var nonInherited = /^(display|opacity|clip-path|stop-color|stop-opacity)$/;
+var initialStyles = {
+  fill: "#000",
+  stroke: "none",
+  color: "#000",
+  opacity: "1",
+  "fill-opacity": "1",
+  "stroke-opacity": "1",
+  "stroke-width": "1",
+  "stroke-linecap": "butt",
+  "stroke-linejoin": "miter",
+  "stroke-miterlimit": "4",
+  "stroke-dasharray": "none",
+  "stroke-dashoffset": "0",
+  display: "inline",
+  visibility: "visible",
+  "clip-path": "none",
+  "font-family": "serif",
+  "font-size": "16",
+  "font-weight": "normal",
+  "font-style": "normal",
+  "text-decoration": "none",
+  "line-height": "normal",
+  "text-anchor": "start",
+  "dominant-baseline": "auto",
+  "alignment-baseline": "baseline",
+  "stop-color": "#000",
+  "stop-opacity": "1"
+};
 function isSvgImport(node) {
   return documents.has(node.ownerDocument);
 }
@@ -13509,7 +13538,7 @@ function parseSvg(input, options, baseURL) {
   const parser = new root.DOMParser();
   let document2 = parser.parseFromString(input, "image/svg+xml");
   let svg3 = document2.documentElement;
-  const wrapped = svg3.localName !== "svg" || svg3.namespaceURI !== namespace;
+  const wrapped = !svg3 || svg3.localName !== "svg" || svg3.namespaceURI !== namespace;
   if (wrapped) {
     document2 = parser.parseFromString(
       '<svg xmlns="' + namespace + '" xmlns:xlink="http://www.w3.org/1999/xlink">' + input + "</svg>",
@@ -13593,14 +13622,27 @@ function parseSvg(input, options, baseURL) {
   documents.add(isolated);
   return { svg: result, wrapped };
 }
-function getSvgImportStyles(node, parentStyles) {
+function getSvgImportStyles(node, parentStyles, resolvePaint = false) {
+  if (!parentStyles && node.parentElement) {
+    parentStyles = getSvgImportStyles(node.parentElement);
+  }
   const styles = {};
   for (const name of presentation) {
-    if (/^(display|opacity|clip-path)$/.test(name)) continue;
-    if (node.hasAttribute(name)) {
-      styles[name] = node.getAttribute(name);
-    } else if (parentStyles && name in parentStyles) {
-      styles[name] = parentStyles[name];
+    const own = node.getAttribute(name);
+    let value = own !== null ? own : !nonInherited.test(name) && parentStyles ? parentStyles[name] : void 0;
+    if (typeof value === "undefined") continue;
+    const keyword = value.trim().toLowerCase();
+    if (keyword === "inherit" || name === "color" && keyword === "currentcolor") {
+      value = parentStyles && parentStyles[name] || initialStyles[name];
+    }
+    styles[name] = value;
+  }
+  styles.color = styles.color || initialStyles.color;
+  if (resolvePaint) {
+    for (const name of ["fill", "stroke", "stop-color"]) {
+      if (/^currentcolor$/i.test((styles[name] || "").trim())) {
+        styles[name] = styles.color;
+      }
     }
   }
   return styles;
@@ -13749,7 +13791,7 @@ function applySvgViewBox(node, value) {
   node.mask.origin.set(-width / 2, -height / 2);
   return node;
 }
-function applySvgAttributes(node, elem, parentStyles) {
+function applySvgAttributes(node, elem, parentStyles, normalization) {
   const styles = {}, attributes2 = {}, extracted = {};
   let i, m, key, value, prop, attr;
   let transforms, x, y;
@@ -13771,7 +13813,7 @@ function applySvgAttributes(node, elem, parentStyles) {
   }
   for (i = 0; i < node.attributes.length; i++) {
     attr = node.attributes[i];
-    if (/style/i.test(attr.nodeName)) {
+    if (attr.nodeName.toLowerCase() === "style") {
       extractCSSText(attr.value, extracted);
     } else {
       attributes2[attr.nodeName] = attr.value;
@@ -13782,7 +13824,7 @@ function applySvgAttributes(node, elem, parentStyles) {
     styles["fill-opacity"] = styles.opacity;
     delete styles.opacity;
   }
-  if (parentStyles) {
+  if (parentStyles && !isSvgImport(node)) {
     const display = styles.display;
     _.defaults(styles, parentStyles);
     if (typeof display === "undefined") {
@@ -13790,6 +13832,9 @@ function applySvgAttributes(node, elem, parentStyles) {
     }
   }
   _.extend(styles, extracted, attributes2);
+  if (isSvgImport(node)) {
+    _.extend(styles, getSvgImportStyles(node, parentStyles, true));
+  }
   styles.visible = !(typeof styles.display !== "undefined" && /none/i.test(styles.display)) && !(typeof styles.visibility !== "undefined" && /hidden/i.test(styles.visibility));
   for (key in styles) {
     value = styles[key];
@@ -13876,6 +13921,7 @@ function applySvgAttributes(node, elem, parentStyles) {
       case "stroke-opacity":
       case "fill-opacity":
         if (elem instanceof Group) {
+          if (isSvgImport(node) && key !== "opacity") break;
           elem._opacity = parseFloat(value);
           break;
         }
@@ -13909,7 +13955,7 @@ function applySvgAttributes(node, elem, parentStyles) {
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             if (!ref.object) {
-              ref.object = readReference.call(this, ref, {});
+              ref.object = readReference.call(this, ref, isSvgImport(node) ? void 0 : {});
             }
             ref = ref.object;
           } else if (!isSvgImport(node)) {
@@ -13984,6 +14030,12 @@ function applySvgAttributes(node, elem, parentStyles) {
     }
   }
   if (Object.keys(node.dataset).length) elem.dataset = node.dataset;
+  if (isSvgImport(node) && elem._matrix && elem._matrix.manual) {
+    elem._matrix.translate(
+      elem.translation.x + (normalization ? normalization.x : 0),
+      elem.translation.y + (normalization ? normalization.y : 0)
+    );
+  }
   return styles;
 }
 function updateDefsCache(node, defsCache) {
@@ -14002,7 +14054,7 @@ function getScene(node) {
   return node.scene;
 }
 var read = {
-  svg: function(node) {
+  svg: function(node, parentStyles) {
     const previous = read.defs.current;
     const defs = read.defs.current = new Registry();
     defs.map = /* @__PURE__ */ Object.create(null);
@@ -14016,7 +14068,7 @@ var read = {
           if (!defs.contains(target.id)) defs.add(target.id, target);
         }
       }
-      const svg3 = read.g.call(this, node);
+      const svg3 = read.g.call(this, node, parentStyles);
       const viewBox = node.getAttribute("viewBox");
       const x = node.getAttribute("x");
       const y = node.getAttribute("y");
@@ -14410,31 +14462,31 @@ var read = {
     _.each(path.vertices, function(v) {
       v.subSelf(rect.centroid);
     });
-    applySvgAttributes.call(this, node, path, parentStyles);
+    applySvgAttributes.call(this, node, path, parentStyles, rect.centroid);
     path.translation.addSelf(rect.centroid);
     return path;
   },
   circle: function(node, parentStyles) {
-    const x = parseFloat(node.getAttribute("cx"));
-    const y = parseFloat(node.getAttribute("cy"));
+    const x = parseFloat(node.getAttribute("cx")) || 0;
+    const y = parseFloat(node.getAttribute("cy")) || 0;
     const r = parseFloat(node.getAttribute("r"));
     const circle = new Circle(0, 0, r);
     circle.stroke = "none";
     circle.fill = "black";
-    applySvgAttributes.call(this, node, circle, parentStyles);
+    applySvgAttributes.call(this, node, circle, parentStyles, { x, y });
     circle.translation.x = x;
     circle.translation.y = y;
     return circle;
   },
   ellipse: function(node, parentStyles) {
-    const x = parseFloat(node.getAttribute("cx"));
-    const y = parseFloat(node.getAttribute("cy"));
+    const x = parseFloat(node.getAttribute("cx")) || 0;
+    const y = parseFloat(node.getAttribute("cy")) || 0;
     const width = parseFloat(node.getAttribute("rx"));
     const height = parseFloat(node.getAttribute("ry"));
     const ellipse = new Ellipse(0, 0, width, height);
     ellipse.stroke = "none";
     ellipse.fill = "black";
-    applySvgAttributes.call(this, node, ellipse, parentStyles);
+    applySvgAttributes.call(this, node, ellipse, parentStyles, { x, y });
     ellipse.translation.x = x;
     ellipse.translation.y = y;
     return ellipse;
@@ -14443,7 +14495,7 @@ var read = {
     const rx = parseFloat(node.getAttribute("rx"));
     const ry = parseFloat(node.getAttribute("ry"));
     if (!_.isNaN(rx) || !_.isNaN(ry)) {
-      return read["rounded-rect"](node);
+      return read["rounded-rect"].call(this, node, parentStyles);
     }
     const width = parseFloat(node.getAttribute("width"));
     const height = parseFloat(node.getAttribute("height"));
@@ -14452,7 +14504,7 @@ var read = {
     const rect = new Rectangle(0, 0, width, height);
     rect.stroke = "none";
     rect.fill = "black";
-    applySvgAttributes.call(this, node, rect, parentStyles);
+    applySvgAttributes.call(this, node, rect, parentStyles, { x: w2, y: h2 });
     rect.translation.x += w2;
     rect.translation.y += h2;
     return rect;
@@ -14468,7 +14520,7 @@ var read = {
     const rect = new RoundedRectangle(0, 0, width, height, radius);
     rect.stroke = "none";
     rect.fill = "black";
-    applySvgAttributes.call(this, node, rect, parentStyles);
+    applySvgAttributes.call(this, node, rect, parentStyles, { x: w2, y: h2 });
     rect.translation.x += w2;
     rect.translation.y += h2;
     return rect;
@@ -14504,6 +14556,7 @@ var read = {
       y2 -= oy;
     }
     const stops = [];
+    const importedStyles = isSvgImport(node) ? getSvgImportStyles(node, parentStyles) : null;
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
@@ -14524,6 +14577,11 @@ var read = {
         opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
       } else {
         opacity = parseFloat(opacity);
+      }
+      if (importedStyles) {
+        const stopStyles = getSvgImportStyles(child, importedStyles, true);
+        color = stopStyles["stop-color"] || "#000";
+        opacity = parseFloat(stopStyles["stop-opacity"] || "1");
       }
       stops.push(new Stop(offset, color, opacity));
     }
@@ -14562,6 +14620,7 @@ var read = {
       fy -= oy;
     }
     const stops = [];
+    const importedStyles = isSvgImport(node) ? getSvgImportStyles(node, parentStyles) : null;
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
@@ -14582,6 +14641,11 @@ var read = {
         opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
       } else {
         opacity = parseFloat(opacity);
+      }
+      if (importedStyles) {
+        const stopStyles = getSvgImportStyles(child, importedStyles, true);
+        color = stopStyles["stop-color"] || "#000";
+        opacity = parseFloat(stopStyles["stop-opacity"] || "1");
       }
       stops.push(new Stop(offset, color, opacity));
     }
@@ -19099,7 +19163,7 @@ var _Two = class _Two {
       }
     };
     const baseURL = root.document && root.document.baseURI;
-    if (typeof pathOrSVGContent === "string" && !/^\s*</.test(pathOrSVGContent)) {
+    if (typeof pathOrSVGContent === "string" && pathOrSVGContent.trim() && !/^\s*</.test(pathOrSVGContent)) {
       try {
         const url = new root.URL(pathOrSVGContent, baseURL);
         if (url.protocol !== "http:" && url.protocol !== "https:") {

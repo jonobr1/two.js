@@ -19,7 +19,7 @@ The importer accepts SVG documents, SVG fragments, multiple top-level SVG elemen
 
 Supported content includes groups, paths, polygons, polylines, circles, ellipses, rectangles, lines, text and text spans, linear and radial gradients, gradient stops, clipping paths, images, definitions, and local `<use>` references. Unsupported elements and their contents are removed. Local paint and clipping references must target a supported definition in the imported document. Recursive references fail the import.
 
-Supported inline presentation styles are converted into validated SVG attributes. These include colors, stroke properties, opacity, visibility, display, text properties, and gradient stop properties. SVG `transform`, `gradientTransform`, and `viewBox` attributes remain supported. CSS variables, CSS transforms, stylesheets, animation, filters, patterns, embedded HTML, event attributes, scripts, and external references are outside this drawing format. Styles from the host page are not used to interpret the drawing.
+Supported inline presentation styles are converted into validated SVG attributes. These include colors, stroke properties, opacity, visibility, display, text properties, and gradient stop properties. `currentColor` and `inherit` resolve from the imported presentation-style chain, including nested SVGs and referenced shapes. SVG `transform`, `gradientTransform`, and `viewBox` attributes remain supported. CSS variables, CSS transforms, stylesheets, animation, filters, patterns, embedded HTML, event attributes, scripts, and external references are outside this drawing format. Styles from the host page are not used to interpret the drawing.
 
 ## Images and network requests
 

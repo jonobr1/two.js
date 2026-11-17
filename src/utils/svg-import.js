@@ -31,6 +31,18 @@ const attributes = [
 const fragment = /^#[\w.-]+$/;
 const paintReference = /^url\(\s*['"]?(#[\w.-]+)['"]?\s*\)$/i;
 const raster = /^data:image\/(?:png|jpeg|gif|webp|avif);base64,[a-z\d+/=\s]+$/i;
+const nonInherited = /^(display|opacity|clip-path|stop-color|stop-opacity)$/;
+const initialStyles = {
+  fill: '#000', stroke: 'none', color: '#000', opacity: '1',
+  'fill-opacity': '1', 'stroke-opacity': '1', 'stroke-width': '1',
+  'stroke-linecap': 'butt', 'stroke-linejoin': 'miter', 'stroke-miterlimit': '4',
+  'stroke-dasharray': 'none', 'stroke-dashoffset': '0', display: 'inline',
+  visibility: 'visible', 'clip-path': 'none', 'font-family': 'serif',
+  'font-size': '16', 'font-weight': 'normal', 'font-style': 'normal',
+  'text-decoration': 'none', 'line-height': 'normal', 'text-anchor': 'start',
+  'dominant-baseline': 'auto', 'alignment-baseline': 'baseline',
+  'stop-color': '#000', 'stop-opacity': '1',
+};
 
 export function isSvgImport(node) {
   return documents.has(node.ownerDocument);
@@ -92,7 +104,7 @@ export function parseSvg(input, options, baseURL) {
   const parser = new root.DOMParser();
   let document = parser.parseFromString(input, 'image/svg+xml');
   let svg = document.documentElement;
-  const wrapped = svg.localName !== 'svg' || svg.namespaceURI !== namespace;
+  const wrapped = !svg || svg.localName !== 'svg' || svg.namespaceURI !== namespace;
   if (wrapped) {
     // Preserve SVG fragments and multiple roots without HTML error recovery.
     document = parser.parseFromString(
@@ -194,15 +206,30 @@ export function parseSvg(input, options, baseURL) {
   return { svg: result, wrapped };
 }
 
-export function getSvgImportStyles(node, parentStyles) {
+export function getSvgImportStyles(node, parentStyles, resolvePaint = false) {
+  if (!parentStyles && node.parentElement) {
+    parentStyles = getSvgImportStyles(node.parentElement);
+  }
   const styles = {};
   for (const name of presentation) {
-    // These apply to the group itself, rather than inheriting to each child.
-    if (/^(display|opacity|clip-path)$/.test(name)) continue;
-    if (node.hasAttribute(name)) {
-      styles[name] = node.getAttribute(name);
-    } else if (parentStyles && name in parentStyles) {
-      styles[name] = parentStyles[name];
+    const own = node.getAttribute(name);
+    let value = own !== null ? own
+      : !nonInherited.test(name) && parentStyles ? parentStyles[name] : undefined;
+    if (typeof value === 'undefined') continue;
+    const keyword = value.trim().toLowerCase();
+    if (keyword === 'inherit' || (name === 'color' && keyword === 'currentcolor')) {
+      value = parentStyles && parentStyles[name] || initialStyles[name];
+    }
+    styles[name] = value;
+  }
+  styles.color = styles.color || initialStyles.color;
+  // Keep currentColor as a keyword in the inheritance chain so a child's own
+  // color can override it. Resolve paints only when applying to a drawable.
+  if (resolvePaint) {
+    for (const name of ['fill', 'stroke', 'stop-color']) {
+      if (/^currentcolor$/i.test((styles[name] || '').trim())) {
+        styles[name] = styles.color;
+      }
     }
   }
   return styles;

@@ -3,7 +3,8 @@ declare module 'two.js/src/utils/svg-import' {
   export function isSvgImport(node: Node): boolean;
   export function getSvgImportStyles(
     node: SVGElement,
-    parentStyles?: Record<string, string>
+    parentStyles?: Record<string, string>,
+    resolvePaint?: boolean
   ): Record<string, string>;
   export function parseSvg(
     input: string | SVGElement,

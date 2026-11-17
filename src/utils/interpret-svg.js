@@ -243,7 +243,7 @@ function applySvgViewBox(node, value) {
  * @description This function iterates through an SVG Node's properties and stores ones of interest. It tries to resolve styles applied via CSS as well.
  * @TODO Reverse calculate {@link Two.Gradient}s for fill / stroke of any given path.
  */
-function applySvgAttributes(node, elem, parentStyles) {
+function applySvgAttributes(node, elem, parentStyles, normalization) {
   const styles = {},
     attributes = {},
     extracted = {};
@@ -276,7 +276,7 @@ function applySvgAttributes(node, elem, parentStyles) {
   // Convert NodeMap to a normal object
   for (i = 0; i < node.attributes.length; i++) {
     attr = node.attributes[i];
-    if (/style/i.test(attr.nodeName)) {
+    if (attr.nodeName.toLowerCase() === 'style') {
       extractCSSText(attr.value, extracted);
     } else {
       attributes[attr.nodeName] = attr.value;
@@ -293,7 +293,7 @@ function applySvgAttributes(node, elem, parentStyles) {
   }
 
   // Merge attributes and applied styles (attributes take precedence)
-  if (parentStyles) {
+  if (parentStyles && !isSvgImport(node)) {
     // `display` is not inherited, a hidden group already hides its children.
     const display = styles.display;
     _.defaults(styles, parentStyles);
@@ -302,6 +302,9 @@ function applySvgAttributes(node, elem, parentStyles) {
     }
   }
   _.extend(styles, extracted, attributes);
+  if (isSvgImport(node)) {
+    _.extend(styles, getSvgImportStyles(node, parentStyles, true));
+  }
 
   // Similarly visibility is influenced by the value of both display and visibility.
   // Calculate a unified value here which defaults to `true`.
@@ -438,6 +441,9 @@ function applySvgAttributes(node, elem, parentStyles) {
         // Only apply styles to rendered shapes
         // in the scene.
         if (elem instanceof Group) {
+          // Paint opacity is inherited by drawables; applying it here as
+          // container opacity would multiply it again at every group level.
+          if (isSvgImport(node) && key !== 'opacity') break;
           elem._opacity = parseFloat(value);
           break;
         }
@@ -476,7 +482,7 @@ function applySvgAttributes(node, elem, parentStyles) {
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             if (!ref.object) {
-              ref.object = readReference.call(this, ref, {});
+              ref.object = readReference.call(this, ref, isSvgImport(node) ? undefined : {});
             }
             ref = ref.object;
           } else if (!isSvgImport(node)) {
@@ -556,6 +562,15 @@ function applySvgAttributes(node, elem, parentStyles) {
 
   if (Object.keys(node.dataset).length) elem.dataset = node.dataset;
 
+  if (isSvgImport(node) && elem._matrix && elem._matrix.manual) {
+    // Readers center geometry around the origin. Manual matrices must apply
+    // that local offset after the SVG transform, including its scale/skew.
+    elem._matrix.translate(
+      elem.translation.x + (normalization ? normalization.x : 0),
+      elem.translation.y + (normalization ? normalization.y : 0)
+    );
+  }
+
   return styles;
 }
 
@@ -597,7 +612,7 @@ function getScene(node) {
  * @property {Object} read - A map of functions to read any number of SVG node types and create Two.js equivalents of them. Primarily used by the {@link Two#interpret} method.
  */
 export const read = {
-  svg: function (node) {
+  svg: function (node, parentStyles) {
     const previous = read.defs.current;
     const defs = (read.defs.current = new Registry());
     defs.map = Object.create(null);
@@ -613,7 +628,7 @@ export const read = {
         }
       }
 
-      const svg = read.g.call(this, node);
+      const svg = read.g.call(this, node, parentStyles);
       const viewBox = node.getAttribute('viewBox');
       const x = node.getAttribute('x');
       const y = node.getAttribute('y');
@@ -1110,7 +1125,7 @@ export const read = {
       v.subSelf(rect.centroid);
     });
 
-    applySvgAttributes.call(this, node, path, parentStyles);
+    applySvgAttributes.call(this, node, path, parentStyles, rect.centroid);
 
     path.translation.addSelf(rect.centroid);
 
@@ -1118,15 +1133,15 @@ export const read = {
   },
 
   circle: function (node, parentStyles) {
-    const x = parseFloat(node.getAttribute('cx'));
-    const y = parseFloat(node.getAttribute('cy'));
+    const x = parseFloat(node.getAttribute('cx')) || 0;
+    const y = parseFloat(node.getAttribute('cy')) || 0;
     const r = parseFloat(node.getAttribute('r'));
 
     const circle = new Circle(0, 0, r);
     circle.stroke = 'none';
     circle.fill = 'black';
 
-    applySvgAttributes.call(this, node, circle, parentStyles);
+    applySvgAttributes.call(this, node, circle, parentStyles, { x, y });
 
     circle.translation.x = x;
     circle.translation.y = y;
@@ -1135,8 +1150,8 @@ export const read = {
   },
 
   ellipse: function (node, parentStyles) {
-    const x = parseFloat(node.getAttribute('cx'));
-    const y = parseFloat(node.getAttribute('cy'));
+    const x = parseFloat(node.getAttribute('cx')) || 0;
+    const y = parseFloat(node.getAttribute('cy')) || 0;
     const width = parseFloat(node.getAttribute('rx'));
     const height = parseFloat(node.getAttribute('ry'));
 
@@ -1144,7 +1159,7 @@ export const read = {
     ellipse.stroke = 'none';
     ellipse.fill = 'black';
 
-    applySvgAttributes.call(this, node, ellipse, parentStyles);
+    applySvgAttributes.call(this, node, ellipse, parentStyles, { x, y });
 
     ellipse.translation.x = x;
     ellipse.translation.y = y;
@@ -1157,7 +1172,7 @@ export const read = {
     const ry = parseFloat(node.getAttribute('ry'));
 
     if (!_.isNaN(rx) || !_.isNaN(ry)) {
-      return read['rounded-rect'](node);
+      return read['rounded-rect'].call(this, node, parentStyles);
     }
 
     const width = parseFloat(node.getAttribute('width'));
@@ -1170,7 +1185,7 @@ export const read = {
     rect.stroke = 'none';
     rect.fill = 'black';
 
-    applySvgAttributes.call(this, node, rect, parentStyles);
+    applySvgAttributes.call(this, node, rect, parentStyles, { x: w2, y: h2 });
 
     // For rectangles, (x, y) is the center of the shape rather than the top
     // left corner.
@@ -1195,7 +1210,7 @@ export const read = {
     rect.stroke = 'none';
     rect.fill = 'black';
 
-    applySvgAttributes.call(this, node, rect, parentStyles);
+    applySvgAttributes.call(this, node, rect, parentStyles, { x: w2, y: h2 });
 
     // For rectangles, (x, y) is the center of the shape rather than the top
     // left corner.
@@ -1245,6 +1260,7 @@ export const read = {
     }
 
     const stops = [];
+    const importedStyles = isSvgImport(node) ? getSvgImportStyles(node, parentStyles) : null;
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
 
@@ -1269,6 +1285,12 @@ export const read = {
         opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
       } else {
         opacity = parseFloat(opacity);
+      }
+
+      if (importedStyles) {
+        const stopStyles = getSvgImportStyles(child, importedStyles, true);
+        color = stopStyles['stop-color'] || '#000';
+        opacity = parseFloat(stopStyles['stop-opacity'] || '1');
       }
 
       stops.push(new Stop(offset, color, opacity));
@@ -1321,6 +1343,7 @@ export const read = {
     }
 
     const stops = [];
+    const importedStyles = isSvgImport(node) ? getSvgImportStyles(node, parentStyles) : null;
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
 
@@ -1345,6 +1368,12 @@ export const read = {
         opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
       } else {
         opacity = parseFloat(opacity);
+      }
+
+      if (importedStyles) {
+        const stopStyles = getSvgImportStyles(child, importedStyles, true);
+        color = stopStyles['stop-color'] || '#000';
+        opacity = parseFloat(stopStyles['stop-opacity'] || '1');
       }
 
       stops.push(new Stop(offset, color, opacity));
