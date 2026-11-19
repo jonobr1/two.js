@@ -28,7 +28,9 @@ import { Constants } from '../constants.js';
 
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 const regex = {
-  path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
+  // A number of the SVG grammar: the exponent's sign is optional (1e2) and a
+  // number may end with its dot (5.)
+  path: /[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g,
   cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i,
 };
@@ -693,13 +695,13 @@ export const read = {
       points = node.getAttribute('points');
     }
 
+    // The numbers can be separated by a comma, white space or both
+    // ("0, 0 10, 0"), so read them all and pair them up in order
     const verts = [];
-    points.replace(
-      /(-?[\d.eE-]+)[,|\s](-?[\d.eE-]+)/g,
-      function (match, p1, p2) {
-        verts.push(new Anchor(parseFloat(p1), parseFloat(p2)));
-      }
-    );
+    const coords = points.match(regex.path) || [];
+    for (let i = 0; i + 1 < coords.length; i += 2) {
+      verts.push(new Anchor(parseFloat(coords[i]), parseFloat(coords[i + 1])));
+    }
 
     const poly = new Path(verts, true);
     poly.stroke = 'none';
