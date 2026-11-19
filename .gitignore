@@ -4,6 +4,7 @@ junk/
 *.log
 docs.json
 dist
+.fuzz-artifacts/
 .idea
 .codacy
 wiki/.vuepress/.cache/

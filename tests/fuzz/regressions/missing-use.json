@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "description": "The interpreter deliberately warns and ignores use elements with missing or unresolved references.",
+  "input": {
+    "target": "svg-fixture",
+    "expectedPaths": 0,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\"><defs/><use/><use href=\"#missing\"/><g/></svg>"
+  }
+}
