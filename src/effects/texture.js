@@ -7,16 +7,11 @@ import { CanvasPolyfill } from '../utils/canvas-polyfill.js';
 import { Vector } from '../vector.js';
 import { Registry } from '../registry.js';
 
-let anchor;
 const regex = {
   video: /\.(mp4|webm|ogg)$/i,
   image: /\.(jpe?g|png|gif|tiff|webp)$/i,
   effect: /texture|gradient/i,
 };
-
-if (root.document) {
-  anchor = document.createElement('a');
-}
 
 /**
  * @name Two.Texture
@@ -229,12 +224,15 @@ export class Texture extends Element {
    * @returns {String} - The serialized absolute path.
    */
   static getAbsoluteURL(path) {
-    if (!anchor) {
-      // TODO: Fix for headless environments
+    if (!root.document) {
       return path;
     }
-    anchor.href = path;
-    return anchor.href;
+    try {
+      return new URL(path, root.document.baseURI).href;
+    } catch (error) {
+      // Match an anchor element's href for an invalid URL.
+      return path;
+    }
   }
 
   /**
