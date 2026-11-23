@@ -3,6 +3,9 @@ import { root } from './root.js';
 let Matrix;
 const TWO_PI = Math.PI * 2;
 const HALF_PI = Math.PI * 0.5;
+const cache = {
+  getComputedMatrix: { active: false, matrices: [] },
+};
 
 /**
  * @name Two.Utils.decomposeMatrix
@@ -53,29 +56,42 @@ function setMatrix(matrix) {
  * @description Method to get the world space transformation of a given object in a Two.js scene.
  */
 function getComputedMatrix(object, matrix) {
+  // identity() and multiply() dispatch change events, which can re-enter this
+  // utility. Nested calls need their own list of ancestor matrices.
+  const workspace = cache.getComputedMatrix.active
+    ? { active: false, matrices: [] }
+    : cache.getComputedMatrix;
+  const matrices = workspace.matrices;
+  let length = 0;
+  workspace.active = true;
 
-  matrix = (matrix && matrix.identity()) || new Matrix();
-  let parent = object;
-  const matrices = [];
+  try {
+    matrix = (matrix && matrix.identity()) || new Matrix();
+    let parent = object;
 
-  while (parent && parent._matrix) {
-    matrices.push(parent._matrix);
-    parent = parent.parent;
+    while (parent && parent._matrix) {
+      matrices[length++] = parent._matrix;
+      parent = parent.parent;
+    }
+
+    for (let i = length - 1; i >= 0; i--) {
+      const e = matrices[i].elements;
+      matrix.multiply(
+        e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]);
+    }
+
+    return matrix;
+  } finally {
+    // Keep backing storage for ordinary hierarchies, but never retain scene
+    // objects or an arbitrarily deep hierarchy in the module cache.
+    for (let i = 0; i < length; i++) {
+      matrices[i] = null;
+    }
+    if (matrices.length > 64) {
+      matrices.length = 64;
+    }
+    workspace.active = false;
   }
-
-  matrices.reverse();
-
-  for (let i = 0; i < matrices.length; i++) {
-
-    const m = matrices[i];
-    const e = m.elements;
-    matrix.multiply(
-      e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]);
-
-  }
-
-  return matrix;
-
 }
 
 /**

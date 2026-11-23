@@ -1,5 +1,5 @@
 import { Commands } from './path-commands.js';
-import { getSubdivisions } from './shape.js';
+import { Curve, getComponentOnCubicBezier } from './curves.js';
 import { Constants } from '../constants.js';
 import { mod, TWO_PI } from './math.js';
 
@@ -26,16 +26,18 @@ function svgAngle(ux, uy, vx, vy) {
   return ang;
 }
 
-function sampleArcPoints(prev, anchor, precision) {
+function appendArcPoints(prev, anchor, precision, appendPoint) {
   if (!prev) {
-    return [createPoint(anchor.x, anchor.y)];
+    appendPoint(createPoint(anchor.x, anchor.y));
+    return;
   }
 
   let rx = anchor.rx;
   let ry = anchor.ry;
 
   if (!(rx && ry)) {
-    return [createPoint(anchor.x, anchor.y)];
+    appendPoint(createPoint(anchor.x, anchor.y));
+    return;
   }
 
   const xAxisRotation = ((anchor.xAxisRotation || 0) * Math.PI) / 180;
@@ -98,26 +100,20 @@ function sampleArcPoints(prev, anchor, precision) {
   const endAngle = startAngle + delta;
   const clockwise = sweepFlag === 0;
 
-  const angleDelta = (() => {
-    const raw = endAngle - startAngle;
-    const samePoints = Math.abs(raw) < Number.EPSILON;
+  const raw = endAngle - startAngle;
+  const samePoints = Math.abs(raw) < Number.EPSILON;
 
-    let deltaAngle = mod(raw, TWO_PI);
+  let angleDelta = mod(raw, TWO_PI);
 
-    if (deltaAngle < Number.EPSILON) {
-      deltaAngle = samePoints ? 0 : TWO_PI;
-    }
+  if (angleDelta < Number.EPSILON) {
+    angleDelta = samePoints ? 0 : TWO_PI;
+  }
 
-    if (clockwise && !samePoints) {
-      deltaAngle = deltaAngle === TWO_PI ? -TWO_PI : deltaAngle - TWO_PI;
-    }
-
-    return deltaAngle;
-  })();
+  if (clockwise && !samePoints) {
+    angleDelta = angleDelta === TWO_PI ? -TWO_PI : angleDelta - TWO_PI;
+  }
 
   const steps = Math.max(Constants.Resolution, Math.max(precision * 2, 1));
-
-  const points = [];
 
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
@@ -135,10 +131,8 @@ function sampleArcPoints(prev, anchor, precision) {
       py = tx * sinR + ty * cosR + cy;
     }
 
-    points.push(createPoint(px, py));
+    appendPoint(createPoint(px, py));
   }
-
-  return points;
 }
 
 function buildPathHitParts(path, precision = DEFAULT_PRECISION) {
@@ -235,17 +229,38 @@ function buildPathHitParts(path, precision = DEFAULT_PRECISION) {
     if (command === Commands.line) {
       appendPoint(createPoint(vertex.x, vertex.y));
     } else if (command === Commands.curve) {
-      const subdivisions = getSubdivisions(vertex, prevVertex, limit);
-      for (let j = 1; j < subdivisions.length; j++) {
-        const sv = subdivisions[j];
-        appendPoint(createPoint(sv.x, sv.y));
+      // Match getSubdivisions' sampling without constructing Anchors (and
+      // their control vectors) that are immediately copied into plain points.
+      const right = prevVertex.controls && prevVertex.controls.right;
+      const left = vertex.controls && vertex.controls.left;
+      let x2 = (right || prevVertex).x;
+      let y2 = (right || prevVertex).y;
+      let x3 = (left || vertex).x;
+      let y3 = (left || vertex).y;
+      if (right && prevVertex._relative) {
+        x2 += prevVertex.x;
+        y2 += prevVertex.y;
+      }
+      if (left && vertex._relative) {
+        x3 += vertex.x;
+        y3 += vertex.y;
+      }
+      if (
+        !(Math.abs(prevVertex.x - vertex.x) < 0.001 &&
+          Math.abs(prevVertex.y - vertex.y) < 0.001)
+      ) {
+        const amount = (limit || Curve.RecursionLimit) + 1;
+        for (let j = 1; j < amount; j++) {
+          const t = j / amount;
+          appendPoint(createPoint(
+            getComponentOnCubicBezier(t, prevVertex.x, x2, x3, vertex.x),
+            getComponentOnCubicBezier(t, prevVertex.y, y2, y3, vertex.y)
+          ));
+        }
       }
       appendPoint(createPoint(vertex.x, vertex.y));
     } else if (command === Commands.arc) {
-      const arcPoints = sampleArcPoints(prevVertex, vertex, limit);
-      for (let j = 0; j < arcPoints.length; j++) {
-        appendPoint(arcPoints[j]);
-      }
+      appendArcPoints(prevVertex, vertex, limit, appendPoint);
     } else if (command === Commands.close) {
       closePolygon(true);
       prevVertex = vertex;
