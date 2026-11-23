@@ -40,8 +40,9 @@ async function corpus() {
 
 // Kept reusable so the harness tests verify the real shrinking/artifact pipeline.
 async function discover(arbitrary, evaluate, output, parameters) {
-  let original, signature, lastFailure, infrastructureError;
-  const details = await fc.check(fc.asyncProperty(arbitrary, async (input) => {
+  let original, signature, infrastructureError, inFlight;
+  const failures = new Map();
+  const evaluateCandidate = async (input) => {
     if (infrastructureError) return true;
     await output.save('active.json', { schemaVersion: 1, input });
     let result;
@@ -59,16 +60,26 @@ async function discover(arbitrary, evaluate, output, parameters) {
       await output.save('secondary.json', { input, result });
       return true;
     }
-    lastFailure = result;
+    failures.set(input, result);
     return false;
-  }), parameters);
+  };
+  const property = fc.asyncProperty(arbitrary, (input) => {
+    inFlight = evaluateCandidate(input);
+    return inFlight;
+  });
+  const details = await fc.check(property, parameters).finally(async () => {
+    // fast-check can stop waiting at its deadline while the candidate still runs.
+    await inFlight;
+  });
   if (infrastructureError) {
     await output.save('infrastructure-error.json', { message: infrastructureError.stack });
     throw infrastructureError;
   }
   if (original) {
-    const input = details.counterexample ? details.counterexample[0] : original.input;
-    await output.failure(input, lastFailure, { seed: details.seed, path: details.counterexamplePath, numRuns: details.numRuns, numShrinks: details.numShrinks, interrupted: details.interrupted });
+    const failure = details.counterexample
+      ? { input: details.counterexample[0], result: failures.get(details.counterexample[0]) }
+      : original;
+    await output.failure(failure.input, failure.result, { seed: details.seed, path: details.counterexamplePath, numRuns: details.numRuns, numShrinks: details.numShrinks, interrupted: details.interrupted });
   }
   return { details, failed: Boolean(original) || details.failed || details.interrupted };
 }

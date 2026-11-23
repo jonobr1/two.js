@@ -1,13 +1,41 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
+const { setTimeout: delay } = require('node:timers/promises');
 const fc = require('fast-check');
 const { startServer } = require('./server.cjs');
 const { Session } = require('./session.cjs');
 const { artifacts } = require('./artifacts.cjs');
 const { discover } = require('./runner.cjs');
 
+async function checkInterruptedDiscovery(duringShrink) {
+  const output = await artifacts(duringShrink ? 'self-test-interrupted-shrink' : 'self-test-interrupted-case');
+  const completed = [];
+  let attempts = 0;
+  const { details, failed } = await discover(
+    fc.integer({ min: 7, max: 1000 }),
+    async (input) => {
+      attempts++;
+      if (!duringShrink || attempts > 1) await delay(500);
+      completed.push(input);
+      return { ok: false, category: 'assertion', property: 'injected-failure', message: String(input) };
+    },
+    output,
+    { seed: 12345, numRuns: 1, interruptAfterTimeLimit: 250, markInterruptAsFailure: true }
+  );
+  assert.equal(failed, true);
+  assert.equal(details.interrupted, true);
+  assert.equal(completed.length, duringShrink ? 2 : 1, 'Discovery waited for the interrupted candidate');
+  const saved = JSON.parse(await fs.readFile(path.join(output.directory, 'failure.json'), 'utf8'));
+  assert.equal(saved.input, completed[0], 'Replay uses the candidate known to have failed');
+  assert.equal(saved.result.message, String(saved.input), 'Diagnostics describe the saved candidate');
+  assert.equal(saved.replay.path, details.counterexamplePath);
+  await fs.access(path.join(output.directory, 'reproduce.html'));
+}
+
 async function main() {
+  await checkInterruptedDiscovery(false);
+  await checkInterruptedDiscovery(true);
   const server = await startServer();
   const session = new Session(server.url, { timeout: 250 });
   const output = await artifacts('self-test');
@@ -45,7 +73,7 @@ async function main() {
       throw new Error('Injected infrastructure failure');
     }, output, { seed: 1, numRuns: 10 }), /Injected infrastructure failure/);
     assert.equal(setupAttempts, 1, 'Infrastructure failure is not re-executed during shrinking');
-    console.log('Harness self-tests passed: hang termination, recovery, unhandled errors, failure-preserving shrinking, infrastructure isolation, artifacts, replay.');
+    console.log('Harness self-tests passed: hang recovery, unhandled errors, failure-preserving shrinking, interrupted discovery, infrastructure isolation, artifacts, replay.');
   } finally {
     await session.close();
     await server.close();

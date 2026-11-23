@@ -33,7 +33,7 @@ async function main() {
     // Keep the interactive test page intact; replace its CDN routes for automation.
     await page.route('**/tests/index.html', async (route) => {
       let html = await fs.readFile(path.join(root, 'tests/index.html'), 'utf8');
-      html = html.replace(/https:\/\/cdn.jsdelivr.net\/npm\/qunit@latest\/qunit\//g, '/node_modules/qunit/qunit/');
+      html = html.replace('https://cdn.jsdelivr.net/npm/qunit@latest/qunit/qunit.css', '/node_modules/qunit/qunit/qunit.css');
       html = html.replace('https://cdn.jsdelivr.net/npm/resemblejs@latest', '/node_modules/resemblejs/resemble.js');
       html = html.replace('https://cdn.jsdelivr.net/npm/qunit@latest', '/node_modules/qunit/qunit/qunit.js');
       html = html.replace('https://cdn.jsdelivr.net/npm/underscore@latest', '/node_modules/underscore/underscore-umd.js');
