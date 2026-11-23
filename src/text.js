@@ -361,8 +361,8 @@ export class Text extends Shape {
    * @returns {Object} - The width and height of the {@link Two.Text} instance.
    */
   static Measure(text) {
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
+    const ctx = canvas && canvas.getContext('2d');
+    if (ctx) {
       ctx.font = [
         text._style,
         text._weight,
@@ -377,8 +377,8 @@ export class Text extends Shape {
         height,
       };
     } else {
-      const width = this.value.length * this.size * Text.Ratio;
-      const height = this.leading;
+      const width = text.value.length * text.size * Text.Ratio;
+      const height = text.leading;
       console.warn(
         'Two.Text: unable to accurately measure text, so using an approximation.',
       );
