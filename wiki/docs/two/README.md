@@ -1166,6 +1166,8 @@ The object passed for event deallocation.
 <div class="description">
 
 Release a [Two.Element](/docs/element/)’s events from memory and recurse through its children, effects, and/or vertices.
+Shared effects keep their other shapes' listeners until the last assignment
+is released. Releasing a shape does not dispose the effect's renderer resources.
 
 </div>
 
@@ -1175,8 +1177,8 @@ Release a [Two.Element](/docs/element/)’s events from memory and recurse throu
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L425">
-    two.js:425
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/two.js#L499">
+    two.js:499
   </a>
 
 </div>

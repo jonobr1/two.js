@@ -53,198 +53,6 @@ var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read fr
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-// src/utils/canvas-polyfill.js
-var CanvasPolyfill = {
-  /**
-   * @param {Image}
-   */
-  Image: null,
-  /**
-   * @param {Boolean}
-   */
-  isHeadless: false,
-  /**
-   *
-   * @param {canvas} elem - An element to spoof as a `<canvas />`.
-   * @param {String} [name] - An optional tag and node name to spoof. Defaults to `'canvas'`.
-   * @returns {canvas} - The same `elem` passed in the first argument with updated attributes needed to be used by Two.js.
-   * @description Adds attributes invoked by Two.js in order to execute and run correctly. This is used by headless environments.
-   */
-  shim: function(elem, name) {
-    elem.tagName = elem.nodeName = name || "canvas";
-    elem.nodeType = 1;
-    elem.getAttribute = function(prop) {
-      return this[prop];
-    };
-    elem.setAttribute = function(prop, val) {
-      this[prop] = val;
-      return this;
-    };
-    return elem;
-  },
-  /**
-   * @name Two.Utils.polyfill
-   * @function
-   * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
-   * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
-   * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
-   * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
-   */
-  polyfill: function(canvas3, Image3) {
-    CanvasPolyfill.shim(canvas3);
-    if (typeof Image3 !== "undefined") {
-      CanvasPolyfill.Image = Image3;
-    }
-    CanvasPolyfill.isHeadless = true;
-    return canvas3;
-  }
-};
-
-// src/utils/curves.js
-var curves_exports = {};
-__export(curves_exports, {
-  Curve: () => Curve,
-  getAnchorsFromArcData: () => getAnchorsFromArcData,
-  getComponentOnCubicBezier: () => getComponentOnCubicBezier,
-  getControlPoints: () => getControlPoints,
-  getCurveBoundingBox: () => getCurveBoundingBox,
-  getCurveFromPoints: () => getCurveFromPoints,
-  getCurveLength: () => getCurveLength,
-  getReflection: () => getReflection,
-  integrate: () => integrate,
-  subdivide: () => subdivide
-});
-
-// src/utils/math.js
-var math_exports = {};
-__export(math_exports, {
-  HALF_PI: () => HALF_PI,
-  NumArray: () => NumArray,
-  TWO_PI: () => TWO_PI,
-  decomposeMatrix: () => decomposeMatrix,
-  getComputedMatrix: () => getComputedMatrix,
-  getEffectiveStrokeWidth: () => getEffectiveStrokeWidth,
-  getPoT: () => getPoT,
-  lerp: () => lerp,
-  mod: () => mod,
-  setMatrix: () => setMatrix,
-  toFixed: () => toFixed
-});
-
-// src/utils/root.js
-var root;
-if (typeof window !== "undefined") {
-  root = window;
-} else if (typeof global !== "undefined") {
-  root = global;
-} else if (typeof self !== "undefined") {
-  root = self;
-}
-
-// src/utils/math.js
-var Matrix;
-var TWO_PI = Math.PI * 2;
-var HALF_PI = Math.PI * 0.5;
-function decomposeMatrix(matrix, b, c, d, e, f) {
-  let a;
-  if (arguments.length <= 1) {
-    a = matrix.a;
-    b = matrix.b;
-    c = matrix.c;
-    d = matrix.d;
-    e = matrix.e;
-    f = matrix.f;
-  } else {
-    a = matrix;
-  }
-  return {
-    translateX: e,
-    translateY: f,
-    scaleX: Math.sqrt(a * a + b * b),
-    scaleY: Math.sqrt(c * c + d * d),
-    rotation: 180 * Math.atan2(b, a) / Math.PI
-  };
-}
-function setMatrix(matrix) {
-  Matrix = matrix;
-}
-function getComputedMatrix(object, matrix) {
-  matrix = matrix && matrix.identity() || new Matrix();
-  let parent = object;
-  const matrices = [];
-  while (parent && parent._matrix) {
-    matrices.push(parent._matrix);
-    parent = parent.parent;
-  }
-  matrices.reverse();
-  for (let i = 0; i < matrices.length; i++) {
-    const m = matrices[i];
-    const e = m.elements;
-    matrix.multiply(
-      e[0],
-      e[1],
-      e[2],
-      e[3],
-      e[4],
-      e[5],
-      e[6],
-      e[7],
-      e[8]
-    );
-  }
-  return matrix;
-}
-function lerp(a, b, t) {
-  return t * (b - a) + a;
-}
-var pots = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
-function getPoT(value) {
-  let i = 0;
-  while (pots[i] && pots[i] < value) {
-    i++;
-  }
-  return pots[i];
-}
-function mod(v, l) {
-  while (v < 0) {
-    v += l;
-  }
-  return v % l;
-}
-var NumArray = root.Float32Array || Array;
-var floor = Math.floor;
-function toFixed(v) {
-  return floor(v * 1e6) / 1e6;
-}
-function getEffectiveStrokeWidth(object, worldMatrix) {
-  const linewidth = object._linewidth;
-  if (object.strokeAttenuation) {
-    return linewidth;
-  }
-  if (!worldMatrix) {
-    worldMatrix = object.worldMatrix || getComputedMatrix(object);
-  }
-  const decomposed = decomposeMatrix(
-    worldMatrix.elements[0],
-    worldMatrix.elements[3],
-    worldMatrix.elements[1],
-    worldMatrix.elements[4],
-    worldMatrix.elements[2],
-    worldMatrix.elements[5]
-  );
-  const scale = Math.max(Math.abs(decomposed.scaleX), Math.abs(decomposed.scaleY));
-  return scale > 0 ? linewidth / scale : linewidth;
-}
-
-// src/utils/path-commands.js
-var Commands = {
-  move: "M",
-  line: "L",
-  curve: "C",
-  arc: "A",
-  close: "Z"
-};
-
 // src/events.js
 var Events = class {
   constructor() {
@@ -343,11 +151,28 @@ var Events = class {
     if (!this._events) {
       return this;
     }
-    const args = Array.prototype.slice.call(arguments, 1);
     const events = this._events[name];
-    if (events) {
-      for (let i = 0; i < events.length; i++) {
-        events[i].call(this, ...args);
+    if (!events || events.length === 0) {
+      return this;
+    }
+    const length = arguments.length;
+    const args = length > 4 ? Array.prototype.slice.call(arguments, 1) : null;
+    for (let i = 0; i < events.length; i++) {
+      switch (length) {
+        case 1:
+          events[i].call(this);
+          break;
+        case 2:
+          events[i].call(this, arguments[1]);
+          break;
+        case 3:
+          events[i].call(this, arguments[1], arguments[2]);
+          break;
+        case 4:
+          events[i].call(this, arguments[1], arguments[2], arguments[3]);
+          break;
+        default:
+          events[i].apply(this, args);
       }
     }
     return this;
@@ -401,6 +226,304 @@ __publicField(Events, "Methods", [
   "listen",
   "ignore"
 ]);
+
+// src/utils/effects.js
+var references = /* @__PURE__ */ new WeakMap();
+var bindings = /* @__PURE__ */ new WeakMap();
+function hasEffectReferences(effect) {
+  return references.has(effect);
+}
+function bindEffects(shape, property, effects, handler) {
+  let properties = bindings.get(shape);
+  const previous = properties && properties.get(property);
+  if (previous) {
+    release(previous);
+  }
+  const unique = /* @__PURE__ */ new Set();
+  for (let i = 0; i < effects.length; i++) {
+    const effect = effects[i];
+    if (effect && typeof effect === "object") {
+      unique.add(effect);
+    }
+  }
+  if (unique.size === 0) {
+    if (properties) {
+      properties.delete(property);
+      if (properties.size === 0) {
+        bindings.delete(shape);
+      }
+    }
+    return;
+  }
+  if (!properties) {
+    properties = /* @__PURE__ */ new Map();
+    bindings.set(shape, properties);
+  }
+  unique.forEach((effect) => {
+    references.set(effect, (references.get(effect) || 0) + 1);
+    if (handler && typeof effect.bind === "function") {
+      effect.bind(Events.Types.change, handler);
+    }
+  });
+  properties.set(property, { effects: unique, handler });
+}
+function disposeEffects(shape) {
+  releaseEffects(shape, true);
+}
+function unbindEffects(shape) {
+  releaseEffects(shape, false);
+}
+function releaseEffects(shape, dispose) {
+  const textures = shape.textures;
+  const renderer = shape._renderer;
+  if (textures && typeof textures.unbind === "function" && renderer) {
+    if (renderer.bindTextures) {
+      textures.unbind(Events.Types.insert, renderer.bindTextures);
+    }
+    if (renderer.unbindTextures) {
+      textures.unbind(Events.Types.remove, renderer.unbindTextures);
+    }
+  }
+  const properties = bindings.get(shape);
+  if (!properties) {
+    return;
+  }
+  bindings.delete(shape);
+  const effects = /* @__PURE__ */ new Set();
+  properties.forEach((binding) => {
+    release(binding);
+    binding.effects.forEach((effect) => effects.add(effect));
+  });
+  effects.forEach((effect) => {
+    if (references.has(effect)) {
+      return;
+    }
+    if (dispose && typeof effect.dispose === "function") {
+      effect.dispose();
+    } else if (typeof effect.unbind === "function") {
+      effect.unbind();
+    }
+  });
+}
+function release(binding) {
+  binding.effects.forEach((effect) => {
+    if (binding.handler && typeof effect.unbind === "function") {
+      effect.unbind(Events.Types.change, binding.handler);
+    }
+    const count2 = references.get(effect) - 1;
+    if (count2 > 0) {
+      references.set(effect, count2);
+    } else {
+      references.delete(effect);
+    }
+  });
+}
+
+// src/utils/canvas-polyfill.js
+var CanvasPolyfill = {
+  /**
+   * @param {Image}
+   */
+  Image: null,
+  /**
+   * @param {Boolean}
+   */
+  isHeadless: false,
+  /**
+   *
+   * @param {canvas} elem - An element to spoof as a `<canvas />`.
+   * @param {String} [name] - An optional tag and node name to spoof. Defaults to `'canvas'`.
+   * @returns {canvas} - The same `elem` passed in the first argument with updated attributes needed to be used by Two.js.
+   * @description Adds attributes invoked by Two.js in order to execute and run correctly. This is used by headless environments.
+   */
+  shim: function(elem, name) {
+    elem.tagName = elem.nodeName = name || "canvas";
+    elem.nodeType = 1;
+    elem.getAttribute = function(prop) {
+      return this[prop];
+    };
+    elem.setAttribute = function(prop, val) {
+      this[prop] = val;
+      return this;
+    };
+    return elem;
+  },
+  /**
+   * @name Two.Utils.polyfill
+   * @function
+   * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
+   * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
+   * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
+   * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas](https://github.com/Automattic/node-canvas) for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
+   */
+  polyfill: function(canvas3, Image3) {
+    CanvasPolyfill.shim(canvas3);
+    if (typeof Image3 !== "undefined") {
+      CanvasPolyfill.Image = Image3;
+    }
+    CanvasPolyfill.isHeadless = true;
+    return canvas3;
+  }
+};
+
+// src/utils/curves.js
+var curves_exports = {};
+__export(curves_exports, {
+  Curve: () => Curve,
+  getAnchorsFromArcData: () => getAnchorsFromArcData,
+  getComponentOnCubicBezier: () => getComponentOnCubicBezier,
+  getControlPoints: () => getControlPoints,
+  getCurveBoundingBox: () => getCurveBoundingBox,
+  getCurveFromPoints: () => getCurveFromPoints,
+  getCurveLength: () => getCurveLength,
+  getReflection: () => getReflection,
+  integrate: () => integrate,
+  subdivide: () => subdivide
+});
+
+// src/utils/math.js
+var math_exports = {};
+__export(math_exports, {
+  HALF_PI: () => HALF_PI,
+  NumArray: () => NumArray,
+  TWO_PI: () => TWO_PI,
+  decomposeMatrix: () => decomposeMatrix,
+  getComputedMatrix: () => getComputedMatrix,
+  getEffectiveStrokeWidth: () => getEffectiveStrokeWidth,
+  getPoT: () => getPoT,
+  lerp: () => lerp,
+  mod: () => mod,
+  setMatrix: () => setMatrix,
+  toFixed: () => toFixed
+});
+
+// src/utils/root.js
+var root;
+if (typeof window !== "undefined") {
+  root = window;
+} else if (typeof global !== "undefined") {
+  root = global;
+} else if (typeof self !== "undefined") {
+  root = self;
+}
+
+// src/utils/math.js
+var Matrix;
+var TWO_PI = Math.PI * 2;
+var HALF_PI = Math.PI * 0.5;
+var cache = {
+  getComputedMatrix: { active: false, matrices: [] }
+};
+function decomposeMatrix(matrix, b, c, d, e, f) {
+  let a;
+  if (arguments.length <= 1) {
+    a = matrix.a;
+    b = matrix.b;
+    c = matrix.c;
+    d = matrix.d;
+    e = matrix.e;
+    f = matrix.f;
+  } else {
+    a = matrix;
+  }
+  return {
+    translateX: e,
+    translateY: f,
+    scaleX: Math.sqrt(a * a + b * b),
+    scaleY: Math.sqrt(c * c + d * d),
+    rotation: 180 * Math.atan2(b, a) / Math.PI
+  };
+}
+function setMatrix(matrix) {
+  Matrix = matrix;
+}
+function getComputedMatrix(object, matrix) {
+  const workspace = cache.getComputedMatrix.active ? { active: false, matrices: [] } : cache.getComputedMatrix;
+  const matrices = workspace.matrices;
+  let length = 0;
+  workspace.active = true;
+  try {
+    matrix = matrix && matrix.identity() || new Matrix();
+    let parent = object;
+    while (parent && parent._matrix) {
+      matrices[length++] = parent._matrix;
+      parent = parent.parent;
+    }
+    for (let i = length - 1; i >= 0; i--) {
+      const e = matrices[i].elements;
+      matrix.multiply(
+        e[0],
+        e[1],
+        e[2],
+        e[3],
+        e[4],
+        e[5],
+        e[6],
+        e[7],
+        e[8]
+      );
+    }
+    return matrix;
+  } finally {
+    for (let i = 0; i < length; i++) {
+      matrices[i] = null;
+    }
+    if (matrices.length > 64) {
+      matrices.length = 64;
+    }
+    workspace.active = false;
+  }
+}
+function lerp(a, b, t) {
+  return t * (b - a) + a;
+}
+var pots = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
+function getPoT(value) {
+  let i = 0;
+  while (pots[i] && pots[i] < value) {
+    i++;
+  }
+  return pots[i];
+}
+function mod(v, l) {
+  while (v < 0) {
+    v += l;
+  }
+  return v % l;
+}
+var NumArray = root.Float32Array || Array;
+var floor = Math.floor;
+function toFixed(v) {
+  return floor(v * 1e6) / 1e6;
+}
+function getEffectiveStrokeWidth(object, worldMatrix) {
+  const linewidth = object._linewidth;
+  if (object.strokeAttenuation) {
+    return linewidth;
+  }
+  if (!worldMatrix) {
+    worldMatrix = object.worldMatrix || getComputedMatrix(object);
+  }
+  const decomposed = decomposeMatrix(
+    worldMatrix.elements[0],
+    worldMatrix.elements[3],
+    worldMatrix.elements[1],
+    worldMatrix.elements[4],
+    worldMatrix.elements[2],
+    worldMatrix.elements[5]
+  );
+  const scale = Math.max(Math.abs(decomposed.scaleX), Math.abs(decomposed.scaleY));
+  return scale > 0 ? linewidth / scale : linewidth;
+}
+
+// src/utils/path-commands.js
+var Commands = {
+  move: "M",
+  line: "L",
+  curve: "C",
+  arc: "A",
+  close: "Z"
+};
 
 // src/vector.js
 var proto = {
@@ -1229,7 +1352,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2026-11-17T05:50:59.582Z",
+  PublishDate: "2026-11-23T16:57:30.957Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1456,8 +1579,7 @@ function getCurveLength(x1, y1, x2, y2, x3, y3, x4, y4, limit) {
   return integrate(integrand, 0, 1, limit || Curve.RecursionLimit);
 }
 function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
-  const tvalues = [];
-  const bounds = [[], []];
+  let minX = Math.min(x1, x4), minY = Math.min(y1, y4), maxX = Math.max(x1, x4), maxY = Math.max(y1, y4);
   let a, b, c, t, t1, t2, b2ac, sqrtb2ac;
   for (let i = 0; i < 2; ++i) {
     if (i === 0) {
@@ -1473,43 +1595,34 @@ function getCurveBoundingBox(x1, y1, x2, y2, x3, y3, x4, y4) {
       if (Math.abs(b) < 1e-3) {
         continue;
       }
-      t = -c / b;
-      if (0 < t && t < 1) {
-        tvalues.push(t);
+      t1 = -c / b;
+      t2 = NaN;
+    } else {
+      b2ac = b * b - 4 * c * a;
+      if (b2ac < 0) {
+        continue;
       }
-      continue;
+      sqrtb2ac = Math.sqrt(b2ac);
+      t1 = (-b + sqrtb2ac) / (2 * a);
+      t2 = (-b - sqrtb2ac) / (2 * a);
     }
-    b2ac = b * b - 4 * c * a;
-    sqrtb2ac = Math.sqrt(b2ac);
-    if (b2ac < 0) {
-      continue;
-    }
-    t1 = (-b + sqrtb2ac) / (2 * a);
-    if (0 < t1 && t1 < 1) {
-      tvalues.push(t1);
-    }
-    t2 = (-b - sqrtb2ac) / (2 * a);
-    if (0 < t2 && t2 < 1) {
-      tvalues.push(t2);
+    for (let j = 0; j < 2; j++) {
+      t = j === 0 ? t1 : t2;
+      if (!(0 < t && t < 1)) {
+        continue;
+      }
+      const mt = 1 - t;
+      const x = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
+      const y = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
     }
   }
-  let j = tvalues.length;
-  let jlen = j;
-  let mt;
-  while (j--) {
-    t = tvalues[j];
-    mt = 1 - t;
-    bounds[0][j] = mt * mt * mt * x1 + 3 * mt * mt * t * x2 + 3 * mt * t * t * x3 + t * t * t * x4;
-    bounds[1][j] = mt * mt * mt * y1 + 3 * mt * mt * t * y2 + 3 * mt * t * t * y3 + t * t * t * y4;
-  }
-  bounds[0][jlen] = x1;
-  bounds[1][jlen] = y1;
-  bounds[0][jlen + 1] = x4;
-  bounds[1][jlen + 1] = y4;
-  bounds[0].length = bounds[1].length = jlen + 2;
   return {
-    min: { x: Math.min.apply(0, bounds[0]), y: Math.min.apply(0, bounds[1]) },
-    max: { x: Math.max.apply(0, bounds[0]), y: Math.max.apply(0, bounds[1]) }
+    min: { x: minX, y: minY },
+    max: { x: maxX, y: maxY }
   };
 }
 function integrate(f, a, b, n) {
@@ -2884,17 +2997,50 @@ var _Gradient = class _Gradient extends Element {
   /**
    * @name Two.Gradient#dispose
    * @function
-   * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+   * @returns {Two.Gradient}
+   * @description Release renderer resources and event listeners. Safe to call
+   * repeatedly. Shapes release shared effects only after their last assignment
+   * is disposed. Call this method directly only when all users are finished.
+   * The gradient's values and internal change tracking remain available for reuse.
    */
   dispose() {
-    if ("elem" in this._renderer) {
-      const elem = this._renderer.elem;
-      if (elem.parentNode) {
-        elem.parentNode.removeChild(elem);
+    const renderer = this._renderer;
+    super.dispose();
+    const callbacks = [
+      "flagStops",
+      "bindStops",
+      "unbindStops",
+      "flagEndPoints",
+      "flagCenter",
+      "flagFocal"
+    ];
+    for (let i = 0; i < callbacks.length; i++) {
+      const key = callbacks[i];
+      if (typeof renderer[key] === "function") {
+        this._renderer[key] = renderer[key];
       }
     }
-    if ("effect" in this._renderer) {
-      this._renderer.effect = null;
+    if (this.stops) {
+      for (let i = 0; i < this.stops.length; i++) {
+        const stop = this.stops[i];
+        delete stop._renderer.elem;
+        stop._flagOffset = stop._flagColor = stop._flagOpacity = true;
+      }
+    }
+    const flags = [
+      "_flagId",
+      "_flagStops",
+      "_flagSpread",
+      "_flagUnits",
+      "_flagEndPoints",
+      "_flagCenter",
+      "_flagFocal",
+      "_flagRadius"
+    ];
+    for (let i = 0; i < flags.length; i++) {
+      if (flags[i] in this) {
+        this[flags[i]] = true;
+      }
     }
     return this;
   }
@@ -3662,22 +3808,18 @@ var _Matrix = class _Matrix extends Events {
       return [x, y, z];
     }
     const A = this.elements;
-    const B = [a, b, c, d, e, f, g, h, i];
     const A0 = A[0], A1 = A[1], A2 = A[2];
     const A3 = A[3], A4 = A[4], A5 = A[5];
     const A6 = A[6], A7 = A[7], A8 = A[8];
-    const B0 = B[0], B1 = B[1], B2 = B[2];
-    const B3 = B[3], B4 = B[4], B5 = B[5];
-    const B6 = B[6], B7 = B[7], B8 = B[8];
-    this.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
-    this.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
-    this.elements[2] = A0 * B2 + A1 * B5 + A2 * B8;
-    this.elements[3] = A3 * B0 + A4 * B3 + A5 * B6;
-    this.elements[4] = A3 * B1 + A4 * B4 + A5 * B7;
-    this.elements[5] = A3 * B2 + A4 * B5 + A5 * B8;
-    this.elements[6] = A6 * B0 + A7 * B3 + A8 * B6;
-    this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
-    this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
+    this.elements[0] = A0 * a + A1 * d + A2 * g;
+    this.elements[1] = A0 * b + A1 * e + A2 * h;
+    this.elements[2] = A0 * c + A1 * f + A2 * i;
+    this.elements[3] = A3 * a + A4 * d + A5 * g;
+    this.elements[4] = A3 * b + A4 * e + A5 * h;
+    this.elements[5] = A3 * c + A4 * f + A5 * i;
+    this.elements[6] = A6 * a + A7 * d + A8 * g;
+    this.elements[7] = A6 * b + A7 * e + A8 * h;
+    this.elements[8] = A6 * c + A7 * f + A8 * i;
     return this.trigger(Events.Types.change);
   }
   /**
@@ -4313,14 +4455,16 @@ function svgAngle(ux, uy, vx, vy) {
   }
   return ang;
 }
-function sampleArcPoints(prev, anchor2, precision) {
+function appendArcPoints(prev, anchor2, precision, appendPoint) {
   if (!prev) {
-    return [createPoint(anchor2.x, anchor2.y)];
+    appendPoint(createPoint(anchor2.x, anchor2.y));
+    return;
   }
   let rx = anchor2.rx;
   let ry = anchor2.ry;
   if (!(rx && ry)) {
-    return [createPoint(anchor2.x, anchor2.y)];
+    appendPoint(createPoint(anchor2.x, anchor2.y));
+    return;
   }
   const xAxisRotation = (anchor2.xAxisRotation || 0) * Math.PI / 180;
   const largeArcFlag = anchor2.largeArcFlag ? 1 : 0;
@@ -4366,20 +4510,16 @@ function sampleArcPoints(prev, anchor2, precision) {
   ) % TWO_PI;
   const endAngle = startAngle + delta;
   const clockwise = sweepFlag === 0;
-  const angleDelta = (() => {
-    const raw = endAngle - startAngle;
-    const samePoints = Math.abs(raw) < Number.EPSILON;
-    let deltaAngle = mod(raw, TWO_PI);
-    if (deltaAngle < Number.EPSILON) {
-      deltaAngle = samePoints ? 0 : TWO_PI;
-    }
-    if (clockwise && !samePoints) {
-      deltaAngle = deltaAngle === TWO_PI ? -TWO_PI : deltaAngle - TWO_PI;
-    }
-    return deltaAngle;
-  })();
+  const raw = endAngle - startAngle;
+  const samePoints = Math.abs(raw) < Number.EPSILON;
+  let angleDelta = mod(raw, TWO_PI);
+  if (angleDelta < Number.EPSILON) {
+    angleDelta = samePoints ? 0 : TWO_PI;
+  }
+  if (clockwise && !samePoints) {
+    angleDelta = angleDelta === TWO_PI ? -TWO_PI : angleDelta - TWO_PI;
+  }
   const steps = Math.max(Constants.Resolution, Math.max(precision * 2, 1));
-  const points = [];
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
     const angle = startAngle + t * angleDelta;
@@ -4393,9 +4533,8 @@ function sampleArcPoints(prev, anchor2, precision) {
       px = tx * cosR - ty * sinR + cx;
       py = tx * sinR + ty * cosR + cy;
     }
-    points.push(createPoint(px, py));
+    appendPoint(createPoint(px, py));
   }
-  return points;
 }
 function buildPathHitParts(path, precision = DEFAULT_PRECISION) {
   const polygons = [];
@@ -4461,17 +4600,33 @@ function buildPathHitParts(path, precision = DEFAULT_PRECISION) {
     if (command === Commands.line) {
       appendPoint(createPoint(vertex.x, vertex.y));
     } else if (command === Commands.curve) {
-      const subdivisions = getSubdivisions(vertex, prevVertex, limit);
-      for (let j = 1; j < subdivisions.length; j++) {
-        const sv = subdivisions[j];
-        appendPoint(createPoint(sv.x, sv.y));
+      const right = prevVertex.controls && prevVertex.controls.right;
+      const left = vertex.controls && vertex.controls.left;
+      let x2 = (right || prevVertex).x;
+      let y2 = (right || prevVertex).y;
+      let x3 = (left || vertex).x;
+      let y3 = (left || vertex).y;
+      if (right && prevVertex._relative) {
+        x2 += prevVertex.x;
+        y2 += prevVertex.y;
+      }
+      if (left && vertex._relative) {
+        x3 += vertex.x;
+        y3 += vertex.y;
+      }
+      if (!(Math.abs(prevVertex.x - vertex.x) < 1e-3 && Math.abs(prevVertex.y - vertex.y) < 1e-3)) {
+        const amount = (limit || Curve.RecursionLimit) + 1;
+        for (let j = 1; j < amount; j++) {
+          const t = j / amount;
+          appendPoint(createPoint(
+            getComponentOnCubicBezier(t, prevVertex.x, x2, x3, vertex.x),
+            getComponentOnCubicBezier(t, prevVertex.y, y2, y3, vertex.y)
+          ));
+        }
       }
       appendPoint(createPoint(vertex.x, vertex.y));
     } else if (command === Commands.arc) {
-      const arcPoints = sampleArcPoints(prevVertex, vertex, limit);
-      for (let j = 0; j < arcPoints.length; j++) {
-        appendPoint(arcPoints[j]);
-      }
+      appendArcPoints(prevVertex, vertex, limit, appendPoint);
     } else if (command === Commands.close) {
       closePolygon(true);
       prevVertex = vertex;
@@ -5183,12 +5338,14 @@ var _Path = class _Path extends Shape {
    * @function
    * @returns {Two.Path}
    * @description Release the path's renderer resources and detach all events.
-   * This method cleans up vertices collection events, individual vertex events,
-   * control point events, and disposes fill/stroke effects (calling dispose()
-   * on Gradients and Textures for thorough cleanup) while preserving the
-   * renderer type for potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    disposeEffects(this);
     super.dispose();
     if (this.vertices && typeof this.vertices.unbind === "function") {
       try {
@@ -5211,16 +5368,6 @@ var _Path = class _Path extends Shape {
           }
         }
       }
-    }
-    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
-      this.fill.dispose();
-    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
-      this.fill.unbind();
-    }
-    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
-      this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
-      this.stroke.unbind();
     }
     return this;
   }
@@ -5329,8 +5476,13 @@ var _Path = class _Path extends Shape {
     for (i = 0; i < l; i++) {
       v1 = this._renderer.vertices[i];
       v0 = this._renderer.vertices[(i + l - 1) % l];
-      const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
-      const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
+      const e = matrix.elements;
+      const x0 = v0.x || 0, y0 = v0.y || 0;
+      const x1 = v1.x || 0, y1 = v1.y || 0;
+      const v0x = e[0] * x0 + e[1] * y0 + e[2];
+      const v0y = e[3] * x0 + e[4] * y0 + e[5];
+      const v1x = e[0] * x1 + e[1] * y1 + e[2];
+      const v1y = e[3] * x1 + e[4] * y1 + e[5];
       if (v0.controls && v1.controls) {
         let rx = v0.controls.right.x;
         let ry = v0.controls.right.y;
@@ -5338,14 +5490,20 @@ var _Path = class _Path extends Shape {
           rx += v0.x;
           ry += v0.y;
         }
-        let [c0x, c0y] = matrix.multiply(rx, ry);
+        rx = rx || 0;
+        ry = ry || 0;
+        const c0x = e[0] * rx + e[1] * ry + e[2];
+        const c0y = e[3] * rx + e[4] * ry + e[5];
         let lx = v1.controls.left.x;
         let ly = v1.controls.left.y;
         if (v1.relative) {
           lx += v1.x;
           ly += v1.y;
         }
-        let [c1x, c1y] = matrix.multiply(lx, ly);
+        lx = lx || 0;
+        ly = ly || 0;
+        const c1x = e[0] * lx + e[1] * ly + e[2];
+        const c1y = e[3] * lx + e[4] * ly + e[5];
         const bb = getCurveBoundingBox(v0x, v0y, c0x, c0y, c1x, c1y, v1x, v1y);
         top = min(bb.min.y - border, top);
         left = min(bb.min.x - border, left);
@@ -5405,7 +5563,10 @@ var _Path = class _Path extends Shape {
     if (!inverse) {
       return super.contains(x, y, opts);
     }
-    const [localX, localY] = inverse.multiply(x, y, 1);
+    const e = inverse.elements;
+    const px = x || 0, py = y || 0;
+    const localX = e[0] * px + e[1] * py + e[2];
+    const localY = e[3] * px + e[4] * py + e[5];
     const precision = typeof opts.precision === "number" && !Number.isNaN(opts.precision) ? Math.max(1, Math.floor(opts.precision)) : 8;
     const fillTest = hasVisibleFill(this, opts.fill);
     const strokeTest = hasVisibleStroke(this, opts.stroke);
@@ -6051,14 +6212,9 @@ var proto10 = {
       return this._fill;
     },
     set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
+      bindEffects(this, "fill", [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     }
   },
   stroke: {
@@ -6067,14 +6223,9 @@ var proto10 = {
       return this._stroke;
     },
     set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
+      bindEffects(this, "stroke", [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     }
   },
   /**
@@ -6737,8 +6888,8 @@ var _Sprite = class _Sprite extends Rectangle {
    * @function
    * @returns {Two.Sprite}
    * @description Release the sprite's renderer resources and detach all events.
-   * This method stops any running animation, clears animation callbacks, disposes
-   * the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+   * This method stops any running animation, clears animation callbacks, releases
+   * its texture assignment, and inherits comprehensive
    * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
    * for potential re-attachment.
    */
@@ -6749,11 +6900,6 @@ var _Sprite = class _Sprite extends Rectangle {
     }
     this._onLastFrame = null;
     this._startTime = 0;
-    if (this._texture && typeof this._texture.dispose === "function") {
-      this._texture.dispose();
-    } else if (this._texture && typeof this._texture.unbind === "function") {
-      this._texture.unbind();
-    }
     return this;
   }
   /**
@@ -6862,6 +7008,7 @@ var proto12 = {
       return this._texture;
     },
     set: function(v) {
+      bindEffects(this, "texture", [v]);
       this._texture = v;
       this._flagTexture = true;
     }
@@ -7895,12 +8042,14 @@ var _Points = class _Points extends Shape {
    * @function
    * @returns {Two.Points}
    * @description Release the points' renderer resources and detach all events.
-   * This method cleans up vertices collection events, individual vertex events,
-   * and disposes fill/stroke effects (calling dispose() on Gradients and
-   * Textures for thorough cleanup) while preserving the renderer type for
-   * potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    disposeEffects(this);
     super.dispose();
     if (this.vertices && typeof this.vertices.unbind === "function") {
       try {
@@ -7915,16 +8064,6 @@ var _Points = class _Points extends Shape {
           v.unbind();
         }
       }
-    }
-    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
-      this.fill.dispose();
-    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
-      this.fill.unbind();
-    }
-    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
-      this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
-      this.stroke.unbind();
     }
     return this;
   }
@@ -8075,14 +8214,9 @@ var proto16 = {
       return this._fill;
     },
     set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
+      bindEffects(this, "fill", [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     }
   },
   stroke: {
@@ -8091,14 +8225,9 @@ var proto16 = {
       return this._stroke;
     },
     set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
+      bindEffects(this, "stroke", [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     }
   },
   /**
@@ -9305,22 +9434,15 @@ var _Text = class _Text extends Shape {
    * @function
    * @returns {Two.Text}
    * @description Release the text's renderer resources and detach all events.
-   * This method disposes fill and stroke effects (calling dispose() on
-   * Gradients and Textures for thorough cleanup) while preserving the
-   * renderer type for potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    disposeEffects(this);
     super.dispose();
-    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
-      this.fill.dispose();
-    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
-      this.fill.unbind();
-    }
-    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
-      this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
-      this.stroke.unbind();
-    }
     return this;
   }
   /**
@@ -9576,14 +9698,9 @@ var proto20 = {
       return this._fill;
     },
     set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
+      bindEffects(this, "fill", [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     }
   },
   stroke: {
@@ -9592,14 +9709,9 @@ var proto20 = {
       return this._stroke;
     },
     set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
+      bindEffects(this, "stroke", [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     }
   },
   mask: {
@@ -9918,9 +10030,9 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
    * @returns {Two.ImageSequence}
    * @description Release the image sequence's renderer resources and detach all events.
    * This method stops any running animation, clears animation callbacks, unbinds
-   * textures collection events, and disposes individual textures (calling dispose()
-   * for thorough cleanup) while preserving the renderer type for potential
-   * re-attachment to a new renderer.
+   * textures collection events, and releases its texture assignments (disposing
+   * each texture only when no other shape assignments remain) while preserving
+   * the renderer type for potential re-attachment to a new renderer.
    */
   dispose() {
     super.dispose();
@@ -9932,16 +10044,6 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
       try {
         this.textures.unbind();
       } catch (e) {
-      }
-    }
-    if (this.textures) {
-      for (let i = 0; i < this.textures.length; i++) {
-        const texture = this.textures[i];
-        if (typeof texture.dispose === "function") {
-          texture.dispose();
-        } else if (typeof texture.unbind === "function") {
-          texture.unbind();
-        }
       }
     }
     return this;
@@ -10115,17 +10217,11 @@ function FlagTextures() {
   this._flagTextures = true;
 }
 function BindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].bind(Events.Types.change, this._renderer.flagTextures);
-  }
+  bindEffects(this, "textures", this.textures, this._renderer.flagTextures);
   this._renderer.flagTextures();
 }
 function UnbindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].unbind(Events.Types.change, this._renderer.flagTextures);
-  }
+  bindEffects(this, "textures", this.textures, this._renderer.flagTextures);
   this._renderer.flagTextures();
 }
 function GenerateTexture(obj) {
@@ -10142,20 +10238,21 @@ var max3 = Math.max;
 function hasFiniteBounds(rect) {
   return isFinite(rect.left) && isFinite(rect.top) && isFinite(rect.right) && isFinite(rect.bottom) && isFinite(rect.width) && isFinite(rect.height);
 }
-var cache = {
-  getShapesAtPoint: {
-    results: [],
+function createHitTestWorkspace() {
+  return {
+    active: false,
     hitOptions: {},
     context: {
       x: 0,
       y: 0,
       visibleOnly: true,
       results: null
-    },
-    single: [],
-    output: [],
-    empty: []
-  }
+    }
+  };
+}
+var cache2 = {
+  getShapesAtPoint: createHitTestWorkspace(),
+  emptyOptions: {}
 };
 var _Group = class _Group extends Shape {
   constructor(children) {
@@ -10595,59 +10692,58 @@ var _Group = class _Group extends Shape {
    * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
    */
   getShapesAtPoint(x, y, options) {
-    const opts = options || {};
-    const { results, hitOptions, context, single, empty } = cache.getShapesAtPoint;
-    results.length = 0;
-    const mode = opts.mode === "deepest" || opts.deepest ? "deepest" : "all";
-    const visibleOnly = opts.visibleOnly !== false;
-    const includeGroups = !!opts.includeGroups;
-    const filter = typeof opts.filter === "function" ? opts.filter : null;
-    const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0;
-    if (typeof opts.precision === "number") {
-      hitOptions.precision = opts.precision;
-    } else {
-      delete hitOptions.precision;
-    }
-    if (typeof opts.fill !== "undefined") {
-      hitOptions.fill = opts.fill;
-    } else {
-      delete hitOptions.fill;
-    }
-    if (typeof opts.stroke !== "undefined") {
-      hitOptions.stroke = opts.stroke;
-    } else {
-      delete hitOptions.stroke;
-    }
-    hitOptions.tolerance = tolerance;
-    hitOptions.ignoreVisibility = !visibleOnly;
-    const stopOnFirst = mode === "deepest";
-    context.x = x;
-    context.y = y;
-    context.visibleOnly = visibleOnly;
-    context.results = results;
-    _Group.VisitForHitTest(
-      this,
-      context,
-      includeGroups,
-      filter,
-      hitOptions,
-      tolerance,
-      stopOnFirst
-    );
-    if (stopOnFirst) {
-      if (results.length > 0) {
-        const first = results[0];
-        results.length = 0;
-        single[0] = first;
-        single.length = 1;
-        return single;
+    const workspace = cache2.getShapesAtPoint.active ? createHitTestWorkspace() : cache2.getShapesAtPoint;
+    const { hitOptions, context } = workspace;
+    const results = [];
+    workspace.active = true;
+    try {
+      const opts = options || cache2.emptyOptions;
+      const mode = opts.mode === "deepest" || opts.deepest ? "deepest" : "all";
+      const visibleOnly = opts.visibleOnly !== false;
+      const includeGroups = !!opts.includeGroups;
+      const filter = typeof opts.filter === "function" ? opts.filter : null;
+      const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0;
+      if (typeof opts.precision === "number") {
+        hitOptions.precision = opts.precision;
+      } else {
+        delete hitOptions.precision;
       }
-      empty.length = 0;
-      return empty;
+      if (typeof opts.fill !== "undefined") {
+        hitOptions.fill = opts.fill;
+      } else {
+        delete hitOptions.fill;
+      }
+      if (typeof opts.stroke !== "undefined") {
+        hitOptions.stroke = opts.stroke;
+      } else {
+        delete hitOptions.stroke;
+      }
+      hitOptions.tolerance = tolerance;
+      hitOptions.ignoreVisibility = !visibleOnly;
+      const stopOnFirst = mode === "deepest";
+      context.x = x;
+      context.y = y;
+      context.visibleOnly = visibleOnly;
+      context.results = results;
+      _Group.VisitForHitTest(
+        this,
+        context,
+        includeGroups,
+        filter,
+        hitOptions,
+        tolerance,
+        stopOnFirst
+      );
+      return results;
+    } finally {
+      context.results = null;
+      delete hitOptions.precision;
+      delete hitOptions.fill;
+      delete hitOptions.stroke;
+      hitOptions.tolerance = 0;
+      hitOptions.ignoreVisibility = false;
+      workspace.active = false;
     }
-    const hits = results.slice();
-    results.length = 0;
-    return hits;
   }
   /**
    * @name Two.Group#corner
@@ -13649,20 +13745,20 @@ function getSvgImportStyles(node, parentStyles, resolvePaint = false) {
 }
 
 // src/utils/interpret-svg.js
-var references = /* @__PURE__ */ new Set();
+var references2 = /* @__PURE__ */ new Set();
 function readReference(node, styles, reference = node) {
   const tag = getTagName(node.nodeName);
   if (!Object.prototype.hasOwnProperty.call(read, tag)) {
     return null;
   }
-  if (references.has(reference)) {
+  if (references2.has(reference)) {
     throw new TwoError("Circular SVG reference.");
   }
-  references.add(reference);
+  references2.add(reference);
   try {
     return read[tag].call(this, node, styles);
   } finally {
-    references.delete(reference);
+    references2.delete(reference);
   }
 }
 var regex2 = {
@@ -14837,17 +14933,12 @@ var _Image = class _Image extends Rectangle {
    * @function
    * @returns {Two.Image}
    * @description Release the image's renderer resources and detach all events.
-   * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+   * This method releases its texture assignment and inherits comprehensive
    * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
    * for potential re-attachment.
    */
   dispose() {
     super.dispose();
-    if (this._texture && typeof this._texture.dispose === "function") {
-      this._texture.dispose();
-    } else if (this._texture && typeof this._texture.unbind === "function") {
-      this._texture.unbind();
-    }
     return this;
   }
   /**
@@ -14951,6 +15042,7 @@ var proto24 = {
       return this._texture;
     },
     set: function(v) {
+      bindEffects(this, "texture", [v]);
       this._texture = v;
       this._flagTexture = true;
     }
@@ -16076,10 +16168,6 @@ var svg2 = {
         domElement.appendChild(this._renderer.elem);
       }
       const flagMatrix = this._matrix.manual || this._flagMatrix;
-      const context = {
-        domElement,
-        elem: this._renderer.elem
-      };
       if (flagMatrix) {
         this._renderer.elem.setAttribute(
           "transform",
@@ -16106,14 +16194,20 @@ var svg2 = {
       if (this._flagClassName) {
         this._renderer.elem.setAttribute("class", this.classList.join(" "));
       }
-      if (this._flagAdditions) {
-        this.additions.forEach(svg2.group.appendChild, context);
-      }
-      if (this._flagSubtractions) {
-        this.subtractions.forEach(svg2.group.removeChild, context);
-      }
-      if (this._flagOrder) {
-        this.children.forEach(svg2.group.orderChild, context);
+      if (this._flagAdditions || this._flagSubtractions || this._flagOrder) {
+        const context = {
+          domElement,
+          elem: this._renderer.elem
+        };
+        if (this._flagAdditions) {
+          this.additions.forEach(svg2.group.appendChild, context);
+        }
+        if (this._flagSubtractions) {
+          this.subtractions.forEach(svg2.group.removeChild, context);
+        }
+        if (this._flagOrder) {
+          this.children.forEach(svg2.group.orderChild, context);
+        }
       }
       if (this._flagMask) {
         if (this._mask) {
@@ -16481,7 +16575,8 @@ var svg2 = {
       } else {
         svg2.setAttributes(this._renderer.elem, changed);
       }
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
       if (this._flagStops) {
@@ -16555,7 +16650,8 @@ var svg2 = {
       } else {
         svg2.setAttributes(this._renderer.elem, changed);
       }
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
       if (this._flagStops) {
@@ -16682,7 +16778,8 @@ var svg2 = {
       } else if (Object.keys(changed).length !== 0) {
         svg2.setAttributes(this._renderer.elem, changed);
       }
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
       if (this._renderer.elem && this._renderer.image && !this._renderer.appended) {
@@ -18475,6 +18572,9 @@ var _Two = class _Two {
       this.fit.domElement = null;
     }
     this.release();
+    if (this.renderer.defs) {
+      this.renderer.defs._disposed = true;
+    }
     if (typeof this.renderer.dispose === "function") {
       this.renderer.dispose();
     }
@@ -18492,77 +18592,19 @@ var _Two = class _Two {
    * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
    * @returns {Two.Element} The object passed for event deallocation.
    * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
+   * Shared effects keep their other shapes' listeners until the last assignment
+   * is released. Releasing a shape does not dispose the effect's renderer resources.
    */
   release(obj) {
-    let i, v, child;
     if (typeof obj === "undefined") {
-      return this.release(this.scene);
+      obj = this.scene;
     }
-    if (typeof obj.unbind === "function") {
-      obj.unbind();
-    }
-    if (typeof obj.fill === "object" && typeof obj.fill.unbind === "function") {
-      obj.fill.unbind();
-    }
-    if (typeof obj.stroke === "object" && typeof obj.stroke.unbind === "function") {
-      obj.stroke.unbind();
-    }
-    if (obj.vertices) {
-      if (typeof obj.vertices.unbind === "function") {
-        try {
-          obj.vertices.unbind();
-        } catch (e) {
-        }
-      }
-      for (i = 0; i < obj.vertices.length; i++) {
-        v = obj.vertices[i];
-        if (typeof v.unbind === "function") {
-          v.unbind();
-        }
-        if (v.controls) {
-          if (v.controls.left && typeof v.controls.left.unbind === "function") {
-            v.controls.left.unbind();
-          }
-          if (v.controls.right && typeof v.controls.right.unbind === "function") {
-            v.controls.right.unbind();
-          }
-        }
-      }
-    }
-    if (obj.children) {
-      for (i = 0; i < obj.children.length; i++) {
-        child = obj.children[i];
-        this.release(child);
-      }
-      if (typeof obj.children.unbind === "function") {
-        try {
-          obj.children.unbind();
-        } catch (e) {
-        }
-      }
-    }
-    if (obj._renderer) {
-      if (obj._renderer.elem && obj._renderer.elem.parentNode) {
-        obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
-        delete obj._renderer.elem;
-      }
-      if (this.type === "WebGLRenderer" && this.renderer.ctx) {
-        const gl = this.renderer.ctx;
-        if (obj._renderer.texture) {
-          gl.deleteTexture(obj._renderer.texture);
-          delete obj._renderer.texture;
-        }
-        if (obj._renderer.positionBuffer) {
-          gl.deleteBuffer(obj._renderer.positionBuffer);
-          delete obj._renderer.positionBuffer;
-        }
-        delete obj._renderer.gl;
-        if (obj._renderer.effect) {
-          obj._renderer.effect = null;
-        }
-      }
-      if (this.type === "CanvasRenderer" && obj._renderer.context) {
-        delete obj._renderer.context;
+    const effects = [];
+    release2.call(this, obj, effects);
+    for (let i = 0; i < effects.length; i++) {
+      const effect = effects[i];
+      if (!hasEffectReferences(effect)) {
+        release2.call(this, effect, effects);
       }
     }
     return obj;
@@ -19263,6 +19305,76 @@ __publicField(_Two, "Commands", Commands);
  */
 __publicField(_Two, "Utils", Utils);
 var Two = _Two;
+function release2(obj, pendingEffects) {
+  let i, v, child;
+  if (typeof obj.unbind === "function") {
+    obj.unbind();
+  }
+  unbindEffects(obj);
+  if (obj.vertices) {
+    if (typeof obj.vertices.unbind === "function") {
+      try {
+        obj.vertices.unbind();
+      } catch (e) {
+      }
+    }
+    for (i = 0; i < obj.vertices.length; i++) {
+      v = obj.vertices[i];
+      if (typeof v.unbind === "function") {
+        v.unbind();
+      }
+      if (v.controls) {
+        if (v.controls.left && typeof v.controls.left.unbind === "function") {
+          v.controls.left.unbind();
+        }
+        if (v.controls.right && typeof v.controls.right.unbind === "function") {
+          v.controls.right.unbind();
+        }
+      }
+    }
+  }
+  if (obj.children) {
+    for (i = 0; i < obj.children.length; i++) {
+      child = obj.children[i];
+      if (child instanceof Gradient || child instanceof Texture) {
+        pendingEffects.push(child);
+      } else {
+        release2.call(this, child, pendingEffects);
+      }
+    }
+    if (typeof obj.children.unbind === "function") {
+      try {
+        obj.children.unbind();
+      } catch (e) {
+      }
+    }
+  }
+  if (obj._renderer) {
+    if (obj._renderer.elem && obj._renderer.elem.parentNode) {
+      obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
+      delete obj._renderer.elem;
+    }
+    if (this.type === "WebGLRenderer" && this.renderer.ctx) {
+      const gl = this.renderer.ctx;
+      if (obj._renderer.texture) {
+        gl.deleteTexture(obj._renderer.texture);
+        delete obj._renderer.texture;
+      }
+      if (obj._renderer.positionBuffer) {
+        gl.deleteBuffer(obj._renderer.positionBuffer);
+        delete obj._renderer.positionBuffer;
+      }
+      delete obj._renderer.gl;
+      if (obj._renderer.effect) {
+        obj._renderer.effect = null;
+      }
+    }
+    if (this.type === "CanvasRenderer" && obj._renderer.context) {
+      delete obj._renderer.context;
+    }
+  }
+  return obj;
+}
 function fitToWindow() {
   const wr = document.body.getBoundingClientRect();
   const width = this.width = wr.width;
@@ -19288,19 +19400,25 @@ function updateDimensions(width, height) {
 var raf = dom.getRequestAnimationFrame();
 var looping = false;
 function loop() {
-  const instances = Two.Instances.slice();
-  for (let i = 0; i < instances.length; i++) {
-    const t = instances[i];
-    if (t.playing && !t._disposed) {
-      t.update();
+  try {
+    const instances = Two.Instances.slice();
+    for (let i = 0; i < instances.length; i++) {
+      const t = instances[i];
+      if (t.playing && !t._disposed) {
+        t.update();
+      }
     }
-  }
-  const playing = Two.Instances.some((t) => t.playing && !t._disposed);
-  if (playing) {
-    Two.NextFrameId = raf(loop);
-  } else {
+    const playing = Two.Instances.some((t) => t.playing && !t._disposed);
+    if (playing) {
+      Two.NextFrameId = raf(loop);
+    } else {
+      Two.NextFrameId = null;
+      looping = false;
+    }
+  } catch (error) {
     Two.NextFrameId = null;
     looping = false;
+    throw error;
   }
 }
 raf.init = function() {

@@ -302,7 +302,6 @@ export class Matrix extends Events {
     // Multiple matrix
 
     const A = this.elements;
-    const B = [a, b, c, d, e, f, g, h, i];
 
     const A0 = A[0],
       A1 = A[1],
@@ -314,27 +313,17 @@ export class Matrix extends Events {
       A7 = A[7],
       A8 = A[8];
 
-    const B0 = B[0],
-      B1 = B[1],
-      B2 = B[2];
-    const B3 = B[3],
-      B4 = B[4],
-      B5 = B[5];
-    const B6 = B[6],
-      B7 = B[7],
-      B8 = B[8];
+    this.elements[0] = A0 * a + A1 * d + A2 * g;
+    this.elements[1] = A0 * b + A1 * e + A2 * h;
+    this.elements[2] = A0 * c + A1 * f + A2 * i;
 
-    this.elements[0] = A0 * B0 + A1 * B3 + A2 * B6;
-    this.elements[1] = A0 * B1 + A1 * B4 + A2 * B7;
-    this.elements[2] = A0 * B2 + A1 * B5 + A2 * B8;
+    this.elements[3] = A3 * a + A4 * d + A5 * g;
+    this.elements[4] = A3 * b + A4 * e + A5 * h;
+    this.elements[5] = A3 * c + A4 * f + A5 * i;
 
-    this.elements[3] = A3 * B0 + A4 * B3 + A5 * B6;
-    this.elements[4] = A3 * B1 + A4 * B4 + A5 * B7;
-    this.elements[5] = A3 * B2 + A4 * B5 + A5 * B8;
-
-    this.elements[6] = A6 * B0 + A7 * B3 + A8 * B6;
-    this.elements[7] = A6 * B1 + A7 * B4 + A8 * B7;
-    this.elements[8] = A6 * B2 + A7 * B5 + A8 * B8;
+    this.elements[6] = A6 * a + A7 * d + A8 * g;
+    this.elements[7] = A6 * b + A7 * e + A8 * h;
+    this.elements[8] = A6 * c + A7 * f + A8 * i;
 
     return this.trigger(Events.Types.change);
   }

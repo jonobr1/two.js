@@ -119,12 +119,31 @@ export class Events {
       return this;
     }
 
-    const args = Array.prototype.slice.call(arguments, 1);
     const events = this._events[name];
+    if (!events || events.length === 0) {
+      return this;
+    }
 
-    if (events) {
-      for (let i = 0; i < events.length; i++) {
-        events[i].call(this, ...args);
+    // Change events usually carry no arguments. Keep the common arities free
+    // of temporary arrays; larger payloads stay local for re-entrant dispatch.
+    const length = arguments.length;
+    const args = length > 4 ? Array.prototype.slice.call(arguments, 1) : null;
+    for (let i = 0; i < events.length; i++) {
+      switch (length) {
+        case 1:
+          events[i].call(this);
+          break;
+        case 2:
+          events[i].call(this, arguments[1]);
+          break;
+        case 3:
+          events[i].call(this, arguments[1], arguments[2]);
+          break;
+        case 4:
+          events[i].call(this, arguments[1], arguments[2], arguments[3]);
+          break;
+        default:
+          events[i].apply(this, args);
       }
     }
 

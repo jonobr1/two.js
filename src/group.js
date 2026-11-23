@@ -40,9 +40,9 @@ function hasFiniteBounds(rect) {
   );
 }
 
-const cache = {
-  getShapesAtPoint: {
-    results: [],
+function createHitTestWorkspace() {
+  return {
+    active: false,
     hitOptions: {},
     context: {
       x: 0,
@@ -50,10 +50,12 @@ const cache = {
       visibleOnly: true,
       results: null,
     },
-    single: [],
-    output: [],
-    empty: [],
-  },
+  };
+}
+
+const cache = {
+  getShapesAtPoint: createHitTestWorkspace(),
+  emptyOptions: {},
 };
 
 /**
@@ -648,67 +650,70 @@ export class Group extends Shape {
    * @nota-bene Expects *world-space coordinates* – the same pixel-space you get from the renderer (e.g., mouse `clientX`/`clientY` adjusted for the canvas’s offset and pixel ratio).
    */
   getShapesAtPoint(x, y, options) {
-    const opts = options || {};
-    const { results, hitOptions, context, single, empty } =
-      cache.getShapesAtPoint;
+    // Filters and custom contains methods can start another query. Only reuse
+    // the module workspace when no invocation is still using it.
+    const workspace = cache.getShapesAtPoint.active
+      ? createHitTestWorkspace()
+      : cache.getShapesAtPoint;
+    const { hitOptions, context } = workspace;
+    const results = [];
+    workspace.active = true;
 
-    results.length = 0;
+    try {
+      const opts = options || cache.emptyOptions;
 
-    const mode = opts.mode === 'deepest' || opts.deepest ? 'deepest' : 'all';
-    const visibleOnly = opts.visibleOnly !== false;
-    const includeGroups = !!opts.includeGroups;
-    const filter = typeof opts.filter === 'function' ? opts.filter : null;
-    const tolerance = typeof opts.tolerance === 'number' ? opts.tolerance : 0;
+      const mode = opts.mode === 'deepest' || opts.deepest ? 'deepest' : 'all';
+      const visibleOnly = opts.visibleOnly !== false;
+      const includeGroups = !!opts.includeGroups;
+      const filter = typeof opts.filter === 'function' ? opts.filter : null;
+      const tolerance = typeof opts.tolerance === 'number' ? opts.tolerance : 0;
 
-    if (typeof opts.precision === 'number') {
-      hitOptions.precision = opts.precision;
-    } else {
-      delete hitOptions.precision;
-    }
-    if (typeof opts.fill !== 'undefined') {
-      hitOptions.fill = opts.fill;
-    } else {
-      delete hitOptions.fill;
-    }
-    if (typeof opts.stroke !== 'undefined') {
-      hitOptions.stroke = opts.stroke;
-    } else {
-      delete hitOptions.stroke;
-    }
-    hitOptions.tolerance = tolerance;
-    hitOptions.ignoreVisibility = !visibleOnly;
-
-    const stopOnFirst = mode === 'deepest';
-    context.x = x;
-    context.y = y;
-    context.visibleOnly = visibleOnly;
-    context.results = results;
-
-    Group.VisitForHitTest(
-      this,
-      context,
-      includeGroups,
-      filter,
-      hitOptions,
-      tolerance,
-      stopOnFirst
-    );
-
-    if (stopOnFirst) {
-      if (results.length > 0) {
-        const first = results[0];
-        results.length = 0;
-        single[0] = first;
-        single.length = 1;
-        return single;
+      if (typeof opts.precision === 'number') {
+        hitOptions.precision = opts.precision;
+      } else {
+        delete hitOptions.precision;
       }
-      empty.length = 0;
-      return empty;
-    }
+      if (typeof opts.fill !== 'undefined') {
+        hitOptions.fill = opts.fill;
+      } else {
+        delete hitOptions.fill;
+      }
+      if (typeof opts.stroke !== 'undefined') {
+        hitOptions.stroke = opts.stroke;
+      } else {
+        delete hitOptions.stroke;
+      }
+      hitOptions.tolerance = tolerance;
+      hitOptions.ignoreVisibility = !visibleOnly;
 
-    const hits = results.slice();
-    results.length = 0;
-    return hits;
+      const stopOnFirst = mode === 'deepest';
+      context.x = x;
+      context.y = y;
+      context.visibleOnly = visibleOnly;
+      context.results = results;
+
+      Group.VisitForHitTest(
+        this,
+        context,
+        includeGroups,
+        filter,
+        hitOptions,
+        tolerance,
+        stopOnFirst
+      );
+
+      // The result is owned by this invocation, including empty and deepest
+      // queries. Return it directly instead of copying a cached working array.
+      return results;
+    } finally {
+      context.results = null;
+      delete hitOptions.precision;
+      delete hitOptions.fill;
+      delete hitOptions.stroke;
+      hitOptions.tolerance = 0;
+      hitOptions.ignoreVisibility = false;
+      workspace.active = false;
+    }
   }
 
   /**
