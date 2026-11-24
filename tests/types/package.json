@@ -9,6 +9,6 @@
     "jest-environment-jsdom": "^30.5.2",
     "ts-jest": "^29.4.15",
     "two.js": "file:../..",
-    "typescript": "^5.0.0"
+    "typescript": "^7.0.2"
   }
 }
