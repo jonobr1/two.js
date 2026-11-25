@@ -1616,6 +1616,65 @@
     })();
   });
 
+  QUnit.test('Two.interpret number lists', function (assert) {
+    var two = new Two({
+      width: 400,
+      height: 400,
+    });
+
+    var interpret = function (markup) {
+      var svg = QUnit.Utils.textToDOM(
+        '<svg xmlns="http://www.w3.org/2000/svg">' + markup + '</svg>'
+      )[0];
+      return two.interpret(svg.firstElementChild, false, false);
+    };
+
+    var vertices = function (markup) {
+      return interpret(markup).vertices.map(function (v) {
+        return [v.x, v.y];
+      });
+    };
+
+    // Each case draws the same shape, written in two valid ways, and the
+    // number of vertices it has
+    var cases = [
+      [
+        '<path d="M 0 0 L 100 0 L 100 100" />',
+        '<path d="M 0 0 L 1e2 0 L 1E2 1e+2" />',
+        3,
+      ],
+      ['<path d="M 0 0 L 20 -30" />', '<path d="M0 0L2e1-3e1" />', 2],
+      [
+        '<polygon points="0,0 100,0 100,100" />',
+        '<polygon points="0, 0 100, 0 100, 100" />',
+        3,
+      ],
+      [
+        '<polyline points="0,0 100,0 100,100" />',
+        '<polyline points="0 , 0 , 1e2 , 0 , 100 , 100" />',
+        3,
+      ],
+    ];
+
+    cases.forEach(function (c) {
+      var expected = vertices(c[0]);
+      assert.equal(expected.length, c[2], c[0] + ' has ' + c[2] + ' vertices.');
+      assert.deepEqual(vertices(c[1]), expected, c[1] + ' reads like ' + c[0]);
+    });
+
+    assert.deepEqual(
+      vertices('<path d="M0 0L5. .5" />'),
+      vertices('<path d="M0 0L5 0.5" />'),
+      'A standalone trailing decimal point remains readable.'
+    );
+
+    assert.deepEqual(
+      vertices('<polyline points="0, 0 100, 0 100, 100 50" />'),
+      [[0, 0], [100, 0], [100, 100]],
+      'Polyline coordinates drop an unpaired final value.'
+    );
+  });
+
   QUnit.test('Two.interpret display and visibility', function (assert) {
     var two = new Two({
       width: 400,
