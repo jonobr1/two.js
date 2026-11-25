@@ -1661,6 +1661,18 @@
       assert.equal(expected.length, c[2], c[0] + ' has ' + c[2] + ' vertices.');
       assert.deepEqual(vertices(c[1]), expected, c[1] + ' reads like ' + c[0]);
     });
+
+    assert.deepEqual(
+      vertices('<path d="M0 0L5. .5" />'),
+      vertices('<path d="M0 0L5 0.5" />'),
+      'A standalone trailing decimal point remains readable.'
+    );
+
+    assert.deepEqual(
+      vertices('<polyline points="0, 0 100, 0 100, 100 50" />'),
+      [[0, 0], [100, 0], [100, 100]],
+      'Polyline coordinates drop an unpaired final value.'
+    );
   });
 
   QUnit.test('Two.interpret display and visibility', function (assert) {

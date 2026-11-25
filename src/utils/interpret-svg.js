@@ -28,9 +28,8 @@ import { Constants } from '../constants.js';
 
 // https://github.com/jonobr1/two.js/issues/507#issuecomment-777159213
 const regex = {
-  // A number of the SVG grammar: the exponent's sign is optional (1e2) and a
-  // number may end with its dot (5.)
-  path: /[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g,
+  // SVG 2 allows an optional exponent sign and requires digits after a dot.
+  number: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]?\d+)?/g,
   cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i,
 };
@@ -695,10 +694,8 @@ export const read = {
       points = node.getAttribute('points');
     }
 
-    // The numbers can be separated by a comma, white space or both
-    // ("0, 0 10, 0"), so read them all and pair them up in order
+    const coords = (points && points.match(regex.number)) || [];
     const verts = [];
-    const coords = points.match(regex.path) || [];
     for (let i = 0; i + 1 < coords.length; i += 2) {
       verts.push(new Anchor(parseFloat(coords[i]), parseFloat(coords[i + 1])));
     }
@@ -743,7 +740,7 @@ export const read = {
       // Split up polybeziers
 
       _.each(commands.slice(0), function (command, i) {
-        const items = command.slice(1).trim().match(regex.path);
+        const items = command.slice(1).trim().match(regex.number);
         const type = command[0];
         const lower = type.toLowerCase();
         let bin, j, l, ct, times;
@@ -817,7 +814,7 @@ export const read = {
         const type = command[0];
         const lower = type.toLowerCase();
 
-        coords = command.slice(1).trim().match(regex.path);
+        coords = command.slice(1).trim().match(regex.number);
         relative = type === lower;
 
         let x1, y1, x2, y2, x3, y3, x4, y4, reflection;
