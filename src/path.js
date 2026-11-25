@@ -1,3 +1,4 @@
+import { bindEffects, disposeEffects } from './utils/effects.js';
 import { Commands } from './utils/path-commands.js';
 import { Collection } from './collection.js';
 import { lerp, mod, decomposeMatrix } from './utils/math.js';
@@ -21,10 +22,6 @@ import { Vector } from './vector.js';
 import { Anchor } from './anchor.js';
 import { Matrix } from './matrix.js';
 
-import { Gradient } from './effects/gradient.js';
-import { LinearGradient } from './effects/linear-gradient.js';
-import { RadialGradient } from './effects/radial-gradient.js';
-import { Texture } from './effects/texture.js';
 import {
   buildPathHitParts,
   pointInPolygons,
@@ -588,12 +585,16 @@ export class Path extends Shape {
    * @function
    * @returns {Two.Path}
    * @description Release the path's renderer resources and detach all events.
-   * This method cleans up vertices collection events, individual vertex events,
-   * control point events, and disposes fill/stroke effects (calling dispose()
-   * on Gradients and Textures for thorough cleanup) while preserving the
-   * renderer type for potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    // Release effects before parent cleanup clears the renderer callbacks.
+    disposeEffects(this);
+
     // Call parent dispose to preserve renderer type and unbind events
     super.dispose();
 
@@ -625,32 +626,6 @@ export class Path extends Shape {
           }
         }
       }
-    }
-
-    // Dispose fill effect (more thorough than unbind)
-    if (
-      typeof this.fill === 'object' &&
-      typeof this.fill.dispose === 'function'
-    ) {
-      this.fill.dispose();
-    } else if (
-      typeof this.fill === 'object' &&
-      typeof this.fill.unbind === 'function'
-    ) {
-      this.fill.unbind();
-    }
-
-    // Dispose stroke effect (more thorough than unbind)
-    if (
-      typeof this.stroke === 'object' &&
-      typeof this.stroke.dispose === 'function'
-    ) {
-      this.stroke.dispose();
-    } else if (
-      typeof this.stroke === 'object' &&
-      typeof this.stroke.unbind === 'function'
-    ) {
-      this.stroke.unbind();
     }
 
     return this;
@@ -792,8 +767,15 @@ export class Path extends Shape {
       // This is important for handling cyclic paths.
       v0 = this._renderer.vertices[(i + l - 1) % l];
 
-      const [v0x, v0y] = matrix.multiply(v0.x, v0.y);
-      const [v1x, v1y] = matrix.multiply(v1.x, v1.y);
+      // These coordinates never escape the bounds calculation. Transform them
+      // directly instead of allocating a Matrix#multiply result per vertex.
+      const e = matrix.elements;
+      const x0 = v0.x || 0, y0 = v0.y || 0;
+      const x1 = v1.x || 0, y1 = v1.y || 0;
+      const v0x = e[0] * x0 + e[1] * y0 + e[2];
+      const v0y = e[3] * x0 + e[4] * y0 + e[5];
+      const v1x = e[0] * x1 + e[1] * y1 + e[2];
+      const v1y = e[3] * x1 + e[4] * y1 + e[5];
 
       if (v0.controls && v1.controls) {
         let rx = v0.controls.right.x;
@@ -804,7 +786,10 @@ export class Path extends Shape {
           ry += v0.y;
         }
 
-        let [c0x, c0y] = matrix.multiply(rx, ry);
+        rx = rx || 0;
+        ry = ry || 0;
+        const c0x = e[0] * rx + e[1] * ry + e[2];
+        const c0y = e[3] * rx + e[4] * ry + e[5];
 
         let lx = v1.controls.left.x;
         let ly = v1.controls.left.y;
@@ -814,7 +799,10 @@ export class Path extends Shape {
           ly += v1.y;
         }
 
-        let [c1x, c1y] = matrix.multiply(lx, ly);
+        lx = lx || 0;
+        ly = ly || 0;
+        const c1x = e[0] * lx + e[1] * ly + e[2];
+        const c1y = e[3] * lx + e[4] * ly + e[5];
 
         const bb = getCurveBoundingBox(v0x, v0y, c0x, c0y, c1x, c1y, v1x, v1y);
 
@@ -898,7 +886,10 @@ export class Path extends Shape {
       return super.contains(x, y, opts);
     }
 
-    const [localX, localY] = inverse.multiply(x, y, 1);
+    const e = inverse.elements;
+    const px = x || 0, py = y || 0;
+    const localX = e[0] * px + e[1] * py + e[2];
+    const localY = e[3] * px + e[4] * py + e[5];
     const precision =
       typeof opts.precision === 'number' && !Number.isNaN(opts.precision)
         ? Math.max(1, Math.floor(opts.precision))
@@ -1723,26 +1714,9 @@ const proto = {
       return this._fill;
     },
     set: function (f) {
-      if (
-        this._fill instanceof Gradient ||
-        this._fill instanceof LinearGradient ||
-        this._fill instanceof RadialGradient ||
-        this._fill instanceof Texture
-      ) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
-
+      bindEffects(this, 'fill', [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-
-      if (
-        this._fill instanceof Gradient ||
-        this._fill instanceof LinearGradient ||
-        this._fill instanceof RadialGradient ||
-        this._fill instanceof Texture
-      ) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     },
   },
 
@@ -1752,26 +1726,9 @@ const proto = {
       return this._stroke;
     },
     set: function (f) {
-      if (
-        this._stroke instanceof Gradient ||
-        this._stroke instanceof LinearGradient ||
-        this._stroke instanceof RadialGradient ||
-        this._stroke instanceof Texture
-      ) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
-
+      bindEffects(this, 'stroke', [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-
-      if (
-        this._stroke instanceof Gradient ||
-        this._stroke instanceof LinearGradient ||
-        this._stroke instanceof RadialGradient ||
-        this._stroke instanceof Texture
-      ) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     },
   },
 

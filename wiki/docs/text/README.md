@@ -1430,9 +1430,11 @@ __Returns__: Two.Text
 <div class="description">
 
 Release the text's renderer resources and detach all events.
-This method disposes fill and stroke effects (calling dispose() on
-Gradients and Textures for thorough cleanup) while preserving the
-renderer type for potential re-attachment to a new renderer.
+Releases this shape's fill and stroke assignments and listeners. An effect
+is disposed once, only when no other shape assignments use it. This includes
+shapes outside the scene. Replacing fill or stroke does not dispose the old
+effect; call its dispose() explicitly when it is no longer needed.
+Also cleans up inherited resources and preserves the renderer type.
 
 </div>
 
@@ -1442,8 +1444,8 @@ renderer type for potential re-attachment to a new renderer.
 
 <div class="meta">
 
-  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L487">
-    text.js:487
+  <a class="lineno" target="_blank" rel="noopener noreferrer" href="https://github.com/jonobr1/two.js/blob/main/src/text.js#L483">
+    text.js:483
   </a>
 
 </div>

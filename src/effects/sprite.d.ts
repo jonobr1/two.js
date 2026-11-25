@@ -209,9 +209,10 @@ declare module 'two.js/src/effects/sprite' {
     /**
      * @name Two.Sprite#dispose
      * @function
+     * @returns {Two.Sprite}
      * @description Release the sprite's renderer resources and detach all events.
-     * This method stops any running animation, clears animation callbacks, disposes
-     * the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+     * This method stops any running animation, clears animation callbacks, releases
+     * its texture assignment, and inherits comprehensive
      * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
      * for potential re-attachment.
      */
