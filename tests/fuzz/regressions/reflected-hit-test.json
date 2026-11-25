@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "description": "Analytic hit testing and invertible matrix round trips with rotation, reflection, and translation.",
+  "input": {
+    "target": "transforms",
+    "point": [10, -20],
+    "shift": [30, -40],
+    "angle": 0.7,
+    "scale": -0.5,
+    "size": 20
+  }
+}

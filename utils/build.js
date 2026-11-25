@@ -113,26 +113,15 @@ function formatFileSize(v) {
 }
 
 async function build() {
-  let startTime, elapsed;
+  let startTime = Date.now();
+  await buildModules();
+  console.log('Built and minified Two.js:', (Date.now() - startTime) / 1000, 'seconds');
 
   startTime = Date.now();
-  try {
-    await buildModules();
-  } catch (error) {
-    console.log(error);
-  }
-  elapsed = Date.now() - startTime;
-  console.log('Built and minified Two.js:', elapsed / 1000, 'seconds');
-
-  elapsed = Date.now() - startTime;
-  try {
-    await publishModule();
-  } catch (error) {
-    console.log(error);
-  }
+  await publishModule();
   console.log(
     'Published additional statistics to wiki:',
-    elapsed / 1000,
+    (Date.now() - startTime) / 1000,
     'seconds'
   );
 }
@@ -142,4 +131,7 @@ function getJSON(filename) {
   return JSON.parse(file);
 }
 
-build();
+build().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
