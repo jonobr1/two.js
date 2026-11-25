@@ -53,6 +53,272 @@ var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read fr
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
+// src/events.js
+var Events = class {
+  constructor() {
+    __publicField(this, "_events", {});
+    __publicField(this, "_bound", false);
+  }
+  /**
+   * @name Two.Events#addEventListener
+   * @function
+   * @param {String} [name] - The name of the event to bind a function to.
+   * @param {Function} [handler] - The function to be invoked when the event is dispatched.
+   * @description Call to add a listener to a specific event name.
+   */
+  addEventListener(name, handler) {
+    const list = this._events[name] || (this._events[name] = []);
+    list.push(handler);
+    this._bound = true;
+    return this;
+  }
+  /**
+   * @name Two.Events#on
+   * @function
+   * @description Alias for {@link Two.Events#addEventListener}.
+   */
+  on() {
+    return this.addEventListener.apply(this, arguments);
+  }
+  /**
+   * @name Two.Events#bind
+   * @function
+   * @description Alias for {@link Two.Events#addEventListener}.
+   */
+  bind() {
+    return this.addEventListener.apply(this, arguments);
+  }
+  /**
+   * @name Two.Events#removeEventListener
+   * @function
+   * @param {String} [name] - The name of the event intended to be removed.
+   * @param {Function} [handler] - The handler intended to be removed.
+   * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the object are removed.
+   */
+  removeEventListener(name, handler) {
+    if (!this._events) {
+      return this;
+    }
+    if (!name && !handler) {
+      this._events = {};
+      this._bound = false;
+      return this;
+    }
+    const names = name ? [name] : Object.keys(this._events);
+    for (let i = 0, l = names.length; i < l; i++) {
+      name = names[i];
+      let list = this._events[name];
+      if (list) {
+        let events = [];
+        if (handler) {
+          for (let j = 0, k = list.length; j < k; j++) {
+            const e = list[j];
+            const callback = e.handler ? e.handler : e;
+            if (handler !== callback) {
+              events.push(e);
+            }
+          }
+        }
+        this._events[name] = events;
+      }
+    }
+    return this;
+  }
+  /**
+   * @name Two.Events#off
+   * @function
+   * @description Alias for {@link Two.Events#removeEventListener}.
+   */
+  off() {
+    return this.removeEventListener.apply(this, arguments);
+  }
+  /**
+   * @name Two.Events#unbind
+   * @function
+   * @description Alias for {@link Two.Events#removeEventListener}.
+   */
+  unbind() {
+    return this.removeEventListener.apply(this, arguments);
+  }
+  /**
+   * @name Two.Events#dispatchEvent
+   * @function
+   * @param {String} name - The name of the event to dispatch.
+   * @param args - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
+   * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
+   */
+  dispatchEvent(name) {
+    if (!this._events) {
+      return this;
+    }
+    const events = this._events[name];
+    if (!events || events.length === 0) {
+      return this;
+    }
+    const length = arguments.length;
+    const args = length > 4 ? Array.prototype.slice.call(arguments, 1) : null;
+    for (let i = 0; i < events.length; i++) {
+      switch (length) {
+        case 1:
+          events[i].call(this);
+          break;
+        case 2:
+          events[i].call(this, arguments[1]);
+          break;
+        case 3:
+          events[i].call(this, arguments[1], arguments[2]);
+          break;
+        case 4:
+          events[i].call(this, arguments[1], arguments[2], arguments[3]);
+          break;
+        default:
+          events[i].apply(this, args);
+      }
+    }
+    return this;
+  }
+  trigger() {
+    return this.dispatchEvent.apply(this, arguments);
+  }
+  listen(obj, name, handler) {
+    const scope = this;
+    if (obj) {
+      e.obj = obj;
+      e.event = name;
+      e.handler = handler;
+      obj.on(name, e);
+    }
+    function e() {
+      handler.apply(scope, arguments);
+    }
+    return scope;
+  }
+  ignore(obj, name, handler) {
+    obj.off(name, handler);
+    return this;
+  }
+};
+/**
+ * @name Two.Events.Types
+ * @property {Object} - Object of different types of Two.js specific events.
+ */
+__publicField(Events, "Types", {
+  play: "play",
+  pause: "pause",
+  update: "update",
+  render: "render",
+  resize: "resize",
+  change: "change",
+  remove: "remove",
+  insert: "insert",
+  order: "order",
+  load: "load",
+  error: "error"
+});
+__publicField(Events, "Methods", [
+  "addEventListener",
+  "on",
+  "removeEventListener",
+  "off",
+  "unbind",
+  "dispatchEvent",
+  "trigger",
+  "listen",
+  "ignore"
+]);
+
+// src/utils/effects.js
+var references = /* @__PURE__ */ new WeakMap();
+var bindings = /* @__PURE__ */ new WeakMap();
+function hasEffectReferences(effect) {
+  return references.has(effect);
+}
+function bindEffects(shape, property, effects, handler) {
+  let properties = bindings.get(shape);
+  const previous = properties && properties.get(property);
+  if (previous) {
+    release(previous);
+  }
+  const unique = /* @__PURE__ */ new Set();
+  for (let i = 0; i < effects.length; i++) {
+    const effect = effects[i];
+    if (effect && typeof effect === "object") {
+      unique.add(effect);
+    }
+  }
+  if (unique.size === 0) {
+    if (properties) {
+      properties.delete(property);
+      if (properties.size === 0) {
+        bindings.delete(shape);
+      }
+    }
+    return;
+  }
+  if (!properties) {
+    properties = /* @__PURE__ */ new Map();
+    bindings.set(shape, properties);
+  }
+  unique.forEach((effect) => {
+    references.set(effect, (references.get(effect) || 0) + 1);
+    if (handler && typeof effect.bind === "function") {
+      effect.bind(Events.Types.change, handler);
+    }
+  });
+  properties.set(property, { effects: unique, handler });
+}
+function disposeEffects(shape) {
+  releaseEffects(shape, true);
+}
+function unbindEffects(shape) {
+  releaseEffects(shape, false);
+}
+function releaseEffects(shape, dispose) {
+  const textures = shape.textures;
+  const renderer = shape._renderer;
+  if (textures && typeof textures.unbind === "function" && renderer) {
+    if (renderer.bindTextures) {
+      textures.unbind(Events.Types.insert, renderer.bindTextures);
+    }
+    if (renderer.unbindTextures) {
+      textures.unbind(Events.Types.remove, renderer.unbindTextures);
+    }
+  }
+  const properties = bindings.get(shape);
+  if (!properties) {
+    return;
+  }
+  bindings.delete(shape);
+  const effects = /* @__PURE__ */ new Set();
+  properties.forEach((binding) => {
+    release(binding);
+    binding.effects.forEach((effect) => effects.add(effect));
+  });
+  effects.forEach((effect) => {
+    if (references.has(effect)) {
+      return;
+    }
+    if (dispose && typeof effect.dispose === "function") {
+      effect.dispose();
+    } else if (typeof effect.unbind === "function") {
+      effect.unbind();
+    }
+  });
+}
+function release(binding) {
+  binding.effects.forEach((effect) => {
+    if (binding.handler && typeof effect.unbind === "function") {
+      effect.unbind(Events.Types.change, binding.handler);
+    }
+    const count2 = references.get(effect) - 1;
+    if (count2 > 0) {
+      references.set(effect, count2);
+    } else {
+      references.delete(effect);
+    }
+  });
+}
+
 // src/utils/canvas-polyfill.js
 var CanvasPolyfill = {
   /**
@@ -258,179 +524,6 @@ var Commands = {
   arc: "A",
   close: "Z"
 };
-
-// src/events.js
-var Events = class {
-  constructor() {
-    __publicField(this, "_events", {});
-    __publicField(this, "_bound", false);
-  }
-  /**
-   * @name Two.Events#addEventListener
-   * @function
-   * @param {String} [name] - The name of the event to bind a function to.
-   * @param {Function} [handler] - The function to be invoked when the event is dispatched.
-   * @description Call to add a listener to a specific event name.
-   */
-  addEventListener(name, handler) {
-    const list = this._events[name] || (this._events[name] = []);
-    list.push(handler);
-    this._bound = true;
-    return this;
-  }
-  /**
-   * @name Two.Events#on
-   * @function
-   * @description Alias for {@link Two.Events#addEventListener}.
-   */
-  on() {
-    return this.addEventListener.apply(this, arguments);
-  }
-  /**
-   * @name Two.Events#bind
-   * @function
-   * @description Alias for {@link Two.Events#addEventListener}.
-   */
-  bind() {
-    return this.addEventListener.apply(this, arguments);
-  }
-  /**
-   * @name Two.Events#removeEventListener
-   * @function
-   * @param {String} [name] - The name of the event intended to be removed.
-   * @param {Function} [handler] - The handler intended to be removed.
-   * @description Call to remove listeners from a specific event. If only `name` is passed then all the handlers attached to that `name` will be removed. If no arguments are passed then all handlers for every event on the object are removed.
-   */
-  removeEventListener(name, handler) {
-    if (!this._events) {
-      return this;
-    }
-    if (!name && !handler) {
-      this._events = {};
-      this._bound = false;
-      return this;
-    }
-    const names = name ? [name] : Object.keys(this._events);
-    for (let i = 0, l = names.length; i < l; i++) {
-      name = names[i];
-      let list = this._events[name];
-      if (list) {
-        let events = [];
-        if (handler) {
-          for (let j = 0, k = list.length; j < k; j++) {
-            const e = list[j];
-            const callback = e.handler ? e.handler : e;
-            if (handler !== callback) {
-              events.push(e);
-            }
-          }
-        }
-        this._events[name] = events;
-      }
-    }
-    return this;
-  }
-  /**
-   * @name Two.Events#off
-   * @function
-   * @description Alias for {@link Two.Events#removeEventListener}.
-   */
-  off() {
-    return this.removeEventListener.apply(this, arguments);
-  }
-  /**
-   * @name Two.Events#unbind
-   * @function
-   * @description Alias for {@link Two.Events#removeEventListener}.
-   */
-  unbind() {
-    return this.removeEventListener.apply(this, arguments);
-  }
-  /**
-   * @name Two.Events#dispatchEvent
-   * @function
-   * @param {String} name - The name of the event to dispatch.
-   * @param args - Anything can be passed after the name and those will be passed on to handlers attached to the event in the order they are passed.
-   * @description Call to trigger a custom event. Any additional arguments passed after the name will be passed along to the attached handlers.
-   */
-  dispatchEvent(name) {
-    if (!this._events) {
-      return this;
-    }
-    const events = this._events[name];
-    if (!events || events.length === 0) {
-      return this;
-    }
-    const length = arguments.length;
-    const args = length > 4 ? Array.prototype.slice.call(arguments, 1) : null;
-    for (let i = 0; i < events.length; i++) {
-      switch (length) {
-        case 1:
-          events[i].call(this);
-          break;
-        case 2:
-          events[i].call(this, arguments[1]);
-          break;
-        case 3:
-          events[i].call(this, arguments[1], arguments[2]);
-          break;
-        case 4:
-          events[i].call(this, arguments[1], arguments[2], arguments[3]);
-          break;
-        default:
-          events[i].apply(this, args);
-      }
-    }
-    return this;
-  }
-  trigger() {
-    return this.dispatchEvent.apply(this, arguments);
-  }
-  listen(obj, name, handler) {
-    const scope = this;
-    if (obj) {
-      e.obj = obj;
-      e.event = name;
-      e.handler = handler;
-      obj.on(name, e);
-    }
-    function e() {
-      handler.apply(scope, arguments);
-    }
-    return scope;
-  }
-  ignore(obj, name, handler) {
-    obj.off(name, handler);
-    return this;
-  }
-};
-/**
- * @name Two.Events.Types
- * @property {Object} - Object of different types of Two.js specific events.
- */
-__publicField(Events, "Types", {
-  play: "play",
-  pause: "pause",
-  update: "update",
-  render: "render",
-  resize: "resize",
-  change: "change",
-  remove: "remove",
-  insert: "insert",
-  order: "order",
-  load: "load"
-});
-__publicField(Events, "Methods", [
-  "addEventListener",
-  "on",
-  "removeEventListener",
-  "off",
-  "unbind",
-  "dispatchEvent",
-  "trigger",
-  "listen",
-  "ignore"
-]);
 
 // src/vector.js
 var proto = {
@@ -1259,7 +1352,7 @@ var Constants = {
    * @name Two.PublishDate
    * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
    */
-  PublishDate: "2026-11-03T01:50:04.731Z",
+  PublishDate: "2026-11-23T16:57:30.957Z",
   /**
    * @name Two.Identifier
    * @property {String} - String prefix for all Two.js object's ids. This trickles down to SVG ids.
@@ -1609,6 +1702,68 @@ function getAnchorsFromArcData(center, xAxisRotation, rx, ry, ts, td, ccw) {
   }
 }
 
+// src/utils/dom.js
+var dom = {
+  hasEventListeners: typeof root.addEventListener === "function",
+  bind: function(elem, event, func, bool) {
+    if (this.hasEventListeners) {
+      elem.addEventListener(event, func, !!bool);
+    } else {
+      elem.attachEvent("on" + event, func);
+    }
+    return dom;
+  },
+  unbind: function(elem, event, func, bool) {
+    if (dom.hasEventListeners) {
+      elem.removeEventListener(event, func, !!bool);
+    } else {
+      elem.detachEvent("on" + event, func);
+    }
+    return dom;
+  },
+  getRequestAnimationFrame: function() {
+    const vendors = ["ms", "moz", "webkit", "o"];
+    let lastTime = 0;
+    let request = root.requestAnimationFrame;
+    if (!request) {
+      for (let i = 0; i < vendors.length; i++) {
+        request = root[vendors[i] + "RequestAnimationFrame"] || request;
+      }
+      request = request || fallbackRequest;
+    }
+    function fallbackRequest(callback, element) {
+      const currTime = (/* @__PURE__ */ new Date()).getTime();
+      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      const id = root.setTimeout(nextRequest, timeToCall);
+      lastTime = currTime + timeToCall;
+      function nextRequest() {
+        callback(currTime + timeToCall);
+      }
+      return id;
+    }
+    return request;
+  }
+};
+
+// src/utils/error.js
+var TwoError = class extends Error {
+  constructor(message) {
+    super();
+    __publicField(this, "name", "Two.js");
+    __publicField(this, "message");
+    this.message = message;
+  }
+};
+
+// src/utils/device-pixel-ratio.js
+var devicePixelRatio = root.devicePixelRatio || 1;
+function getBackingStoreRatio(ctx) {
+  return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
+}
+function getRatio(ctx) {
+  return devicePixelRatio / getBackingStoreRatio(ctx);
+}
+
 // src/utils/underscore.js
 var slice = Array.prototype.slice;
 function isArrayLike(collection) {
@@ -1669,80 +1824,6 @@ var _ = {
    */
   performance: root.performance && root.performance.now ? root.performance : Date
 };
-
-// src/utils/dom.js
-var dom = {
-  hasEventListeners: typeof root.addEventListener === "function",
-  bind: function(elem, event, func, bool) {
-    if (this.hasEventListeners) {
-      elem.addEventListener(event, func, !!bool);
-    } else {
-      elem.attachEvent("on" + event, func);
-    }
-    return dom;
-  },
-  unbind: function(elem, event, func, bool) {
-    if (dom.hasEventListeners) {
-      elem.removeEventListener(event, func, !!bool);
-    } else {
-      elem.detachEvent("on" + event, func);
-    }
-    return dom;
-  },
-  getRequestAnimationFrame: function() {
-    const vendors = ["ms", "moz", "webkit", "o"];
-    let lastTime = 0;
-    let request = root.requestAnimationFrame;
-    if (!request) {
-      for (let i = 0; i < vendors.length; i++) {
-        request = root[vendors[i] + "RequestAnimationFrame"] || request;
-      }
-      request = request || fallbackRequest;
-    }
-    function fallbackRequest(callback, element) {
-      const currTime = (/* @__PURE__ */ new Date()).getTime();
-      const timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      const id = root.setTimeout(nextRequest, timeToCall);
-      lastTime = currTime + timeToCall;
-      function nextRequest() {
-        callback(currTime + timeToCall);
-      }
-      return id;
-    }
-    return request;
-  }
-};
-var temp = root.document ? root.document.createElement("div") : {};
-temp.id = "help-two-load";
-Object.defineProperty(dom, "temp", {
-  enumerable: true,
-  get: function() {
-    if (_.isElement(temp) && !root.document.head.contains(temp)) {
-      temp.style.display = "none";
-      root.document.head.appendChild(temp);
-    }
-    return temp;
-  }
-});
-
-// src/utils/error.js
-var TwoError = class extends Error {
-  constructor(message) {
-    super();
-    __publicField(this, "name", "Two.js");
-    __publicField(this, "message");
-    this.message = message;
-  }
-};
-
-// src/utils/device-pixel-ratio.js
-var devicePixelRatio = root.devicePixelRatio || 1;
-function getBackingStoreRatio(ctx) {
-  return ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
-}
-function getRatio(ctx) {
-  return devicePixelRatio / getBackingStoreRatio(ctx);
-}
 
 // src/registry.js
 var Registry = class {
@@ -2318,11 +2399,11 @@ var _Texture = class _Texture extends Element {
    * @description Create a new instance of {@link Two.Texture} with the same properties of the current texture.
    */
   clone() {
-    const clone = new _Texture(this.src);
-    clone.repeat = this.repeat;
-    clone.offset.copy(this.offset);
-    clone.scale = this.scale;
-    return clone;
+    const clone2 = new _Texture(this.src);
+    clone2.repeat = this.repeat;
+    clone2.offset.copy(this.offset);
+    clone2.scale = this.scale;
+    return clone2;
   }
   /**
    * @name Two.Texture#copy
@@ -2690,18 +2771,18 @@ var _Stop = class _Stop extends Element {
    * @description Create a new instance of {@link Two.Stop} with the same properties of the current path.
    */
   clone(parent) {
-    const clone = new _Stop();
+    const clone2 = new _Stop();
     _.each(
       _Stop.Properties,
       function(property) {
-        clone[property] = this[property];
+        clone2[property] = this[property];
       },
       this
     );
     if (parent && parent.stops) {
-      parent.stops.push(clone);
+      parent.stops.push(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Stop#toObject
@@ -2838,18 +2919,18 @@ var _Gradient = class _Gradient extends Element {
     const stops = this.stops.map((s) => {
       return s.clone();
     });
-    const clone = new _Gradient(stops);
+    const clone2 = new _Gradient(stops);
     _.each(
       _Gradient.Properties,
       (k) => {
-        clone[k] = this[k];
+        clone2[k] = this[k];
       },
       this
     );
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Gradient#copy
@@ -2916,17 +2997,50 @@ var _Gradient = class _Gradient extends Element {
   /**
    * @name Two.Gradient#dispose
    * @function
-   * @description Detach instance from renderer including any `<defs />` or textures stored in memory.
+   * @returns {Two.Gradient}
+   * @description Release renderer resources and event listeners. Safe to call
+   * repeatedly. Shapes release shared effects only after their last assignment
+   * is disposed. Call this method directly only when all users are finished.
+   * The gradient's values and internal change tracking remain available for reuse.
    */
   dispose() {
-    if ("elem" in this._renderer) {
-      const elem = this._renderer.elem;
-      if (elem.parentNode) {
-        elem.parentNode.removeChild(elem);
+    const renderer = this._renderer;
+    super.dispose();
+    const callbacks = [
+      "flagStops",
+      "bindStops",
+      "unbindStops",
+      "flagEndPoints",
+      "flagCenter",
+      "flagFocal"
+    ];
+    for (let i = 0; i < callbacks.length; i++) {
+      const key = callbacks[i];
+      if (typeof renderer[key] === "function") {
+        this._renderer[key] = renderer[key];
       }
     }
-    if ("effect" in this._renderer) {
-      this._renderer.effect = null;
+    if (this.stops) {
+      for (let i = 0; i < this.stops.length; i++) {
+        const stop = this.stops[i];
+        delete stop._renderer.elem;
+        stop._flagOffset = stop._flagColor = stop._flagOpacity = true;
+      }
+    }
+    const flags = [
+      "_flagId",
+      "_flagStops",
+      "_flagSpread",
+      "_flagUnits",
+      "_flagEndPoints",
+      "_flagCenter",
+      "_flagFocal",
+      "_flagRadius"
+    ];
+    for (let i = 0; i < flags.length; i++) {
+      if (flags[i] in this) {
+        this[flags[i]] = true;
+      }
     }
     return this;
   }
@@ -3074,7 +3188,7 @@ var _LinearGradient = class _LinearGradient extends Gradient {
     const stops = this.stops.map(function(stop) {
       return stop.clone();
     });
-    const clone = new _LinearGradient(
+    const clone2 = new _LinearGradient(
       this.left._x,
       this.left._y,
       this.right._x,
@@ -3084,14 +3198,14 @@ var _LinearGradient = class _LinearGradient extends Gradient {
     _.each(
       Gradient.Properties,
       function(k) {
-        clone[k] = this[k];
+        clone2[k] = this[k];
       },
       this
     );
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.LinearGradient#toObject
@@ -3266,7 +3380,7 @@ var _RadialGradient = class _RadialGradient extends Gradient {
     const stops = this.stops.map(function(stop) {
       return stop.clone();
     });
-    const clone = new _RadialGradient(
+    const clone2 = new _RadialGradient(
       this.center._x,
       this.center._y,
       this._radius,
@@ -3277,14 +3391,14 @@ var _RadialGradient = class _RadialGradient extends Gradient {
     _.each(
       Gradient.Properties.concat(_RadialGradient.Properties),
       function(k) {
-        clone[k] = this[k];
+        clone2[k] = this[k];
       },
       this
     );
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.RadialGradient#toObject
@@ -4140,19 +4254,19 @@ var _Shape = class _Shape extends Element {
    * @description Create a new {@link Two.Shape} with the same values as the current shape.
    */
   clone(parent) {
-    const clone = new _Shape();
-    clone.position.copy(this.position);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    const clone2 = new _Shape();
+    clone2.position.copy(this.position);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone._update();
+    return clone2._update();
   }
   /**
    * @name Two.Shape#toObject
@@ -5171,27 +5285,27 @@ var _Path = class _Path extends Shape {
    * @description Create a new instance of {@link Two.Path} with the same properties of the current path.
    */
   clone(parent) {
-    const clone = new _Path();
+    const clone2 = new _Path();
     for (let j = 0; j < this.vertices.length; j++) {
-      clone.vertices.push(this.vertices[j].clone());
+      clone2.vertices.push(this.vertices[j].clone());
     }
     for (let i = 0; i < _Path.Properties.length; i++) {
       const k = _Path.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
-    clone.className = this.className;
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    clone2.className = this.className;
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone._update();
+    return clone2._update();
   }
   /**
    * @name Two.Path#toObject
@@ -5224,12 +5338,14 @@ var _Path = class _Path extends Shape {
    * @function
    * @returns {Two.Path}
    * @description Release the path's renderer resources and detach all events.
-   * This method cleans up vertices collection events, individual vertex events,
-   * control point events, and disposes fill/stroke effects (calling dispose()
-   * on Gradients and Textures for thorough cleanup) while preserving the
-   * renderer type for potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    disposeEffects(this);
     super.dispose();
     if (this.vertices && typeof this.vertices.unbind === "function") {
       try {
@@ -5252,16 +5368,6 @@ var _Path = class _Path extends Shape {
           }
         }
       }
-    }
-    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
-      this.fill.dispose();
-    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
-      this.fill.unbind();
-    }
-    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
-      this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
-      this.stroke.unbind();
     }
     return this;
   }
@@ -5654,9 +5760,9 @@ var _Path = class _Path extends Shape {
       if (closed) {
         from -= length;
       } else {
-        const temp2 = from;
+        const temp = from;
         from = to;
-        to = temp2;
+        to = temp;
       }
     }
     const rangeLength = to - from + 1;
@@ -5712,8 +5818,8 @@ var _Path = class _Path extends Shape {
     for (let i = 0; i < length; i += 1) {
       const currentOriginal = vertices[i];
       if (!prevOriginal || currentOriginal.command === Commands.move) {
-        const clone = currentOriginal.clone();
-        points.push(clone);
+        const clone2 = currentOriginal.clone();
+        points.push(clone2);
         prevOriginal = currentOriginal;
         subpathStartOriginal = currentOriginal;
         continue;
@@ -6106,14 +6212,9 @@ var proto10 = {
       return this._fill;
     },
     set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
+      bindEffects(this, "fill", [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     }
   },
   stroke: {
@@ -6122,14 +6223,9 @@ var proto10 = {
       return this._stroke;
     },
     set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
+      bindEffects(this, "stroke", [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     }
   },
   /**
@@ -6441,27 +6537,27 @@ var _Rectangle = class _Rectangle extends Path {
    * @description Create a new instance of {@link Two.Rectangle} with the same properties of the current path.
    */
   clone(parent) {
-    const clone = new _Rectangle(0, 0, this.width, this.height);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    const clone2 = new _Rectangle(0, 0, this.width, this.height);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      if (clone[k] instanceof Vector) {
-        clone[k].copy(this[k]);
+      if (clone2[k] instanceof Vector) {
+        clone2[k].copy(this[k]);
       } else {
-        clone[k] = this[k];
+        clone2[k] = this[k];
       }
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Rectangle#toObject
@@ -6749,7 +6845,7 @@ var _Sprite = class _Sprite extends Rectangle {
    * @description Create a new instance of {@link Two.Sprite} with the same properties of the current sprite.
    */
   clone(parent) {
-    const clone = new _Sprite(
+    const clone2 = new _Sprite(
       this.texture,
       this.translation.x,
       this.translation.y,
@@ -6758,15 +6854,15 @@ var _Sprite = class _Sprite extends Rectangle {
       this.frameRate
     );
     if (this.playing) {
-      clone.play(this._firstFrame, this._lastFrame);
+      clone2.play(this._firstFrame, this._lastFrame);
     }
-    clone.loop = this.loop;
-    clone.firstFrame = this.firstFrame;
-    clone.lastFrame = this.lastFrame;
+    clone2.loop = this.loop;
+    clone2.firstFrame = this.firstFrame;
+    clone2.lastFrame = this.lastFrame;
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Sprite#toObject
@@ -6792,8 +6888,8 @@ var _Sprite = class _Sprite extends Rectangle {
    * @function
    * @returns {Two.Sprite}
    * @description Release the sprite's renderer resources and detach all events.
-   * This method stops any running animation, clears animation callbacks, disposes
-   * the texture (calling dispose() for thorough cleanup), and inherits comprehensive
+   * This method stops any running animation, clears animation callbacks, releases
+   * its texture assignment, and inherits comprehensive
    * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
    * for potential re-attachment.
    */
@@ -6804,11 +6900,6 @@ var _Sprite = class _Sprite extends Rectangle {
     }
     this._onLastFrame = null;
     this._startTime = 0;
-    if (this._texture && typeof this._texture.dispose === "function") {
-      this._texture.dispose();
-    } else if (this._texture && typeof this._texture.unbind === "function") {
-      this._texture.unbind();
-    }
     return this;
   }
   /**
@@ -6917,6 +7008,7 @@ var proto12 = {
       return this._texture;
     },
     set: function(v) {
+      bindEffects(this, "texture", [v]);
       this._texture = v;
       this._flagTexture = true;
     }
@@ -7287,23 +7379,23 @@ var _ArcSegment = class _ArcSegment extends Path {
     const sa = this.startAngle;
     const ea = this.endAngle;
     const resolution = this.vertices.length;
-    const clone = new _ArcSegment(0, 0, ir, or, sa, ea, resolution);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    const clone2 = new _ArcSegment(0, 0, ir, or, sa, ea, resolution);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.ArcSegment#toObject
@@ -7494,23 +7586,23 @@ var _Circle = class _Circle extends Path {
    * @description Create a new instance of {@link Two.Circle} with the same properties of the current path.
    */
   clone(parent) {
-    const clone = new _Circle(0, 0, this.radius, this.vertices.length);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    const clone2 = new _Circle(0, 0, this.radius, this.vertices.length);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Circle#toObject
@@ -7692,23 +7784,23 @@ var _Ellipse = class _Ellipse extends Path {
     const rx = this.width / 2;
     const ry = this.height / 2;
     const resolution = this.vertices.length;
-    const clone = new _Ellipse(0, 0, rx, ry, resolution);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    const clone2 = new _Ellipse(0, 0, rx, ry, resolution);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Ellipse#toObject
@@ -7898,27 +7990,27 @@ var _Points = class _Points extends Shape {
    * @description Create a new instance of {@link Two.Points} with the same properties of the current path.
    */
   clone(parent) {
-    const clone = new _Points();
+    const clone2 = new _Points();
     for (let j = 0; j < this.vertices.length; j++) {
-      clone.vertices.push(this.vertices[j].clone());
+      clone2.vertices.push(this.vertices[j].clone());
     }
     for (let i = 0; i < _Points.Properties.length; i++) {
       const k = _Points.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
-    clone.className = this.className;
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    clone2.className = this.className;
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone._update();
+    return clone2._update();
   }
   /**
    * @name Two.Points#toObject
@@ -7950,12 +8042,14 @@ var _Points = class _Points extends Shape {
    * @function
    * @returns {Two.Points}
    * @description Release the points' renderer resources and detach all events.
-   * This method cleans up vertices collection events, individual vertex events,
-   * and disposes fill/stroke effects (calling dispose() on Gradients and
-   * Textures for thorough cleanup) while preserving the renderer type for
-   * potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    disposeEffects(this);
     super.dispose();
     if (this.vertices && typeof this.vertices.unbind === "function") {
       try {
@@ -7970,16 +8064,6 @@ var _Points = class _Points extends Shape {
           v.unbind();
         }
       }
-    }
-    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
-      this.fill.dispose();
-    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
-      this.fill.unbind();
-    }
-    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
-      this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
-      this.stroke.unbind();
     }
     return this;
   }
@@ -8130,14 +8214,9 @@ var proto16 = {
       return this._fill;
     },
     set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
+      bindEffects(this, "fill", [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     }
   },
   stroke: {
@@ -8146,14 +8225,9 @@ var proto16 = {
       return this._stroke;
     },
     set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
+      bindEffects(this, "stroke", [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     }
   },
   /**
@@ -8390,25 +8464,25 @@ var _Polygon = class _Polygon extends Path {
    * @description Create a new instance of {@link Two.Polygon} with the same properties of the current path.
    */
   clone(parent) {
-    const clone = new _Polygon(0, 0, 0, this.sides);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
-    clone.width = this.width;
-    clone.height = this.height;
+    const clone2 = new _Polygon(0, 0, 0, this.sides);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
+    clone2.width = this.width;
+    clone2.height = this.height;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Polygon#toObject
@@ -8685,23 +8759,23 @@ var _RoundedRectangle = class _RoundedRectangle extends Path {
     const width = this.width;
     const height = this.height;
     const radius = this.radius;
-    const clone = new _RoundedRectangle(0, 0, width, height, radius);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    const clone2 = new _RoundedRectangle(0, 0, width, height, radius);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.RoundedRectangle#toObject
@@ -8927,23 +9001,23 @@ var _Star = class _Star extends Path {
     const ir = this.innerRadius;
     const or = this.outerRadius;
     const sides = this.sides;
-    const clone = new _Star(0, 0, ir, or, sides);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.skewX = this.skewX;
-    clone.skewY = this.skewY;
+    const clone2 = new _Star(0, 0, ir, or, sides);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.skewX = this.skewX;
+    clone2.skewY = this.skewY;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     for (let i = 0; i < Path.Properties.length; i++) {
       const k = Path.Properties[i];
-      clone[k] = this[k];
+      clone2[k] = this[k];
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Star#toObject
@@ -9255,16 +9329,16 @@ var _Text = class _Text extends Shape {
    * @param {Two.Text} [text] - The instance of {@link Two.Text} to measure.
    * @returns {Object} - The width and height of the {@link Two.Text} instance.
    */
-  static Measure(text) {
+  static Measure(text2) {
     if (canvas) {
       const ctx = canvas.getContext("2d");
       ctx.font = [
-        text._style,
-        text._weight,
-        `${text._size}px/${text._leading}px`,
-        text._family
+        text2._style,
+        text2._weight,
+        `${text2._size}px/${text2._leading}px`,
+        text2._family
       ].join(" ");
-      const metrics = ctx.measureText(text.value, 0, 0);
+      const metrics = ctx.measureText(text2.value, 0, 0);
       const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
       return {
         width: metrics.width,
@@ -9293,11 +9367,11 @@ var _Text = class _Text extends Shape {
   static fromObject(obj) {
     const fill = typeof obj.fill === "string" ? obj.fill : getEffectFromObject(obj.fill);
     const stroke = typeof obj.stroke === "string" ? obj.stroke : getEffectFromObject(obj.stroke);
-    const text = new _Text().copy(__spreadProps(__spreadValues({}, obj), { fill, stroke }));
+    const text2 = new _Text().copy(__spreadProps(__spreadValues({}, obj), { fill, stroke }));
     if ("id" in obj) {
-      text.id = obj.id;
+      text2.id = obj.id;
     }
-    return text;
+    return text2;
   }
   /**
    * @name Two.Text#copy
@@ -9305,12 +9379,12 @@ var _Text = class _Text extends Shape {
    * @param {Two.Text} text
    * @description Copy the properties of one {@link Two.Text} onto another.
    */
-  copy(text) {
-    super.copy.call(this, text);
+  copy(text2) {
+    super.copy.call(this, text2);
     for (let i = 0; i < _Text.Properties.length; i++) {
       const k = _Text.Properties[i];
-      if (k in text) {
-        this[k] = text[k];
+      if (k in text2) {
+        this[k] = text2[k];
       }
     }
     return this;
@@ -9323,21 +9397,21 @@ var _Text = class _Text extends Shape {
    * @description Create a new instance of {@link Two.Text} with the same properties of the current text object.
    */
   clone(parent) {
-    const clone = new _Text(this.value);
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
+    const clone2 = new _Text(this.value);
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
     for (let i = 0; i < _Text.Properties.length; i++) {
       const prop = _Text.Properties[i];
-      clone[prop] = this[prop];
+      clone2[prop] = this[prop];
     }
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone._update();
+    return clone2._update();
   }
   /**
    * @name Two.Text#toObject
@@ -9360,22 +9434,15 @@ var _Text = class _Text extends Shape {
    * @function
    * @returns {Two.Text}
    * @description Release the text's renderer resources and detach all events.
-   * This method disposes fill and stroke effects (calling dispose() on
-   * Gradients and Textures for thorough cleanup) while preserving the
-   * renderer type for potential re-attachment to a new renderer.
+   * Releases this shape's fill and stroke assignments and listeners. An effect
+   * is disposed once, only when no other shape assignments use it. This includes
+   * shapes outside the scene. Replacing fill or stroke does not dispose the old
+   * effect; call its dispose() explicitly when it is no longer needed.
+   * Also cleans up inherited resources and preserves the renderer type.
    */
   dispose() {
+    disposeEffects(this);
     super.dispose();
-    if (typeof this.fill === "object" && typeof this.fill.dispose === "function") {
-      this.fill.dispose();
-    } else if (typeof this.fill === "object" && typeof this.fill.unbind === "function") {
-      this.fill.unbind();
-    }
-    if (typeof this.stroke === "object" && typeof this.stroke.dispose === "function") {
-      this.stroke.dispose();
-    } else if (typeof this.stroke === "object" && typeof this.stroke.unbind === "function") {
-      this.stroke.unbind();
-    }
     return this;
   }
   /**
@@ -9631,14 +9698,9 @@ var proto20 = {
       return this._fill;
     },
     set: function(f) {
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.unbind(Events.Types.change, this._renderer.flagFill);
-      }
+      bindEffects(this, "fill", [f], this._renderer.flagFill);
       this._fill = f;
       this._flagFill = true;
-      if (this._fill instanceof Gradient || this._fill instanceof LinearGradient || this._fill instanceof RadialGradient || this._fill instanceof Texture) {
-        this._fill.bind(Events.Types.change, this._renderer.flagFill);
-      }
     }
   },
   stroke: {
@@ -9647,14 +9709,9 @@ var proto20 = {
       return this._stroke;
     },
     set: function(f) {
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.unbind(Events.Types.change, this._renderer.flagStroke);
-      }
+      bindEffects(this, "stroke", [f], this._renderer.flagStroke);
       this._stroke = f;
       this._flagStroke = true;
-      if (this._stroke instanceof Gradient || this._stroke instanceof LinearGradient || this._stroke instanceof RadialGradient || this._stroke instanceof Texture) {
-        this._stroke.bind(Events.Types.change, this._renderer.flagStroke);
-      }
     }
   },
   mask: {
@@ -9933,20 +9990,20 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
    * @description Create a new instance of {@link Two.ImageSequence} with the same properties of the current image sequence.
    */
   clone(parent) {
-    const clone = new _ImageSequence(
+    const clone2 = new _ImageSequence(
       this.textures,
       this.translation.x,
       this.translation.y,
       this.frameRate
     );
-    clone._loop = this._loop;
+    clone2._loop = this._loop;
     if (this._playing) {
-      clone.play();
+      clone2.play();
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.ImageSequence#toObject
@@ -9973,9 +10030,9 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
    * @returns {Two.ImageSequence}
    * @description Release the image sequence's renderer resources and detach all events.
    * This method stops any running animation, clears animation callbacks, unbinds
-   * textures collection events, and disposes individual textures (calling dispose()
-   * for thorough cleanup) while preserving the renderer type for potential
-   * re-attachment to a new renderer.
+   * textures collection events, and releases its texture assignments (disposing
+   * each texture only when no other shape assignments remain) while preserving
+   * the renderer type for potential re-attachment to a new renderer.
    */
   dispose() {
     super.dispose();
@@ -9987,16 +10044,6 @@ var _ImageSequence = class _ImageSequence extends Rectangle {
       try {
         this.textures.unbind();
       } catch (e) {
-      }
-    }
-    if (this.textures) {
-      for (let i = 0; i < this.textures.length; i++) {
-        const texture = this.textures[i];
-        if (typeof texture.dispose === "function") {
-          texture.dispose();
-        } else if (typeof texture.unbind === "function") {
-          texture.unbind();
-        }
       }
     }
     return this;
@@ -10170,17 +10217,11 @@ function FlagTextures() {
   this._flagTextures = true;
 }
 function BindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].bind(Events.Types.change, this._renderer.flagTextures);
-  }
+  bindEffects(this, "textures", this.textures, this._renderer.flagTextures);
   this._renderer.flagTextures();
 }
 function UnbindTextures(items) {
-  let i = items.length;
-  while (i--) {
-    items[i].unbind(Events.Types.change, this._renderer.flagTextures);
-  }
+  bindEffects(this, "textures", this.textures, this._renderer.flagTextures);
   this._renderer.flagTextures();
 }
 function GenerateTexture(obj) {
@@ -10561,26 +10602,26 @@ var _Group = class _Group extends Shape {
    * @description Create a new instance of {@link Two.Group} with the same properties of the current group.
    */
   clone(parent) {
-    const clone = new _Group();
+    const clone2 = new _Group();
     const children = this.children.map(function(child) {
       return child.clone();
     });
-    clone.add(children);
-    clone.opacity = this.opacity;
+    clone2.add(children);
+    clone2.opacity = this.opacity;
     if (this.mask) {
-      clone.mask = this.mask;
+      clone2.mask = this.mask;
     }
-    clone.translation.copy(this.translation);
-    clone.rotation = this.rotation;
-    clone.scale = this.scale;
-    clone.className = this.className;
+    clone2.translation.copy(this.translation);
+    clone2.rotation = this.rotation;
+    clone2.scale = this.scale;
+    clone2.className = this.className;
     if (this.matrix.manual) {
-      clone.matrix.copy(this.matrix);
+      clone2.matrix.copy(this.matrix);
     }
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone._update();
+    return clone2._update();
   }
   /**
    * @name Two.Group#toObject
@@ -11370,10 +11411,2359 @@ var proto23 = {
   }
 };
 
+// node_modules/dompurify/dist/purify.es.mjs
+function _OverloadYield(e, d) {
+  this.v = e, this.k = d;
+}
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
+}
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e, n, i, u, a = [], f = true, o = false;
+    try {
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = false;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = true) ;
+    } catch (r2) {
+      o = true, n = r2;
+    } finally {
+      try {
+        if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
+    }
+    return a;
+  }
+}
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _slicedToArray(r, e) {
+  return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+}
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return _arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+  }
+}
+function AsyncGenerator(e) {
+  var t, n;
+  function resume(t2, n2) {
+    try {
+      var r = e[t2](n2), o = r.value, u = o instanceof _OverloadYield;
+      Promise.resolve(u ? o.v : o).then(function(n3) {
+        if (u) {
+          var i = "return" === t2 && o.k ? t2 : "next";
+          if (!o.k || n3.done) return resume(i, n3);
+          n3 = e[i](n3).value;
+        }
+        settle(!!r.done, n3);
+      }, function(e2) {
+        resume("throw", e2);
+      });
+    } catch (e2) {
+      settle(2, e2);
+    }
+  }
+  function settle(e2, r) {
+    2 === e2 ? t.reject(r) : t.resolve({
+      value: r,
+      done: e2
+    }), (t = t.next) ? resume(t.key, t.arg) : n = null;
+  }
+  this._invoke = function(e2, r) {
+    return new Promise(function(o, u) {
+      var i = {
+        key: e2,
+        arg: r,
+        resolve: o,
+        reject: u,
+        next: null
+      };
+      n ? n = n.next = i : (t = n = i, resume(e2, r));
+    });
+  }, "function" != typeof e.return && (this.return = void 0);
+}
+AsyncGenerator.prototype["function" == typeof Symbol && Symbol.asyncIterator || "@@asyncIterator"] = function() {
+  return this;
+}, AsyncGenerator.prototype.next = function(e) {
+  return this._invoke("next", e);
+}, AsyncGenerator.prototype.throw = function(e) {
+  return this._invoke("throw", e);
+}, AsyncGenerator.prototype.return = function(e) {
+  return this._invoke("return", e);
+};
+var entries = Object.entries;
+var setPrototypeOf = Object.setPrototypeOf;
+var isFrozen = Object.isFrozen;
+var getPrototypeOf = Object.getPrototypeOf;
+var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+var freeze = Object.freeze;
+var seal = Object.seal;
+var create = Object.create;
+var _ref = typeof Reflect !== "undefined" && Reflect;
+var apply = _ref.apply;
+var construct = _ref.construct;
+if (!freeze) freeze = function freeze2(x) {
+  return x;
+};
+if (!seal) seal = function seal2(x) {
+  return x;
+};
+if (!apply) apply = function apply2(func, thisArg) {
+  for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) args[_key - 2] = arguments[_key];
+  return func.apply(thisArg, args);
+};
+if (!construct) construct = function construct2(Func) {
+  for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) args[_key2 - 1] = arguments[_key2];
+  return new Func(...args);
+};
+var arrayForEach = unapply(Array.prototype.forEach);
+Array.prototype.indexOf;
+var arrayLastIndexOf = unapply(Array.prototype.lastIndexOf);
+var arrayPop = unapply(Array.prototype.pop);
+var arrayPush = unapply(Array.prototype.push);
+var arraySlice = unapply(Array.prototype.slice);
+var arraySplice = unapply(Array.prototype.splice);
+var arrayIsArray = Array.isArray;
+var setCreate = unconstruct(Set);
+var setAdd = unapply(Set.prototype.add);
+var setHas = unapply(Set.prototype.has);
+var stringToLowerCase = unapply(String.prototype.toLowerCase);
+var stringToString = unapply(String.prototype.toString);
+var stringMatch = unapply(String.prototype.match);
+var stringReplace = unapply(String.prototype.replace);
+var stringIndexOf = unapply(String.prototype.indexOf);
+var stringTrim = unapply(String.prototype.trim);
+var numberToString = unapply(Number.prototype.toString);
+var booleanToString = unapply(Boolean.prototype.toString);
+var bigintToString = typeof BigInt === "undefined" ? null : unapply(BigInt.prototype.toString);
+var symbolToString = typeof Symbol === "undefined" ? null : unapply(Symbol.prototype.toString);
+var objectHasOwnProperty = unapply(Object.prototype.hasOwnProperty);
+var objectToString = unapply(Object.prototype.toString);
+var regExpTest = unapply(RegExp.prototype.test);
+var typeErrorCreate = unconstruct(TypeError);
+function unapply(func) {
+  return function(thisArg) {
+    if (thisArg instanceof RegExp) thisArg.lastIndex = 0;
+    for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) args[_key3 - 1] = arguments[_key3];
+    return apply(func, thisArg, args);
+  };
+}
+function unconstruct(Func) {
+  return function() {
+    for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) args[_key4] = arguments[_key4];
+    return construct(Func, args);
+  };
+}
+function addToSet(set, array2) {
+  let transformCaseFunc = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : stringToLowerCase;
+  if (setPrototypeOf) setPrototypeOf(set, null);
+  if (!arrayIsArray(array2)) return set;
+  let l = array2.length;
+  while (l--) {
+    let element = array2[l];
+    if (typeof element === "string") {
+      const lcElement = transformCaseFunc(element);
+      if (lcElement !== element) {
+        if (!isFrozen(array2)) array2[l] = lcElement;
+        element = lcElement;
+      }
+    }
+    set[element] = true;
+  }
+  return set;
+}
+function cleanArray(array2) {
+  for (let index = 0; index < array2.length; index++) if (!objectHasOwnProperty(array2, index)) array2[index] = null;
+  return array2;
+}
+function clone(object) {
+  const newObject = create(null);
+  for (const _ref2 of entries(object)) {
+    var _ref3 = _slicedToArray(_ref2, 2);
+    const property = _ref3[0];
+    const value = _ref3[1];
+    if (objectHasOwnProperty(object, property)) {
+      if (arrayIsArray(value)) newObject[property] = cleanArray(value);
+      else if (value && typeof value === "object" && value.constructor === Object) newObject[property] = clone(value);
+      else newObject[property] = value;
+    }
+  }
+  return newObject;
+}
+function stringifyValue(value) {
+  switch (typeof value) {
+    case "string":
+      return value;
+    case "number":
+      return numberToString(value);
+    case "boolean":
+      return booleanToString(value);
+    case "bigint":
+      return bigintToString ? bigintToString(value) : "0";
+    case "symbol":
+      return symbolToString ? symbolToString(value) : "Symbol()";
+    case "undefined":
+      return objectToString(value);
+    case "function":
+    case "object": {
+      if (value === null) return objectToString(value);
+      const valueAsRecord = value;
+      const valueToString = lookupGetter(valueAsRecord, "toString");
+      if (typeof valueToString === "function") {
+        const stringified = valueToString(valueAsRecord);
+        return typeof stringified === "string" ? stringified : objectToString(stringified);
+      }
+      return objectToString(value);
+    }
+    default:
+      return objectToString(value);
+  }
+}
+function lookupGetter(object, prop) {
+  while (object !== null) {
+    const desc = getOwnPropertyDescriptor(object, prop);
+    if (desc) {
+      if (desc.get) return unapply(desc.get);
+      if (typeof desc.value === "function") return unapply(desc.value);
+    }
+    object = getPrototypeOf(object);
+  }
+  function fallbackValue() {
+    return null;
+  }
+  return fallbackValue;
+}
+function lookupAccessor(object, prop) {
+  while (object !== null) {
+    const desc = getOwnPropertyDescriptor(object, prop);
+    if (desc) return desc.get ? unapply(desc.get) : null;
+    object = getPrototypeOf(object);
+  }
+  return null;
+}
+function isRegex(value) {
+  try {
+    regExpTest(value, "");
+    return true;
+  } catch (_unused) {
+    return false;
+  }
+}
+var html$1 = freeze([
+  "a",
+  "abbr",
+  "acronym",
+  "address",
+  "area",
+  "article",
+  "aside",
+  "audio",
+  "b",
+  "bdi",
+  "bdo",
+  "big",
+  "blink",
+  "blockquote",
+  "body",
+  "br",
+  "button",
+  "canvas",
+  "caption",
+  "center",
+  "cite",
+  "code",
+  "col",
+  "colgroup",
+  "content",
+  "data",
+  "datalist",
+  "dd",
+  "decorator",
+  "del",
+  "details",
+  "dfn",
+  "dialog",
+  "dir",
+  "div",
+  "dl",
+  "dt",
+  "element",
+  "em",
+  "fieldset",
+  "figcaption",
+  "figure",
+  "font",
+  "footer",
+  "form",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "head",
+  "header",
+  "hgroup",
+  "hr",
+  "html",
+  "i",
+  "img",
+  "input",
+  "ins",
+  "kbd",
+  "label",
+  "legend",
+  "li",
+  "main",
+  "map",
+  "mark",
+  "marquee",
+  "menu",
+  "menuitem",
+  "meter",
+  "nav",
+  "nobr",
+  "ol",
+  "optgroup",
+  "option",
+  "output",
+  "p",
+  "picture",
+  "pre",
+  "progress",
+  "q",
+  "rp",
+  "rt",
+  "ruby",
+  "s",
+  "samp",
+  "search",
+  "section",
+  "select",
+  "shadow",
+  "slot",
+  "small",
+  "source",
+  "spacer",
+  "span",
+  "strike",
+  "strong",
+  "style",
+  "sub",
+  "summary",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "template",
+  "textarea",
+  "tfoot",
+  "th",
+  "thead",
+  "time",
+  "tr",
+  "track",
+  "tt",
+  "u",
+  "ul",
+  "var",
+  "video",
+  "wbr"
+]);
+var svg$1 = freeze([
+  "svg",
+  "a",
+  "altglyph",
+  "altglyphdef",
+  "altglyphitem",
+  "animatecolor",
+  "animatemotion",
+  "animatetransform",
+  "circle",
+  "clippath",
+  "defs",
+  "desc",
+  "ellipse",
+  "enterkeyhint",
+  "exportparts",
+  "filter",
+  "font",
+  "g",
+  "glyph",
+  "glyphref",
+  "hkern",
+  "image",
+  "inputmode",
+  "line",
+  "lineargradient",
+  "marker",
+  "mask",
+  "metadata",
+  "mpath",
+  "part",
+  "path",
+  "pattern",
+  "polygon",
+  "polyline",
+  "radialgradient",
+  "rect",
+  "stop",
+  "style",
+  "switch",
+  "symbol",
+  "text",
+  "textpath",
+  "title",
+  "tref",
+  "tspan",
+  "view",
+  "vkern"
+]);
+var svgFilters = freeze([
+  "feBlend",
+  "feColorMatrix",
+  "feComponentTransfer",
+  "feComposite",
+  "feConvolveMatrix",
+  "feDiffuseLighting",
+  "feDisplacementMap",
+  "feDistantLight",
+  "feDropShadow",
+  "feFlood",
+  "feFuncA",
+  "feFuncB",
+  "feFuncG",
+  "feFuncR",
+  "feGaussianBlur",
+  "feImage",
+  "feMerge",
+  "feMergeNode",
+  "feMorphology",
+  "feOffset",
+  "fePointLight",
+  "feSpecularLighting",
+  "feSpotLight",
+  "feTile",
+  "feTurbulence"
+]);
+var svgDisallowed = freeze([
+  "animate",
+  "color-profile",
+  "cursor",
+  "discard",
+  "font-face",
+  "font-face-format",
+  "font-face-name",
+  "font-face-src",
+  "font-face-uri",
+  "foreignobject",
+  "hatch",
+  "hatchpath",
+  "mesh",
+  "meshgradient",
+  "meshpatch",
+  "meshrow",
+  "missing-glyph",
+  "script",
+  "set",
+  "solidcolor",
+  "unknown",
+  "use"
+]);
+var mathMl$1 = freeze([
+  "math",
+  "menclose",
+  "merror",
+  "mfenced",
+  "mfrac",
+  "mglyph",
+  "mi",
+  "mlabeledtr",
+  "mmultiscripts",
+  "mn",
+  "mo",
+  "mover",
+  "mpadded",
+  "mphantom",
+  "mroot",
+  "mrow",
+  "ms",
+  "mspace",
+  "msqrt",
+  "mstyle",
+  "msub",
+  "msup",
+  "msubsup",
+  "mtable",
+  "mtd",
+  "mtext",
+  "mtr",
+  "munder",
+  "munderover",
+  "mprescripts"
+]);
+var mathMlDisallowed = freeze([
+  "maction",
+  "maligngroup",
+  "malignmark",
+  "mlongdiv",
+  "mscarries",
+  "mscarry",
+  "msgroup",
+  "mstack",
+  "msline",
+  "msrow",
+  "semantics",
+  "annotation",
+  "annotation-xml",
+  "mprescripts",
+  "none"
+]);
+var text = freeze(["#text"]);
+var html = freeze([
+  "accept",
+  "action",
+  "align",
+  "alt",
+  "autocapitalize",
+  "autocomplete",
+  "autopictureinpicture",
+  "autoplay",
+  "background",
+  "bgcolor",
+  "border",
+  "capture",
+  "cellpadding",
+  "cellspacing",
+  "checked",
+  "cite",
+  "class",
+  "clear",
+  "color",
+  "cols",
+  "colspan",
+  "command",
+  "commandfor",
+  "controls",
+  "controlslist",
+  "coords",
+  "crossorigin",
+  "datetime",
+  "decoding",
+  "default",
+  "dir",
+  "disabled",
+  "disablepictureinpicture",
+  "disableremoteplayback",
+  "download",
+  "draggable",
+  "enctype",
+  "enterkeyhint",
+  "exportparts",
+  "face",
+  "for",
+  "headers",
+  "height",
+  "hidden",
+  "high",
+  "href",
+  "hreflang",
+  "id",
+  "inert",
+  "inputmode",
+  "integrity",
+  "ismap",
+  "kind",
+  "label",
+  "lang",
+  "list",
+  "loading",
+  "loop",
+  "low",
+  "max",
+  "maxlength",
+  "media",
+  "method",
+  "min",
+  "minlength",
+  "multiple",
+  "muted",
+  "name",
+  "nonce",
+  "noshade",
+  "novalidate",
+  "nowrap",
+  "open",
+  "optimum",
+  "part",
+  "pattern",
+  "placeholder",
+  "playsinline",
+  "popover",
+  "popovertarget",
+  "popovertargetaction",
+  "poster",
+  "preload",
+  "pubdate",
+  "radiogroup",
+  "readonly",
+  "rel",
+  "required",
+  "rev",
+  "reversed",
+  "role",
+  "rows",
+  "rowspan",
+  "spellcheck",
+  "scope",
+  "selected",
+  "shape",
+  "size",
+  "sizes",
+  "slot",
+  "span",
+  "srclang",
+  "start",
+  "src",
+  "srcset",
+  "step",
+  "style",
+  "summary",
+  "tabindex",
+  "title",
+  "translate",
+  "type",
+  "usemap",
+  "valign",
+  "value",
+  "width",
+  "wrap",
+  "xmlns"
+]);
+var svg = freeze([
+  "accent-height",
+  "accumulate",
+  "additive",
+  "alignment-baseline",
+  "amplitude",
+  "ascent",
+  "attributename",
+  "attributetype",
+  "azimuth",
+  "basefrequency",
+  "baseline-shift",
+  "begin",
+  "bias",
+  "by",
+  "class",
+  "clip",
+  "clippathunits",
+  "clip-path",
+  "clip-rule",
+  "color",
+  "color-interpolation",
+  "color-interpolation-filters",
+  "color-profile",
+  "color-rendering",
+  "cx",
+  "cy",
+  "d",
+  "dx",
+  "dy",
+  "diffuseconstant",
+  "direction",
+  "display",
+  "divisor",
+  "dominant-baseline",
+  "dur",
+  "edgemode",
+  "elevation",
+  "end",
+  "exponent",
+  "fill",
+  "fill-opacity",
+  "fill-rule",
+  "filter",
+  "filterunits",
+  "flood-color",
+  "flood-opacity",
+  "font-family",
+  "font-size",
+  "font-size-adjust",
+  "font-stretch",
+  "font-style",
+  "font-variant",
+  "font-weight",
+  "fx",
+  "fy",
+  "g1",
+  "g2",
+  "glyph-name",
+  "glyphref",
+  "gradientunits",
+  "gradienttransform",
+  "height",
+  "href",
+  "id",
+  "image-rendering",
+  "in",
+  "in2",
+  "intercept",
+  "k",
+  "k1",
+  "k2",
+  "k3",
+  "k4",
+  "kerning",
+  "keypoints",
+  "keysplines",
+  "keytimes",
+  "lang",
+  "lengthadjust",
+  "letter-spacing",
+  "kernelmatrix",
+  "kernelunitlength",
+  "lighting-color",
+  "local",
+  "marker-end",
+  "marker-mid",
+  "marker-start",
+  "markerheight",
+  "markerunits",
+  "markerwidth",
+  "maskcontentunits",
+  "maskunits",
+  "max",
+  "mask",
+  "mask-type",
+  "media",
+  "method",
+  "mode",
+  "min",
+  "name",
+  "numoctaves",
+  "offset",
+  "operator",
+  "opacity",
+  "order",
+  "orient",
+  "orientation",
+  "origin",
+  "overflow",
+  "paint-order",
+  "path",
+  "pathlength",
+  "patterncontentunits",
+  "patterntransform",
+  "patternunits",
+  "pointer-events",
+  "points",
+  "preservealpha",
+  "preserveaspectratio",
+  "primitiveunits",
+  "r",
+  "rx",
+  "ry",
+  "radius",
+  "refx",
+  "refy",
+  "repeatcount",
+  "repeatdur",
+  "restart",
+  "result",
+  "rotate",
+  "scale",
+  "seed",
+  "shape-rendering",
+  "slope",
+  "specularconstant",
+  "specularexponent",
+  "spreadmethod",
+  "startoffset",
+  "stddeviation",
+  "stitchtiles",
+  "stop-color",
+  "stop-opacity",
+  "stroke-dasharray",
+  "stroke-dashoffset",
+  "stroke-linecap",
+  "stroke-linejoin",
+  "stroke-miterlimit",
+  "stroke-opacity",
+  "stroke",
+  "stroke-width",
+  "style",
+  "surfacescale",
+  "systemlanguage",
+  "tabindex",
+  "tablevalues",
+  "targetx",
+  "targety",
+  "transform",
+  "transform-origin",
+  "text-anchor",
+  "text-decoration",
+  "text-orientation",
+  "text-rendering",
+  "textlength",
+  "type",
+  "u1",
+  "u2",
+  "unicode",
+  "values",
+  "vector-effect",
+  "viewbox",
+  "visibility",
+  "version",
+  "vert-adv-y",
+  "vert-origin-x",
+  "vert-origin-y",
+  "width",
+  "word-spacing",
+  "wrap",
+  "writing-mode",
+  "xchannelselector",
+  "ychannelselector",
+  "x",
+  "x1",
+  "x2",
+  "xmlns",
+  "y",
+  "y1",
+  "y2",
+  "z",
+  "zoomandpan"
+]);
+var mathMl = freeze([
+  "accent",
+  "accentunder",
+  "align",
+  "bevelled",
+  "close",
+  "columnalign",
+  "columnlines",
+  "columnspacing",
+  "columnspan",
+  "denomalign",
+  "depth",
+  "dir",
+  "display",
+  "displaystyle",
+  "encoding",
+  "fence",
+  "frame",
+  "height",
+  "href",
+  "id",
+  "largeop",
+  "length",
+  "linethickness",
+  "lquote",
+  "lspace",
+  "mathbackground",
+  "mathcolor",
+  "mathsize",
+  "mathvariant",
+  "maxsize",
+  "minsize",
+  "movablelimits",
+  "notation",
+  "numalign",
+  "open",
+  "rowalign",
+  "rowlines",
+  "rowspacing",
+  "rowspan",
+  "rspace",
+  "rquote",
+  "scriptlevel",
+  "scriptminsize",
+  "scriptsizemultiplier",
+  "selection",
+  "separator",
+  "separators",
+  "stretchy",
+  "subscriptshift",
+  "supscriptshift",
+  "symmetric",
+  "voffset",
+  "width",
+  "xmlns"
+]);
+var xml = freeze([
+  "xlink:href",
+  "xml:id",
+  "xlink:title",
+  "xml:space",
+  "xmlns:xlink"
+]);
+var MUSTACHE_EXPR = seal(/{{[\w\W]*|^[\w\W]*}}/g);
+var ERB_EXPR = seal(/<%[\w\W]*|^[\w\W]*%>/g);
+var TMPLIT_EXPR = seal(/\${[\w\W]*/g);
+var DATA_ATTR = seal(/^data-[\-\w.\u00B7-\uFFFF]+$/);
+var ARIA_ATTR = seal(/^aria-[\-\w]+$/);
+var IS_ALLOWED_URI = seal(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp|matrix):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i);
+var IS_SCRIPT_OR_DATA = seal(/^(?:\w+script|data):/i);
+var ATTR_WHITESPACE = seal(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g);
+var DOCTYPE_NAME = seal(/^html$/i);
+var CUSTOM_ELEMENT = seal(/^[a-z][.\w]*(-[.\w]+)+$/i);
+var ELEMENT_MARKUP_PROBE = seal(/<[/\w!]/g);
+var COMMENT_MARKUP_PROBE = seal(/<[/\w]/g);
+var FALLBACK_TAG_CLOSE = seal(/<\/no(script|embed|frames)/i);
+var SELF_CLOSING_TAG = seal(/\/>/i);
+var NODE_TYPE = {
+  element: 1,
+  attribute: 2,
+  text: 3,
+  cdataSection: 4,
+  entityReference: 5,
+  entityNode: 6,
+  processingInstruction: 7,
+  comment: 8,
+  document: 9,
+  documentType: 10,
+  documentFragment: 11,
+  notation: 12
+};
+var LITERAL_TEXT_ELEMENTS = freeze(addToSet({}, [
+  "style",
+  "script",
+  "xmp",
+  "iframe",
+  "noembed",
+  "noframes",
+  "plaintext",
+  "noscript"
+]));
+var getGlobal = function getGlobal2() {
+  return typeof window === "undefined" ? null : window;
+};
+var _createTrustedTypesPolicy = function _createTrustedTypesPolicy2(trustedTypes, purifyHostElement) {
+  if (typeof trustedTypes !== "object" || typeof trustedTypes.createPolicy !== "function") return null;
+  let suffix = null;
+  const ATTR_NAME = "data-tt-policy-suffix";
+  if (purifyHostElement && purifyHostElement.hasAttribute(ATTR_NAME)) suffix = purifyHostElement.getAttribute(ATTR_NAME);
+  const policyName = "dompurify" + (suffix ? "#" + suffix : "");
+  try {
+    return trustedTypes.createPolicy(policyName, {
+      createHTML(html2) {
+        return html2;
+      },
+      createScriptURL(scriptUrl) {
+        return scriptUrl;
+      }
+    });
+  } catch (_2) {
+    console.warn("TrustedTypes policy " + policyName + " could not be created.");
+    return null;
+  }
+};
+var _createHooksMap = function _createHooksMap2() {
+  return {
+    afterSanitizeAttributes: [],
+    afterSanitizeElements: [],
+    afterSanitizeShadowDOM: [],
+    beforeSanitizeAttributes: [],
+    beforeSanitizeElements: [],
+    beforeSanitizeShadowDOM: [],
+    uponSanitizeAttribute: [],
+    uponSanitizeElement: [],
+    uponSanitizeShadowNode: []
+  };
+};
+var _resolveSetOption = function _resolveSetOption2(cfg, key, fallback, options) {
+  return objectHasOwnProperty(cfg, key) && arrayIsArray(cfg[key]) ? addToSet(options.base ? clone(options.base) : {}, cfg[key], options.transform) : fallback;
+};
+var _resolveObjectOption = function _resolveObjectOption2(cfg, key, makeFallback) {
+  const value = objectHasOwnProperty(cfg, key) ? cfg[key] : void 0;
+  return value && typeof value === "object" ? clone(value) : makeFallback();
+};
+function createDOMPurify() {
+  let window2 = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : getGlobal();
+  const DOMPurify = (root2) => createDOMPurify(root2);
+  DOMPurify.version = "3.4.17";
+  DOMPurify.removed = [];
+  if (!window2 || !window2.document || window2.document.nodeType !== NODE_TYPE.document || !window2.Element) {
+    DOMPurify.isSupported = false;
+    return DOMPurify;
+  }
+  let document2 = window2.document;
+  const originalDocument = document2;
+  const currentScript = originalDocument.currentScript;
+  window2.DocumentFragment;
+  const HTMLTemplateElement = window2.HTMLTemplateElement, Node = window2.Node, Element2 = window2.Element, NodeFilter = window2.NodeFilter;
+  window2.NamedNodeMap === void 0 && (window2.NamedNodeMap || window2.MozNamedAttrMap);
+  window2.HTMLFormElement;
+  const DOMParser = window2.DOMParser, trustedTypes = window2.trustedTypes;
+  const ElementPrototype = Element2.prototype;
+  const cloneNode = lookupGetter(ElementPrototype, "cloneNode");
+  const remove = lookupGetter(ElementPrototype, "remove");
+  const removeAttributeNode = lookupGetter(ElementPrototype, "removeAttributeNode");
+  const getNextSibling = lookupGetter(ElementPrototype, "nextSibling");
+  const getChildNodes = lookupGetter(ElementPrototype, "childNodes");
+  const getParentNode = lookupGetter(ElementPrototype, "parentNode");
+  const getShadowRoot = lookupGetter(ElementPrototype, "shadowRoot");
+  const getAttributes = lookupGetter(ElementPrototype, "attributes");
+  const getNodeType = Node && Node.prototype ? lookupGetter(Node.prototype, "nodeType") : null;
+  const getNodeName = Node && Node.prototype ? lookupGetter(Node.prototype, "nodeName") : null;
+  const getOwnerDocument = Node && Node.prototype ? lookupGetter(Node.prototype, "ownerDocument") : null;
+  const _readNodeType = function _readNodeType2(node) {
+    return getNodeType ? getNodeType(node) : node.nodeType;
+  };
+  const _readNodeName = function _readNodeName2(node) {
+    return getNodeName ? getNodeName(node) : node.nodeName;
+  };
+  const getNamespaceURI = lookupAccessor(ElementPrototype, "namespaceURI");
+  const _readNamespaceURI = function _readNamespaceURI2(element) {
+    return getNamespaceURI ? getNamespaceURI(element) : element.namespaceURI;
+  };
+  if (typeof HTMLTemplateElement === "function") {
+    const template = document2.createElement("template");
+    if (template.content && template.content.ownerDocument) document2 = template.content.ownerDocument;
+  }
+  let trustedTypesPolicy;
+  let emptyHTML = "";
+  let defaultTrustedTypesPolicy;
+  let defaultTrustedTypesPolicyResolved = false;
+  let IN_TRUSTED_TYPES_POLICY = 0;
+  const _assertNotInTrustedTypesPolicy = function _assertNotInTrustedTypesPolicy2() {
+    if (IN_TRUSTED_TYPES_POLICY > 0) throw typeErrorCreate('A configured TRUSTED_TYPES_POLICY callback (createHTML or createScriptURL) must not call DOMPurify.sanitize, as that causes infinite recursion. Do not pass a policy whose callbacks wrap DOMPurify as TRUSTED_TYPES_POLICY; see the "DOMPurify and Trusted Types" section of the README.');
+  };
+  const _createTrustedHTML = function _createTrustedHTML2(html2) {
+    _assertNotInTrustedTypesPolicy();
+    IN_TRUSTED_TYPES_POLICY++;
+    try {
+      return trustedTypesPolicy.createHTML(html2);
+    } finally {
+      IN_TRUSTED_TYPES_POLICY--;
+    }
+  };
+  const _createTrustedScriptURL = function _createTrustedScriptURL2(scriptUrl) {
+    _assertNotInTrustedTypesPolicy();
+    IN_TRUSTED_TYPES_POLICY++;
+    try {
+      return trustedTypesPolicy.createScriptURL(scriptUrl);
+    } finally {
+      IN_TRUSTED_TYPES_POLICY--;
+    }
+  };
+  const _getDefaultTrustedTypesPolicy = function _getDefaultTrustedTypesPolicy2() {
+    if (!defaultTrustedTypesPolicyResolved) {
+      defaultTrustedTypesPolicy = _createTrustedTypesPolicy(trustedTypes, currentScript);
+      defaultTrustedTypesPolicyResolved = true;
+    }
+    return defaultTrustedTypesPolicy;
+  };
+  const _document = document2, implementation = _document.implementation, createNodeIterator = _document.createNodeIterator, createDocumentFragment = _document.createDocumentFragment, getElementsByTagName = _document.getElementsByTagName;
+  const importNode = originalDocument.importNode;
+  let hooks = _createHooksMap();
+  DOMPurify.isSupported = typeof entries === "function" && typeof getParentNode === "function" && implementation && implementation.createHTMLDocument !== void 0;
+  const MUSTACHE_EXPR$1 = MUSTACHE_EXPR, ERB_EXPR$1 = ERB_EXPR, TMPLIT_EXPR$1 = TMPLIT_EXPR, DATA_ATTR$1 = DATA_ATTR, ARIA_ATTR$1 = ARIA_ATTR, IS_SCRIPT_OR_DATA$1 = IS_SCRIPT_OR_DATA, ATTR_WHITESPACE$1 = ATTR_WHITESPACE, CUSTOM_ELEMENT$1 = CUSTOM_ELEMENT;
+  let IS_ALLOWED_URI$1 = IS_ALLOWED_URI;
+  let ALLOWED_TAGS = null;
+  const DEFAULT_ALLOWED_TAGS = addToSet({}, [
+    ...html$1,
+    ...svg$1,
+    ...svgFilters,
+    ...mathMl$1,
+    ...text
+  ]);
+  let ALLOWED_ATTR = null;
+  const DEFAULT_ALLOWED_ATTR = addToSet({}, [
+    ...html,
+    ...svg,
+    ...mathMl,
+    ...xml
+  ]);
+  let CUSTOM_ELEMENT_HANDLING = Object.seal(create(null, {
+    tagNameCheck: {
+      writable: true,
+      configurable: false,
+      enumerable: true,
+      value: null
+    },
+    attributeNameCheck: {
+      writable: true,
+      configurable: false,
+      enumerable: true,
+      value: null
+    },
+    allowCustomizedBuiltInElements: {
+      writable: true,
+      configurable: false,
+      enumerable: true,
+      value: false
+    }
+  }));
+  let FORBID_TAGS = null;
+  let FORBID_ATTR = null;
+  const EXTRA_ELEMENT_HANDLING = Object.seal(create(null, {
+    tagCheck: {
+      writable: true,
+      configurable: false,
+      enumerable: true,
+      value: null
+    },
+    attributeCheck: {
+      writable: true,
+      configurable: false,
+      enumerable: true,
+      value: null
+    }
+  }));
+  let ALLOW_ARIA_ATTR = true;
+  let ALLOW_DATA_ATTR = true;
+  let ALLOW_UNKNOWN_PROTOCOLS = false;
+  let ALLOW_SELF_CLOSE_IN_ATTR = true;
+  let SAFE_FOR_TEMPLATES = false;
+  let SAFE_FOR_XML = true;
+  let WHOLE_DOCUMENT = false;
+  let SET_CONFIG = false;
+  let SET_CONFIG_ALLOWED_TAGS = null;
+  let SET_CONFIG_ALLOWED_ATTR = null;
+  let FORCE_BODY = false;
+  let RETURN_DOM = false;
+  let RETURN_DOM_FRAGMENT = false;
+  let RETURN_TRUSTED_TYPE = false;
+  let SANITIZE_DOM = true;
+  let SANITIZE_NAMED_PROPS = false;
+  const SANITIZE_NAMED_PROPS_PREFIX = "user-content-";
+  let KEEP_CONTENT = true;
+  let IN_PLACE = false;
+  let IN_PLACE_VISITED = null;
+  let USE_PROFILES = {};
+  let FORBID_CONTENTS = null;
+  const DEFAULT_FORBID_CONTENTS = addToSet({}, [
+    "annotation-xml",
+    "audio",
+    "colgroup",
+    "desc",
+    "foreignobject",
+    "head",
+    "iframe",
+    "math",
+    "mi",
+    "mn",
+    "mo",
+    "ms",
+    "mtext",
+    "noembed",
+    "noframes",
+    "noscript",
+    "plaintext",
+    "script",
+    "selectedcontent",
+    "style",
+    "svg",
+    "template",
+    "thead",
+    "title",
+    "video",
+    "xmp"
+  ]);
+  let DATA_URI_TAGS = null;
+  const DEFAULT_DATA_URI_TAGS = addToSet({}, [
+    "audio",
+    "video",
+    "img",
+    "source",
+    "image",
+    "track"
+  ]);
+  let URI_SAFE_ATTRIBUTES = null;
+  const DEFAULT_URI_SAFE_ATTRIBUTES = addToSet({}, [
+    "alt",
+    "class",
+    "for",
+    "id",
+    "label",
+    "name",
+    "pattern",
+    "placeholder",
+    "role",
+    "summary",
+    "title",
+    "value",
+    "style",
+    "xmlns"
+  ]);
+  const MATHML_NAMESPACE = "http://www.w3.org/1998/Math/MathML";
+  const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+  const HTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
+  let NAMESPACE = HTML_NAMESPACE;
+  let IS_EMPTY_INPUT = false;
+  let ALLOWED_NAMESPACES = null;
+  const DEFAULT_ALLOWED_NAMESPACES = addToSet({}, [
+    MATHML_NAMESPACE,
+    SVG_NAMESPACE,
+    HTML_NAMESPACE
+  ], stringToString);
+  const DEFAULT_MATHML_TEXT_INTEGRATION_POINTS = freeze([
+    "mi",
+    "mo",
+    "mn",
+    "ms",
+    "mtext"
+  ]);
+  let MATHML_TEXT_INTEGRATION_POINTS = addToSet({}, DEFAULT_MATHML_TEXT_INTEGRATION_POINTS);
+  const DEFAULT_HTML_INTEGRATION_POINTS = freeze(["annotation-xml"]);
+  let HTML_INTEGRATION_POINTS = addToSet({}, DEFAULT_HTML_INTEGRATION_POINTS);
+  const COMMON_SVG_AND_HTML_ELEMENTS = addToSet({}, [
+    "title",
+    "style",
+    "font",
+    "a",
+    "script"
+  ]);
+  let PARSER_MEDIA_TYPE = null;
+  const SUPPORTED_PARSER_MEDIA_TYPES = ["application/xhtml+xml", "text/html"];
+  const DEFAULT_PARSER_MEDIA_TYPE = "text/html";
+  let transformCaseFunc = null;
+  let CONFIG = null;
+  const formElement = document2.createElement("form");
+  const isRegexOrFunction = function isRegexOrFunction2(testValue) {
+    return testValue instanceof RegExp || testValue instanceof Function;
+  };
+  const _parseConfig = function _parseConfig2() {
+    let cfg = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+    if (CONFIG && CONFIG === cfg) return;
+    if (!cfg || typeof cfg !== "object") cfg = {};
+    cfg = clone(cfg);
+    PARSER_MEDIA_TYPE = SUPPORTED_PARSER_MEDIA_TYPES.indexOf(cfg.PARSER_MEDIA_TYPE) === -1 ? DEFAULT_PARSER_MEDIA_TYPE : cfg.PARSER_MEDIA_TYPE;
+    transformCaseFunc = PARSER_MEDIA_TYPE === "application/xhtml+xml" ? stringToString : stringToLowerCase;
+    ALLOWED_TAGS = _resolveSetOption(cfg, "ALLOWED_TAGS", DEFAULT_ALLOWED_TAGS, { transform: transformCaseFunc });
+    ALLOWED_ATTR = _resolveSetOption(cfg, "ALLOWED_ATTR", DEFAULT_ALLOWED_ATTR, { transform: transformCaseFunc });
+    ALLOWED_NAMESPACES = _resolveSetOption(cfg, "ALLOWED_NAMESPACES", DEFAULT_ALLOWED_NAMESPACES, { transform: stringToString });
+    URI_SAFE_ATTRIBUTES = _resolveSetOption(cfg, "ADD_URI_SAFE_ATTR", DEFAULT_URI_SAFE_ATTRIBUTES, {
+      transform: transformCaseFunc,
+      base: DEFAULT_URI_SAFE_ATTRIBUTES
+    });
+    DATA_URI_TAGS = _resolveSetOption(cfg, "ADD_DATA_URI_TAGS", DEFAULT_DATA_URI_TAGS, {
+      transform: transformCaseFunc,
+      base: DEFAULT_DATA_URI_TAGS
+    });
+    FORBID_CONTENTS = _resolveSetOption(cfg, "FORBID_CONTENTS", DEFAULT_FORBID_CONTENTS, { transform: transformCaseFunc });
+    FORBID_TAGS = _resolveSetOption(cfg, "FORBID_TAGS", clone({}), { transform: transformCaseFunc });
+    FORBID_ATTR = _resolveSetOption(cfg, "FORBID_ATTR", clone({}), { transform: transformCaseFunc });
+    USE_PROFILES = objectHasOwnProperty(cfg, "USE_PROFILES") ? cfg.USE_PROFILES && typeof cfg.USE_PROFILES === "object" ? clone(cfg.USE_PROFILES) : cfg.USE_PROFILES : false;
+    ALLOW_ARIA_ATTR = cfg.ALLOW_ARIA_ATTR !== false;
+    ALLOW_DATA_ATTR = cfg.ALLOW_DATA_ATTR !== false;
+    ALLOW_UNKNOWN_PROTOCOLS = cfg.ALLOW_UNKNOWN_PROTOCOLS || false;
+    ALLOW_SELF_CLOSE_IN_ATTR = cfg.ALLOW_SELF_CLOSE_IN_ATTR !== false;
+    SAFE_FOR_TEMPLATES = cfg.SAFE_FOR_TEMPLATES || false;
+    SAFE_FOR_XML = cfg.SAFE_FOR_XML !== false;
+    WHOLE_DOCUMENT = cfg.WHOLE_DOCUMENT || false;
+    RETURN_DOM = cfg.RETURN_DOM || false;
+    RETURN_DOM_FRAGMENT = cfg.RETURN_DOM_FRAGMENT || false;
+    RETURN_TRUSTED_TYPE = cfg.RETURN_TRUSTED_TYPE || false;
+    FORCE_BODY = cfg.FORCE_BODY || false;
+    SANITIZE_DOM = cfg.SANITIZE_DOM !== false;
+    SANITIZE_NAMED_PROPS = cfg.SANITIZE_NAMED_PROPS || false;
+    KEEP_CONTENT = cfg.KEEP_CONTENT !== false;
+    IN_PLACE = cfg.IN_PLACE || false;
+    IS_ALLOWED_URI$1 = isRegex(cfg.ALLOWED_URI_REGEXP) ? cfg.ALLOWED_URI_REGEXP : IS_ALLOWED_URI;
+    NAMESPACE = typeof cfg.NAMESPACE === "string" ? cfg.NAMESPACE : HTML_NAMESPACE;
+    MATHML_TEXT_INTEGRATION_POINTS = _resolveObjectOption(cfg, "MATHML_TEXT_INTEGRATION_POINTS", () => addToSet({}, DEFAULT_MATHML_TEXT_INTEGRATION_POINTS));
+    HTML_INTEGRATION_POINTS = _resolveObjectOption(cfg, "HTML_INTEGRATION_POINTS", () => addToSet({}, DEFAULT_HTML_INTEGRATION_POINTS));
+    const customElementHandling = _resolveObjectOption(cfg, "CUSTOM_ELEMENT_HANDLING", () => create(null));
+    CUSTOM_ELEMENT_HANDLING = create(null);
+    if (objectHasOwnProperty(customElementHandling, "tagNameCheck") && isRegexOrFunction(customElementHandling.tagNameCheck)) CUSTOM_ELEMENT_HANDLING.tagNameCheck = customElementHandling.tagNameCheck;
+    if (objectHasOwnProperty(customElementHandling, "attributeNameCheck") && isRegexOrFunction(customElementHandling.attributeNameCheck)) CUSTOM_ELEMENT_HANDLING.attributeNameCheck = customElementHandling.attributeNameCheck;
+    if (objectHasOwnProperty(customElementHandling, "allowCustomizedBuiltInElements") && typeof customElementHandling.allowCustomizedBuiltInElements === "boolean") CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements = customElementHandling.allowCustomizedBuiltInElements;
+    seal(CUSTOM_ELEMENT_HANDLING);
+    if (SAFE_FOR_TEMPLATES) ALLOW_DATA_ATTR = false;
+    if (RETURN_DOM_FRAGMENT) RETURN_DOM = true;
+    if (USE_PROFILES) {
+      ALLOWED_TAGS = addToSet({}, text);
+      ALLOWED_ATTR = create(null);
+      if (USE_PROFILES.html === true) {
+        addToSet(ALLOWED_TAGS, html$1);
+        addToSet(ALLOWED_ATTR, html);
+      }
+      if (USE_PROFILES.svg === true) {
+        addToSet(ALLOWED_TAGS, svg$1);
+        addToSet(ALLOWED_ATTR, svg);
+        addToSet(ALLOWED_ATTR, xml);
+      }
+      if (USE_PROFILES.svgFilters === true) {
+        addToSet(ALLOWED_TAGS, svgFilters);
+        addToSet(ALLOWED_ATTR, svg);
+        addToSet(ALLOWED_ATTR, xml);
+      }
+      if (USE_PROFILES.mathMl === true) {
+        addToSet(ALLOWED_TAGS, mathMl$1);
+        addToSet(ALLOWED_ATTR, mathMl);
+        addToSet(ALLOWED_ATTR, xml);
+      }
+    }
+    EXTRA_ELEMENT_HANDLING.tagCheck = null;
+    EXTRA_ELEMENT_HANDLING.attributeCheck = null;
+    if (objectHasOwnProperty(cfg, "ADD_TAGS")) {
+      if (typeof cfg.ADD_TAGS === "function") EXTRA_ELEMENT_HANDLING.tagCheck = cfg.ADD_TAGS;
+      else if (arrayIsArray(cfg.ADD_TAGS)) {
+        if (ALLOWED_TAGS === DEFAULT_ALLOWED_TAGS) ALLOWED_TAGS = clone(ALLOWED_TAGS);
+        addToSet(ALLOWED_TAGS, cfg.ADD_TAGS, transformCaseFunc);
+      }
+    }
+    if (objectHasOwnProperty(cfg, "ADD_ATTR")) {
+      if (typeof cfg.ADD_ATTR === "function") EXTRA_ELEMENT_HANDLING.attributeCheck = cfg.ADD_ATTR;
+      else if (arrayIsArray(cfg.ADD_ATTR)) {
+        if (ALLOWED_ATTR === DEFAULT_ALLOWED_ATTR) ALLOWED_ATTR = clone(ALLOWED_ATTR);
+        addToSet(ALLOWED_ATTR, cfg.ADD_ATTR, transformCaseFunc);
+      }
+    }
+    if (objectHasOwnProperty(cfg, "ADD_FORBID_CONTENTS") && arrayIsArray(cfg.ADD_FORBID_CONTENTS)) {
+      if (FORBID_CONTENTS === DEFAULT_FORBID_CONTENTS) FORBID_CONTENTS = clone(FORBID_CONTENTS);
+      addToSet(FORBID_CONTENTS, cfg.ADD_FORBID_CONTENTS, transformCaseFunc);
+    }
+    if (KEEP_CONTENT) ALLOWED_TAGS["#text"] = true;
+    if (WHOLE_DOCUMENT) addToSet(ALLOWED_TAGS, [
+      "html",
+      "head",
+      "body"
+    ]);
+    if (ALLOWED_TAGS.table) {
+      addToSet(ALLOWED_TAGS, ["tbody"]);
+      delete FORBID_TAGS.tbody;
+    }
+    if (cfg.TRUSTED_TYPES_POLICY) {
+      if (typeof cfg.TRUSTED_TYPES_POLICY.createHTML !== "function") throw typeErrorCreate('TRUSTED_TYPES_POLICY configuration option must provide a "createHTML" hook.');
+      if (typeof cfg.TRUSTED_TYPES_POLICY.createScriptURL !== "function") throw typeErrorCreate('TRUSTED_TYPES_POLICY configuration option must provide a "createScriptURL" hook.');
+      const previousTrustedTypesPolicy = trustedTypesPolicy;
+      trustedTypesPolicy = cfg.TRUSTED_TYPES_POLICY;
+      try {
+        emptyHTML = _createTrustedHTML("");
+      } catch (error) {
+        trustedTypesPolicy = previousTrustedTypesPolicy;
+        throw error;
+      }
+    } else if (cfg.TRUSTED_TYPES_POLICY === null) {
+      trustedTypesPolicy = void 0;
+      emptyHTML = "";
+    } else {
+      if (trustedTypesPolicy === void 0) trustedTypesPolicy = _getDefaultTrustedTypesPolicy();
+      if (trustedTypesPolicy && typeof emptyHTML === "string") emptyHTML = _createTrustedHTML("");
+    }
+    if (freeze) freeze(cfg);
+    CONFIG = cfg;
+  };
+  const ALL_SVG_TAGS = addToSet({}, [
+    ...svg$1,
+    ...svgFilters,
+    ...svgDisallowed
+  ]);
+  const ALL_MATHML_TAGS = addToSet({}, [...mathMl$1, ...mathMlDisallowed]);
+  const _checkSvgNamespace = function _checkSvgNamespace2(tagName, parent, parentTagName) {
+    if (parent.namespaceURI === HTML_NAMESPACE) return tagName === "svg";
+    if (parent.namespaceURI === MATHML_NAMESPACE) return tagName === "svg" && (parentTagName === "annotation-xml" || MATHML_TEXT_INTEGRATION_POINTS[parentTagName]);
+    return Boolean(ALL_SVG_TAGS[tagName]);
+  };
+  const _checkMathMlNamespace = function _checkMathMlNamespace2(tagName, parent, parentTagName) {
+    if (parent.namespaceURI === HTML_NAMESPACE) return tagName === "math";
+    if (parent.namespaceURI === SVG_NAMESPACE) return tagName === "math" && HTML_INTEGRATION_POINTS[parentTagName];
+    return Boolean(ALL_MATHML_TAGS[tagName]);
+  };
+  const _checkHtmlNamespace = function _checkHtmlNamespace2(tagName, parent, parentTagName) {
+    if (parent.namespaceURI === SVG_NAMESPACE && !HTML_INTEGRATION_POINTS[parentTagName]) return false;
+    if (parent.namespaceURI === MATHML_NAMESPACE && !MATHML_TEXT_INTEGRATION_POINTS[parentTagName]) return false;
+    return !ALL_MATHML_TAGS[tagName] && (COMMON_SVG_AND_HTML_ELEMENTS[tagName] || !ALL_SVG_TAGS[tagName]);
+  };
+  const _checkValidNamespace = function _checkValidNamespace2(element) {
+    const elementNamespace = _readNamespaceURI(element);
+    const tagName = stringToLowerCase(_readNodeName(element));
+    const parentNode = getParentNode(element);
+    let parent;
+    let parentTagName;
+    if (parentNode && _readNodeType(parentNode) === NODE_TYPE.element) {
+      parent = { namespaceURI: _readNamespaceURI(parentNode) };
+      parentTagName = stringToLowerCase(_readNodeName(parentNode));
+    } else {
+      parent = { namespaceURI: NAMESPACE };
+      parentTagName = "template";
+    }
+    if (!ALLOWED_NAMESPACES[elementNamespace]) return false;
+    if (elementNamespace === SVG_NAMESPACE) return _checkSvgNamespace(tagName, parent, parentTagName);
+    if (elementNamespace === MATHML_NAMESPACE) return _checkMathMlNamespace(tagName, parent, parentTagName);
+    if (elementNamespace === HTML_NAMESPACE) return _checkHtmlNamespace(tagName, parent, parentTagName);
+    if (PARSER_MEDIA_TYPE === "application/xhtml+xml" && ALLOWED_NAMESPACES[elementNamespace]) return true;
+    return false;
+  };
+  const _forceRemove = function _forceRemove2(node) {
+    arrayPush(DOMPurify.removed, { element: node });
+    try {
+      getParentNode(node).removeChild(node);
+    } catch (_2) {
+      remove(node);
+      if (!getParentNode(node)) throw typeErrorCreate("a node selected for removal could not be detached from its tree and cannot be safely returned; refusing to sanitize in place");
+    }
+  };
+  const _stripAttributeNode = function _stripAttributeNode2(element, attribute, name) {
+    try {
+      removeAttributeNode(element, attribute);
+    } catch (_2) {
+      try {
+        element.removeAttribute(name);
+      } catch (_3) {
+      }
+    }
+  };
+  const _neutralizeRoot = function _neutralizeRoot2(root2) {
+    _neutralizeSubtree(root2);
+    const childNodes = getChildNodes(root2);
+    if (childNodes) arrayForEach(arraySlice(childNodes), (child) => {
+      try {
+        remove(child);
+      } catch (_2) {
+      }
+    });
+    const attributes2 = _readNodeType(root2) === NODE_TYPE.element ? getAttributes(root2) : null;
+    if (attributes2) for (let i = attributes2.length - 1; i >= 0; --i) {
+      const attribute = attributes2[i];
+      const name = attribute && attribute.name;
+      if (typeof name === "string") _stripAttributeNode(root2, attribute, name);
+    }
+  };
+  const _removeAttribute = function _removeAttribute2(name, element, attr) {
+    if (!attr) try {
+      attr = element.getAttributeNode(name);
+    } catch (_2) {
+      attr = null;
+    }
+    arrayPush(DOMPurify.removed, {
+      attribute: attr || null,
+      from: element
+    });
+    try {
+      if (attr) removeAttributeNode(element, attr);
+      else element.removeAttribute(name);
+    } catch (_2) {
+      try {
+        element.removeAttribute(name);
+      } catch (_3) {
+      }
+    }
+    if (name === "is") {
+      if (RETURN_DOM || RETURN_DOM_FRAGMENT) try {
+        _forceRemove(element);
+      } catch (_2) {
+      }
+      else try {
+        element.setAttribute(name, "");
+      } catch (_2) {
+      }
+    }
+  };
+  const _stripDisallowedAttributes = function _stripDisallowedAttributes2(element) {
+    const attributes2 = getAttributes(element);
+    if (!attributes2) return;
+    for (let i = attributes2.length - 1; i >= 0; --i) {
+      const attribute = attributes2[i];
+      const name = attribute && attribute.name;
+      if (typeof name !== "string" || ALLOWED_ATTR[transformCaseFunc(name)]) continue;
+      _stripAttributeNode(element, attribute, name);
+    }
+  };
+  const _walkTree = function _walkTree2(root2, visit) {
+    let intoShadow = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : false;
+    const stack = [root2];
+    while (stack.length > 0) {
+      const node = stack.pop();
+      if (visit(node) === false) continue;
+      if (intoShadow && _readNodeType(node) === NODE_TYPE.element) {
+        const shadowRoot = getShadowRoot(node);
+        if (_isDocumentFragment(shadowRoot)) stack.push(shadowRoot);
+      }
+      const childNodes = getChildNodes(node);
+      if (childNodes) for (let i = childNodes.length - 1; i >= 0; --i) stack.push(childNodes[i]);
+    }
+  };
+  const _neutralizeSubtree = function _neutralizeSubtree2(root2) {
+    _walkTree(root2, (node) => {
+      if (_readNodeType(node) === NODE_TYPE.element) _stripDisallowedAttributes(node);
+    });
+  };
+  const _collectLiveNodes = function _collectLiveNodes2(root2) {
+    const nodes = [];
+    _walkTree(root2, (node) => {
+      nodes.push(node);
+    }, true);
+    return nodes;
+  };
+  const _neutralizeEscapedElements = function _neutralizeEscapedElements2(root2, before) {
+    const reachable = setCreate();
+    arrayForEach(_collectLiveNodes(root2), (node) => {
+      if (_readNodeType(node) === NODE_TYPE.element) setAdd(reachable, node);
+    });
+    arrayForEach(before, (node) => {
+      if (_readNodeType(node) === NODE_TYPE.element && !setHas(reachable, node)) _stripDisallowedAttributes(node);
+    });
+  };
+  const _neutralizeDiscarded = function _neutralizeDiscarded2(root2, before) {
+    let rootRemoved = false;
+    arrayForEach(DOMPurify.removed, (entry) => {
+      if (entry.element) {
+        rootRemoved = rootRemoved || entry.element === root2;
+        _neutralizeSubtree(entry.element);
+      }
+    });
+    _neutralizeEscapedElements(root2, before);
+    return rootRemoved;
+  };
+  const MAX_UNVISITED_ROUNDS = 8;
+  const _sanitizeUnvisitedNodes = function _sanitizeUnvisitedNodes2(root2, before) {
+    const visited = IN_PLACE_VISITED;
+    let original = null;
+    const getOriginal = () => {
+      if (!original) {
+        original = setCreate();
+        arrayForEach(before, (beforeNode) => {
+          setAdd(original, beforeNode);
+        });
+      }
+      return original;
+    };
+    for (let round = 0; ; round++) {
+      const live = _collectLiveNodes(root2);
+      const containers = [root2];
+      let pending = false;
+      arrayForEach(live, (node) => {
+        if (_readNodeType(node) === NODE_TYPE.documentFragment) arrayPush(containers, node);
+        else if (!pending && !setHas(visited, node)) pending = setHas(getOriginal(), node);
+      });
+      if (!pending) return;
+      if (round >= MAX_UNVISITED_ROUNDS) throw typeErrorCreate("the tree kept changing during in-place sanitization; refusing to return it");
+      arrayForEach(containers, (container, index) => {
+        _sanitizeUnvisitedIn(container, index > 0, root2, getOriginal());
+      });
+    }
+  };
+  const _sanitizeUnvisitedIn = function _sanitizeUnvisitedIn2(container, inShadow, root2, original) {
+    const iterator = _createNodeIterator(container);
+    let node;
+    while (node = iterator.nextNode()) {
+      if (!setHas(original, node) || setHas(IN_PLACE_VISITED, node)) continue;
+      if (inShadow) _executeHooks(hooks.uponSanitizeShadowNode, node, null);
+      _sanitizeElements(node, root2);
+      _sanitizeAttributes(node, root2);
+      if (_isDocumentFragment(node.content)) _sanitizeShadowDOM2(node.content);
+    }
+  };
+  const _markVisited = function _markVisited2(node) {
+    if (IN_PLACE_VISITED) setAdd(IN_PLACE_VISITED, node);
+  };
+  const _isPatchLinkageAttribute = function _isPatchLinkageAttribute2(lcName, lcTag) {
+    if (!SAFE_FOR_XML) return false;
+    if (lcName === "patchsrc") return true;
+    return lcName === "for" && lcTag !== "label" && lcTag !== "output";
+  };
+  const _neutralizePatchLinkage = function _neutralizePatchLinkage2(root2) {
+    if (!SAFE_FOR_XML) return;
+    _walkTree(root2, (node) => {
+      const nodeType = _readNodeType(node);
+      if (nodeType === NODE_TYPE.processingInstruction || nodeType === NODE_TYPE.comment && regExpTest(COMMENT_MARKUP_PROBE, node.data)) {
+        try {
+          remove(node);
+        } catch (_2) {
+        }
+        return false;
+      }
+      if (nodeType === NODE_TYPE.element) {
+        const element = node;
+        const lcTag = transformCaseFunc(_readNodeName(node));
+        try {
+          if (element.hasAttribute && element.hasAttribute("patchsrc")) element.removeAttribute("patchsrc");
+          if (element.hasAttribute && element.hasAttribute("for") && _isPatchLinkageAttribute("for", lcTag)) element.removeAttribute("for");
+        } catch (_2) {
+        }
+      }
+      return true;
+    });
+  };
+  const _initDocument = function _initDocument2(dirty) {
+    let doc = null;
+    let leadingWhitespace = null;
+    if (FORCE_BODY) dirty = "<remove></remove>" + dirty;
+    else {
+      const matches = stringMatch(dirty, /^[\r\n\t ]+/);
+      leadingWhitespace = matches && matches[0];
+    }
+    if (PARSER_MEDIA_TYPE === "application/xhtml+xml" && NAMESPACE === HTML_NAMESPACE) dirty = '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>' + dirty + "</body></html>";
+    const dirtyPayload = trustedTypesPolicy ? _createTrustedHTML(dirty) : dirty;
+    if (NAMESPACE === HTML_NAMESPACE) try {
+      doc = new DOMParser().parseFromString(dirtyPayload, PARSER_MEDIA_TYPE);
+    } catch (_2) {
+    }
+    if (!doc || !doc.documentElement) {
+      doc = implementation.createDocument(NAMESPACE, "template", null);
+      try {
+        doc.documentElement.innerHTML = IS_EMPTY_INPUT ? emptyHTML : dirtyPayload;
+      } catch (_2) {
+      }
+    }
+    const body = doc.body || doc.documentElement;
+    if (dirty && leadingWhitespace) body.insertBefore(document2.createTextNode(leadingWhitespace), body.childNodes[0] || null);
+    if (NAMESPACE === HTML_NAMESPACE) return getElementsByTagName.call(doc, WHOLE_DOCUMENT ? "html" : "body")[0];
+    return WHOLE_DOCUMENT ? doc.documentElement : body;
+  };
+  const _createNodeIterator = function _createNodeIterator2(root2) {
+    const doc = getOwnerDocument ? getOwnerDocument(root2) : root2.ownerDocument;
+    return createNodeIterator.call(doc || root2, root2, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT | NodeFilter.SHOW_PROCESSING_INSTRUCTION | NodeFilter.SHOW_CDATA_SECTION, null);
+  };
+  const _stripTemplateExpressions = function _stripTemplateExpressions2(value) {
+    value = stringReplace(value, MUSTACHE_EXPR$1, " ");
+    value = stringReplace(value, ERB_EXPR$1, " ");
+    value = stringReplace(value, TMPLIT_EXPR$1, " ");
+    return value;
+  };
+  const _scrubTemplateExpressions2 = function _scrubTemplateExpressions(node) {
+    var _node$querySelectorAl;
+    _scrubOwnCharacterData(node);
+    const templates = (_node$querySelectorAl = node.querySelectorAll) === null || _node$querySelectorAl === void 0 ? void 0 : _node$querySelectorAl.call(node, "template");
+    if (templates) arrayForEach(templates, (tmpl) => {
+      if (_isDocumentFragment(tmpl.content)) _scrubTemplateExpressions2(tmpl.content);
+    });
+  };
+  const _scrubOwnCharacterData = function _scrubOwnCharacterData2(node) {
+    node.normalize();
+    const doc = getOwnerDocument ? getOwnerDocument(node) : node.ownerDocument;
+    const walker = createNodeIterator.call(doc || node, node, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_CDATA_SECTION | NodeFilter.SHOW_PROCESSING_INSTRUCTION, null);
+    let currentNode = walker.nextNode();
+    while (currentNode) {
+      currentNode.data = _stripTemplateExpressions(currentNode.data);
+      currentNode = walker.nextNode();
+    }
+  };
+  const _isClobbered = function _isClobbered2(element) {
+    const realTagName = getNodeName ? getNodeName(element) : null;
+    if (typeof realTagName !== "string") return false;
+    if (transformCaseFunc(realTagName) !== "form") return false;
+    return typeof element.nodeName !== "string" || typeof element.textContent !== "string" || typeof element.removeChild !== "function" || element.attributes !== getAttributes(element) || typeof element.removeAttribute !== "function" || typeof element.removeAttributeNode !== "function" || typeof element.getAttributeNode !== "function" || typeof element.setAttribute !== "function" || typeof element.namespaceURI !== "string" || typeof element.insertBefore !== "function" || typeof element.hasChildNodes !== "function" || element.nodeType !== getNodeType(element) || element.childNodes !== getChildNodes(element);
+  };
+  const _isDocumentFragment = function _isDocumentFragment2(value) {
+    if (!getNodeType || typeof value !== "object" || value === null) return false;
+    try {
+      return getNodeType(value) === NODE_TYPE.documentFragment;
+    } catch (_2) {
+      return false;
+    }
+  };
+  const _isNode = function _isNode2(value) {
+    if (!getNodeType || typeof value !== "object" || value === null) return false;
+    try {
+      return typeof getNodeType(value) === "number";
+    } catch (_2) {
+      return false;
+    }
+  };
+  function _executeHooks(hooks2, currentNode, data) {
+    if (hooks2.length === 0) return;
+    arrayForEach(hooks2, (hook) => {
+      hook.call(DOMPurify, currentNode, data, CONFIG);
+    });
+  }
+  const _isUnsafeNode = function _isUnsafeNode2(currentNode, tagName) {
+    if (SAFE_FOR_XML && currentNode.hasChildNodes() && !_isNode(currentNode.firstElementChild) && regExpTest(ELEMENT_MARKUP_PROBE, currentNode.textContent) && regExpTest(ELEMENT_MARKUP_PROBE, currentNode.innerHTML)) return true;
+    if (SAFE_FOR_XML && LITERAL_TEXT_ELEMENTS[tagName] && _readNodeType(currentNode) === NODE_TYPE.element && _readNamespaceURI(currentNode) === HTML_NAMESPACE && (_isNode(currentNode.firstElementChild) || typeof currentNode.textContent === "string" && regExpTest(ELEMENT_MARKUP_PROBE, currentNode.textContent))) return true;
+    if (currentNode.nodeType === NODE_TYPE.processingInstruction) return true;
+    if (SAFE_FOR_XML && currentNode.nodeType === NODE_TYPE.comment && regExpTest(COMMENT_MARKUP_PROBE, currentNode.data)) return true;
+    return false;
+  };
+  const _matchesNameCheck = function _matchesNameCheck2(check, name) {
+    if (check instanceof RegExp) return regExpTest(check, name);
+    if (check instanceof Function) {
+      for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) args[_key - 2] = arguments[_key];
+      return Boolean(check(name, ...args));
+    }
+    return false;
+  };
+  const _sanitizeDisallowedNode = function _sanitizeDisallowedNode2(currentNode, tagName, root2) {
+    if (!FORBID_TAGS[tagName] && _isBasicCustomElement(tagName) && _matchesNameCheck(CUSTOM_ELEMENT_HANDLING.tagNameCheck, tagName)) return false;
+    if (KEEP_CONTENT && !FORBID_CONTENTS[tagName] && !FORBID_CONTENTS[stringToLowerCase(tagName)]) {
+      const parentNode = getParentNode(currentNode);
+      const childNodes = getChildNodes(currentNode);
+      if (childNodes && parentNode) {
+        const childCount = childNodes.length;
+        for (let i = childCount - 1; i >= 0; --i) {
+          const hoisted = currentNode === root2 ? cloneNode(childNodes[i], true) : childNodes[i];
+          parentNode.insertBefore(hoisted, getNextSibling(currentNode));
+        }
+      }
+    }
+    _forceRemove(currentNode);
+    return true;
+  };
+  const _forkSharedAllowlist = function _forkSharedAllowlist2(hookList, set, defaultSet, setConfigSet) {
+    if (hookList.length === 0) return set;
+    return set === defaultSet || set === setConfigSet ? clone(set) : set;
+  };
+  const _handleHookDetachedNode = function _handleHookDetachedNode2(currentNode, root2) {
+    if (currentNode === root2 || getParentNode(currentNode) !== null) return false;
+    if (IN_PLACE) _neutralizeSubtree(currentNode);
+    return true;
+  };
+  const _sanitizeElements = function _sanitizeElements2(currentNode, root2) {
+    _markVisited(currentNode);
+    _executeHooks(hooks.beforeSanitizeElements, currentNode, null);
+    if (_handleHookDetachedNode(currentNode, root2)) return true;
+    if (_isClobbered(currentNode)) {
+      _forceRemove(currentNode);
+      return true;
+    }
+    const tagName = transformCaseFunc(_readNodeName(currentNode));
+    ALLOWED_TAGS = _forkSharedAllowlist(hooks.uponSanitizeElement, ALLOWED_TAGS, DEFAULT_ALLOWED_TAGS, SET_CONFIG_ALLOWED_TAGS);
+    _executeHooks(hooks.uponSanitizeElement, currentNode, {
+      tagName,
+      allowedTags: ALLOWED_TAGS
+    });
+    if (_handleHookDetachedNode(currentNode, root2)) return true;
+    if (_isUnsafeNode(currentNode, tagName)) {
+      _forceRemove(currentNode);
+      return true;
+    }
+    if (FORBID_TAGS[tagName] || !(EXTRA_ELEMENT_HANDLING.tagCheck instanceof Function && EXTRA_ELEMENT_HANDLING.tagCheck(tagName)) && !ALLOWED_TAGS[tagName]) {
+      const removed = _sanitizeDisallowedNode(currentNode, tagName, root2);
+      if (removed === false) {
+        _executeHooks(hooks.afterSanitizeElements, currentNode, null);
+        if (_handleHookDetachedNode(currentNode, root2)) return true;
+      }
+      return removed;
+    }
+    if (_readNodeType(currentNode) === NODE_TYPE.element && !_checkValidNamespace(currentNode)) {
+      _forceRemove(currentNode);
+      return true;
+    }
+    if ((tagName === "noscript" || tagName === "noembed" || tagName === "noframes") && regExpTest(FALLBACK_TAG_CLOSE, currentNode.innerHTML)) {
+      _forceRemove(currentNode);
+      return true;
+    }
+    if (SAFE_FOR_TEMPLATES && currentNode.nodeType === NODE_TYPE.text) {
+      const content = _stripTemplateExpressions(currentNode.textContent);
+      if (currentNode.textContent !== content) {
+        arrayPush(DOMPurify.removed, { element: currentNode.cloneNode() });
+        currentNode.textContent = content;
+      }
+    }
+    _executeHooks(hooks.afterSanitizeElements, currentNode, null);
+    return _handleHookDetachedNode(currentNode, root2);
+  };
+  const _isValidAttribute = function _isValidAttribute2(lcTag, lcName, value) {
+    if (FORBID_ATTR[lcName]) return false;
+    if (_isPatchLinkageAttribute(lcName, lcTag)) return false;
+    if (SANITIZE_DOM && (lcName === "id" || lcName === "name") && (value in document2 || value in formElement)) return false;
+    const nameIsPermitted = ALLOWED_ATTR[lcName] || EXTRA_ELEMENT_HANDLING.attributeCheck instanceof Function && EXTRA_ELEMENT_HANDLING.attributeCheck(lcName, lcTag);
+    if (ALLOW_DATA_ATTR && regExpTest(DATA_ATTR$1, lcName)) return true;
+    if (ALLOW_ARIA_ATTR && regExpTest(ARIA_ATTR$1, lcName)) return true;
+    if (!nameIsPermitted) return _isBasicCustomElement(lcTag) && _matchesNameCheck(CUSTOM_ELEMENT_HANDLING.tagNameCheck, lcTag) && _matchesNameCheck(CUSTOM_ELEMENT_HANDLING.attributeNameCheck, lcName, lcTag) || lcName === "is" && CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements && _matchesNameCheck(CUSTOM_ELEMENT_HANDLING.tagNameCheck, value);
+    if (URI_SAFE_ATTRIBUTES[lcName]) return true;
+    if (regExpTest(IS_ALLOWED_URI$1, stringReplace(value, ATTR_WHITESPACE$1, ""))) return true;
+    if ((lcName === "src" || lcName === "xlink:href" || lcName === "href") && lcTag !== "script" && stringIndexOf(value, "data:") === 0 && DATA_URI_TAGS[lcTag]) return true;
+    if (ALLOW_UNKNOWN_PROTOCOLS && !regExpTest(IS_SCRIPT_OR_DATA$1, stringReplace(value, ATTR_WHITESPACE$1, ""))) return true;
+    return !value;
+  };
+  const RESERVED_CUSTOM_ELEMENT_NAMES = addToSet({}, [
+    "annotation-xml",
+    "color-profile",
+    "font-face",
+    "font-face-format",
+    "font-face-name",
+    "font-face-src",
+    "font-face-uri",
+    "missing-glyph"
+  ]);
+  const _isBasicCustomElement = function _isBasicCustomElement2(tagName) {
+    return !RESERVED_CUSTOM_ELEMENT_NAMES[stringToLowerCase(tagName)] && regExpTest(CUSTOM_ELEMENT$1, tagName);
+  };
+  const _applyTrustedTypesToAttribute = function _applyTrustedTypesToAttribute2(lcTag, lcName, namespaceURI, value) {
+    if (trustedTypesPolicy && typeof trustedTypes === "object" && typeof trustedTypes.getAttributeType === "function" && !namespaceURI) switch (trustedTypes.getAttributeType(lcTag, lcName)) {
+      case "TrustedHTML":
+        return _createTrustedHTML(value);
+      case "TrustedScriptURL":
+        return _createTrustedScriptURL(value);
+    }
+    return value;
+  };
+  const _setAttributeValue = function _setAttributeValue2(currentNode, name, namespaceURI, value) {
+    try {
+      if (namespaceURI) currentNode.setAttributeNS(namespaceURI, name, value);
+      else currentNode.setAttribute(name, value);
+      if (_isClobbered(currentNode)) {
+        _forceRemove(currentNode);
+        return false;
+      }
+      return true;
+    } catch (_2) {
+      _removeAttribute(name, currentNode);
+      return false;
+    }
+  };
+  const _isUnsafeAttributeValue = function _isUnsafeAttributeValue2(name, value) {
+    if (SAFE_FOR_XML && regExpTest(/((--!?|])>)|<\/(style|script|title|xmp|textarea|noscript|iframe|noembed|noframes)/i, value)) return true;
+    return stringToLowerCase(name) === "attributename" && stringMatch(value, "href") !== null;
+  };
+  const _sanitizeAttributes = function _sanitizeAttributes2(currentNode, root2) {
+    _executeHooks(hooks.beforeSanitizeAttributes, currentNode, null);
+    if (_handleHookDetachedNode(currentNode, root2)) return;
+    const attributes2 = currentNode.attributes;
+    if (!attributes2 || _isClobbered(currentNode)) return;
+    ALLOWED_ATTR = _forkSharedAllowlist(hooks.uponSanitizeAttribute, ALLOWED_ATTR, DEFAULT_ALLOWED_ATTR, SET_CONFIG_ALLOWED_ATTR);
+    const hookEvent = {
+      attrName: "",
+      attrValue: "",
+      keepAttr: true,
+      allowedAttributes: ALLOWED_ATTR,
+      forceKeepAttr: void 0
+    };
+    let l = attributes2.length;
+    const lcTag = transformCaseFunc(currentNode.nodeName);
+    while (l--) {
+      const attr = attributes2[l];
+      const name = attr.name, namespaceURI = attr.namespaceURI, attrValue = attr.value;
+      const lcName = transformCaseFunc(name);
+      const initValue = attrValue;
+      let value = name === "value" ? initValue : stringTrim(initValue);
+      let recreatedNamedProp = false;
+      hookEvent.attrName = lcName;
+      hookEvent.attrValue = value;
+      hookEvent.keepAttr = true;
+      hookEvent.forceKeepAttr = void 0;
+      _executeHooks(hooks.uponSanitizeAttribute, currentNode, hookEvent);
+      value = hookEvent.attrValue;
+      if (SANITIZE_NAMED_PROPS && (lcName === "id" || lcName === "name") && stringIndexOf(value, SANITIZE_NAMED_PROPS_PREFIX) !== 0) {
+        _removeAttribute(name, currentNode, attr);
+        value = SANITIZE_NAMED_PROPS_PREFIX + value;
+        recreatedNamedProp = true;
+      }
+      if (_isUnsafeAttributeValue(name, value)) {
+        _removeAttribute(name, currentNode, attr);
+        continue;
+      }
+      if (hookEvent.forceKeepAttr) continue;
+      if (!hookEvent.keepAttr) {
+        _removeAttribute(name, currentNode, attr);
+        continue;
+      }
+      if (!ALLOW_SELF_CLOSE_IN_ATTR && regExpTest(SELF_CLOSING_TAG, value)) {
+        _removeAttribute(name, currentNode, attr);
+        continue;
+      }
+      if (SAFE_FOR_TEMPLATES) value = _stripTemplateExpressions(value);
+      if (!_isValidAttribute(lcTag, lcName, value)) {
+        _removeAttribute(name, currentNode, attr);
+        continue;
+      }
+      value = _applyTrustedTypesToAttribute(lcTag, lcName, namespaceURI, value);
+      if (value !== initValue) {
+        if (_setAttributeValue(currentNode, name, namespaceURI, value) && recreatedNamedProp) arrayPop(DOMPurify.removed);
+      }
+    }
+    _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);
+    _handleHookDetachedNode(currentNode, root2);
+  };
+  const _sanitizeShadowDOM2 = function _sanitizeShadowDOM(fragment2) {
+    let shadowNode = null;
+    const shadowIterator = _createNodeIterator(fragment2);
+    _executeHooks(hooks.beforeSanitizeShadowDOM, fragment2, null);
+    while (shadowNode = shadowIterator.nextNode()) {
+      _executeHooks(hooks.uponSanitizeShadowNode, shadowNode, null);
+      _sanitizeElements(shadowNode, fragment2);
+      _sanitizeAttributes(shadowNode, fragment2);
+      if (_isDocumentFragment(shadowNode.content)) _sanitizeShadowDOM2(shadowNode.content);
+      if (_readNodeType(shadowNode) === NODE_TYPE.element) {
+        const innerSr = getShadowRoot(shadowNode);
+        if (_isDocumentFragment(innerSr)) {
+          _sanitizeAttachedShadowRoots(innerSr);
+          _sanitizeShadowDOM2(innerSr);
+        }
+      }
+    }
+    if (SAFE_FOR_TEMPLATES) _scrubOwnCharacterData(fragment2);
+    _executeHooks(hooks.afterSanitizeShadowDOM, fragment2, null);
+  };
+  const _sanitizeAttachedShadowRoots = function _sanitizeAttachedShadowRoots2(root2) {
+    const stack = [{
+      node: root2,
+      shadow: null
+    }];
+    while (stack.length > 0) {
+      const item = stack.pop();
+      if (item.shadow) {
+        _sanitizeShadowDOM2(item.shadow);
+        continue;
+      }
+      const node = item.node;
+      const isElement = _readNodeType(node) === NODE_TYPE.element;
+      const childNodes = getChildNodes(node);
+      if (childNodes) for (let i = childNodes.length - 1; i >= 0; --i) stack.push({
+        node: childNodes[i],
+        shadow: null
+      });
+      if (isElement) {
+        const rootName = getNodeName ? getNodeName(node) : null;
+        if (typeof rootName === "string" && transformCaseFunc(rootName) === "template") {
+          const content = node.content;
+          if (_isDocumentFragment(content)) stack.push({
+            node: content,
+            shadow: null
+          });
+        }
+      }
+      if (isElement) {
+        const sr = getShadowRoot(node);
+        if (_isDocumentFragment(sr)) stack.push({
+          node: null,
+          shadow: sr
+        }, {
+          node: sr,
+          shadow: null
+        });
+      }
+    }
+  };
+  DOMPurify.sanitize = function(dirty) {
+    let cfg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+    let body = null;
+    let importedNode = null;
+    let currentNode = null;
+    let returnNode = null;
+    IS_EMPTY_INPUT = !dirty;
+    if (IS_EMPTY_INPUT) dirty = "<!-->";
+    if (typeof dirty !== "string" && !_isNode(dirty)) {
+      dirty = stringifyValue(dirty);
+      if (typeof dirty !== "string") throw typeErrorCreate("dirty is not a string, aborting");
+    }
+    if (!DOMPurify.isSupported) return dirty;
+    if (SET_CONFIG) {
+      ALLOWED_TAGS = SET_CONFIG_ALLOWED_TAGS;
+      ALLOWED_ATTR = SET_CONFIG_ALLOWED_ATTR;
+    } else _parseConfig(cfg);
+    if (hooks.uponSanitizeElement.length > 0 || hooks.uponSanitizeAttribute.length > 0) ALLOWED_TAGS = clone(ALLOWED_TAGS);
+    if (hooks.uponSanitizeAttribute.length > 0) ALLOWED_ATTR = clone(ALLOWED_ATTR);
+    DOMPurify.removed = [];
+    const inPlace = IN_PLACE && typeof dirty !== "string" && _isNode(dirty);
+    let inPlaceNodes = [];
+    const outerVisited = IN_PLACE_VISITED;
+    if (inPlace) {
+      _neutralizePatchLinkage(dirty);
+      const nn = _readNodeName(dirty);
+      if (typeof nn === "string") {
+        const tagName = transformCaseFunc(nn);
+        if (!ALLOWED_TAGS[tagName] || FORBID_TAGS[tagName]) {
+          _neutralizeRoot(dirty);
+          throw typeErrorCreate("root node is forbidden and cannot be sanitized in-place");
+        }
+      }
+      if (_isClobbered(dirty)) {
+        _neutralizeRoot(dirty);
+        throw typeErrorCreate("root node is clobbered and cannot be sanitized in-place");
+      }
+      inPlaceNodes = _collectLiveNodes(dirty);
+      IN_PLACE_VISITED = setCreate();
+    } else if (_isNode(dirty)) {
+      body = _initDocument("<!---->");
+      importedNode = body.ownerDocument.importNode(dirty, true);
+      if (importedNode.nodeType === NODE_TYPE.element && importedNode.nodeName === "BODY") body = importedNode;
+      else if (importedNode.nodeName === "HTML") body = importedNode;
+      else body.appendChild(importedNode);
+      _sanitizeAttachedShadowRoots(body);
+    } else {
+      if (!RETURN_DOM && !SAFE_FOR_TEMPLATES && !WHOLE_DOCUMENT && dirty.indexOf("<") === -1) return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? _createTrustedHTML(dirty) : dirty;
+      body = _initDocument(dirty);
+      if (!body) return RETURN_DOM ? null : RETURN_TRUSTED_TYPE ? emptyHTML : "";
+    }
+    if (body && FORCE_BODY) _forceRemove(body.firstChild);
+    const walkRoot = inPlace ? dirty : body;
+    try {
+      if (inPlace) _sanitizeAttachedShadowRoots(dirty);
+      const nodeIterator = _createNodeIterator(walkRoot);
+      while (currentNode = nodeIterator.nextNode()) {
+        _sanitizeElements(currentNode, walkRoot);
+        _sanitizeAttributes(currentNode, walkRoot);
+        if (_isDocumentFragment(currentNode.content)) _sanitizeShadowDOM2(currentNode.content);
+      }
+      if (inPlace) _sanitizeUnvisitedNodes(dirty, inPlaceNodes);
+    } catch (error) {
+      if (inPlace) {
+        _neutralizeRoot(dirty);
+        _neutralizeDiscarded(dirty, inPlaceNodes);
+      }
+      throw error;
+    } finally {
+      IN_PLACE_VISITED = outerVisited;
+    }
+    if (inPlace) {
+      if (_neutralizeDiscarded(dirty, inPlaceNodes)) throw typeErrorCreate("a node selected for removal could not be safely returned; refusing to sanitize in place");
+      if (SAFE_FOR_TEMPLATES) _scrubTemplateExpressions2(dirty);
+      return dirty;
+    }
+    if (RETURN_DOM) {
+      if (SAFE_FOR_TEMPLATES) _scrubTemplateExpressions2(body);
+      if (RETURN_DOM_FRAGMENT) {
+        returnNode = createDocumentFragment.call(body.ownerDocument);
+        while (body.firstChild) returnNode.appendChild(body.firstChild);
+      } else returnNode = body;
+      if (ALLOWED_ATTR.shadowroot || ALLOWED_ATTR.shadowrootmode) returnNode = importNode.call(originalDocument, returnNode, true);
+      return returnNode;
+    }
+    let serializedHTML = WHOLE_DOCUMENT ? body.outerHTML : body.innerHTML;
+    if (WHOLE_DOCUMENT && ALLOWED_TAGS["!doctype"] && body.ownerDocument && body.ownerDocument.doctype && body.ownerDocument.doctype.name && regExpTest(DOCTYPE_NAME, body.ownerDocument.doctype.name)) serializedHTML = "<!DOCTYPE " + body.ownerDocument.doctype.name + ">\n" + serializedHTML;
+    if (SAFE_FOR_TEMPLATES) serializedHTML = _stripTemplateExpressions(serializedHTML);
+    return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? _createTrustedHTML(serializedHTML) : serializedHTML;
+  };
+  DOMPurify.setConfig = function() {
+    let cfg = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+    _parseConfig(cfg);
+    SET_CONFIG = true;
+    SET_CONFIG_ALLOWED_TAGS = ALLOWED_TAGS;
+    SET_CONFIG_ALLOWED_ATTR = ALLOWED_ATTR;
+  };
+  DOMPurify.clearConfig = function() {
+    CONFIG = null;
+    SET_CONFIG = false;
+    SET_CONFIG_ALLOWED_TAGS = null;
+    SET_CONFIG_ALLOWED_ATTR = null;
+    trustedTypesPolicy = defaultTrustedTypesPolicy;
+    emptyHTML = "";
+  };
+  DOMPurify.isValidAttribute = function(tag, attr, value) {
+    if (!CONFIG) _parseConfig({});
+    const lcTag = transformCaseFunc(tag);
+    const lcName = transformCaseFunc(attr);
+    if (typeof value === "string" && (_isUnsafeAttributeValue(attr, value) || !ALLOW_SELF_CLOSE_IN_ATTR && regExpTest(SELF_CLOSING_TAG, value))) return false;
+    return _isValidAttribute(lcTag, lcName, value);
+  };
+  DOMPurify.addHook = function(entryPoint, hookFunction) {
+    if (typeof hookFunction !== "function") return;
+    if (!objectHasOwnProperty(hooks, entryPoint)) return;
+    arrayPush(hooks[entryPoint], hookFunction);
+  };
+  DOMPurify.removeHook = function(entryPoint, hookFunction) {
+    if (!objectHasOwnProperty(hooks, entryPoint)) return;
+    if (hookFunction !== void 0) {
+      const index = arrayLastIndexOf(hooks[entryPoint], hookFunction);
+      return index === -1 ? void 0 : arraySplice(hooks[entryPoint], index, 1)[0];
+    }
+    return arrayPop(hooks[entryPoint]);
+  };
+  DOMPurify.removeHooks = function(entryPoint) {
+    if (!objectHasOwnProperty(hooks, entryPoint)) return;
+    hooks[entryPoint] = [];
+  };
+  DOMPurify.removeAllHooks = function() {
+    hooks = _createHooksMap();
+  };
+  return DOMPurify;
+}
+var purify_default = createDOMPurify();
+
+// src/utils/svg-import.js
+var namespace = "http://www.w3.org/2000/svg";
+var documents = /* @__PURE__ */ new WeakSet();
+var purifier;
+var tags = [
+  "svg",
+  "g",
+  "defs",
+  "use",
+  "path",
+  "polygon",
+  "polyline",
+  "circle",
+  "ellipse",
+  "rect",
+  "line",
+  "linearGradient",
+  "radialGradient",
+  "stop",
+  "clipPath",
+  "text",
+  "tspan",
+  "image",
+  "title",
+  "desc",
+  "#text"
+];
+var presentation = [
+  "fill",
+  "stroke",
+  "color",
+  "opacity",
+  "fill-opacity",
+  "stroke-opacity",
+  "stroke-width",
+  "stroke-linecap",
+  "stroke-linejoin",
+  "stroke-miterlimit",
+  "stroke-dasharray",
+  "stroke-dashoffset",
+  "display",
+  "visibility",
+  "clip-path",
+  "font-family",
+  "font-size",
+  "font-weight",
+  "font-style",
+  "text-decoration",
+  "line-height",
+  "text-anchor",
+  "dominant-baseline",
+  "alignment-baseline",
+  "stop-color",
+  "stop-opacity"
+];
+var attributes = [
+  "id",
+  "class",
+  "xmlns",
+  "xmlns:xlink",
+  "href",
+  "xlink:href",
+  "style",
+  "x",
+  "y",
+  "x1",
+  "x2",
+  "y1",
+  "y2",
+  "width",
+  "height",
+  "cx",
+  "cy",
+  "r",
+  "rx",
+  "ry",
+  "fx",
+  "fy",
+  "d",
+  "points",
+  "transform",
+  "viewBox",
+  "gradientUnits",
+  "gradientTransform",
+  "spreadMethod",
+  "offset",
+  ...presentation
+];
+var fragment = /^#[\w.-]+$/;
+var paintReference = /^url\(\s*['"]?(#[\w.-]+)['"]?\s*\)$/i;
+var raster = /^data:image\/(?:png|jpeg|gif|webp|avif);base64,[a-z\d+/=\s]+$/i;
+var nonInherited = /^(display|opacity|clip-path|stop-color|stop-opacity)$/;
+var initialStyles = {
+  fill: "#000",
+  stroke: "none",
+  color: "#000",
+  opacity: "1",
+  "fill-opacity": "1",
+  "stroke-opacity": "1",
+  "stroke-width": "1",
+  "stroke-linecap": "butt",
+  "stroke-linejoin": "miter",
+  "stroke-miterlimit": "4",
+  "stroke-dasharray": "none",
+  "stroke-dashoffset": "0",
+  display: "inline",
+  visibility: "visible",
+  "clip-path": "none",
+  "font-family": "serif",
+  "font-size": "16",
+  "font-weight": "normal",
+  "font-style": "normal",
+  "text-decoration": "none",
+  "line-height": "normal",
+  "text-anchor": "start",
+  "dominant-baseline": "auto",
+  "alignment-baseline": "baseline",
+  "stop-color": "#000",
+  "stop-opacity": "1"
+};
+function isSvgImport(node) {
+  return documents.has(node.ownerDocument);
+}
+function drawingValue(name, value) {
+  value = value.trim();
+  if (name === "clip-path") {
+    return value === "none" || paintReference.test(value);
+  }
+  if (/^(fill|stroke|color|stop-color)$/.test(name)) {
+    if (paintReference.test(value)) {
+      return name === "fill" || name === "stroke";
+    }
+    return /^(?:none|inherit|currentColor|[a-z]+|#[a-f\d]+|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\([-\w\s,.%+/]+\))$/i.test(value);
+  }
+  return /^[-\w\s.,%+'"]+$/.test(value);
+}
+function imageURL(value, options, baseURL) {
+  if (raster.test(value)) {
+    return value;
+  }
+  if (options.allowExternalImages === true) {
+    try {
+      const url = new root.URL(value, baseURL);
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        return url.href;
+      }
+    } catch (_error) {
+    }
+  }
+  return null;
+}
+function parseSvg(input, options, baseURL) {
+  if (!root.DOMParser || !root.document) {
+    throw new TwoError("SVG loading requires a browser DOM.");
+  }
+  if (input && input.nodeType === 1) {
+    input = new root.XMLSerializer().serializeToString(input);
+  }
+  if (typeof input !== "string") {
+    throw new TwoError("Invalid SVG content.");
+  }
+  input = input.replace(/<!DOCTYPE\s+svg\s+PUBLIC\s+"-\/\/W3C\/\/DTD SVG 1\.1\/\/EN"\s+"https?:\/\/www\.w3\.org\/Graphics\/SVG\/1\.1\/DTD\/svg11\.dtd"\s*>/g, "");
+  if (/<!DOCTYPE/i.test(input)) throw new TwoError("SVG DTDs are not supported.");
+  const parser = new root.DOMParser();
+  let document2 = parser.parseFromString(input, "image/svg+xml");
+  let svg3 = document2.documentElement;
+  const wrapped = !svg3 || svg3.localName !== "svg" || svg3.namespaceURI !== namespace;
+  if (wrapped) {
+    document2 = parser.parseFromString(
+      '<svg xmlns="' + namespace + '" xmlns:xlink="http://www.w3.org/1999/xlink">' + input + "</svg>",
+      "image/svg+xml"
+    );
+    svg3 = document2.documentElement;
+  }
+  if (document2.getElementsByTagNameNS("*", "parsererror").length) {
+    throw new TwoError("Invalid SVG content.");
+  }
+  purifier = purifier || purify_default(root);
+  if (!purifier.isSupported) {
+    throw new TwoError("SVG sanitization is unavailable.");
+  }
+  purifier.sanitize(svg3, {
+    IN_PLACE: true,
+    ALLOWED_TAGS: tags,
+    ALLOWED_ATTR: attributes,
+    ALLOWED_NAMESPACES: [namespace],
+    ALLOW_DATA_ATTR: false,
+    ALLOW_ARIA_ATTR: false,
+    KEEP_CONTENT: false
+  });
+  for (const node of [svg3, ...svg3.querySelectorAll("*")]) {
+    for (const name of presentation) {
+      const value = node.style.getPropertyValue(name);
+      if (value) {
+        node.setAttribute(name, value);
+      }
+      if (node.hasAttribute(name) && !drawingValue(name, node.getAttribute(name))) {
+        node.removeAttribute(name);
+      }
+    }
+    node.removeAttribute("style");
+    if (node.localName === "image") {
+      const href = node.getAttribute("href") || node.getAttribute("xlink:href");
+      const url = href && imageURL(href, options, baseURL);
+      if (!url) {
+        node.remove();
+        continue;
+      }
+      node.setAttribute("href", url);
+      node.removeAttribute("xlink:href");
+    } else {
+      for (const name of ["href", "xlink:href"]) {
+        const value = node.getAttribute(name);
+        if (value && (node.localName !== "use" || !fragment.test(value))) {
+          node.removeAttribute(name);
+        }
+      }
+    }
+  }
+  if (!svg3.hasAttribute("fill")) svg3.setAttribute("fill", "#000");
+  if (!svg3.hasAttribute("stroke")) svg3.setAttribute("stroke", "none");
+  const ids = /* @__PURE__ */ new Map();
+  for (const node of [svg3, ...svg3.querySelectorAll("[id]")]) {
+    if (node.id && !ids.has(node.id)) ids.set(node.id, node);
+  }
+  for (const node of [svg3, ...svg3.querySelectorAll("*")]) {
+    for (const name of ["fill", "stroke", "clip-path"]) {
+      const match = paintReference.exec(node.getAttribute(name) || "");
+      if (!match) continue;
+      const target = ids.get(match[1].slice(1));
+      const valid = target && (name === "clip-path" ? target.localName === "clipPath" : /^(linearGradient|radialGradient)$/.test(target.localName));
+      if (valid) {
+        node.setAttribute(name, "url(" + match[1] + ")");
+      } else {
+        node.removeAttribute(name);
+      }
+    }
+    if (node.localName === "use") {
+      const href = node.getAttribute("href") || node.getAttribute("xlink:href");
+      if (!href || !ids.has(href.slice(1))) {
+        node.removeAttribute("href");
+        node.removeAttribute("xlink:href");
+      }
+    }
+  }
+  const isolated = root.document.implementation.createDocument(namespace, null);
+  const result = isolated.importNode(svg3, true);
+  documents.add(isolated);
+  return { svg: result, wrapped };
+}
+function getSvgImportStyles(node, parentStyles, resolvePaint = false) {
+  if (!parentStyles && node.parentElement) {
+    parentStyles = getSvgImportStyles(node.parentElement);
+  }
+  const styles = {};
+  for (const name of presentation) {
+    const own = node.getAttribute(name);
+    let value = own !== null ? own : !nonInherited.test(name) && parentStyles ? parentStyles[name] : void 0;
+    if (typeof value === "undefined") continue;
+    const keyword = value.trim().toLowerCase();
+    if (keyword === "inherit" || name === "color" && keyword === "currentcolor") {
+      value = parentStyles && parentStyles[name] || initialStyles[name];
+    }
+    styles[name] = value;
+  }
+  styles.color = styles.color || initialStyles.color;
+  if (resolvePaint) {
+    for (const name of ["fill", "stroke", "stop-color"]) {
+      if (/^currentcolor$/i.test((styles[name] || "").trim())) {
+        styles[name] = styles.color;
+      }
+    }
+  }
+  return styles;
+}
+
 // src/utils/interpret-svg.js
+var references2 = /* @__PURE__ */ new Set();
+function readReference(node, styles, reference = node) {
+  const tag = getTagName(node.nodeName);
+  if (!Object.prototype.hasOwnProperty.call(read, tag)) {
+    return null;
+  }
+  if (references2.has(reference)) {
+    throw new TwoError("Circular SVG reference.");
+  }
+  references2.add(reference);
+  try {
+    return read[tag].call(this, node, styles);
+  } finally {
+    references2.delete(reference);
+  }
+}
 var regex2 = {
   path: /[+-]?(?:\d*\.\d+|\d+)(?:[eE][+-]\d+)?/g,
-  cssBackgroundImage: /url\(['"]?#([\w\d-_]*)['"]?\)/i,
+  cssBackgroundImage: /url\(['"]?#([\w.-]*)['"]?\)/i,
   unitSuffix: /[a-zA-Z%]*/i
 };
 var alignments = {
@@ -11411,11 +13801,11 @@ function applyTransformsToVector(transforms, vector3) {
     vector3.y = l * Math.sin(transforms.rotation);
   }
 }
-function extractCSSText(text, styles) {
+function extractCSSText(text2, styles) {
   if (!styles) {
     styles = {};
   }
-  const commands = text.split(";");
+  const commands = text2.split(";");
   for (let i = 0; i < commands.length; i++) {
     const command = commands[i].split(":");
     const name = command[0];
@@ -11431,11 +13821,11 @@ function extractCSSText(text, styles) {
 }
 function getSvgStyles(node) {
   const styles = {};
-  const attributes = getSvgAttributes(node);
-  const length = Math.max(attributes.length, node.style.length);
+  const attributes2 = getSvgAttributes(node);
+  const length = Math.max(attributes2.length, node.style.length);
   for (let i = 0; i < length; i++) {
     const command = node.style[i];
-    const attribute = attributes[i];
+    const attribute = attributes2[i];
     if (command) {
       styles[command] = node.style[command];
     }
@@ -11446,15 +13836,15 @@ function getSvgStyles(node) {
   return styles;
 }
 function getSvgAttributes(node) {
-  const attributes = node.getAttributeNames();
+  const attributes2 = node.getAttributeNames();
   for (let i = 0; i < reservedAttributesToRemove.length; i++) {
     const keyword = reservedAttributesToRemove[i];
-    const index = Array.prototype.indexOf.call(attributes, keyword);
+    const index = Array.prototype.indexOf.call(attributes2, keyword);
     if (index >= 0) {
-      attributes.splice(index, 1);
+      attributes2.splice(index, 1);
     }
   }
-  return attributes;
+  return attributes2;
 }
 function applySvgViewBox(node, value) {
   const elements = value.split(/[\s,]/);
@@ -11497,16 +13887,16 @@ function applySvgViewBox(node, value) {
   node.mask.origin.set(-width / 2, -height / 2);
   return node;
 }
-function applySvgAttributes(node, elem, parentStyles) {
-  const styles = {}, attributes = {}, extracted = {};
+function applySvgAttributes(node, elem, parentStyles, normalization) {
+  const styles = {}, attributes2 = {}, extracted = {};
   let i, m, key, value, prop, attr;
   let transforms, x, y;
-  let id, scene, ref, tagName;
+  let id, scene, ref;
   let ca, cb, cc, error;
   if (node === null) {
     return styles;
   }
-  if (root.getComputedStyle) {
+  if (root.getComputedStyle && !isSvgImport(node)) {
     const computedStyles = root.getComputedStyle(node);
     i = computedStyles.length;
     while (i--) {
@@ -11519,10 +13909,10 @@ function applySvgAttributes(node, elem, parentStyles) {
   }
   for (i = 0; i < node.attributes.length; i++) {
     attr = node.attributes[i];
-    if (/style/i.test(attr.nodeName)) {
+    if (attr.nodeName.toLowerCase() === "style") {
       extractCSSText(attr.value, extracted);
     } else {
-      attributes[attr.nodeName] = attr.value;
+      attributes2[attr.nodeName] = attr.value;
     }
   }
   if (typeof styles.opacity !== "undefined") {
@@ -11530,21 +13920,24 @@ function applySvgAttributes(node, elem, parentStyles) {
     styles["fill-opacity"] = styles.opacity;
     delete styles.opacity;
   }
-  if (parentStyles) {
+  if (parentStyles && !isSvgImport(node)) {
     const display = styles.display;
     _.defaults(styles, parentStyles);
     if (typeof display === "undefined") {
       delete styles.display;
     }
   }
-  _.extend(styles, extracted, attributes);
+  _.extend(styles, extracted, attributes2);
+  if (isSvgImport(node)) {
+    _.extend(styles, getSvgImportStyles(node, parentStyles, true));
+  }
   styles.visible = !(typeof styles.display !== "undefined" && /none/i.test(styles.display)) && !(typeof styles.visibility !== "undefined" && /hidden/i.test(styles.visibility));
   for (key in styles) {
     value = styles[key];
     switch (key) {
       case "gradientTransform":
         if (/none/i.test(value)) break;
-        m = node.gradientTransform && node.gradientTransform.baseVal && node.gradientTransform.baseVal.length > 0 ? node.gradientTransform.baseVal[0].matrix : node.getCTM ? node.getCTM() : null;
+        m = node.gradientTransform && node.gradientTransform.baseVal && node.gradientTransform.baseVal.length > 0 ? isSvgImport(node) ? node.gradientTransform.baseVal.consolidate().matrix : node.gradientTransform.baseVal[0].matrix : node.getCTM ? node.getCTM() : null;
         if (m === null) break;
         transforms = decomposeMatrix(m);
         switch (elem._renderer.type) {
@@ -11563,7 +13956,7 @@ function applySvgAttributes(node, elem, parentStyles) {
         break;
       case "transform":
         if (/none/i.test(value)) break;
-        m = node.transform && node.transform.baseVal && node.transform.baseVal.length > 0 ? node.transform.baseVal[0].matrix : node.getCTM ? node.getCTM() : null;
+        m = node.transform && node.transform.baseVal && node.transform.baseVal.length > 0 ? isSvgImport(node) ? node.transform.baseVal.consolidate().matrix : node.transform.baseVal[0].matrix : node.getCTM ? node.getCTM() : null;
         if (m === null) break;
         if (Constants.AutoCalculateImportedMatrices) {
           transforms = decomposeMatrix(m);
@@ -11579,9 +13972,10 @@ function applySvgAttributes(node, elem, parentStyles) {
             elem.translation.y = y;
           }
         } else {
-          m = node.getCTM();
+          if (!isSvgImport(node)) m = node.getCTM();
+          if (!m) break;
           elem._matrix.manual = true;
-          elem._matrix.set(m.a, m.b, m.c, m.d, m.e, m.f);
+          elem._matrix.set(m.a, m.c, m.e, m.b, m.d, m.f, 0, 0, 1);
         }
         break;
       case "visible":
@@ -11623,6 +14017,7 @@ function applySvgAttributes(node, elem, parentStyles) {
       case "stroke-opacity":
       case "fill-opacity":
         if (elem instanceof Group) {
+          if (isSvgImport(node) && key !== "opacity") break;
           elem._opacity = parseFloat(value);
           break;
         }
@@ -11633,10 +14028,10 @@ function applySvgAttributes(node, elem, parentStyles) {
           id = value.replace(regex2.cssBackgroundImage, "$1");
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
-            if (ref && ref.childNodes.length > 0) {
-              ref = ref.childNodes[0];
-              tagName = getTagName(ref.nodeName);
-              elem.mask = read[tagName].call(this, ref, {});
+            if (ref && ref.children.length > 0) {
+              ref = ref.children[0];
+              elem.mask = readReference.call(this, ref, {});
+              if (!elem.mask) break;
               switch (elem._renderer.type) {
                 case "text":
                 case "path":
@@ -11656,15 +14051,14 @@ function applySvgAttributes(node, elem, parentStyles) {
           if (read.defs.current && read.defs.current.contains(id)) {
             ref = read.defs.current.get(id);
             if (!ref.object) {
-              tagName = getTagName(ref.nodeName);
-              ref.object = read[tagName].call(this, ref, {});
+              ref.object = readReference.call(this, ref, isSvgImport(node) ? void 0 : {});
             }
             ref = ref.object;
-          } else {
+          } else if (!isSvgImport(node)) {
             scene = getScene(this);
             ref = scene.getById(id);
           }
-          elem[prop] = ref;
+          if (ref) elem[prop] = ref;
         } else {
           elem[prop] = value;
         }
@@ -11732,6 +14126,12 @@ function applySvgAttributes(node, elem, parentStyles) {
     }
   }
   if (Object.keys(node.dataset).length) elem.dataset = node.dataset;
+  if (isSvgImport(node) && elem._matrix && elem._matrix.manual) {
+    elem._matrix.translate(
+      elem.translation.x + (normalization ? normalization.x : 0),
+      elem.translation.y + (normalization ? normalization.y : 0)
+    );
+  }
   return styles;
 }
 function updateDefsCache(node, defsCache) {
@@ -11750,41 +14150,51 @@ function getScene(node) {
   return node.scene;
 }
 var read = {
-  svg: function(node) {
+  svg: function(node, parentStyles) {
+    const previous = read.defs.current;
     const defs = read.defs.current = new Registry();
-    const elements = node.getElementsByTagName("defs");
-    for (let i = 0; i < elements.length; i++) {
-      updateDefsCache(elements[i], defs);
+    defs.map = /* @__PURE__ */ Object.create(null);
+    try {
+      const elements = node.getElementsByTagName("defs");
+      for (let i = 0; i < elements.length; i++) {
+        updateDefsCache(elements[i], defs);
+      }
+      if (isSvgImport(node)) {
+        for (const target of node.querySelectorAll("[id]")) {
+          if (!defs.contains(target.id)) defs.add(target.id, target);
+        }
+      }
+      const svg3 = read.g.call(this, node, parentStyles);
+      const viewBox = node.getAttribute("viewBox");
+      const x = node.getAttribute("x");
+      const y = node.getAttribute("y");
+      const width = node.getAttribute("width");
+      const height = node.getAttribute("height");
+      svg3.defs = defs;
+      const viewBoxExists = viewBox !== null;
+      const xExists = x !== null;
+      const yExists = y !== null;
+      const widthExists = width !== null;
+      const heightExists = height !== null;
+      if (xExists) {
+        svg3.x = parseFloat(x.replace(regex2.unitSuffix, ""));
+      }
+      if (yExists) {
+        svg3.y = parseFloat(y.replace(regex2.unitSuffix, ""));
+      }
+      if (widthExists) {
+        svg3.width = parseFloat(width.replace(regex2.unitSuffix, ""));
+      }
+      if (heightExists) {
+        svg3.height = parseFloat(height.replace(regex2.unitSuffix, ""));
+      }
+      if (viewBoxExists) {
+        applySvgViewBox(svg3, viewBox);
+      }
+      return svg3;
+    } finally {
+      read.defs.current = previous;
     }
-    const svg2 = read.g.call(this, node);
-    const viewBox = node.getAttribute("viewBox");
-    const x = node.getAttribute("x");
-    const y = node.getAttribute("y");
-    const width = node.getAttribute("width");
-    const height = node.getAttribute("height");
-    svg2.defs = defs;
-    const viewBoxExists = viewBox !== null;
-    const xExists = x !== null;
-    const yExists = y !== null;
-    const widthExists = width !== null;
-    const heightExists = height !== null;
-    if (xExists) {
-      svg2.x = parseFloat(x.replace(regex2.unitSuffix, ""));
-    }
-    if (yExists) {
-      svg2.y = parseFloat(y.replace(regex2.unitSuffix, ""));
-    }
-    if (widthExists) {
-      svg2.width = parseFloat(width.replace(regex2.unitSuffix, ""));
-    }
-    if (heightExists) {
-      svg2.height = parseFloat(height.replace(regex2.unitSuffix, ""));
-    }
-    if (viewBoxExists) {
-      applySvgViewBox(svg2, viewBox);
-    }
-    delete read.defs.current;
-    return svg2;
   },
   defs: function(node) {
     return null;
@@ -11798,7 +14208,7 @@ var read = {
       return null;
     }
     const id = href.slice(1);
-    if (!read.defs.current.contains(id)) {
+    if (href[0] !== "#" || !read.defs.current || !read.defs.current.contains(id)) {
       error = new TwoError(
         "unable to find element for reference " + href + "."
       );
@@ -11809,26 +14219,26 @@ var read = {
     const fullNode = template.cloneNode(true);
     for (let i = 0; i < node.attributes.length; i++) {
       const attr = node.attributes[i];
+      if (attr.nodeName === "href" || attr.nodeName === "xlink:href") continue;
       const ca = overwriteAttrs.includes(attr.nodeName);
       const cb = !fullNode.hasAttribute(attr.nodeName);
       if (ca || cb) {
         fullNode.setAttribute(attr.nodeName, attr.value);
       }
     }
-    const tagName = getTagName(fullNode.nodeName);
-    return read[tagName].call(this, fullNode, styles);
+    return readReference.call(this, fullNode, styles, template);
   },
   g: function(node, parentStyles) {
     const group = new Group();
     applySvgAttributes.call(this, node, group, parentStyles);
-    this.add(group);
-    const styles = getSvgStyles.call(this, node);
+    if (!isSvgImport(node)) this.add(group);
+    const styles = isSvgImport(node) ? getSvgImportStyles(node, parentStyles) : getSvgStyles.call(this, node);
     for (let i = 0, l = node.childNodes.length; i < l; i++) {
       const n = node.childNodes[i];
       const tag = n.nodeName;
       if (!tag) return;
       const tagName = getTagName(tag);
-      if (tagName in read) {
+      if (Object.prototype.hasOwnProperty.call(read, tagName)) {
         const o = read[tagName].call(group, n, styles);
         if (!!o && !o.parent) {
           group.add(o);
@@ -12148,31 +14558,31 @@ var read = {
     _.each(path.vertices, function(v) {
       v.subSelf(rect.centroid);
     });
-    applySvgAttributes.call(this, node, path, parentStyles);
+    applySvgAttributes.call(this, node, path, parentStyles, rect.centroid);
     path.translation.addSelf(rect.centroid);
     return path;
   },
   circle: function(node, parentStyles) {
-    const x = parseFloat(node.getAttribute("cx"));
-    const y = parseFloat(node.getAttribute("cy"));
+    const x = parseFloat(node.getAttribute("cx")) || 0;
+    const y = parseFloat(node.getAttribute("cy")) || 0;
     const r = parseFloat(node.getAttribute("r"));
     const circle = new Circle(0, 0, r);
     circle.stroke = "none";
     circle.fill = "black";
-    applySvgAttributes.call(this, node, circle, parentStyles);
+    applySvgAttributes.call(this, node, circle, parentStyles, { x, y });
     circle.translation.x = x;
     circle.translation.y = y;
     return circle;
   },
   ellipse: function(node, parentStyles) {
-    const x = parseFloat(node.getAttribute("cx"));
-    const y = parseFloat(node.getAttribute("cy"));
+    const x = parseFloat(node.getAttribute("cx")) || 0;
+    const y = parseFloat(node.getAttribute("cy")) || 0;
     const width = parseFloat(node.getAttribute("rx"));
     const height = parseFloat(node.getAttribute("ry"));
     const ellipse = new Ellipse(0, 0, width, height);
     ellipse.stroke = "none";
     ellipse.fill = "black";
-    applySvgAttributes.call(this, node, ellipse, parentStyles);
+    applySvgAttributes.call(this, node, ellipse, parentStyles, { x, y });
     ellipse.translation.x = x;
     ellipse.translation.y = y;
     return ellipse;
@@ -12181,7 +14591,7 @@ var read = {
     const rx = parseFloat(node.getAttribute("rx"));
     const ry = parseFloat(node.getAttribute("ry"));
     if (!_.isNaN(rx) || !_.isNaN(ry)) {
-      return read["rounded-rect"](node);
+      return read["rounded-rect"].call(this, node, parentStyles);
     }
     const width = parseFloat(node.getAttribute("width"));
     const height = parseFloat(node.getAttribute("height"));
@@ -12190,7 +14600,7 @@ var read = {
     const rect = new Rectangle(0, 0, width, height);
     rect.stroke = "none";
     rect.fill = "black";
-    applySvgAttributes.call(this, node, rect, parentStyles);
+    applySvgAttributes.call(this, node, rect, parentStyles, { x: w2, y: h2 });
     rect.translation.x += w2;
     rect.translation.y += h2;
     return rect;
@@ -12206,7 +14616,7 @@ var read = {
     const rect = new RoundedRectangle(0, 0, width, height, radius);
     rect.stroke = "none";
     rect.fill = "black";
-    applySvgAttributes.call(this, node, rect, parentStyles);
+    applySvgAttributes.call(this, node, rect, parentStyles, { x: w2, y: h2 });
     rect.translation.x += w2;
     rect.translation.y += h2;
     return rect;
@@ -12242,6 +14652,7 @@ var read = {
       y2 -= oy;
     }
     const stops = [];
+    const importedStyles = isSvgImport(node) ? getSvgImportStyles(node, parentStyles) : null;
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
@@ -12262,6 +14673,11 @@ var read = {
         opacity = matches && matches.length > 1 ? parseFloat(matches[1]) : 1;
       } else {
         opacity = parseFloat(opacity);
+      }
+      if (importedStyles) {
+        const stopStyles = getSvgImportStyles(child, importedStyles, true);
+        color = stopStyles["stop-color"] || "#000";
+        opacity = parseFloat(stopStyles["stop-opacity"] || "1");
       }
       stops.push(new Stop(offset, color, opacity));
     }
@@ -12300,6 +14716,7 @@ var read = {
       fy -= oy;
     }
     const stops = [];
+    const importedStyles = isSvgImport(node) ? getSvgImportStyles(node, parentStyles) : null;
     for (let i = 0; i < node.children.length; i++) {
       const child = node.children[i];
       let offset = child.getAttribute("offset");
@@ -12321,6 +14738,11 @@ var read = {
       } else {
         opacity = parseFloat(opacity);
       }
+      if (importedStyles) {
+        const stopStyles = getSvgImportStyles(child, importedStyles, true);
+        color = stopStyles["stop-color"] || "#000";
+        opacity = parseFloat(stopStyles["stop-opacity"] || "1");
+      }
       stops.push(new Stop(offset, color, opacity));
     }
     const gradient = new RadialGradient(cx, cy, r, stops, fx, fy);
@@ -12338,11 +14760,11 @@ var read = {
     } else {
       message = node.textContent;
     }
-    const text = new Text(message);
-    applySvgAttributes.call(this, node, text, parentStyles);
-    text.alignment = alignment;
-    text.baseline = baseline;
-    return text;
+    const text2 = new Text(message);
+    applySvgAttributes.call(this, node, text2, parentStyles);
+    text2.alignment = alignment;
+    text2.baseline = baseline;
+    return text2;
   },
   clippath: function(node, parentStyles) {
     if (read.defs.current && !read.defs.current.contains(node.id)) {
@@ -12375,14 +14797,22 @@ var read = {
 };
 
 // src/utils/xhr.js
-function xhr(path, callback) {
+function xhr(path, callback, onError) {
   const xhr2 = new XMLHttpRequest();
   xhr2.open("GET", path);
-  xhr2.onreadystatechange = function() {
-    if (xhr2.readyState === 4 && xhr2.status === 200) {
-      callback(xhr2.responseText);
+  xhr2.onload = function() {
+    if (xhr2.status >= 200 && xhr2.status < 300) {
+      callback(xhr2.responseText, xhr2);
+    } else {
+      fail();
     }
   };
+  xhr2.onerror = xhr2.onabort = xhr2.ontimeout = fail;
+  function fail() {
+    if (typeof onError === "function") {
+      onError(new Error("Unable to load SVG resource: HTTP " + xhr2.status));
+    }
+  }
   xhr2.send();
   return xhr2;
 }
@@ -12473,7 +14903,7 @@ var _Image = class _Image extends Rectangle {
    * @description Create a new instance of {@link Two.Image} with the same properties of the current image.
    */
   clone(parent) {
-    const clone = new _Image(
+    const clone2 = new _Image(
       this.texture,
       this.translation.x,
       this.translation.y,
@@ -12481,9 +14911,9 @@ var _Image = class _Image extends Rectangle {
       this.height
     );
     if (parent) {
-      parent.add(clone);
+      parent.add(clone2);
     }
-    return clone;
+    return clone2;
   }
   /**
    * @name Two.Image#toObject
@@ -12503,17 +14933,12 @@ var _Image = class _Image extends Rectangle {
    * @function
    * @returns {Two.Image}
    * @description Release the image's renderer resources and detach all events.
-   * This method disposes the texture (calling dispose() for thorough cleanup) and inherits comprehensive
+   * This method releases its texture assignment and inherits comprehensive
    * cleanup from the Rectangle/Path hierarchy while preserving the renderer type
    * for potential re-attachment.
    */
   dispose() {
     super.dispose();
-    if (this._texture && typeof this._texture.dispose === "function") {
-      this._texture.dispose();
-    } else if (this._texture && typeof this._texture.unbind === "function") {
-      this._texture.unbind();
-    }
     return this;
   }
   /**
@@ -12617,6 +15042,7 @@ var proto24 = {
       return this._texture;
     },
     set: function(v) {
+      bindEffects(this, "texture", [v]);
       this._texture = v;
       this._flagTexture = true;
     }
@@ -13516,7 +15942,7 @@ function isDefaultMatrix(m) {
 }
 
 // src/renderers/svg.js
-var svg = {
+var svg2 = {
   version: 1.1,
   ns: "http://www.w3.org/2000/svg",
   xlink: "http://www.w3.org/1999/xlink",
@@ -13534,14 +15960,14 @@ var svg = {
   // Create an svg namespaced element.
   createElement: function(name, attrs) {
     const tag = name;
-    const elem = document.createElementNS(svg.ns, tag);
+    const elem = document.createElementNS(svg2.ns, tag);
     if (tag === "svg") {
       attrs = _.defaults(attrs || {}, {
-        version: svg.version
+        version: svg2.version
       });
     }
     if (attrs && Object.keys(attrs).length > 0) {
-      svg.setAttributes(elem, attrs);
+      svg2.setAttributes(elem, attrs);
     }
     return elem;
   },
@@ -13550,7 +15976,7 @@ var svg = {
     const keys = Object.keys(attrs);
     for (let i = 0; i < keys.length; i++) {
       if (/href/.test(keys[i])) {
-        elem.setAttributeNS(svg.xlink, keys[i], attrs[keys[i]]);
+        elem.setAttributeNS(svg2.xlink, keys[i], attrs[keys[i]]);
       } else {
         elem.setAttribute(keys[i], attrs[keys[i]]);
       }
@@ -13662,7 +16088,7 @@ var svg = {
   getClip: function(shape, domElement) {
     let clip = shape._renderer.clip;
     if (!clip) {
-      clip = shape._renderer.clip = svg.createElement("clipPath", {
+      clip = shape._renderer.clip = svg2.createElement("clipPath", {
         "clip-rule": "nonzero"
       });
     }
@@ -13672,7 +16098,7 @@ var svg = {
     return clip;
   },
   getRendererType: function(type) {
-    return type in svg ? type : "path";
+    return type in svg2 ? type : "path";
   },
   defs: {
     update: function(domElement) {
@@ -13724,8 +16150,8 @@ var svg = {
       this.elem.appendChild(object._renderer.elem);
     },
     renderChild: function(child) {
-      const prop = svg.getRendererType(child._renderer.type);
-      svg[prop].render.call(child, this);
+      const prop = svg2.getRendererType(child._renderer.type);
+      svg2[prop].render.call(child, this);
     },
     render: function(domElement) {
       if (!this._visible && !this._flagVisible || this._opacity === 0 && !this._flagOpacity) {
@@ -13736,7 +16162,7 @@ var svg = {
       }
       this._update();
       if (!this._renderer.elem) {
-        this._renderer.elem = svg.createElement("g", {
+        this._renderer.elem = svg2.createElement("g", {
           id: this.id
         });
         domElement.appendChild(this._renderer.elem);
@@ -13750,8 +16176,8 @@ var svg = {
       }
       for (let i = 0; i < this.children.length; i++) {
         const child = this.children[i];
-        const prop = svg.getRendererType(child._renderer.type);
-        svg[prop].render.call(child, domElement);
+        const prop = svg2.getRendererType(child._renderer.type);
+        svg2[prop].render.call(child, domElement);
       }
       if (this._flagId) {
         this._renderer.elem.setAttribute("id", this._id);
@@ -13774,19 +16200,19 @@ var svg = {
           elem: this._renderer.elem
         };
         if (this._flagAdditions) {
-          this.additions.forEach(svg.group.appendChild, context);
+          this.additions.forEach(svg2.group.appendChild, context);
         }
         if (this._flagSubtractions) {
-          this.subtractions.forEach(svg.group.removeChild, context);
+          this.subtractions.forEach(svg2.group.removeChild, context);
         }
         if (this._flagOrder) {
-          this.children.forEach(svg.group.orderChild, context);
+          this.children.forEach(svg2.group.orderChild, context);
         }
       }
       if (this._flagMask) {
         if (this._mask) {
-          const prop = svg.getRendererType(this._mask._renderer.type);
-          svg[prop].render.call(this._mask, domElement);
+          const prop = svg2.getRendererType(this._mask._renderer.type);
+          svg2[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -13822,7 +16248,7 @@ var svg = {
         changed.id = this._id;
       }
       if (this._flagVertices) {
-        const vertices = svg.toString(
+        const vertices = svg2.toString(
           this._renderer.vertices,
           this._renderer.closed
         );
@@ -13831,8 +16257,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        const prop = svg.getRendererType(this._fill._renderer.type);
-        svg[prop].render.call(this._fill, domElement, true);
+        const prop = svg2.getRendererType(this._fill._renderer.type);
+        svg2[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -13844,8 +16270,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        const prop = svg.getRendererType(this._stroke._renderer.type);
-        svg[prop].render.call(this._stroke, domElement, true);
+        const prop = svg2.getRendererType(this._stroke._renderer.type);
+        svg2[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -13882,13 +16308,13 @@ var svg = {
       }
       if (!this._renderer.elem) {
         changed.id = this._id;
-        this._renderer.elem = svg.createElement("path", changed);
+        this._renderer.elem = svg2.createElement("path", changed);
         domElement.appendChild(this._renderer.elem);
       } else {
-        svg.setAttributes(this._renderer.elem, changed);
+        svg2.setAttributes(this._renderer.elem, changed);
       }
       if (this._flagClip) {
-        const clip = svg.getClip(this, domElement);
+        const clip = svg2.getClip(this, domElement);
         const elem = this._renderer.elem;
         if (this._clip) {
           elem.removeAttribute("id");
@@ -13902,8 +16328,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          const prop = svg.getRendererType(this._mask._renderer.type);
-          svg[prop].render.call(this._mask, domElement);
+          const prop = svg2.getRendererType(this._mask._renderer.type);
+          svg2[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -13942,14 +16368,14 @@ var svg = {
           const m = decomposeMatrix(me[0], me[3], me[1], me[4], me[2], me[5]);
           size /= Math.max(m.scaleX, m.scaleY);
         }
-        const vertices = svg.pointsToString(this._renderer.collection, size);
+        const vertices = svg2.pointsToString(this._renderer.collection, size);
         changed.d = vertices;
       }
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        const prop = svg.getRendererType(this._fill._renderer.type);
-        svg[prop].render.call(this._fill, domElement, true);
+        const prop = svg2.getRendererType(this._fill._renderer.type);
+        svg2[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -13961,8 +16387,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        const prop = svg.getRendererType(this._stroke._renderer.type);
-        svg[prop].render.call(this._stroke, domElement, true);
+        const prop = svg2.getRendererType(this._stroke._renderer.type);
+        svg2[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -13990,10 +16416,10 @@ var svg = {
       }
       if (!this._renderer.elem) {
         changed.id = this._id;
-        this._renderer.elem = svg.createElement("path", changed);
+        this._renderer.elem = svg2.createElement("path", changed);
         domElement.appendChild(this._renderer.elem);
       } else {
-        svg.setAttributes(this._renderer.elem, changed);
+        svg2.setAttributes(this._renderer.elem, changed);
       }
       if (_.isFunction(this._renderer.onAfterRender)) {
         this._renderer.onAfterRender();
@@ -14022,10 +16448,10 @@ var svg = {
         changed["line-height"] = this._leading;
       }
       if (this._flagAlignment) {
-        changed["text-anchor"] = svg.alignments[this._alignment] || this._alignment;
+        changed["text-anchor"] = svg2.alignments[this._alignment] || this._alignment;
       }
       if (this._flagBaseline) {
-        changed["dominant-baseline"] = svg.baselines[this._baseline] || this._baseline;
+        changed["dominant-baseline"] = svg2.baselines[this._baseline] || this._baseline;
       }
       if (this._flagStyle) {
         changed["font-style"] = this._style;
@@ -14042,8 +16468,8 @@ var svg = {
       if (this._fill && this._fill._renderer) {
         this._renderer.hasFillEffect = true;
         this._fill._update();
-        const prop = svg.getRendererType(this._fill._renderer.type);
-        svg[prop].render.call(this._fill, domElement, true);
+        const prop = svg2.getRendererType(this._fill._renderer.type);
+        svg2[prop].render.call(this._fill, domElement, true);
       }
       if (this._flagFill) {
         changed.fill = this._fill && this._fill.id ? "url(#" + this._fill.id + ")" : this._fill;
@@ -14055,8 +16481,8 @@ var svg = {
       if (this._stroke && this._stroke._renderer) {
         this._renderer.hasStrokeEffect = true;
         this._stroke._update();
-        const prop = svg.getRendererType(this._stroke._renderer.type);
-        svg[prop].render.call(this._stroke, domElement, true);
+        const prop = svg2.getRendererType(this._stroke._renderer.type);
+        svg2[prop].render.call(this._stroke, domElement, true);
       }
       if (this._flagStroke) {
         changed.stroke = this._stroke && this._stroke.id ? "url(#" + this._stroke.id + ")" : this._stroke;
@@ -14083,13 +16509,13 @@ var svg = {
       }
       if (!this._renderer.elem) {
         changed.id = this._id;
-        this._renderer.elem = svg.createElement("text", changed);
+        this._renderer.elem = svg2.createElement("text", changed);
         domElement.appendChild(this._renderer.elem);
       } else {
-        svg.setAttributes(this._renderer.elem, changed);
+        svg2.setAttributes(this._renderer.elem, changed);
       }
       if (this._flagClip) {
-        const clip = svg.getClip(this, domElement);
+        const clip = svg2.getClip(this, domElement);
         const elem = this._renderer.elem;
         if (this._clip) {
           elem.removeAttribute("id");
@@ -14103,8 +16529,8 @@ var svg = {
       }
       if (this._flagMask) {
         if (this._mask) {
-          const prop = svg.getRendererType(this._mask._renderer.type);
-          svg[prop].render.call(this._mask, domElement);
+          const prop = svg2.getRendererType(this._mask._renderer.type);
+          svg2[prop].render.call(this._mask, domElement);
           this._renderer.elem.setAttribute(
             "clip-path",
             "url(#" + this._mask.id + ")"
@@ -14145,11 +16571,12 @@ var svg = {
       }
       if (!this._renderer.elem) {
         changed.id = this._id;
-        this._renderer.elem = svg.createElement("linearGradient", changed);
+        this._renderer.elem = svg2.createElement("linearGradient", changed);
       } else {
-        svg.setAttributes(this._renderer.elem, changed);
+        svg2.setAttributes(this._renderer.elem, changed);
       }
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
       if (this._flagStops) {
@@ -14172,9 +16599,9 @@ var svg = {
             attrs["stop-opacity"] = stop._opacity;
           }
           if (!stop._renderer.elem) {
-            stop._renderer.elem = svg.createElement("stop", attrs);
+            stop._renderer.elem = svg2.createElement("stop", attrs);
           } else {
-            svg.setAttributes(stop._renderer.elem, attrs);
+            svg2.setAttributes(stop._renderer.elem, attrs);
           }
           if (lengthChanged) {
             this._renderer.elem.appendChild(stop._renderer.elem);
@@ -14219,11 +16646,12 @@ var svg = {
       }
       if (!this._renderer.elem) {
         changed.id = this._id;
-        this._renderer.elem = svg.createElement("radialGradient", changed);
+        this._renderer.elem = svg2.createElement("radialGradient", changed);
       } else {
-        svg.setAttributes(this._renderer.elem, changed);
+        svg2.setAttributes(this._renderer.elem, changed);
       }
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
       if (this._flagStops) {
@@ -14246,9 +16674,9 @@ var svg = {
             attrs["stop-opacity"] = stop._opacity;
           }
           if (!stop._renderer.elem) {
-            stop._renderer.elem = svg.createElement("stop", attrs);
+            stop._renderer.elem = svg2.createElement("stop", attrs);
           } else {
-            svg.setAttributes(stop._renderer.elem, attrs);
+            svg2.setAttributes(stop._renderer.elem, attrs);
           }
           if (lengthChanged) {
             this._renderer.elem.appendChild(stop._renderer.elem);
@@ -14338,19 +16766,20 @@ var svg = {
       }
       if (this._flagScale || this._flagLoaded) {
         if (!this._renderer.image) {
-          this._renderer.image = svg.createElement("image", styles);
+          this._renderer.image = svg2.createElement("image", styles);
         } else {
-          svg.setAttributes(this._renderer.image, styles);
+          svg2.setAttributes(this._renderer.image, styles);
         }
       }
       if (!this._renderer.elem) {
         changed.id = this._id;
         changed.patternUnits = "userSpaceOnUse";
-        this._renderer.elem = svg.createElement("pattern", changed);
+        this._renderer.elem = svg2.createElement("pattern", changed);
       } else if (Object.keys(changed).length !== 0) {
-        svg.setAttributes(this._renderer.elem, changed);
+        svg2.setAttributes(this._renderer.elem, changed);
       }
-      if (this._renderer.elem.parentNode === null) {
+      const parent = this._renderer.elem.parentNode;
+      if (parent === null || parent._disposed) {
         domElement.defs.appendChild(this._renderer.elem);
       }
       if (this._renderer.elem && this._renderer.image && !this._renderer.appended) {
@@ -14367,10 +16796,10 @@ var svg = {
 var Renderer2 = class extends Events {
   constructor(params) {
     super();
-    this.domElement = params.domElement || svg.createElement("svg");
+    this.domElement = params.domElement || svg2.createElement("svg");
     this.scene = new Group();
     this.scene.parent = this;
-    this.defs = svg.createElement("defs");
+    this.defs = svg2.createElement("defs");
     this.defs._flagUpdate = false;
     this.domElement.appendChild(this.defs);
     this.domElement.defs = this.defs;
@@ -14387,7 +16816,7 @@ var Renderer2 = class extends Events {
   setSize(width, height) {
     this.width = width;
     this.height = height;
-    svg.setAttributes(this.domElement, {
+    svg2.setAttributes(this.domElement, {
       width,
       height
     });
@@ -14399,8 +16828,8 @@ var Renderer2 = class extends Events {
    * @description Render the current scene to the `<svg />`.
    */
   render() {
-    svg.group.render.call(this.scene, this.domElement);
-    svg.defs.update(this.domElement);
+    svg2.group.render.call(this.scene, this.domElement);
+    svg2.defs.update(this.domElement);
     return this;
   }
 };
@@ -14408,7 +16837,7 @@ var Renderer2 = class extends Events {
  * @name Two.SVGRenderer.Utils
  * @property {Object} - A massive object filled with utility functions and properties to render Two.js objects to a `<svg />`.
  */
-__publicField(Renderer2, "Utils", svg);
+__publicField(Renderer2, "Utils", svg2);
 
 // src/utils/shaders.js
 var shaders = {
@@ -16054,6 +18483,17 @@ var _Two = class _Two {
     return (_a = this._events.ignore) == null ? void 0 : _a.apply(this, arguments);
   }
   /**
+   * @name Two.AutoCalculateImportedMatrices
+   * @property {Boolean} - When importing SVGs through the {@link Two#interpret} and {@link Two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
+   * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
+   */
+  static get AutoCalculateImportedMatrices() {
+    return Constants.AutoCalculateImportedMatrices;
+  }
+  static set AutoCalculateImportedMatrices(value) {
+    Constants.AutoCalculateImportedMatrices = value;
+  }
+  /**
    * @name Two#appendTo
    * @function
    * @param {Element} elem - The DOM element to append the Two.js stage to.
@@ -16132,6 +18572,9 @@ var _Two = class _Two {
       this.fit.domElement = null;
     }
     this.release();
+    if (this.renderer.defs) {
+      this.renderer.defs._disposed = true;
+    }
     if (typeof this.renderer.dispose === "function") {
       this.renderer.dispose();
     }
@@ -16149,77 +18592,19 @@ var _Two = class _Two {
    * @param {Two.Element} [obj] - Object to release from event listening. If none provided then the root {@link Two.Group} will be used.
    * @returns {Two.Element} The object passed for event deallocation.
    * @description Release a {@link Two.Element}’s events from memory and recurse through its children, effects, and/or vertices.
+   * Shared effects keep their other shapes' listeners until the last assignment
+   * is released. Releasing a shape does not dispose the effect's renderer resources.
    */
   release(obj) {
-    let i, v, child;
     if (typeof obj === "undefined") {
-      return this.release(this.scene);
+      obj = this.scene;
     }
-    if (typeof obj.unbind === "function") {
-      obj.unbind();
-    }
-    if (typeof obj.fill === "object" && typeof obj.fill.unbind === "function") {
-      obj.fill.unbind();
-    }
-    if (typeof obj.stroke === "object" && typeof obj.stroke.unbind === "function") {
-      obj.stroke.unbind();
-    }
-    if (obj.vertices) {
-      if (typeof obj.vertices.unbind === "function") {
-        try {
-          obj.vertices.unbind();
-        } catch (e) {
-        }
-      }
-      for (i = 0; i < obj.vertices.length; i++) {
-        v = obj.vertices[i];
-        if (typeof v.unbind === "function") {
-          v.unbind();
-        }
-        if (v.controls) {
-          if (v.controls.left && typeof v.controls.left.unbind === "function") {
-            v.controls.left.unbind();
-          }
-          if (v.controls.right && typeof v.controls.right.unbind === "function") {
-            v.controls.right.unbind();
-          }
-        }
-      }
-    }
-    if (obj.children) {
-      for (i = 0; i < obj.children.length; i++) {
-        child = obj.children[i];
-        this.release(child);
-      }
-      if (typeof obj.children.unbind === "function") {
-        try {
-          obj.children.unbind();
-        } catch (e) {
-        }
-      }
-    }
-    if (obj._renderer) {
-      if (obj._renderer.elem && obj._renderer.elem.parentNode) {
-        obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
-        delete obj._renderer.elem;
-      }
-      if (this.type === "WebGLRenderer" && this.renderer.ctx) {
-        const gl = this.renderer.ctx;
-        if (obj._renderer.texture) {
-          gl.deleteTexture(obj._renderer.texture);
-          delete obj._renderer.texture;
-        }
-        if (obj._renderer.positionBuffer) {
-          gl.deleteBuffer(obj._renderer.positionBuffer);
-          delete obj._renderer.positionBuffer;
-        }
-        delete obj._renderer.gl;
-        if (obj._renderer.effect) {
-          obj._renderer.effect = null;
-        }
-      }
-      if (this.type === "CanvasRenderer" && obj._renderer.context) {
-        delete obj._renderer.context;
+    const effects = [];
+    release2.call(this, obj, effects);
+    for (let i = 0; i < effects.length; i++) {
+      const effect = effects[i];
+      if (!hasEffectReferences(effect)) {
+        release2.call(this, effect, effects);
       }
     }
     return obj;
@@ -16637,9 +19022,9 @@ var _Two = class _Two {
    * @description Creates a Two.js text object and adds it to the scene.
    */
   makeText(message, x, y, styles) {
-    const text = new Text(message, x, y, styles);
-    this.add(text);
-    return text;
+    const text2 = new Text(message, x, y, styles);
+    this.add(text2);
+    return text2;
   }
   /**
    * @name Two#makeLinearGradient
@@ -16766,18 +19151,18 @@ var _Two = class _Two {
    * @param {Boolean} shallow - Don't create a top-most group but append all content directly.
    * @param {Boolean} [add=true] – Automatically add the reconstructed SVG node to scene.
    * @returns {Two.Group}
-   * @description Interpret an SVG Node and add it to this instance's scene. The distinction should be made that this doesn't `import` svg's, it solely interprets them into something compatible for Two.js - this is slightly different than a direct transcription.
+   * @description Interpret a trusted SVG Node and add it to this instance's scene. This does not sanitize the source DOM. Use {@link Two#load} for untrusted SVG text. Interpretation reconstructs compatible Two.js objects rather than transcribing SVG directly.
    */
-  interpret(svg2, shallow, add) {
-    const tag = svg2.tagName.toLowerCase();
+  interpret(svg3, shallow, add) {
+    const tag = svg3.tagName.toLowerCase();
     add = typeof add !== "undefined" ? add : true;
-    if (!(tag in read)) {
+    if (!Object.prototype.hasOwnProperty.call(read, tag)) {
       return null;
     }
-    const node = read[tag].call(this, svg2);
-    if (add) {
+    const node = read[tag].call(this, svg3);
+    if (add && node) {
       this.add(shallow && node instanceof Group ? node.children : node);
-    } else if (node.parent) {
+    } else if (node && node.parent) {
       node.remove();
     }
     return node;
@@ -16787,31 +19172,54 @@ var _Two = class _Two {
    * @function
    * @param {String|SVGElement} pathOrSVGContent - The URL path of an SVG file or an SVG document as text.
    * @param {Function} [callback] - Function to call once loading has completed.
+   * @param {Object} [options] - SVG import options.
+   * @param {Boolean} [options.allowExternalImages=false] - Allow HTTP(S) image requests. Embedded PNG, JPEG, GIF, WebP and AVIF images are allowed by default.
+   * @param {Function} [options.onError] - Called with an error on failure. Inline failures throw if omitted; asynchronous failures emit an `error` event on this instance.
    * @returns {Two.Group}
-   * @description Load an SVG file or SVG text and interpret it into Two.js legible objects.
+   * @description Load SVG through a sanitized, detached drawing document. Active content, stylesheets and external references are removed. The success callback receives sanitized detached nodes (a stable array for multiple roots). Existing DOM nodes are serialized and sanitized; effects from their earlier insertion cannot be undone.
    */
-  load(pathOrSVGContent, callback) {
+  load(pathOrSVGContent, callback, options = {}) {
     const group = new Group();
-    let elem, i, child;
-    const attach = function(data) {
-      dom.temp.innerHTML = data;
-      for (i = 0; i < dom.temp.children.length; i++) {
-        elem = dom.temp.children[i];
-        child = this.interpret(elem, false, false);
-        if (child !== null) {
-          group.add(child);
-        }
+    const fail = (error, asynchronous) => {
+      if (typeof options.onError === "function") {
+        options.onError(error);
+      } else if (asynchronous) {
+        this.trigger(Events.Types.error, error);
+      } else {
+        throw error;
+      }
+    };
+    const attach = (data, baseURL2, asynchronous) => {
+      let nodes;
+      try {
+        const parsed = parseSvg(data, options, baseURL2);
+        nodes = parsed.wrapped ? Array.from(parsed.svg.children) : [parsed.svg];
+        const child = this.interpret(parsed.svg, false, false);
+        group.add(parsed.wrapped ? child.children.slice() : child);
+      } catch (error) {
+        fail(error, asynchronous);
+        return;
       }
       if (typeof callback === "function") {
-        const svg2 = dom.temp.children.length <= 1 ? dom.temp.children[0] : dom.temp.children;
-        callback(group, svg2);
+        callback(group, nodes.length <= 1 ? nodes[0] : nodes);
       }
-    }.bind(this);
-    if (/\.svg$/i.test(pathOrSVGContent)) {
-      xhr(pathOrSVGContent, attach);
-      return group;
+    };
+    const baseURL = root.document && root.document.baseURI;
+    if (typeof pathOrSVGContent === "string" && pathOrSVGContent.trim() && !/^\s*</.test(pathOrSVGContent)) {
+      try {
+        const url = new root.URL(pathOrSVGContent, baseURL);
+        if (url.protocol !== "http:" && url.protocol !== "https:") {
+          throw new TwoError("SVG URLs must use HTTP or HTTPS.");
+        }
+        xhr(url.href, (data, request) => {
+          attach(data, request.responseURL || url.href, true);
+        }, (error) => fail(error, true));
+      } catch (error) {
+        fail(error, false);
+      }
+    } else {
+      attach(pathOrSVGContent, baseURL, false);
     }
-    attach(pathOrSVGContent);
     return group;
   }
 };
@@ -16842,12 +19250,6 @@ __publicField(_Two, "Identifier", Constants.Identifier);
  * @property {Number} - Default amount of vertices to be used for interpreting Arcs and ArcSegments.
  */
 __publicField(_Two, "Resolution", Constants.Resolution);
-/**
- * @name Two.AutoCalculateImportedMatrices
- * @property {Boolean} - When importing SVGs through the {@link Two#interpret} and {@link Two#load}, this boolean determines whether Two.js infers and then overrides the exact transformation matrix of the reference SVG.
- * @nota-bene `false` copies the exact transformation matrix values, but also sets the path's `matrix.manual = true`.
- */
-__publicField(_Two, "AutoCalculateImportedMatrices", Constants.AutoCalculateImportedMatrices);
 /**
  * @name Two.Instances
  * @property {Two[]} - Registered list of all Two.js instances in the current session.
@@ -16903,6 +19305,76 @@ __publicField(_Two, "Commands", Commands);
  */
 __publicField(_Two, "Utils", Utils);
 var Two = _Two;
+function release2(obj, pendingEffects) {
+  let i, v, child;
+  if (typeof obj.unbind === "function") {
+    obj.unbind();
+  }
+  unbindEffects(obj);
+  if (obj.vertices) {
+    if (typeof obj.vertices.unbind === "function") {
+      try {
+        obj.vertices.unbind();
+      } catch (e) {
+      }
+    }
+    for (i = 0; i < obj.vertices.length; i++) {
+      v = obj.vertices[i];
+      if (typeof v.unbind === "function") {
+        v.unbind();
+      }
+      if (v.controls) {
+        if (v.controls.left && typeof v.controls.left.unbind === "function") {
+          v.controls.left.unbind();
+        }
+        if (v.controls.right && typeof v.controls.right.unbind === "function") {
+          v.controls.right.unbind();
+        }
+      }
+    }
+  }
+  if (obj.children) {
+    for (i = 0; i < obj.children.length; i++) {
+      child = obj.children[i];
+      if (child instanceof Gradient || child instanceof Texture) {
+        pendingEffects.push(child);
+      } else {
+        release2.call(this, child, pendingEffects);
+      }
+    }
+    if (typeof obj.children.unbind === "function") {
+      try {
+        obj.children.unbind();
+      } catch (e) {
+      }
+    }
+  }
+  if (obj._renderer) {
+    if (obj._renderer.elem && obj._renderer.elem.parentNode) {
+      obj._renderer.elem.parentNode.removeChild(obj._renderer.elem);
+      delete obj._renderer.elem;
+    }
+    if (this.type === "WebGLRenderer" && this.renderer.ctx) {
+      const gl = this.renderer.ctx;
+      if (obj._renderer.texture) {
+        gl.deleteTexture(obj._renderer.texture);
+        delete obj._renderer.texture;
+      }
+      if (obj._renderer.positionBuffer) {
+        gl.deleteBuffer(obj._renderer.positionBuffer);
+        delete obj._renderer.positionBuffer;
+      }
+      delete obj._renderer.gl;
+      if (obj._renderer.effect) {
+        obj._renderer.effect = null;
+      }
+    }
+    if (this.type === "CanvasRenderer" && obj._renderer.context) {
+      delete obj._renderer.context;
+    }
+  }
+  return obj;
+}
 function fitToWindow() {
   const wr = document.body.getBoundingClientRect();
   const width = this.width = wr.width;
@@ -16958,3 +19430,9 @@ raf.init = function() {
 export {
   Two as default
 };
+/*! Bundled license information:
+
+dompurify/dist/purify.es.mjs:
+  (*! @license DOMPurify 3.4.17 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.4.17/LICENSE *)
+  (*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE *)
+*/

@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>SVG interpreter regressions</title>
+<base href="../">
+<link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css">
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="../node_modules/qunit/qunit/qunit.js"></script>
+<script src="../node_modules/underscore/underscore-umd.js"></script>
+<script src="../build/two.js"></script>
+<script>
+  window.testFailures = [];
+  QUnit.on('testEnd', function (test) {
+    if (test.status === 'failed') {
+      window.testFailures.push({ name: test.name, errors: test.errors });
+    }
+  });
+  QUnit.on('runEnd', function (run) {
+    window.testResult = { counts: run.testCounts, failures: window.testFailures };
+  });
+</script>
+<script src="src/utils.js"></script>
+<script src="suite/svg-interpreter.js"></script>
+<script type="module" src="suite/dom.js"></script>

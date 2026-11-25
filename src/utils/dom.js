@@ -1,5 +1,4 @@
 import { root } from './root.js';
-import { _ } from './underscore.js';
 
 export const dom = {
 
@@ -60,17 +59,3 @@ export const dom = {
   }
 
 };
-
-const temp = (root.document ? root.document.createElement('div') : {});
-temp.id = 'help-two-load';
-
-Object.defineProperty(dom, 'temp', {
-  enumerable: true,
-  get: function() {
-    if (_.isElement(temp) && !root.document.head.contains(temp)) {
-      temp.style.display = 'none';
-      root.document.head.appendChild(temp);
-    }
-    return temp;
-  }
-});

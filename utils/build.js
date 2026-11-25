@@ -1,7 +1,6 @@
 const esbuild = require('esbuild');
 const fs = require('fs');
 const path = require('path');
-const _ = require('underscore');
 const gzip = require('gzip-size');
 
 const publishDateString = new Date().toISOString();
@@ -70,13 +69,13 @@ async function buildModules() {
 
 function template(buffer, isExposed) {
   const code = buffer.toString();
-  const generate = _.template(code);
-  let result = generate({
-    version: config.version,
-    publishDate: publishDateString,
-  });
+  // Replace only our metadata tokens. Bundled dependencies can contain other
+  // template delimiters, which must remain literal JavaScript source.
+  let result = code
+    .replace(/<%=\s*version\s*%>/g, config.version)
+    .replace(/<%=\s*publishDate\s*%>/g, publishDateString);
   if (isExposed) {
-    result = result.replace(/\}\)\(\);\s*$/, '})().default;');
+    result += '\nTwo = Two.default;';
   }
   return result;
 }
@@ -119,7 +118,9 @@ async function build() {
   try {
     await buildModules();
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    process.exitCode = 1;
+    return;
   }
   elapsed = Date.now() - startTime;
   console.log('Built and minified Two.js:', elapsed / 1000, 'seconds');

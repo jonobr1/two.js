@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="paint" x1="0" x2="1"><stop offset="0" style="stop-color:rgb(255, 0, 0);stop-opacity:0.5" /><stop offset="1" stop-color="blue" /></linearGradient>
+    <radialGradient id="radial" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="white" /><stop offset="1" stop-color="black" /></radialGradient>
+    <clipPath id="clip">
+      <rect width="10" height="10" />
+    </clipPath>
+    <rect id="template" width="8" height="6" fill="orange" />
+  </defs>
+  <g id="translated" transform="translate(10 20) scale(2)"><rect id="gradient" width="20" height="10" fill="url(#paint)" /></g>
+  <g visibility="hidden" fill="purple"><g><rect id="hidden-shape" width="10" height="10" /><rect id="shown" width="10" height="10" visibility="visible" /></g></g>
+  <circle id="radial-shape" cx="50" cy="50" r="5" fill="url(#radial)" />
+  <rect id="clipped" width="10" height="10" clip-path="url(#clip)" />
+  <use href="#template" x="30" y="40" />
+  <text id="label" x="5" y="15" font-size="12" font-family="sans-serif">Hello &lt;svg&gt;</text>
+</svg>

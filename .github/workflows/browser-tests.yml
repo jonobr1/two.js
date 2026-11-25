@@ -1,0 +1,24 @@
+name: Browser tests
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  svg-import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Install Firefox software WebGL dependencies
+        run: sudo apt-get install -y libgl1-mesa-dri xauth
+      - name: Test Chromium and WebKit
+        run: npm run test:browser -- --project=chromium --project=webkit
+      - name: Test Firefox with software WebGL
+        run: LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a npm run test:browser -- --project=firefox --headed
