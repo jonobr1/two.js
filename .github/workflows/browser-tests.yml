@@ -16,4 +16,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
-      - run: npm run test:browser
+      - name: Install Firefox software WebGL dependencies
+        run: sudo apt-get install -y libgl1-mesa-dri xauth
+      - name: Test Chromium and WebKit
+        run: npm run test:browser -- --project=chromium --project=webkit
+      - name: Test Firefox with software WebGL
+        run: LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a npm run test:browser -- --project=firefox --headed
