@@ -7,6 +7,8 @@ import { CanvasPolyfill } from '../utils/canvas-polyfill.js';
 import { Vector } from '../vector.js';
 import { Registry } from '../registry.js';
 
+let legacyAnchor;
+
 const regex = {
   video: /\.(mp4|webm|ogg)$/i,
   image: /\.(jpe?g|png|gif|tiff|webp)$/i,
@@ -224,11 +226,21 @@ export class Texture extends Element {
    * @returns {String} - The serialized absolute path.
    */
   static getAbsoluteURL(path) {
-    if (!root.document) {
+    const { document } = root;
+    if (!document) {
       return path;
     }
+
+    const encoding = document.characterSet;
+    if (encoding && encoding !== 'UTF-8') {
+      // An anchor uses the document's encoding for query parameters.
+      legacyAnchor = legacyAnchor || document.createElement('a');
+      legacyAnchor.href = path;
+      return legacyAnchor.href;
+    }
+
     try {
-      return new URL(path, root.document.baseURI).href;
+      return new URL(path, document.baseURI).href;
     } catch (error) {
       // Match an anchor element's href for an invalid URL.
       return path;
