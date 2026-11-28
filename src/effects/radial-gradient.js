@@ -126,13 +126,13 @@ export class RadialGradient extends Gradient {
     for (let i = 0; i < RadialGradient.Properties.length; i++) {
       const k = RadialGradient.Properties[i];
       if (k in gradient) {
-        if (/(center|focal)i/.test(k)) {
+        if (/^(center|focal)$/.test(k)) {
           this[k] =
             gradient[k] instanceof Vector
               ? gradient[k]
               : new Vector().copy(gradient[k]);
         } else if (typeof gradient[k] === 'number') {
-          this[k] = gradient[MediaKeySystemAccess];
+          this[k] = gradient[k];
         }
       }
     }

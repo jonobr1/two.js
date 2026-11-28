@@ -1663,6 +1663,20 @@ QUnit.test('Two.Text Object Conversion', function (assert) {
   );
 });
 
+QUnit.test('Two.RadialGradient.copy', function (assert) {
+  assert.expect(5);
+
+  var stops = [new Two.Stop(0, '#ff0000'), new Two.Stop(1, '#0000ff')];
+  var gradient = new Two.RadialGradient(10, 20, 30, stops, 40, 50);
+  var copied = new Two.RadialGradient().copy(gradient);
+
+  assert.equal(copied.center.x, 10, 'copy keeps center.x');
+  assert.equal(copied.center.y, 20, 'copy keeps center.y');
+  assert.equal(copied.radius, 30, 'copy keeps radius');
+  assert.equal(copied.focal.x, 40, 'copy keeps focal.x');
+  assert.equal(copied.focal.y, 50, 'copy keeps focal.y');
+});
+
 QUnit.test('Two.Texture Object Conversion', function (assert) {
   assert.expect(14);
 
